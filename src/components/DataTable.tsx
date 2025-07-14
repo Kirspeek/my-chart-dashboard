@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { DataTableProps } from "../../interfaces/common";
+import type { DataTableProps, UserData } from "@/interfaces";
 
-export default function DataTable({ data, title }: DataTableProps) {
+export default function DataTable({ data, title }: DataTableProps<UserData>) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">

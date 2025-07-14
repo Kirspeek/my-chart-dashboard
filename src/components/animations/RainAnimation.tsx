@@ -115,13 +115,13 @@ export default function RainAnimation() {
         }}
         style={{
           position: "absolute",
-          bottom: 12,
+          bottom: 32,
           left: 0,
           opacity: 0.4,
           zIndex: 0,
         }}
       >
-        <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+        <svg width="160" height="56" viewBox="0 0 160 56" fill="none">
           <defs>
             <linearGradient
               id="cloudGrad3"
@@ -129,14 +129,14 @@ export default function RainAnimation() {
               y1="0"
               x2="0"
               y2="1"
-              gradientTransform="scale(1,40)"
+              gradientTransform="scale(1,56)"
             >
               <stop offset="0%" stopColor="#fff" />
               <stop offset="100%" stopColor="#dbe6ef" />
             </linearGradient>
           </defs>
           <path
-            d="M20,30 Q10,40 5,25 Q0,20 10,10 Q15,0 30,5 Q40,0 60,10 Q80,0 90,10 Q110,5 115,20 Q120,25 110,35 Q100,40 90,30 Q80,40 60,30 Q40,40 20,30 Z"
+            d="M8,44 Q0,56 32,52 Q48,56 64,52 Q80,56 96,52 Q128,56 152,52 Q160,44 152,36 Q156,24 128,28 Q120,12 96,24 Q80,8 64,24 Q40,12 32,28 Q4,24 8,36 Q0,44 8,44 Z"
             fill="url(#cloudGrad3)"
           />
         </svg>

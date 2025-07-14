@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import WidgetCard from "../../common/WidgetCard";
+import WidgetBase from "../../common/WidgetBase";
+import WidgetButton from "../../common/WidgetButton";
+import Button3D from "../../common/3DButton";
 import { ClockWidgetProps } from "../../../../interfaces/widgets";
 
 const timeZones = [
@@ -62,9 +64,8 @@ export default function ClockWidget({
   // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return (
-      <WidgetCard
-        className="widget flex flex-col gap-8"
-        variant="large"
+      <WidgetBase
+        className="flex flex-col gap-8"
         style={{
           width: "100%",
           minWidth: 600,
@@ -87,14 +88,13 @@ export default function ClockWidget({
             --:--:--
           </div>
         </div>
-      </WidgetCard>
+      </WidgetBase>
     );
   }
 
   return (
-    <WidgetCard
-      className="widget flex flex-col gap-8"
-      variant="large"
+    <WidgetBase
+      className="flex flex-col gap-8"
       style={{
         width: "100%",
         minWidth: 600,
@@ -145,38 +145,34 @@ export default function ClockWidget({
             Sun: 07:12 - 17:17
           </span>
           <div className="flex gap-2 ml-4">
-            <button
-              className="text-xs font-mono px-3 py-1 rounded-full border"
-              style={{
-                borderColor: is24h
-                  ? "#b0b0a8" // light theme muted
-                  : "#ea4300", // light theme accent red
-                color: is24h
-                  ? "#b0b0a8" // light theme muted
-                  : "#ea4300", // light theme accent red
-                background: is24h ? "transparent" : "rgba(234, 67, 0, 0.1)", // light theme red with opacity
-                fontWeight: 700,
-              }}
+            <WidgetButton
+              size="sm"
+              fontFamily="var(--font-mono)"
+              fontSize="xs"
+              px={3}
+              py={1}
+              border={is24h ? "1px solid #b0b0a8" : "1px solid #ea4300"}
+              color={is24h ? "#b0b0a8" : "#ea4300"}
+              bg={is24h ? undefined : "rgba(234, 67, 0, 0.1)"}
+              fontWeight={700}
               onClick={() => setIs24h(false)}
             >
               12h
-            </button>
-            <button
-              className="text-xs font-mono px-3 py-1 rounded-full border"
-              style={{
-                borderColor: is24h
-                  ? "#ea4300" // light theme accent red
-                  : "#b0b0a8", // light theme muted
-                color: is24h
-                  ? "#ea4300" // light theme accent red
-                  : "#b0b0a8", // light theme muted
-                background: is24h ? "rgba(234, 67, 0, 0.1)" : "transparent", // light theme red with opacity
-                fontWeight: 700,
-              }}
+            </WidgetButton>
+            <WidgetButton
+              size="sm"
+              fontFamily="var(--font-mono)"
+              fontSize="xs"
+              px={3}
+              py={1}
+              border={is24h ? "1px solid #ea4300" : "1px solid #b0b0a8"}
+              color={is24h ? "#ea4300" : "#b0b0a8"}
+              bg={is24h ? "rgba(234, 67, 0, 0.1)" : undefined}
+              fontWeight={700}
               onClick={() => setIs24h(true)}
             >
               24h
-            </button>
+            </WidgetButton>
           </div>
         </div>
       </div>
@@ -191,25 +187,15 @@ export default function ClockWidget({
             const isLocal = tz.zone === selectedZone;
             const isDayTime = isDay(h);
             return (
-              <div
+              <Button3D
                 key={tz.zone}
-                className="flex flex-col items-center justify-center px-8 py-6"
-                style={{
-                  background: isLocal ? "#ea4300" : "rgba(255,255,255,0.04)", // slightly lighter transparent bg for dark theme
-                  borderRadius: "1.5rem",
-                  minWidth: 180,
-                  minHeight: 110,
-                  border: isLocal ? `2px solid #ea4300` : "none", // no border for non-selected
-                  color: isLocal ? "#fff" : "var(--theme-text)",
-                  transition: "all 0.2s",
-                  cursor: "pointer",
-                }}
+                selected={isLocal}
                 onClick={() => setSelectedZone(tz.zone)}
               >
                 <span
                   className="text-base font-bold mono mb-1"
                   style={{
-                    color: isLocal ? "#fff" : "var(--theme-text)", // theme primary text color
+                    color: isLocal ? "#fff" : "#232323",
                   }}
                 >
                   {tz.label}
@@ -217,7 +203,7 @@ export default function ClockWidget({
                 <span
                   className="text-xs font-mono mb-2"
                   style={{
-                    color: isLocal ? "#fff" : "#888", // light theme secondary
+                    color: isLocal ? "#fff" : "#888",
                   }}
                 >
                   {tz.utc}
@@ -225,7 +211,7 @@ export default function ClockWidget({
                 <span
                   className="text-4xl font-mono font-extrabold mono mb-1"
                   style={{
-                    color: isLocal ? "#fff" : "var(--theme-text)", // theme primary text color
+                    color: isLocal ? "#fff" : "#232323",
                     letterSpacing: "0.04em",
                     lineHeight: 1.1,
                   }}
@@ -242,11 +228,11 @@ export default function ClockWidget({
                 >
                   {mounted ? (isDayTime ? "☀️ Day" : "🌙 Night") : "--"}
                 </span>
-              </div>
+              </Button3D>
             );
           })}
         </div>
       </div>
-    </WidgetCard>
+    </WidgetBase>
   );
 }

@@ -1,4 +1,12 @@
-export interface LineChartProps {
+import { CommonComponentProps } from "./common";
+
+export interface ChartData {
+  name: string;
+  value: number;
+  [key: string]: unknown;
+}
+
+export interface LineChartProps extends CommonComponentProps {
   data: Array<{
     month: string;
     sales: number;
@@ -14,7 +22,7 @@ export interface BarChartData {
   revenue: number;
 }
 
-export interface BarChartProps {
+export interface BarChartProps extends CommonComponentProps {
   data: BarChartData[];
   title: string;
 }
@@ -25,7 +33,7 @@ export interface PieChartData {
   color: string;
 }
 
-export interface PieChartProps {
+export interface PieChartProps extends CommonComponentProps {
   data: PieChartData[];
   title: string;
 }

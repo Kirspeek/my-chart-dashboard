@@ -1,11 +1,5 @@
-import React from "react";
-import { lightTheme } from "../../lib/theme-config";
-
-interface WidgetCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  variant?: "default" | "compact" | "large";
-  className?: string;
-}
+import { Box } from "@chakra-ui/react";
+import { WidgetCardProps } from "../../../interfaces/common";
 
 export default function WidgetCard({
   children,
@@ -14,47 +8,30 @@ export default function WidgetCard({
   style = {},
   ...props
 }: WidgetCardProps) {
-  const getVariantStyles = () => {
-    switch (variant) {
-      case "compact":
-        return {
-          padding: lightTheme.spacing.lg,
-          minWidth: "auto",
-          minHeight: "auto",
-        };
-      case "large":
-        return {
-          padding: lightTheme.spacing["2xl"],
-          minWidth: "600px",
-          minHeight: "480px",
-          maxWidth: "800px",
-        };
-      default:
-        return {
-          padding: lightTheme.spacing.xl,
-          minWidth: "auto",
-          minHeight: "auto",
-        };
-    }
-  };
-
-  const variantStyles = getVariantStyles();
-
+  let padding = 6;
+  let minW, minH, maxW;
+  if (variant === "compact") {
+    padding = 4;
+  } else if (variant === "large") {
+    padding = 8;
+    minW = "600px";
+    minH = "480px";
+    maxW = "800px";
+  }
   return (
-    <div
-      className={`widget-card ${className}`}
-      style={{
-        background: lightTheme.colors.cardBackground,
-        borderRadius: lightTheme.borderRadius["2xl"],
-        boxShadow: lightTheme.shadows.none,
-        color: lightTheme.colors.primary,
-        fontFamily: lightTheme.typography.fontFamily.sans,
-        ...variantStyles,
-        ...style,
-      }}
+    <Box
+      borderRadius="xl"
+      bg="brand.50"
+      boxShadow="lg"
+      p={padding}
+      minW={minW}
+      minH={minH}
+      maxW={maxW}
+      className={className}
+      style={style}
       {...props}
     >
       {children}
-    </div>
+    </Box>
   );
 }

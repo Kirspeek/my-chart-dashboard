@@ -1,110 +1,24 @@
 "use client";
 
 import React, { useState, useEffect, CSSProperties } from "react";
-import CloudAnimation from "./CloudAnimation";
-import RainAnimation from "./RainAnimation";
-
-// Import new subcomponents
+import CloudAnimation from "../animations/CloudAnimation";
+import RainAnimation from "../animations/RainAnimation";
 import WeatherBackground from "./WeatherBackground";
 import WeatherText from "./WeatherText";
 import ForecastDay from "./ForecastDay";
-import SunAnimation from "./SunAnimation";
-import HotAnimation from "./HotAnimation";
-import Lightning from "./Lightning";
-import {
-  WeatherWidgetProps,
-  ForecastDay as ForecastDayType,
-} from "../../../interfaces/widgets";
-
-function getWeatherIcon(desc: string): string {
-  if (/clear/i.test(desc)) return "☀️";
-  if (/cloud/i.test(desc)) return "🌤️";
-  if (/rain/i.test(desc)) return "🌧️";
-  if (/storm|thunder/i.test(desc)) return "⛈️";
-  if (/snow/i.test(desc)) return "❄️";
-  return "🌡️";
-}
-
-async function geocodeCity(
-  city: string
-): Promise<{ lat: number; lon: number } | null> {
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
-  const res = await fetch(url);
-  const data = await res.json();
-  if (data && data.results && data.results.length > 0) {
-    return { lat: data.results[0].latitude, lon: data.results[0].longitude };
-  }
-  return null;
-}
+import SunAnimation from "../animations/SunAnimation";
+import HotAnimation from "../animations/HotAnimation";
+import Lightning from "../animations/Lightning";
+import { WeatherWidgetProps } from "../../../interfaces/widgets";
+import WidgetBase from "../common/WidgetBase";
+import { useWeather } from "../../hooks";
 
 export default function WeatherWidget({
   city = "Amsterdam",
 }: WeatherWidgetProps) {
-  const [forecast, setForecast] = useState<ForecastDayType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { forecast, loading, error, isCached, isPreloading } = useWeather(city);
   const [selectedDay, setSelectedDay] = useState(0); // 0 = today by default
   const [dateString, setDateString] = useState("");
-
-  useEffect(() => {
-    let cancelled = false;
-    async function fetchWeather() {
-      setLoading(true);
-      setError(null);
-      setForecast([]);
-      // 1. Geocode city
-      const coords = await geocodeCity(city);
-      if (!coords) {
-        if (!cancelled) {
-          setError("City not found");
-          setLoading(false);
-        }
-        return;
-      }
-      const { lat, lon } = coords;
-      // 2. Fetch current weather and forecast from Open-Meteo
-      try {
-        // Current weather
-        const weatherRes = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`
-        );
-        const weatherData = await weatherRes.json();
-        // No need to process current_weather for main box, handled by forecast
-        // Parse 5-day forecast
-        if (weatherData.daily) {
-          const days: ForecastDayType[] = [];
-          for (let i = 0; i < Math.min(5, weatherData.daily.time.length); i++) {
-            const date = new Date(weatherData.daily.time[i]);
-            const day = date.toLocaleDateString(undefined, {
-              weekday: "short",
-            });
-            const min = Math.round(weatherData.daily.temperature_2m_min[i]);
-            const max = Math.round(weatherData.daily.temperature_2m_max[i]);
-            const code = weatherData.daily.weathercode[i];
-            const desc = getOpenMeteoDesc(code);
-            days.push({
-              day,
-              icon: getWeatherIcon(desc),
-              min,
-              max,
-              desc,
-            });
-          }
-          setForecast(days);
-        }
-        setLoading(false);
-      } catch {
-        if (!cancelled) {
-          setError("Weather fetch error");
-          setLoading(false);
-        }
-      }
-    }
-    fetchWeather();
-    return () => {
-      cancelled = true;
-    };
-  }, [city]);
 
   useEffect(() => {
     if (forecast[selectedDay]) {
@@ -122,20 +36,9 @@ export default function WeatherWidget({
     }
   }, [forecast, selectedDay]);
 
-  function getOpenMeteoDesc(code: number): string {
-    // See https://open-meteo.com/en/docs#api_form for weathercode meanings
-    if (code === 0) return "Clear sky";
-    if (code === 1 || code === 2 || code === 3) return "Partly cloudy";
-    if (code === 45 || code === 48) return "Fog";
-    if (code === 51 || code === 53 || code === 55) return "Drizzle";
-    if (code === 61 || code === 63 || code === 65) return "Rain";
-    if (code === 71 || code === 73 || code === 75) return "Snow";
-    if (code === 80 || code === 81 || code === 82) return "Showers";
-    if (code === 95) return "Thunderstorm";
-    if (code === 96 || code === 99) return "Thunderstorm with hail";
-    return "Unknown";
-  }
-
+  const isCloudy = /cloudy|partly cloudy/i.test(
+    forecast[selectedDay]?.desc || ""
+  );
   const leftPanelStyle: CSSProperties = {
     flex: 1,
     minWidth: 220,
@@ -152,26 +55,20 @@ export default function WeatherWidget({
     background: "transparent",
     width: "100%",
     height: "100%",
+    overflow: isCloudy ? undefined : "hidden",
   };
 
   return (
-    <div
-      className="flex flex-row"
+    <WidgetBase
       style={{
         maxWidth: 480,
-        color: "var(--color-black)",
-        overflow: "hidden",
+        padding: 0,
+        boxShadow: "none",
       }}
+      className="flex flex-row"
     >
       {/* Left: Current weather */}
-      <div
-        style={{
-          ...leftPanelStyle,
-          background: "transparent",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
+      <div style={leftPanelStyle}>
         <WeatherBackground desc={forecast[selectedDay]?.desc || ""}>
           {/* Weather-specific animations */}
           {forecast[selectedDay] &&
@@ -223,7 +120,6 @@ export default function WeatherWidget({
       {/* Right: Forecast */}
       <div
         style={{
-          background: "var(--color-bg-card)",
           flex: 2,
           minWidth: 0,
           display: "flex",
@@ -237,12 +133,25 @@ export default function WeatherWidget({
       >
         {forecast.length === 0 && loading ? (
           <div style={{ color: "var(--color-gray)", fontSize: 18 }}>
-            Loading...
+            {isPreloading ? "Preloading..." : "Loading..."}
           </div>
         ) : forecast.length === 0 && error ? (
           <div style={{ color: "red", fontSize: 18 }}>{error}</div>
         ) : (
           <div className="flex flex-col gap-3 w-full items-center justify-center">
+            {/* Cache indicator */}
+            {isCached && (
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "var(--color-gray)",
+                  opacity: 0.7,
+                  marginBottom: 4,
+                }}
+              >
+                ⚡ Instant
+              </div>
+            )}
             {forecast.map((f, i) => (
               <ForecastDay
                 key={f.day}
@@ -258,6 +167,6 @@ export default function WeatherWidget({
           </div>
         )}
       </div>
-    </div>
+    </WidgetBase>
   );
 }

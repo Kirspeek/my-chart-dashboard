@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { CommonComponentProps } from "./common";
 
 export interface ClockWidgetProps {
   selectedZone: string;
@@ -17,7 +18,7 @@ export interface ForecastDay {
   desc: string;
 }
 
-export interface ForecastDayProps {
+export interface ForecastDayProps extends CommonComponentProps {
   day: string;
   icon: string;
   min: number;
@@ -25,24 +26,21 @@ export interface ForecastDayProps {
   selected: boolean;
   desc: string;
   onClick?: () => void;
-  children?: React.ReactNode;
 }
 
-export interface WeatherBackgroundProps {
+export interface WeatherBackgroundProps extends CommonComponentProps {
   desc: string;
-  children: React.ReactNode;
 }
 
-export interface WeatherTextProps {
+export interface WeatherTextProps extends CommonComponentProps {
   desc: string;
   temp: number;
   city: string;
   date: string;
   hot?: boolean;
-  children?: React.ReactNode;
 }
 
-export interface MetricCardProps {
+export interface MetricCardProps extends CommonComponentProps {
   metric: {
     title: string;
     value: string | number;

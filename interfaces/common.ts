@@ -1,17 +1,28 @@
-import React from "react";
+import { ReactNode, CSSProperties } from "react";
 
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+export interface BaseProps {
+  className?: string;
+  style?: CSSProperties;
 }
 
-export interface DataTableProps {
-  data: Array<{
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    status: "active" | "inactive";
-    lastLogin: string;
-  }>;
-  title: string;
+export interface WithChildren {
+  children?: ReactNode;
+}
+
+export interface CommonComponentProps extends BaseProps, WithChildren {}
+
+export interface TableColumn<T> {
+  key: keyof T;
+  label: string;
+  render?: (value: T[keyof T], row: T) => ReactNode;
+}
+
+export interface DataTableProps<T> extends CommonComponentProps {
+  data: T[];
+  columns: TableColumn<T>[];
+  title?: string;
+}
+
+export interface WidgetCardProps extends CommonComponentProps {
+  variant?: "default" | "compact" | "large";
 }

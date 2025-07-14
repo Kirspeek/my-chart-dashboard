@@ -1,9 +1,12 @@
 import { motion } from "framer-motion";
-import { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import {
+  HotWeatherBackgroundProps,
+  HotCloudSVGProps,
+} from "../../../interfaces/animations";
 
 // Thin, wispy orange cloud SVG
-const HotCloudSVG = ({ style = {} }) => (
+const HotCloudSVG = ({ style = {} }: HotCloudSVGProps) => (
   <svg width="160" height="40" viewBox="0 0 160 40" fill="none" style={style}>
     <ellipse
       cx="50"
@@ -28,10 +31,7 @@ const HotCloudSVG = ({ style = {} }) => (
 export default function HotWeatherBackground({
   children,
   inset = false,
-}: {
-  children: ReactNode;
-  inset?: boolean;
-}) {
+}: HotWeatherBackgroundProps) {
   // HotAnimation logic
   const duration = 2.2;
   const width = 60;

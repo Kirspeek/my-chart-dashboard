@@ -1,0 +1,224 @@
+import { WeatherAPI, WeatherForecastResponse } from "./api";
+import { ForecastDay } from "../../interfaces/widgets";
+
+interface CachedWeatherData {
+  forecast: ForecastDay[];
+  coords: { lat: number; lon: number } | null;
+  timestamp: number;
+  loading: boolean;
+}
+
+class WeatherCacheManager {
+  private cache = new Map<string, CachedWeatherData>();
+  private preloadQueue = new Set<string>();
+  private cacheTimeout = 10 * 60 * 1000; // 10 minutes
+
+  /**
+   * Get weather data for a city (from cache or fetch)
+   */
+  async getWeather(city: string): Promise<{
+    forecast: ForecastDay[];
+    coords: { lat: number; lon: number } | null;
+    loading: boolean;
+  }> {
+    const normalizedCity = this.normalizeCity(city);
+    const cached = this.cache.get(normalizedCity);
+
+    // Return cached data if still valid
+    if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
+      return {
+        forecast: cached.forecast,
+        coords: cached.coords,
+        loading: cached.loading,
+      };
+    }
+
+    // If not cached or expired, fetch and cache
+    return this.fetchAndCacheWeather(normalizedCity);
+  }
+
+  /**
+   * Preload weather data for multiple cities
+   */
+  async preloadCities(cities: string[]): Promise<void> {
+    const citiesToPreload = cities.filter(
+      (city) => !this.isCached(city) && !this.preloadQueue.has(city)
+    );
+
+    if (citiesToPreload.length === 0) return;
+
+    // Add to preload queue
+    citiesToPreload.forEach((city) => this.preloadQueue.add(city));
+
+    // Preload all cities in parallel
+    const preloadPromises = citiesToPreload.map(async (city) => {
+      try {
+        await this.fetchAndCacheWeather(this.normalizeCity(city));
+      } catch (error) {
+        console.error(`Failed to preload weather for ${city}:`, error);
+      } finally {
+        this.preloadQueue.delete(city);
+      }
+    });
+
+    await Promise.allSettled(preloadPromises);
+  }
+
+  /**
+   * Check if weather data is cached for a city
+   */
+  isCached(city: string): boolean {
+    const normalizedCity = this.normalizeCity(city);
+    const cached = this.cache.get(normalizedCity);
+    return (
+      cached !== undefined && Date.now() - cached.timestamp < this.cacheTimeout
+    );
+  }
+
+  /**
+   * Check if a city is currently being preloaded
+   */
+  isPreloading(city: string): boolean {
+    return this.preloadQueue.has(this.normalizeCity(city));
+  }
+
+  /**
+   * Clear expired cache entries
+   */
+  clearExpired(): void {
+    const now = Date.now();
+    for (const [city, data] of this.cache.entries()) {
+      if (now - data.timestamp > this.cacheTimeout) {
+        this.cache.delete(city);
+      }
+    }
+  }
+
+  /**
+   * Clear all cache
+   */
+  clearAll(): void {
+    this.cache.clear();
+    this.preloadQueue.clear();
+  }
+
+  /**
+   * Get cache statistics
+   */
+  getStats(): { cachedCities: number; preloadingCities: number } {
+    return {
+      cachedCities: this.cache.size,
+      preloadingCities: this.preloadQueue.size,
+    };
+  }
+
+  private async fetchAndCacheWeather(city: string): Promise<{
+    forecast: ForecastDay[];
+    coords: { lat: number; lon: number } | null;
+    loading: boolean;
+  }> {
+    // Mark as loading
+    this.cache.set(city, {
+      forecast: [],
+      coords: null,
+      timestamp: Date.now(),
+      loading: true,
+    });
+
+    try {
+      const { forecast: weatherData, coords } =
+        await WeatherAPI.getCityWeather(city);
+
+      if (!weatherData?.daily) {
+        throw new Error("City not found");
+      }
+
+      const forecast = this.processWeatherData(weatherData);
+
+      // Update cache with successful data
+      this.cache.set(city, {
+        forecast,
+        coords,
+        timestamp: Date.now(),
+        loading: false,
+      });
+
+      return { forecast, coords, loading: false };
+    } catch (error) {
+      // Update cache with error state
+      this.cache.set(city, {
+        forecast: [],
+        coords: null,
+        timestamp: Date.now(),
+        loading: false,
+      });
+
+      throw error;
+    }
+  }
+
+  private processWeatherData(
+    weatherData: WeatherForecastResponse
+  ): ForecastDay[] {
+    if (!weatherData.daily) return [];
+
+    const days: ForecastDay[] = [];
+    for (let i = 0; i < Math.min(5, weatherData.daily.time.length); i++) {
+      const date = new Date(weatherData.daily.time[i]);
+      const day = date.toLocaleDateString(undefined, {
+        weekday: "short",
+      });
+      const min = Math.round(weatherData.daily.temperature_2m_min[i]);
+      const max = Math.round(weatherData.daily.temperature_2m_max[i]);
+      const code = weatherData.daily.weathercode[i];
+      const desc = this.getWeatherDescription(code);
+
+      days.push({
+        day,
+        icon: this.getWeatherIcon(desc),
+        min,
+        max,
+        desc,
+      });
+    }
+
+    return days;
+  }
+
+  private getWeatherDescription(code: number): string {
+    if (code === 0) return "Clear sky";
+    if (code === 1 || code === 2 || code === 3) return "Partly cloudy";
+    if (code === 45 || code === 48) return "Fog";
+    if (code === 51 || code === 53 || code === 55) return "Drizzle";
+    if (code === 61 || code === 63 || code === 65) return "Rain";
+    if (code === 71 || code === 73 || code === 75) return "Snow";
+    if (code === 80 || code === 81 || code === 82) return "Showers";
+    if (code === 95) return "Thunderstorm";
+    if (code === 96 || code === 99) return "Thunderstorm with hail";
+    return "Unknown";
+  }
+
+  private getWeatherIcon(desc: string): string {
+    if (/clear/i.test(desc)) return "☀️";
+    if (/cloud/i.test(desc)) return "🌤️";
+    if (/rain/i.test(desc)) return "🌧️";
+    if (/storm|thunder/i.test(desc)) return "⛈️";
+    if (/snow/i.test(desc)) return "❄️";
+    return "🌡️";
+  }
+
+  private normalizeCity(city: string): string {
+    return city.toLowerCase().trim();
+  }
+}
+
+// Export singleton instance
+export const weatherCache = new WeatherCacheManager();
+
+// Auto-cleanup expired cache entries every 5 minutes
+setInterval(
+  () => {
+    weatherCache.clearExpired();
+  },
+  5 * 60 * 1000
+);

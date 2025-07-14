@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { LightningProps } from "../../../interfaces/animations";
 
 const Lightning = ({
   hue = 50, // yellow
@@ -6,7 +7,7 @@ const Lightning = ({
   speed = 1,
   intensity = 0.7,
   size = 0.8,
-}) => {
+}: LightningProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {

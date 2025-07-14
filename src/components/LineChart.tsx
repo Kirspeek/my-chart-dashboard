@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { LineChartProps } from "../../interfaces/charts";
+import type { LineChartProps } from "@/interfaces";
 
 export default function LineChart({ data, title }: LineChartProps) {
   return (

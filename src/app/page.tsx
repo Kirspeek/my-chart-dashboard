@@ -17,7 +17,9 @@ import {
 } from "@/lib/data";
 import ClockWidget from "@/components/widgets/clock/ClockWidget";
 import WeatherWidget from "../components/weather/WeatherWidget";
+import WeatherCacheStatus from "../components/weather/WeatherCacheStatus";
 import MusicWidget from "@/components/widgets/MusicWidget";
+import { useWeatherPreload } from "@/hooks";
 
 const cityMap: { [key: string]: string } = {
   "America/New_York": "New York",
@@ -26,9 +28,18 @@ const cityMap: { [key: string]: string } = {
   "Europe/Kyiv": "Kyiv",
 };
 
+// All cities that might be selected
+const allCities = Object.values(cityMap);
+
 export default function Home() {
   const [selectedZone, setSelectedZone] = useState("Europe/London"); // Default fallback
   const selectedCity = cityMap[selectedZone] || "London";
+
+  // Preload weather for all cities
+  useWeatherPreload(allCities, {
+    autoPreload: true,
+    preloadOnMount: true,
+  });
 
   useEffect(() => {
     // Only get local timezone on client side
@@ -69,6 +80,12 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* Cache Status Demo */}
+            <div className="mb-8">
+              <WeatherCacheStatus cities={allCities} />
+            </div>
+
             {/* Metric cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               {metricCards.map((metric, index) => (

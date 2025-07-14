@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { BarChartProps } from "../../interfaces/charts";
+import type { BarChartProps } from "@/interfaces";
 
 export default function BarChart({ data, title }: BarChartProps) {
   return (

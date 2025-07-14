@@ -1,39 +1,18 @@
 "use client";
 
-import Card from "../common/Card";
+import { Box, Text, Button } from "@chakra-ui/react";
+import { HTMLAttributes } from "react";
 
-export default function MusicWidget() {
+export default function MusicWidget(props: HTMLAttributes<HTMLDivElement>) {
   return (
-    <Card
-      className="widget flex flex-col justify-between"
-      style={{
-        background: "#E6D6FF", // pastel violet
-        borderRadius: "2rem",
-        boxShadow: "none",
-        padding: "2.5rem 2.5rem",
-        minWidth: 300,
-        minHeight: 200,
-        width: "100%",
-        height: "100%",
-        color: "#232323",
-      }}
-    >
-      <div className="text-lg font-semibold mb-1">Speaker</div>
-      <div className="text-sm font-bold">Dance of the Knights</div>
-      <div className="text-xs mt-1" style={{ opacity: 0.7 }}>
-        Prokofiev
-      </div>
-      <div className="flex gap-2 mt-2">
-        <button className="rounded-full bg-white/80 px-3 py-1 text-xs font-bold">
-          ⏮️
-        </button>
-        <button className="rounded-full bg-white/80 px-3 py-1 text-xs font-bold">
-          ⏯️
-        </button>
-        <button className="rounded-full bg-white/80 px-3 py-1 text-xs font-bold">
-          ⏭️
-        </button>
-      </div>
-    </Card>
+    <Box borderRadius="xl" bg="brand.50" boxShadow="lg" p={6} {...props}>
+      <Text fontSize="xl" fontWeight="bold" color="brand.900">
+        Music Widget
+      </Text>
+      {/* Add your music widget content here, using Chakra UI components */}
+      <Button mt={4} colorScheme="yellow">
+        Play
+      </Button>
+    </Box>
   );
 }

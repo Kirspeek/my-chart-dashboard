@@ -1,8 +1,21 @@
 // Dashboard interfaces
-export * from "./dashboard";
+export type {
+  ChartData as DashboardChartData,
+  SalesData,
+  UserData,
+  MetricCard,
+  DashboardStats,
+} from "./dashboard";
 
 // Chart interfaces
-export * from "./charts";
+export type {
+  ChartData as ChartChartData,
+  LineChartProps,
+  BarChartData,
+  BarChartProps,
+  PieChartData,
+  PieChartProps,
+} from "./charts";
 
 // Widget interfaces
 export * from "./widgets";
@@ -11,4 +24,7 @@ export * from "./widgets";
 export * from "./common";
 
 // Theme interfaces
-export * from "./theme";
+export type { Theme, ThemeContextType, ThemeVars } from "./theme";
+
+// Animation interfaces
+export * from "./animations";
