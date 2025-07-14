@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  --color-bg: #f6f6f6; /* very light neutral gray from user image */
+  --color-bg-card: rgba(35, 35, 35, 0.07); /* slightly darker for cards */
+  --color-black: #232323;
+  --color-gray: #888;
+  --color-gray-light: #b0b0a8;
+  --color-border: #232323;
+  --color-border-secondary: #e0e0e0; /* soft, secondary border color */
+  --font-sans: "Inter", "Geist Sans", Arial, Helvetica, sans-serif;
+  --font-mono: "Space Mono", "Geist Mono", Menlo, Monaco, monospace;
+
+  /* Accent Colors (for metrics, charts, icons, etc.) */
+  --accent-yellow: #ffdd6d;
+  --accent-teal: #425b59;
+  --accent-red: #ea4300;
+  --accent-blue: #7bc2e8;
+
+  /* Theme section for main styles */
+  --theme-bg: var(--color-bg);
+  --theme-bg-card: var(--color-bg-card);
+  --theme-border: var(--color-border-secondary);
+  --theme-text: var(--color-black);
+  --theme-text-secondary: var(--color-gray);
+  --theme-accent-1: var(--accent-yellow);
+  --theme-accent-2: var(--accent-teal);
+  --theme-accent-3: var(--accent-red);
+  --theme-accent-4: var(--accent-blue);
+  --weather-bg-rain: linear-gradient(to bottom, #3a7ca5 0%, #4a90c2 100%);
+  --weather-bg-hot: linear-gradient(165deg, #ff512f 0%, #ffb347 100%);
+  --weather-bg-sunny: linear-gradient(135deg, #ffe88a 0%, #ffd34d 100%);
+  --weather-bg-cloudy: var(--accent-yellow);
+  --weather-orange: #ea7a00;
+
+  /* Weather color scheme */
+  --weather-bg-clear: linear-gradient(
+    135deg,
+    #ffe88a 0%,
+    #ffd34d 100%
+  ); /* bright yellow */
+  --weather-bg-sunny: linear-gradient(
+    135deg,
+    #ffe88a 0%,
+    #ffd34d 100%
+  ); /* same as clear */
+  --weather-bg-partly-cloudy: linear-gradient(
+    135deg,
+    #e3f0ff 0%,
+    #b3d8f7 100%
+  ); /* light blue */
+  --weather-bg-partly-cloudy-button: linear-gradient(
+    135deg,
+    #e3f0ff 0%,
+    #b3d8f7 100%
+  ); /* light blue for button */
+  --weather-bg-cloudy: linear-gradient(
+    135deg,
+    #e0e0e0 0%,
+    #b0b0a8 100%
+  ); /* light gray */
+  --weather-bg-rain: linear-gradient(
+    to bottom,
+    #3a7ca5 0%,
+    #4a90c2 100%
+  ); /* blue */
+  --weather-bg-showers: linear-gradient(
+    to bottom,
+    #3a7ca5 0%,
+    #4a90c2 100%
+  ); /* restore to match rain */
+  --weather-bg-showers-button: linear-gradient(
+    165deg,
+    #ff512f 0%,
+    #ffb347 100%
+  ); /* orange for button, matches hot */
+  --weather-bg-drizzle: linear-gradient(
+    to bottom,
+    #b3d8f7 0%,
+    #7bc2e8 100%
+  ); /* pale blue */
+  --weather-bg-snow: linear-gradient(
+    135deg,
+    #f8fafc 0%,
+    #e0e0e0 100%
+  ); /* white/gray */
+  --weather-bg-fog: linear-gradient(
+    135deg,
+    #dbe6ef 0%,
+    #b0b0a8 100%
+  ); /* foggy gray */
+  --weather-bg-thunderstorm: linear-gradient(
+    135deg,
+    #232323 0%,
+    #7bc2e8 100%
+  ); /* dark blue/gray */
+  --weather-bg-hot: linear-gradient(
+    165deg,
+    #ff512f 0%,
+    #ffb347 100%
+  ); /* orange */
+  --weather-bg-cold: linear-gradient(
+    135deg,
+    #b3d8f7 0%,
+    #425b59 100%
+  ); /* teal/blue */
+
+  --weather-text-clear: #ea7a00;
+  --weather-text-sunny: #ea7a00;
+  --weather-text-partly-cloudy: #23405c; /* dark blue for partly cloudy text */
+  --weather-text-cloudy: #425b59;
+  --weather-text-rain: #23405c;
+  --weather-text-showers: #23405c;
+  --weather-text-drizzle: #23405c;
+  --weather-text-snow: #425b59;
+  --weather-text-fog: #888;
+  --weather-text-thunderstorm: #fff;
+  --weather-text-hot: #fff;
+  --weather-text-cold: #23405c;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-black);
+  font-family: var(--font-sans);
+  letter-spacing: 0.01em;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.mono,
+.font-mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+}
+
+.card,
+.widget {
+  background: var(--color-bg-card);
+  border-radius: 2rem;
+  box-shadow: 0 4px 24px 0 rgba(35, 35, 35, 0.07); /* soft shadow for glass effect */
+  border: 1px solid var(--color-border-secondary); /* secondary border color */
+  backdrop-filter: blur(8px); /* glassmorphism blur */
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    box-shadow 0.2s,
+    border 0.2s,
+    background 0.2s;
+  padding: 2rem;
+}
+
+.divider {
+  border-bottom: 1px solid var(--color-border);
+  margin: 1rem 0;
+}
+
+.text-black {
+  color: var(--color-black);
+}
+.text-gray {
+  color: var(--color-gray);
+}
+.text-gray-light {
+  color: var(--color-gray-light);
+}
