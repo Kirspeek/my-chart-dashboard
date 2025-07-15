@@ -9,6 +9,7 @@ import ForecastDay from "./ForecastDay";
 import SunAnimation from "../animations/SunAnimation";
 import HotAnimation from "../animations/HotAnimation";
 import Lightning from "../animations/Lightning";
+import FogAnimation from "../animations/FogAnimation";
 import { WeatherWidgetProps } from "../../../interfaces/widgets";
 import WidgetBase from "../common/WidgetBase";
 import { useWeather } from "../../hooks";
@@ -16,7 +17,7 @@ import { useWeather } from "../../hooks";
 export default function WeatherWidget({
   city = "Amsterdam",
 }: WeatherWidgetProps) {
-  const { forecast, loading, error, isCached, isPreloading } = useWeather(city);
+  const { forecast, error, isCached, isPreloading, stale } = useWeather(city);
   const [selectedDay, setSelectedDay] = useState(0); // 0 = today by default
   const [dateString, setDateString] = useState("");
 
@@ -104,6 +105,9 @@ export default function WeatherWidget({
             /rain/i.test(forecast[selectedDay].desc) && <RainAnimation />}
           {forecast[selectedDay] &&
             /thunderstorm/i.test(forecast[selectedDay].desc) && <Lightning />}
+          {forecast[selectedDay] && /fog/i.test(forecast[selectedDay].desc) && (
+            <FogAnimation />
+          )}
         </WeatherBackground>
         {forecast[selectedDay] && dateString && (
           <WeatherText
@@ -131,7 +135,36 @@ export default function WeatherWidget({
           padding: "1.5rem 1.2rem 1.5rem 1.2rem",
         }}
       >
-        {forecast.length === 0 && loading ? (
+        {/* Always show the status label to avoid layout shift */}
+        <div
+          style={{
+            fontSize: 12,
+            color: isCached
+              ? "var(--color-gray)"
+              : isPreloading
+                ? "#eab308" // yellow for preloading
+                : stale
+                  ? "#f87171" // red for stale
+                  : "#b0b0a8", // fallback gray
+            opacity: 0.7,
+            marginBottom: 4,
+            minHeight: 18,
+            minWidth: 70,
+            textAlign: "center",
+            transition: "color 0.2s",
+            fontWeight: 500,
+            letterSpacing: "0.01em",
+          }}
+        >
+          {isCached
+            ? "⚡ Instant"
+            : isPreloading
+              ? "⟳ Updating..."
+              : stale
+                ? "⚠️ Outdated"
+                : ""}
+        </div>
+        {forecast.length === 0 && !error ? (
           <div style={{ color: "var(--color-gray)", fontSize: 18 }}>
             {isPreloading ? "Preloading..." : "Loading..."}
           </div>
@@ -139,19 +172,6 @@ export default function WeatherWidget({
           <div style={{ color: "red", fontSize: 18 }}>{error}</div>
         ) : (
           <div className="flex flex-col gap-3 w-full items-center justify-center">
-            {/* Cache indicator */}
-            {isCached && (
-              <div
-                style={{
-                  fontSize: 12,
-                  color: "var(--color-gray)",
-                  opacity: 0.7,
-                  marginBottom: 4,
-                }}
-              >
-                ⚡ Instant
-              </div>
-            )}
             {forecast.map((f, i) => (
               <ForecastDay
                 key={f.day}

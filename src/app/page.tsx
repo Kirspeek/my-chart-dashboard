@@ -18,7 +18,7 @@ import {
 import ClockWidget from "@/components/widgets/clock/ClockWidget";
 import WeatherWidget from "../components/weather/WeatherWidget";
 import WeatherCacheStatus from "../components/weather/WeatherCacheStatus";
-import MusicWidget from "@/components/widgets/MusicWidget";
+import TimerWidget from "@/components/widgets/TimerWidget";
 import { useWeatherPreload } from "@/hooks";
 
 const cityMap: { [key: string]: string } = {
@@ -34,6 +34,7 @@ const allCities = Object.values(cityMap);
 export default function Home() {
   const [selectedZone, setSelectedZone] = useState("Europe/London"); // Default fallback
   const selectedCity = cityMap[selectedZone] || "London";
+  const [mounted, setMounted] = useState(false);
 
   // Preload weather for all cities
   useWeatherPreload(allCities, {
@@ -42,6 +43,7 @@ export default function Home() {
   });
 
   useEffect(() => {
+    setMounted(true);
     // Only get local timezone on client side
     const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setSelectedZone(localZone);
@@ -59,27 +61,38 @@ export default function Home() {
         <main className="flex-1 overflow-y-auto px-8 py-8 bg-[var(--background)]">
           <div className="max-w-7xl mx-auto">
             {/* Widget grid */}
-            <div className="flex flex-col lg:flex-row gap-8 mb-12">
-              {/* Left: ClockWidget */}
-              <div className="flex-1 flex items-stretch">
-                <ClockWidget
-                  selectedZone={selectedZone}
-                  setSelectedZone={setSelectedZone}
-                />
-              </div>
-              {/* Right: Weather and Music stacked */}
-              <div
-                className="flex flex-col flex-1 gap-8"
-                style={{ minWidth: 0 }}
-              >
-                <div className="flex-1 flex items-stretch">
-                  <WeatherWidget city={selectedCity} />
+            {mounted && (
+              <div className="flex flex-col lg:flex-row items-stretch gap-8 mb-12 px-2 lg:px-0">
+                {/* Left: ClockWidget */}
+                <div
+                  className="flex items-stretch justify-center"
+                  style={{ flex: 1.15, minWidth: 420, maxWidth: 650 }}
+                >
+                  <ClockWidget
+                    selectedZone={selectedZone}
+                    setSelectedZone={setSelectedZone}
+                  />
                 </div>
-                <div className="flex-1 flex items-stretch">
-                  <MusicWidget />
+                {/* Right: Weather and Music stacked */}
+                <div
+                  className="flex flex-col gap-8 justify-between"
+                  style={{ flex: 1, minWidth: 320, maxWidth: 420 }}
+                >
+                  <div
+                    className="flex-1 flex items-stretch"
+                    style={{ width: "100%", minWidth: 320, maxWidth: 420 }}
+                  >
+                    <WeatherWidget city={selectedCity} />
+                  </div>
+                  <div
+                    className="flex-1 flex items-stretch"
+                    style={{ width: "100%", minWidth: 320, maxWidth: 420 }}
+                  >
+                    <TimerWidget />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Cache Status Demo */}
             <div className="mb-8">

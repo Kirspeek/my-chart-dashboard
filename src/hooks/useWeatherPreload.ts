@@ -20,15 +20,21 @@ export function useWeatherPreload(
 ): UseWeatherPreloadReturn {
   const { autoPreload = true, preloadOnMount = true } = options;
 
-  const preloadCities = useCallback(async (citiesToPreload: string[]) => {
-    if (citiesToPreload.length === 0) return;
+  const preloadCities = useCallback(
+    async (citiesToPreload: string[], forceRefresh = false) => {
+      if (citiesToPreload.length === 0) return;
 
-    try {
-      await weatherCache.preloadCities(citiesToPreload);
-    } catch (error) {
-      console.error("Failed to preload cities:", error);
-    }
-  }, []);
+      try {
+        if (forceRefresh) {
+          await weatherCache.clearAll();
+        }
+        await weatherCache.preloadCities(citiesToPreload);
+      } catch (error) {
+        console.error("Failed to preload cities:", error);
+      }
+    },
+    []
+  );
 
   const isCached = useCallback((city: string) => {
     return weatherCache.isCached(city);
@@ -56,7 +62,7 @@ export function useWeatherPreload(
   // Preload on mount if specified
   useEffect(() => {
     if (preloadOnMount && cities.length > 0) {
-      preloadCities(cities);
+      preloadCities(cities); // Do NOT force refresh or clear cache
     }
   }, [preloadOnMount, cities, preloadCities]);
 

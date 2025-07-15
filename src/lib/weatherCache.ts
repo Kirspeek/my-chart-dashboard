@@ -112,6 +112,27 @@ class WeatherCacheManager {
     };
   }
 
+  /**
+   * Get stale weather data for a city (returns cached data even if expired)
+   */
+  getStaleWeather(city: string): {
+    forecast: ForecastDay[];
+    coords: { lat: number; lon: number } | null;
+    loading: boolean;
+    isStale: boolean;
+  } | null {
+    const normalizedCity = this.normalizeCity(city);
+    const cached = this.cache.get(normalizedCity);
+    if (!cached) return null;
+    const isStale = Date.now() - cached.timestamp >= this.cacheTimeout;
+    return {
+      forecast: cached.forecast,
+      coords: cached.coords,
+      loading: cached.loading,
+      isStale,
+    };
+  }
+
   private async fetchAndCacheWeather(city: string): Promise<{
     forecast: ForecastDay[];
     coords: { lat: number; lon: number } | null;
