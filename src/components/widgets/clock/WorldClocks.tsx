@@ -3,6 +3,7 @@
 import React from "react";
 import Button3D from "../../common/3DButton";
 import type { TimeZone } from "../../../../interfaces/widgets";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface WorldClocksProps {
   timeZones: TimeZone[];
@@ -25,6 +26,9 @@ export default function WorldClocks({
   getTimeInZone,
   isDay,
 }: WorldClocksProps) {
+  const { accent } = useTheme();
+  const clockAccentColor = accent.red; // Use red for clock widget
+
   return (
     <div className="w-full flex flex-col gap-6 mt-4">
       <div className="flex flex-wrap gap-4 justify-center">
@@ -40,6 +44,7 @@ export default function WorldClocks({
               key={tz.zone}
               selected={isLocal}
               onClick={() => setSelectedZone(tz.zone)}
+              customAccentColor={clockAccentColor}
             >
               <span
                 className="text-base font-bold mono mb-1"

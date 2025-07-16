@@ -64,6 +64,67 @@ export interface WeatherWidgetProps {
   city?: string;
 }
 
+// Map Widget Interfaces
+export interface MapState {
+  search: string;
+  searchFocused: boolean;
+  loading: boolean;
+  searchResult: [number, number] | null;
+  internalLocation: [number, number] | null;
+}
+
+export interface MapActions {
+  setSearch: (search: string) => void;
+  setSearchFocused: (focused: boolean) => void;
+  setLoading: (loading: boolean) => void;
+  setSearchResult: (result: [number, number] | null) => void;
+  setInternalLocation: (location: [number, number] | null) => void;
+  handleSearch: (e: React.FormEvent) => void;
+}
+
+export interface MapWidgetProps {
+  onMarkerChange?: (pos: { lat: number; lon: number }) => void;
+  userLocation?: [number, number];
+}
+
+// Calendar Widget Interfaces
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: Date;
+  description?: string;
+}
+
+export interface CalendarState {
+  currentDate: Date;
+  selectedDate: Date | null;
+  viewMode: "month" | "week" | "day";
+  events: CalendarEvent[];
+  showEventForm: boolean;
+}
+
+export interface CalendarActions {
+  setSelectedDate: (date: Date) => void;
+  setViewMode: (mode: "month" | "week" | "day") => void;
+  goToPrevious: () => void;
+  goToNext: () => void;
+  goToToday: () => void;
+  getDaysInMonth: (date: Date) => Date[];
+  getWeekDays: () => string[];
+  isToday: (date: Date) => boolean;
+  isSelected: (date: Date) => boolean;
+  isCurrentMonth: (date: Date) => boolean;
+  addEvent: (event: Omit<CalendarEvent, "id">) => void;
+  deleteEvent: (eventId: string) => void;
+  getEventsForDate: (date: Date) => CalendarEvent[];
+  toggleEventForm: () => void;
+}
+
+export interface CalendarWidgetProps {
+  onDateSelect?: (date: Date) => void;
+  initialDate?: Date;
+}
+
 export interface ForecastDay {
   day: string;
   icon: string;
@@ -103,4 +164,17 @@ export interface MetricCardProps extends CommonComponentProps {
     icon: string;
   };
   index?: number;
+}
+
+// Metric Widget Interfaces
+export interface MetricWidgetProps {
+  metric: MetricData;
+  index?: number;
+}
+
+export interface MetricData {
+  title: string;
+  value: string | number;
+  change: number;
+  icon: string;
 }

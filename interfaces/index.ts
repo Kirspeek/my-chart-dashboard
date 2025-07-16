@@ -3,7 +3,6 @@ export type {
   ChartData as DashboardChartData,
   SalesData,
   UserData,
-  MetricCard,
   DashboardStats,
 } from "./dashboard";
 

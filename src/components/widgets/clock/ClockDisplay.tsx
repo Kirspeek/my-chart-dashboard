@@ -2,6 +2,7 @@
 
 import React from "react";
 import WidgetButton from "../../common/WidgetButton";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface ClockDisplayProps {
   mainTime: Date;
@@ -18,6 +19,9 @@ export default function ClockDisplay({
   pad,
   setIs24h,
 }: ClockDisplayProps) {
+  const { accent } = useTheme();
+  const clockAccentColor = accent.red; // Use red for clock widget
+
   const hours = mainTime.getHours();
   const minutes = mainTime.getMinutes();
   const seconds = mainTime.getSeconds();
@@ -55,8 +59,8 @@ export default function ClockDisplay({
         <span
           className="text-xs font-mono px-2 py-1 rounded-full border"
           style={{
-            borderColor: "#ea4300", // light theme accent red
-            color: "#ea4300", // light theme accent red
+            borderColor: clockAccentColor,
+            color: clockAccentColor,
             fontWeight: 700,
             marginLeft: 8,
           }}
@@ -66,23 +70,27 @@ export default function ClockDisplay({
         </span>
         <div className="flex gap-2 ml-4">
           <WidgetButton
-            className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold ${
-              is24h
-                ? "border-gray-400 text-gray-400 bg-transparent"
-                : "border-[#ea4300] text-[#ea4300] bg-[rgba(234,67,0,0.1)]"
-            }`}
-            style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
+            className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontWeight: 700,
+              borderColor: is24h ? "#888" : clockAccentColor,
+              color: is24h ? "#888" : clockAccentColor,
+              backgroundColor: is24h ? "transparent" : `${clockAccentColor}1a`,
+            }}
             onClick={() => setIs24h(false)}
           >
             12h
           </WidgetButton>
           <WidgetButton
-            className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold ${
-              is24h
-                ? "border-[#ea4300] text-[#ea4300] bg-[rgba(234,67,0,0.1)]"
-                : "border-gray-400 text-gray-400 bg-transparent"
-            }`}
-            style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
+            className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontWeight: 700,
+              borderColor: is24h ? clockAccentColor : "#888",
+              color: is24h ? clockAccentColor : "#888",
+              backgroundColor: is24h ? `${clockAccentColor}1a` : "transparent",
+            }}
             onClick={() => setIs24h(true)}
           >
             24h

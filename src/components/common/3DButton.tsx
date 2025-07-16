@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Button3DProps } from "../../../interfaces/components";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function Button3D({
   children,
@@ -10,7 +11,12 @@ export default function Button3D({
   style = {},
   disabled = false,
   customBackground,
+  customAccentColor,
 }: Button3DProps) {
+  const { accent } = useTheme();
+  const defaultAccentColor = accent.teal; // Default to teal for calendar
+  const accentColor = customAccentColor || defaultAccentColor;
+
   const baseStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
@@ -38,7 +44,7 @@ export default function Button3D({
     }
 
     if (selected) {
-      return "#ea4300";
+      return accentColor;
     }
 
     switch (state) {

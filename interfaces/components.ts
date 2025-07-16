@@ -14,6 +14,7 @@ export interface Button3DProps {
   style?: React.CSSProperties;
   disabled?: boolean;
   customBackground?: string;
+  customAccentColor?: string;
 }
 
 export interface TimerWidgetProps {

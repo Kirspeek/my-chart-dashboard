@@ -1,12 +1,17 @@
-// Timer widgets
-export { default as TimerWidget } from "./timer/TimerWidget";
+// Timer Widget
+export { TimerWidget } from "./timer";
 
-// Clock widgets
-export { default as ClockWidget } from "./clock/ClockWidget";
+// Clock Widget
+export { ClockWidget } from "./clock";
 
-// Weather widgets
+// Weather Widget
 export { default as WeatherWidget } from "../weather/WeatherWidget";
 
-// Other widgets
-export { default as MapComponent } from "./MapComponent";
-export { default as MusicWidget } from "./MusicWidget";
+// Map Widget
+export { MapWidget } from "./map";
+
+// Calendar Widget
+export { CalendarWidget } from "./calendar";
+
+// Metric Widget
+export { MetricWidget } from "./metric";

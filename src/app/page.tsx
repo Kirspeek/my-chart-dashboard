@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import MetricCard from "@/components/metric-card";
 import LineChart from "../components/LineChart";
 import BarChart from "../components/BarChart";
 import PieChart from "../components/PieChart";
@@ -17,9 +16,14 @@ import {
   pieChartData,
   userData,
 } from "@/lib/data";
-import ClockWidget from "@/components/widgets/clock/ClockWidget";
-import WeatherWidget from "../components/weather/WeatherWidget";
-import TimerWidget from "@/components/widgets/timer/TimerWidget";
+import {
+  ClockWidget,
+  WeatherWidget,
+  TimerWidget,
+  MapWidget,
+  CalendarWidget,
+  MetricWidget,
+} from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 
@@ -92,30 +96,41 @@ export default function Home() {
           <div className="max-w-7xl mx-auto">
             {/* Widget grid */}
             {mounted && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                {/* Column 1: ClockWidget */}
-                <div className="h-full">
-                  <ClockWidget
-                    selectedZone={selectedZone}
-                    setSelectedZone={setSelectedZone}
-                  />
-                </div>
-                {/* Column 2: Weather (70%) + Timer (30%) */}
-                <div className="h-full flex flex-col gap-8">
-                  <div className="flex-1 basis-[70%] min-h-0">
-                    <WeatherWidget city={selectedCity} />
+              <>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                  {/* Column 1: ClockWidget */}
+                  <div className="h-full">
+                    <ClockWidget
+                      selectedZone={selectedZone}
+                      setSelectedZone={setSelectedZone}
+                    />
                   </div>
-                  <div className="flex-1 basis-[30%] min-h-0">
-                    <TimerWidget />
+                  {/* Column 2: Weather (70%) + Timer (30%) */}
+                  <div className="h-full flex flex-col gap-8">
+                    <div className="flex-1 basis-[70%] min-h-0">
+                      <WeatherWidget city={selectedCity} />
+                    </div>
+                    <div className="flex-1 basis-[30%] min-h-0">
+                      <TimerWidget />
+                    </div>
                   </div>
                 </div>
-              </div>
+                {/* New row: Map and Calendar widgets */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                  <div className="h-full">
+                    <MapWidget />
+                  </div>
+                  <div className="h-full">
+                    <CalendarWidget />
+                  </div>
+                </div>
+              </>
             )}
 
             {/* Metric cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-8">
               {metricCards.map((metric, index) => (
-                <MetricCard key={index} metric={metric} index={index} />
+                <MetricWidget key={index} metric={metric} index={index} />
               ))}
             </div>
             {/* Charts grid */}

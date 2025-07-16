@@ -1,5 +1,5 @@
 import {
-  MetricCard,
+  MetricData,
   SalesData,
   UserData,
   BarChartData,
@@ -64,33 +64,29 @@ export const userData: UserData[] = [
   },
 ];
 
-export const metricCards: MetricCard[] = [
+export const metricCards: MetricData[] = [
   {
     title: "Total Sales",
     value: "$456,000",
     change: 12.5,
-    changeType: "increase",
     icon: "TrendingUp",
   },
   {
     title: "Total Revenue",
     value: "$2.4M",
     change: 8.2,
-    changeType: "increase",
     icon: "DollarSign",
   },
   {
     title: "Active Users",
     value: "1,234",
     change: -2.1,
-    changeType: "decrease",
     icon: "Users",
   },
   {
     title: "Conversion Rate",
     value: "3.2%",
     change: 1.8,
-    changeType: "increase",
     icon: "Target",
   },
 ];
