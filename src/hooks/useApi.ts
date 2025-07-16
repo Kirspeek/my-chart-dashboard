@@ -1,34 +1,18 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-
-interface UseApiOptions<T> {
-  immediate?: boolean;
-  cacheTime?: number;
-  retryCount?: number;
-  onSuccess?: (data: T) => void;
-  onError?: (error: Error) => void;
-}
-
-interface UseApiReturn<T> {
-  data: T | null;
-  loading: boolean;
-  error: Error | null;
-  execute: (...args: unknown[]) => Promise<T | null>;
-  reset: () => void;
-}
-
-interface CacheEntry<T> {
-  data: T;
-  timestamp: number;
-}
+import {
+  UseApiOptions,
+  UseApiReturn,
+  CacheEntry,
+} from "../../interfaces/hooks";
 
 export function useApi<T>(
   apiFunction: (...args: unknown[]) => Promise<T>,
   options: UseApiOptions<T> = {}
 ): UseApiReturn<T> {
   const {
-    immediate = false,
+    immediate = true,
     cacheTime = 5 * 60 * 1000, // 5 minutes
-    retryCount = 3,
+    retryCount = 2,
     onSuccess,
     onError,
   } = options;
@@ -36,24 +20,15 @@ export function useApi<T>(
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-
   const cacheRef = useRef<Map<string, CacheEntry<T>>>(new Map());
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const reset = useCallback(() => {
-    setData(null);
-    setLoading(false);
-    setError(null);
-    cacheRef.current.clear();
-  }, []);
-
   const execute = useCallback(
     async (...args: unknown[]): Promise<T | null> => {
-      // Create cache key from function name and arguments
-      const cacheKey = `${apiFunction.name}-${JSON.stringify(args)}`;
-
-      // Check cache first
+      const cacheKey = JSON.stringify(args);
       const cached = cacheRef.current.get(cacheKey);
+
+      // Return cached data if still valid
       if (cached && Date.now() - cached.timestamp < cacheTime) {
         setData(cached.data);
         return cached.data;
@@ -64,9 +39,7 @@ export function useApi<T>(
         abortControllerRef.current.abort();
       }
 
-      // Create new abort controller
       abortControllerRef.current = new AbortController();
-
       setLoading(true);
       setError(null);
 
@@ -76,44 +49,43 @@ export function useApi<T>(
         try {
           const result = await apiFunction(...args);
 
-          // Cache the result
-          cacheRef.current.set(cacheKey, {
-            data: result,
-            timestamp: Date.now(),
-          });
+          // Check if request was aborted
+          if (abortControllerRef.current?.signal.aborted) {
+            return null;
+          }
 
           setData(result);
           setLoading(false);
 
-          if (onSuccess) {
-            onSuccess(result);
-          }
+          // Cache the result
+          cacheRef.current.set(cacheKey, {
+            data: result,
+            timestamp: Date.now(),
+            loading: false,
+          });
 
+          onSuccess?.(result);
           return result;
         } catch (err) {
           lastError = err as Error;
 
-          // Don't retry if it's an abort error
-          if (err instanceof Error && err.name === "AbortError") {
-            break;
+          // Check if request was aborted
+          if (abortControllerRef.current?.signal.aborted) {
+            return null;
           }
 
-          // Don't retry on last attempt
           if (attempt === retryCount) {
-            break;
+            setError(lastError);
+            setLoading(false);
+            onError?.(lastError);
+            return null;
           }
 
-          // Wait before retrying with exponential backoff
-          const delay = 1000 * Math.pow(2, attempt);
-          await new Promise((resolve) => setTimeout(resolve, delay));
+          // Wait before retrying
+          await new Promise((resolve) =>
+            setTimeout(resolve, 1000 * (attempt + 1))
+          );
         }
-      }
-
-      setError(lastError!);
-      setLoading(false);
-
-      if (onError) {
-        onError(lastError!);
       }
 
       return null;
@@ -121,17 +93,32 @@ export function useApi<T>(
     [apiFunction, cacheTime, retryCount, onSuccess, onError]
   );
 
+  const reset = useCallback(() => {
+    setData(null);
+    setError(null);
+    setLoading(false);
+    cacheRef.current.clear();
+  }, []);
+
+  const refetch = useCallback(async () => {
+    await execute();
+  }, [execute]);
+
+  // Execute immediately if specified
   useEffect(() => {
     if (immediate) {
       execute();
     }
+  }, [immediate, execute]);
 
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
     };
-  }, [immediate, execute]);
+  }, []);
 
   return {
     data,
@@ -139,6 +126,7 @@ export function useApi<T>(
     error,
     execute,
     reset,
+    refetch,
   };
 }
 

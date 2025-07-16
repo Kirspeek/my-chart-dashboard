@@ -19,7 +19,7 @@ import {
 } from "@/lib/data";
 import ClockWidget from "@/components/widgets/clock/ClockWidget";
 import WeatherWidget from "../components/weather/WeatherWidget";
-import TimerWidget from "@/components/widgets/TimerWidget";
+import TimerWidget from "@/components/widgets/timer/TimerWidget";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 

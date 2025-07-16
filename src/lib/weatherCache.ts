@@ -1,12 +1,6 @@
 import { WeatherAPI, WeatherForecastResponse } from "./api";
 import { ForecastDay } from "../../interfaces/widgets";
-
-interface CachedWeatherData {
-  forecast: ForecastDay[];
-  coords: { lat: number; lon: number } | null;
-  timestamp: number;
-  loading: boolean;
-}
+import { CachedWeatherData } from "../../interfaces/api";
 
 class WeatherCacheManager {
   private cache = new Map<string, CachedWeatherData>();
@@ -24,7 +18,6 @@ class WeatherCacheManager {
     const normalizedCity = this.normalizeCity(city);
     const cached = this.cache.get(normalizedCity);
 
-    // Return cached data if still valid
     if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
       return {
         forecast: cached.forecast,
@@ -33,13 +26,9 @@ class WeatherCacheManager {
       };
     }
 
-    // If not cached or expired, fetch and cache
     return this.fetchAndCacheWeather(normalizedCity);
   }
 
-  /**
-   * Preload weather data for multiple cities
-   */
   async preloadCities(cities: string[]): Promise<void> {
     const citiesToPreload = cities.filter(
       (city) => !this.isCached(city) && !this.preloadQueue.has(city)
@@ -47,10 +36,8 @@ class WeatherCacheManager {
 
     if (citiesToPreload.length === 0) return;
 
-    // Add to preload queue
     citiesToPreload.forEach((city) => this.preloadQueue.add(city));
 
-    // Preload all cities in parallel
     const preloadPromises = citiesToPreload.map(async (city) => {
       try {
         await this.fetchAndCacheWeather(this.normalizeCity(city));
@@ -64,9 +51,6 @@ class WeatherCacheManager {
     await Promise.allSettled(preloadPromises);
   }
 
-  /**
-   * Check if weather data is cached for a city
-   */
   isCached(city: string): boolean {
     const normalizedCity = this.normalizeCity(city);
     const cached = this.cache.get(normalizedCity);

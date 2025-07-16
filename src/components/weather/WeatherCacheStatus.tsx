@@ -2,11 +2,7 @@
 
 import React from "react";
 import { useWeatherPreload } from "../../hooks";
-
-interface WeatherCacheStatusProps {
-  cities: string[];
-  className?: string;
-}
+import { WeatherCacheStatusProps } from "../../../interfaces/components";
 
 export default function WeatherCacheStatus({
   cities,

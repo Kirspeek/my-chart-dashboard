@@ -1,17 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { weatherCache } from "../lib/weatherCache";
+import { UseWeatherReturn } from "../../interfaces/hooks";
 import { ForecastDay } from "../../interfaces/widgets";
 
-interface UseWeatherReturn {
-  forecast: ForecastDay[];
-  error: string | null;
-  refetch: () => Promise<void>;
-  isCached: boolean;
-  isPreloading: boolean;
-  stale: boolean;
-}
-
-export function useWeather(city: string): UseWeatherReturn {
+export default function useWeather(city: string): UseWeatherReturn {
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isCached, setIsCached] = useState(false);
@@ -107,8 +99,7 @@ export function useWeather(city: string): UseWeatherReturn {
   );
 
   useEffect(() => {
-    fetchWeather(true); // Always force refresh on mount/city change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchWeather(true);
   }, [city]);
 
   return {

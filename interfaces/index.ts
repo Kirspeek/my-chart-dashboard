@@ -28,3 +28,12 @@ export type { Theme, ThemeContextType, ThemeVars } from "./theme";
 
 // Animation interfaces
 export * from "./animations";
+
+// API interfaces
+export * from "./api";
+
+// Hooks interfaces
+export * from "./hooks";
+
+// Component interfaces
+export * from "./components";

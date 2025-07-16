@@ -1,70 +1,49 @@
-import { useEffect, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { weatherCache } from "../lib/weatherCache";
-
-interface UseWeatherPreloadOptions {
-  autoPreload?: boolean;
-  preloadOnMount?: boolean;
-}
-
-interface UseWeatherPreloadReturn {
-  preloadCities: (cities: string[]) => Promise<void>;
-  isCached: (city: string) => boolean;
-  isPreloading: (city: string) => boolean;
-  getStats: () => { cachedCities: number; preloadingCities: number };
-  clearCache: () => void;
-}
+import {
+  UseWeatherPreloadOptions,
+  UseWeatherPreloadReturn,
+} from "../../interfaces/hooks";
 
 export function useWeatherPreload(
-  cities: string[] = [],
+  cities: string[],
   options: UseWeatherPreloadOptions = {}
 ): UseWeatherPreloadReturn {
   const { autoPreload = true, preloadOnMount = true } = options;
 
-  const preloadCities = useCallback(
-    async (citiesToPreload: string[], forceRefresh = false) => {
-      if (citiesToPreload.length === 0) return;
+  const preloadCities = useCallback(async (citiesToPreload: string[]) => {
+    await weatherCache.preloadCities(citiesToPreload);
+  }, []);
 
-      try {
-        if (forceRefresh) {
-          await weatherCache.clearAll();
-        }
-        await weatherCache.preloadCities(citiesToPreload);
-      } catch (error) {
-        console.error("Failed to preload cities:", error);
-      }
-    },
+  const isCached = useCallback(
+    (city: string) => weatherCache.isCached(city),
     []
   );
 
-  const isCached = useCallback((city: string) => {
-    return weatherCache.isCached(city);
-  }, []);
+  const isPreloading = useCallback(
+    (city: string) => weatherCache.isPreloading(city),
+    []
+  );
 
-  const isPreloading = useCallback((city: string) => {
-    return weatherCache.isPreloading(city);
-  }, []);
-
-  const getStats = useCallback(() => {
-    return weatherCache.getStats();
-  }, []);
+  const getStats = useCallback(() => weatherCache.getStats(), []);
 
   const clearCache = useCallback(() => {
     weatherCache.clearAll();
   }, []);
 
-  // Auto-preload cities when they change
+  // Auto-preload on mount if enabled
+  useEffect(() => {
+    if (preloadOnMount && cities.length > 0) {
+      preloadCities(cities);
+    }
+  }, [cities, preloadOnMount, preloadCities]);
+
+  // Auto-preload when cities change if enabled
   useEffect(() => {
     if (autoPreload && cities.length > 0) {
       preloadCities(cities);
     }
   }, [cities, autoPreload, preloadCities]);
-
-  // Preload on mount if specified
-  useEffect(() => {
-    if (preloadOnMount && cities.length > 0) {
-      preloadCities(cities); // Do NOT force refresh or clear cache
-    }
-  }, [preloadOnMount, cities, preloadCities]);
 
   return {
     preloadCities,

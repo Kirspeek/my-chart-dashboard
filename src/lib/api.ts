@@ -1,35 +1,12 @@
-// API Configuration and Endpoints
-export const API_CONFIG = {
-  // Weather APIs - Updated endpoints
-  WEATHER: {
-    GEOCODING: "https://geocoding-api.open-meteo.com/v1/search",
-    FORECAST: "https://api.open-meteo.com/v1/forecast",
-  },
-  // Add more API configurations here as needed
-} as const;
+import {
+  API_CONFIG,
+  GeocodingResponse,
+  WeatherForecastResponse,
+  APIError,
+} from "../../interfaces/api";
 
-// API Response Types
-export interface GeocodingResponse {
-  results?: Array<{
-    latitude: number;
-    longitude: number;
-    name: string;
-    country: string;
-  }>;
-}
-
-export interface WeatherForecastResponse {
-  daily?: {
-    time: string[];
-    temperature_2m_max: number[];
-    temperature_2m_min: number[];
-    weathercode: number[];
-  };
-  current_weather?: {
-    temperature: number;
-    weathercode: number;
-  };
-}
+// Re-export for backward compatibility
+export type { WeatherForecastResponse };
 
 // API Functions
 export class WeatherAPI {
@@ -241,18 +218,6 @@ export const WeatherUtils = {
     return "🌡️";
   },
 };
-
-// Error handling utilities
-export class APIError extends Error {
-  constructor(
-    message: string,
-    public status?: number,
-    public endpoint?: string
-  ) {
-    super(message);
-    this.name = "APIError";
-  }
-}
 
 // Request utilities
 export const RequestUtils = {

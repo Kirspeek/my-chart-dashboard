@@ -1,12 +1,6 @@
 "use client";
 
-import { ReactNode, HTMLAttributes } from "react";
-
-interface WidgetBaseProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-}
+import { WidgetBaseProps } from "../../../interfaces/components";
 
 export default function WidgetBase({
   children,

@@ -1,45 +1,30 @@
 "use client";
 
-import React, { useState, useEffect, CSSProperties } from "react";
-import CloudAnimation from "../animations/CloudAnimation";
-import RainAnimation from "../animations/RainAnimation";
+import React, { CSSProperties } from "react";
 import WeatherBackground from "./WeatherBackground";
 import WeatherText from "./WeatherText";
 import ForecastDay from "./ForecastDay";
-import SunAnimation from "../animations/SunAnimation";
-import HotAnimation from "../animations/HotAnimation";
-import Lightning from "../animations/Lightning";
-import FogAnimation from "../animations/FogAnimation";
 import { WeatherWidgetProps } from "../../../interfaces/widgets";
 import WidgetBase from "../common/WidgetBase";
-import { useWeather } from "../../hooks";
+import { useWeatherLogic } from "../../hooks/useWeatherLogic";
+import WeatherAnimations from "./WeatherAnimations";
+import WeatherStatus from "./WeatherStatus";
 
 export default function WeatherWidget({
   city = "Amsterdam",
 }: WeatherWidgetProps) {
-  const { forecast, error, isCached, isPreloading, stale } = useWeather(city);
-  const [selectedDay, setSelectedDay] = useState(0); // 0 = today by default
-  const [dateString, setDateString] = useState("");
+  const {
+    forecast,
+    error,
+    isCached,
+    isPreloading,
+    stale,
+    selectedDay,
+    dateString,
+    isCloudy,
+    setSelectedDay,
+  } = useWeatherLogic(city);
 
-  useEffect(() => {
-    if (forecast[selectedDay]) {
-      const today = new Date();
-      const date = new Date(today);
-      date.setDate(today.getDate() + selectedDay);
-      setDateString(
-        date.toLocaleDateString("en-GB", {
-          weekday: "long",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        })
-      );
-    }
-  }, [forecast, selectedDay]);
-
-  const isCloudy = /cloudy|partly cloudy/i.test(
-    forecast[selectedDay]?.desc || ""
-  );
   const leftPanelStyle: CSSProperties = {
     flex: 1.3,
     minWidth: 220,
@@ -76,43 +61,7 @@ export default function WeatherWidget({
       {/* Left: Current weather */}
       <div style={leftPanelStyle}>
         <WeatherBackground desc={forecast[selectedDay]?.desc || ""}>
-          {/* Weather-specific animations */}
-          {forecast[selectedDay] &&
-            /showers|hot|very hot|heat|accent-red|drizzle/i.test(
-              forecast[selectedDay].desc
-            ) && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: 24,
-                  top: 12,
-                  zIndex: 2,
-                  width: 90,
-                  height: 140,
-                  pointerEvents: "none",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <HotAnimation />
-              </div>
-            )}
-          {forecast[selectedDay] &&
-            /clear sky|sunny/i.test(forecast[selectedDay].desc) && (
-              <SunAnimation />
-            )}
-          {forecast[selectedDay] &&
-            /partly cloudy/i.test(forecast[selectedDay].desc) && (
-              <CloudAnimation />
-            )}
-          {forecast[selectedDay] &&
-            /rain/i.test(forecast[selectedDay].desc) && <RainAnimation />}
-          {forecast[selectedDay] &&
-            /thunderstorm/i.test(forecast[selectedDay].desc) && <Lightning />}
-          {forecast[selectedDay] && /fog/i.test(forecast[selectedDay].desc) && (
-            <FogAnimation />
-          )}
+          <WeatherAnimations weatherDesc={forecast[selectedDay]?.desc || ""} />
         </WeatherBackground>
         {forecast[selectedDay] && dateString && (
           <WeatherText
@@ -143,34 +92,11 @@ export default function WeatherWidget({
         }}
       >
         {/* Always show the status label to avoid layout shift */}
-        <div
-          style={{
-            fontSize: 12,
-            color: isCached
-              ? "var(--color-gray)"
-              : isPreloading
-                ? "#eab308" // yellow for preloading
-                : stale
-                  ? "#f87171" // red for stale
-                  : "#b0b0a8", // fallback gray
-            opacity: 0.7,
-            marginBottom: 4,
-            minHeight: 18,
-            minWidth: 70,
-            textAlign: "center",
-            transition: "color 0.2s",
-            fontWeight: 500,
-            letterSpacing: "0.01em",
-          }}
-        >
-          {isCached
-            ? "⚡ Instant"
-            : isPreloading
-              ? "⟳ Updating..."
-              : stale
-                ? "⚠️ Outdated"
-                : ""}
-        </div>
+        <WeatherStatus
+          isCached={isCached}
+          isPreloading={isPreloading}
+          stale={stale}
+        />
         {forecast.length === 0 && !error ? (
           <div style={{ color: "var(--color-gray)", fontSize: 18 }}>
             {isPreloading ? "Preloading..." : "Loading..."}
