@@ -15,7 +15,7 @@ export default function WidgetBase({
   ...props
 }: WidgetBaseProps) {
   // Modern glassy, alive effect
-  const bg = "rgba(255,255,255,0.97)";
+  const bg = "rgba(var(--background-rgb), 0.65)";
   const border = "rgba(0,0,0,0.06)";
   // Stronger, more 3D shadow
   const shadow =

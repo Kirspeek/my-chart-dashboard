@@ -150,8 +150,21 @@ class WeatherCacheManager {
       const { forecast: weatherData, coords } =
         await WeatherAPI.getCityWeather(city);
 
+      // WeatherAPI.getCityWeather now always returns valid data (real or mock)
+      // but we should still check for safety
       if (!weatherData?.daily) {
-        throw new Error("City not found");
+        console.warn(`No weather data available for ${city}, using mock data`);
+        const mockData = WeatherAPI.getMockWeatherData(city);
+        const forecast = this.processWeatherData(mockData.forecast);
+
+        this.cache.set(city, {
+          forecast,
+          coords: mockData.coords,
+          timestamp: Date.now(),
+          loading: false,
+        });
+
+        return { forecast, coords: mockData.coords, loading: false };
       }
 
       const forecast = this.processWeatherData(weatherData);
@@ -166,15 +179,21 @@ class WeatherCacheManager {
 
       return { forecast, coords, loading: false };
     } catch (error) {
-      // Update cache with error state
+      console.error(`Weather fetch error for ${city}:`, error);
+
+      // Even if there's an unexpected error, provide mock data
+      const mockData = WeatherAPI.getMockWeatherData(city);
+      const forecast = this.processWeatherData(mockData.forecast);
+
+      // Update cache with mock data
       this.cache.set(city, {
-        forecast: [],
-        coords: null,
+        forecast,
+        coords: mockData.coords,
         timestamp: Date.now(),
         loading: false,
       });
 
-      throw error;
+      return { forecast, coords: mockData.coords, loading: false };
     }
   }
 

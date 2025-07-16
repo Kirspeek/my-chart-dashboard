@@ -4,6 +4,17 @@
 :root {
   --font-sans: "Inter", "Geist Sans", Arial, Helvetica, sans-serif;
   --font-mono: "Space Mono", "Geist Mono", Menlo, Monaco, monospace;
+  --background: #ededed;
+  --background-rgb: 237, 237, 237;
+  --primary-text: #232323;
+  --secondary-text: #b0b0a8;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --background-rgb: 26, 26, 26;
+  --primary-text: #f5f5f5;
+  --secondary-text: #d0d0d0;
 }
 
 body {
@@ -45,4 +56,94 @@ h6 {
 }
 .text-gray-light {
   color: #b0b0a8;
+}
+
+/* Glassy panel for sidebar/header */
+.glass-panel {
+  background: rgba(var(--background-rgb), 0.65);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px 0 rgba(35, 35, 35, 0.18),
+    0 2px 8px 0 rgba(255, 255, 255, 0.1) inset,
+    0 1.5px 8px 0 rgba(234, 67, 0, 0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-sans);
+  transition:
+    box-shadow 0.3s cubic-bezier(0.4, 2, 0.6, 1),
+    background 0.3s;
+}
+.dark .glass-panel {
+  border: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Consistent icon style for widgets, sidebar, header */
+.widget-icon {
+  color: #232323;
+  width: 1.75rem;
+  height: 1.75rem;
+  transition: color 0.2s;
+}
+.dark .widget-icon {
+  color: #fff;
+}
+
+/* Font override for sidebar/header to match widgets */
+.font-sans-override {
+  font-family: var(--font-sans) !important;
+}
+
+/* Sidebar font and icon style to match weather widget city */
+.sidebar-secondary {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  color: var(--secondary-text);
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+  transition: color 0.2s;
+}
+.dark .sidebar-secondary {
+  color: #b0b0a8;
+}
+.sidebar-icon {
+  font-family: var(--font-mono);
+  color: var(--secondary-text);
+  width: 1.75rem;
+  height: 1.75rem;
+  transition: color 0.2s;
+}
+.dark .sidebar-icon {
+  color: #b0b0a8;
+}
+
+/* Active sidebar item style (matches Button3D accent) */
+.sidebar-active {
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--secondary-text) !important;
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+  border-radius: 1rem;
+  box-shadow:
+    inset 0 4px 8px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+.dark .sidebar-active {
+  background: rgba(255, 255, 255, 0.04);
+}
+.sidebar-active .sidebar-icon {
+  color: var(--secondary-text) !important;
+}
+
+/* Mono font, secondary color for search input placeholder */
+.search-mono-input::placeholder {
+  color: var(--secondary-text);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  opacity: 1;
 }

@@ -5,11 +5,22 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   return (
-    <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+    <header
+      className="glass-panel shadow-sm"
+      style={{ borderBottom: "2px solid rgba(0,0,0,0.06)" }}
+    >
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+            <h1
+              className="text-xl"
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontWeight: 900,
+                color: "#232323",
+                letterSpacing: "0.01em",
+              }}
+            >
               Chart Dashboard
             </h1>
           </div>
@@ -17,19 +28,40 @@ export default function Header() {
           <div className="flex items-center space-x-4">
             {/* Search */}
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+              <div
+                style={{
+                  position: "absolute",
+                  left: 14,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  pointerEvents: "none",
+                }}
+              >
+                <Search style={{ color: "#b0b0a8", width: 24, height: 24 }} />
               </div>
               <input
                 type="text"
                 placeholder="Search..."
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                className="search-mono-input w-full"
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                  color: "#232323",
+                  background: "rgba(35,35,35,0.07)",
+                  border: "2px solid #e0e0e0",
+                  borderRadius: "1rem",
+                  padding: "0.6rem 1.2rem 0.6rem 2.5rem",
+                  outline: "none",
+                  boxShadow: "0 2px 8px rgba(35,35,35,0.04)",
+                  transition: "border 0.2s, box-shadow 0.2s",
+                }}
               />
             </div>
 
             {/* Notifications */}
-            <button className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
-              <Bell className="h-6 w-6" />
+            <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
+              <Bell style={{ color: "#b0b0a8", width: 28, height: 28 }} />
             </button>
 
             {/* Theme Toggle */}
@@ -38,15 +70,31 @@ export default function Header() {
             {/* User menu */}
             <div className="flex items-center space-x-3">
               <div className="flex flex-col items-end">
-                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 900,
+                    fontSize: "1.1rem",
+                    color: "#232323",
+                    letterSpacing: "0.01em",
+                  }}
+                >
                   Admin User
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 700,
+                    fontSize: "0.95rem",
+                    color: "#b0b0a8",
+                    letterSpacing: "0.01em",
+                  }}
+                >
                   admin@example.com
                 </span>
               </div>
-              <button className="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
-                <User className="h-6 w-6" />
+              <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
+                <User style={{ color: "#b0b0a8", width: 28, height: 28 }} />
               </button>
             </div>
           </div>
