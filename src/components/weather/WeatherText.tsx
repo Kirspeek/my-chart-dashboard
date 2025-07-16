@@ -50,8 +50,25 @@ export default function WeatherText({
     secondaryColor = "#23405c"; // light theme blue
   }
 
+  // Split date into day of week and rest (e.g. "Thursday 17 Jul 2025" -> "Thursday", "17 Jul 2025")
+  let dayOfWeek = "";
+  let restOfDate = date;
+  if (date) {
+    const match = date.match(/^(\w+),?\s*(.*)$/);
+    if (match) {
+      dayOfWeek = match[1];
+      restOfDate = match[2];
+    }
+  }
   return (
-    <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        zIndex: 1,
+        width: "100%",
+        paddingLeft: 18,
+      }}
+    >
       <span
         style={{
           fontWeight: 700,
@@ -68,13 +85,14 @@ export default function WeatherText({
       <span
         style={{
           fontStyle: "italic",
-          fontWeight: 400,
-          fontSize: 16,
+          fontWeight: 500,
+          fontSize: 18,
           fontFamily: "var(--font-mono)",
           color: secondaryColor,
-          margin: "8px 0 0 0",
+          margin: "14px 0 0 0",
           display: "block",
           marginLeft: 0,
+          letterSpacing: "0.01em",
         }}
       >
         {desc}
@@ -82,12 +100,13 @@ export default function WeatherText({
       <span
         style={{
           fontFamily: "var(--font-mono)",
-          fontWeight: 700,
-          fontSize: 24,
+          fontWeight: 900,
+          fontSize: 32,
           color: mainColor,
-          margin: "18px 0 0 0",
+          margin: "24px 0 0 0",
           display: "block",
           marginLeft: 0,
+          letterSpacing: "0.01em",
         }}
       >
         {city}
@@ -96,16 +115,31 @@ export default function WeatherText({
         style={{
           fontFamily: "var(--font-mono)",
           fontWeight: 700,
-          fontSize: 18,
+          fontSize: 20,
           color: secondaryColor,
           letterSpacing: "0.01em",
-          margin: "10px 0 0 0",
+          margin: "18px 0 0 0",
           display: "block",
           lineHeight: 1.2,
           marginLeft: 0,
         }}
       >
-        {date}
+        {dayOfWeek}
+      </span>
+      <span
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontWeight: 400,
+          fontSize: 15,
+          color: secondaryColor,
+          letterSpacing: "0.01em",
+          margin: "2px 0 0 0",
+          display: "block",
+          lineHeight: 1.2,
+          marginLeft: 0,
+        }}
+      >
+        {restOfDate}
       </span>
       {children}
     </div>

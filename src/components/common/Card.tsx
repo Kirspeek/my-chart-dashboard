@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { CommonComponentProps } from "../../../interfaces/common";
 
 export default function Card({
@@ -8,16 +7,12 @@ export default function Card({
   ...props
 }: CommonComponentProps) {
   return (
-    <Box
-      borderRadius="xl"
-      bg="brand.50"
-      boxShadow="lg"
-      p={8}
-      className={className}
+    <div
+      className={`rounded-2xl bg-white shadow-lg p-8 ${className}`}
       style={style}
       {...props}
     >
       {children}
-    </Box>
+    </div>
   );
 }

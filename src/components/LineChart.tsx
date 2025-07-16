@@ -11,11 +11,12 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { LineChartProps } from "@/interfaces";
+import type { LineChartProps } from "../../interfaces/charts";
+import WidgetBase from "./common/WidgetBase";
 
 export default function LineChart({ data, title }: LineChartProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <WidgetBase>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         {title}
       </h3>
@@ -67,6 +68,6 @@ export default function LineChart({ data, title }: LineChartProps) {
           />
         </RechartsLineChart>
       </ResponsiveContainer>
-    </div>
+    </WidgetBase>
   );
 }

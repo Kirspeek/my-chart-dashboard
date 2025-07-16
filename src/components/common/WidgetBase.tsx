@@ -1,6 +1,5 @@
 "use client";
 
-import { Box, useColorModeValue } from "@chakra-ui/react";
 import { ReactNode, HTMLAttributes } from "react";
 
 interface WidgetBaseProps extends HTMLAttributes<HTMLDivElement> {
@@ -16,33 +15,27 @@ export default function WidgetBase({
   ...props
 }: WidgetBaseProps) {
   // Modern glassy, alive effect
-  const bg = useColorModeValue("rgba(255,255,255,0.95)", "rgba(30,30,30,0.85)");
-  const border = useColorModeValue(
-    "rgba(0,0,0,0.03)",
-    "rgba(255,255,255,0.08)"
-  );
-  const shadow = useColorModeValue(
-    "0 8px 32px 0 rgba(35,35,35,0.10)",
-    "0 8px 32px 0 rgba(0,0,0,0.40)"
-  );
+  const bg = "rgba(255,255,255,0.97)";
+  const border = "rgba(0,0,0,0.06)";
+  // Stronger, more 3D shadow
+  const shadow =
+    "0 8px 32px 0 rgba(35,35,35,0.18), 0 2px 8px 0 rgba(255,255,255,0.10) inset, 0 1.5px 8px 0 rgba(234,67,0,0.04)";
 
   return (
-    <Box
-      bg={bg}
-      borderRadius="2rem"
-      boxShadow={shadow}
-      border="1px solid"
-      borderColor={border}
-      p="2rem"
+    <div
+      className={`rounded-[2.5rem] border p-8 ${className}`}
       style={{
+        background: bg,
+        borderColor: border,
+        boxShadow: shadow,
+        borderWidth: 2,
         backdropFilter: "blur(8px)",
         WebkitBackdropFilter: "blur(8px)",
         ...style,
       }}
-      className={className}
       {...props}
     >
       {children}
-    </Box>
+    </div>
   );
 }

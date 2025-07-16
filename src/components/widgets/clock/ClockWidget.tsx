@@ -68,9 +68,6 @@ export default function ClockWidget({
         className="flex flex-col gap-8"
         style={{
           width: "100%",
-          minWidth: 600,
-          minHeight: 480,
-          maxWidth: 800,
           padding: "2.5rem 2.5rem",
         }}
       >
@@ -97,9 +94,6 @@ export default function ClockWidget({
       className="flex flex-col gap-8"
       style={{
         width: "100%",
-        minWidth: 600,
-        minHeight: 480,
-        maxWidth: 800,
         padding: "2.5rem 2.5rem",
       }}
     >
@@ -146,29 +140,23 @@ export default function ClockWidget({
           </span>
           <div className="flex gap-2 ml-4">
             <WidgetButton
-              size="sm"
-              fontFamily="var(--font-mono)"
-              fontSize="xs"
-              px={3}
-              py={1}
-              border={is24h ? "1px solid #b0b0a8" : "1px solid #ea4300"}
-              color={is24h ? "#b0b0a8" : "#ea4300"}
-              bg={is24h ? undefined : "rgba(234, 67, 0, 0.1)"}
-              fontWeight={700}
+              className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold ${
+                is24h
+                  ? "border-gray-400 text-gray-400 bg-transparent"
+                  : "border-[#ea4300] text-[#ea4300] bg-[rgba(234,67,0,0.1)]"
+              }`}
+              style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
               onClick={() => setIs24h(false)}
             >
               12h
             </WidgetButton>
             <WidgetButton
-              size="sm"
-              fontFamily="var(--font-mono)"
-              fontSize="xs"
-              px={3}
-              py={1}
-              border={is24h ? "1px solid #ea4300" : "1px solid #b0b0a8"}
-              color={is24h ? "#ea4300" : "#b0b0a8"}
-              bg={is24h ? "rgba(234, 67, 0, 0.1)" : undefined}
-              fontWeight={700}
+              className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold ${
+                is24h
+                  ? "border-[#ea4300] text-[#ea4300] bg-[rgba(234,67,0,0.1)]"
+                  : "border-gray-400 text-gray-400 bg-transparent"
+              }`}
+              style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
               onClick={() => setIs24h(true)}
             >
               24h

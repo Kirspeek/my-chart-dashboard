@@ -193,15 +193,12 @@ export default function TimerWidget({ className = "" }: TimerWidgetProps) {
   return (
     <WidgetBase
       style={{
-        minWidth: 480,
-        maxWidth: 480,
         width: "100%",
         padding: "0.7rem 0.3rem 0.7rem 0.3rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: "none",
       }}
       className={className}
     >

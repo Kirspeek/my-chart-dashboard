@@ -9,7 +9,7 @@ import {
   Users,
   Target,
 } from "lucide-react";
-import WidgetCard from "../common/WidgetCard";
+import WidgetBase from "../common/WidgetBase";
 
 const iconMap = {
   TrendingUp,
@@ -25,9 +25,6 @@ const accentColors = [
   { bg: "var(--accent-red)", icon: "var(--accent-red)" },
   { bg: "var(--accent-blue)", icon: "var(--accent-blue)" },
 ];
-
-const cardBg = (index: number) =>
-  index % 2 === 0 ? "var(--color-bg-card)" : "var(--color-bg-card)";
 
 function splitNumber(value: string | number) {
   // Extracts main and secondary (decimal/0) part
@@ -48,19 +45,7 @@ export default function MetricCard({ metric, index = 0 }: MetricCardProps) {
   const accent = accentColors[index % accentColors.length];
 
   return (
-    <WidgetCard
-      className="widget flex flex-col gap-4"
-      variant="compact"
-      style={{
-        background: cardBg(index),
-        borderRadius: "2rem",
-        boxShadow: "none",
-        padding: "1.5rem 2rem",
-        width: "fit-content",
-        height: "fit-content",
-        maxWidth: "100%",
-      }}
-    >
+    <WidgetBase className="flex flex-col gap-4">
       <div className="flex items-center justify-between w-full">
         <div>
           <p
@@ -107,7 +92,7 @@ export default function MetricCard({ metric, index = 0 }: MetricCardProps) {
             height: 56,
             minWidth: 56,
             minHeight: 56,
-            boxShadow: `0 0 0 4px ${cardBg(index)}`,
+            boxShadow: `0 0 0 4px var(--color-bg-card)`,
           }}
         >
           <IconComponent style={{ color: "#fff", width: 30, height: 30 }} />
@@ -133,6 +118,6 @@ export default function MetricCard({ metric, index = 0 }: MetricCardProps) {
           from last month
         </span>
       </div>
-    </WidgetCard>
+    </WidgetBase>
   );
 }

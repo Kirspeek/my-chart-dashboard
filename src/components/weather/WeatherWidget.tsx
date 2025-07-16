@@ -41,7 +41,7 @@ export default function WeatherWidget({
     forecast[selectedDay]?.desc || ""
   );
   const leftPanelStyle: CSSProperties = {
-    flex: 1,
+    flex: 1.3,
     minWidth: 220,
     maxWidth: 320,
     display: "flex",
@@ -55,18 +55,23 @@ export default function WeatherWidget({
     textAlign: "left",
     background: "transparent",
     width: "100%",
+    minHeight: 0,
     height: "100%",
+    alignSelf: "stretch",
     overflow: isCloudy ? undefined : "hidden",
   };
 
   return (
     <WidgetBase
       style={{
-        maxWidth: 480,
+        width: "100%",
         padding: 0,
-        boxShadow: "none",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "stretch",
+        minHeight: 0,
+        height: "100%",
       }}
-      className="flex flex-row"
     >
       {/* Left: Current weather */}
       <div style={leftPanelStyle}>
@@ -124,7 +129,7 @@ export default function WeatherWidget({
       {/* Right: Forecast */}
       <div
         style={{
-          flex: 2,
+          flex: 1,
           minWidth: 0,
           display: "flex",
           flexDirection: "column",
@@ -133,6 +138,8 @@ export default function WeatherWidget({
           borderTopRightRadius: "2rem",
           borderBottomRightRadius: "2rem",
           padding: "1.5rem 1.2rem 1.5rem 1.2rem",
+          minHeight: 0,
+          height: "100%",
         }}
       >
         {/* Always show the status label to avoid layout shift */}

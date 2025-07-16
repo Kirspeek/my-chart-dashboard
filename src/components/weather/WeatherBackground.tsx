@@ -13,8 +13,10 @@ export default function WeatherBackground({
           position: "absolute",
           inset: 0,
           background: "linear-gradient(135deg, #e3f0ff 0%, #b3d8f7 100%)",
-          borderTopLeftRadius: "2rem",
-          borderBottomLeftRadius: "2rem",
+          borderTopLeftRadius: "2.5rem",
+          borderBottomLeftRadius: "2.5rem",
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
           zIndex: 0,
         }}
       >
@@ -30,8 +32,10 @@ export default function WeatherBackground({
           position: "absolute",
           inset: 0,
           background: "linear-gradient(to bottom, #3a7ca5 0%, #4a90c2 100%)",
-          borderTopLeftRadius: "2rem",
-          borderBottomLeftRadius: "2rem",
+          borderTopLeftRadius: "2.5rem",
+          borderBottomLeftRadius: "2.5rem",
+          borderTopRightRadius: 0,
+          borderBottomRightRadius: 0,
           zIndex: 0,
         }}
       >
@@ -66,8 +70,10 @@ export default function WeatherBackground({
         position: "absolute",
         inset: 0,
         background,
-        borderTopLeftRadius: "2rem",
-        borderBottomLeftRadius: "2rem",
+        borderTopLeftRadius: "2.5rem",
+        borderBottomLeftRadius: "2.5rem",
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
         zIndex: 0,
       }}
     >

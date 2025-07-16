@@ -168,6 +168,7 @@ const Lightning = ({
     const startTime = performance.now();
     const render = () => {
       if (!canvas) return;
+      gl.useProgram(program); // Ensure the correct program is active
       resizeCanvas();
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);

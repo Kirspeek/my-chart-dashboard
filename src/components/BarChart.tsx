@@ -11,11 +11,12 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { BarChartProps } from "@/interfaces";
+import type { BarChartProps } from "../../interfaces/charts";
+import WidgetBase from "./common/WidgetBase";
 
 export default function BarChart({ data, title }: BarChartProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <WidgetBase>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         {title}
       </h3>
@@ -45,6 +46,6 @@ export default function BarChart({ data, title }: BarChartProps) {
           <Bar dataKey="revenue" fill="#10b981" radius={[4, 4, 0, 0]} />
         </RechartsBarChart>
       </ResponsiveContainer>
-    </div>
+    </WidgetBase>
   );
 }

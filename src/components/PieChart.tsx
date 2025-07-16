@@ -9,13 +9,14 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import type { PieChartProps } from "@/interfaces";
+import type { PieChartProps } from "../../interfaces/charts";
+import WidgetBase from "./common/WidgetBase";
 
 const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 export default function PieChart({ data, title }: PieChartProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+    <WidgetBase>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         {title}
       </h3>
@@ -52,6 +53,6 @@ export default function PieChart({ data, title }: PieChartProps) {
           <Legend />
         </RechartsPieChart>
       </ResponsiveContainer>
-    </div>
+    </WidgetBase>
   );
 }
