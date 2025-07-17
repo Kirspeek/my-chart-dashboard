@@ -15,3 +15,14 @@ export { CalendarWidget } from "./calendar";
 
 // Metric Widget
 export { MetricWidget } from "./metric";
+
+// Chart Widgets
+export { LineChartWidget } from "./line-chart";
+export { BarChartWidget } from "./bar-chart";
+
+// Data Widgets
+export { RecentUsersWidget } from "./recent-users";
+export { DeviceUsageWidget } from "./device-usage";
+
+// New Chart Widgets
+export { RadarChartWidget } from "./radar-chart";

@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { CommonComponentProps } from "./common";
+import { UserData } from "./dashboard";
 
 // Clock Widget Interfaces
 export interface TimeZone {
@@ -177,4 +178,88 @@ export interface MetricData {
   value: string | number;
   change: number;
   icon: string;
+}
+
+// Chart Widget Interfaces
+export interface ChartDataPoint {
+  month?: string;
+  name?: string;
+  sales: number;
+  revenue: number;
+  profit?: number;
+}
+
+export interface LineChartWidgetProps {
+  data: ChartDataPoint[];
+  title: string;
+}
+
+export interface BarChartWidgetProps {
+  data: ChartDataPoint[];
+  title: string;
+}
+
+export interface ChartState {
+  data: ChartDataPoint[];
+  title: string;
+}
+
+export interface ChartActions {
+  formatValue: (value: number) => string;
+  formatTooltip: (value: number, name: string) => [string, string];
+}
+
+// Recent Users Widget Interfaces
+export interface RecentUsersWidgetProps {
+  data: UserData[];
+  title: string;
+}
+
+// Device Usage Widget Interfaces
+export interface DeviceUsageWidgetProps {
+  data: DeviceUsageData[];
+  title: string;
+}
+
+export interface DeviceUsageData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+// Radar Chart Widget Interfaces
+export interface RadarChartData {
+  subject: string;
+  value: number;
+  fullMark: number;
+}
+
+export interface RadarChartWidgetProps {
+  data: RadarChartData[];
+  title: string;
+}
+
+// Area Chart Widget Interfaces
+export interface AreaChartData {
+  name: string;
+  value: number;
+  fill: string;
+}
+
+export interface AreaChartWidgetProps {
+  data: AreaChartData[];
+  title: string;
+}
+
+// Scatter Chart Widget Interfaces
+export interface ScatterChartData {
+  x: number;
+  y: number;
+  z: number;
+  category: string;
+}
+
+export interface ScatterChartWidgetProps {
+  data: ScatterChartData[];
+  title: string;
 }

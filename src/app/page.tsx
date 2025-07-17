@@ -3,18 +3,13 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import LineChart from "../components/LineChart";
-import BarChart from "../components/BarChart";
-import PieChart from "../components/PieChart";
-import DataTable from "../components/DataTable";
-import type { TableColumn } from "../../interfaces/common";
-import type { UserData } from "../../interfaces/dashboard";
 import {
   metricCards,
   salesData,
   barChartData,
   pieChartData,
   userData,
+  radarChartData,
 } from "@/lib/data";
 import {
   ClockWidget,
@@ -23,6 +18,11 @@ import {
   MapWidget,
   CalendarWidget,
   MetricWidget,
+  LineChartWidget,
+  BarChartWidget,
+  RecentUsersWidget,
+  DeviceUsageWidget,
+  RadarChartWidget,
 } from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
@@ -36,15 +36,6 @@ const cityMap: { [key: string]: string } = {
 
 // All cities that might be selected
 const allCities = Object.values(cityMap);
-
-// Define columns for DataTable
-const userColumns: TableColumn<UserData>[] = [
-  { key: "name", label: "Name" },
-  { key: "email", label: "Email" },
-  { key: "role", label: "Role" },
-  { key: "status", label: "Status" },
-  { key: "lastLogin", label: "Last Login" },
-];
 
 export default function Home() {
   const [selectedZone, setSelectedZone] = useState("Europe/London"); // Default fallback
@@ -135,20 +126,23 @@ export default function Home() {
             </div>
             {/* Charts grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
-              <LineChart data={salesData} title="Sales Performance" />
-              <BarChart data={barChartData} title="Quarterly Overview" />
+              <LineChartWidget data={salesData} title="Sales Performance" />
+              <BarChartWidget data={barChartData} title="Quarterly Overview" />
+            </div>
+            {/* New charts row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
+              <RadarChartWidget
+                data={radarChartData}
+                title="Performance Metrics"
+              />
             </div>
             {/* Bottom row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
-              <div className="lg:col-span-2">
-                <DataTable
-                  data={userData}
-                  title="Recent Users"
-                  columns={userColumns}
-                />
+              <div className="lg:col-span-2 h-full">
+                <RecentUsersWidget data={userData} title="Recent Users" />
               </div>
-              <div>
-                <PieChart data={pieChartData} title="Device Usage" />
+              <div className="h-full">
+                <DeviceUsageWidget data={pieChartData} title="Device Usage" />
               </div>
             </div>
           </div>

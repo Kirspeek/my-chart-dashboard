@@ -3,7 +3,10 @@ import {
   SalesData,
   UserData,
   BarChartData,
-  PieChartData,
+  DeviceUsageData,
+  RadarChartData,
+  AreaChartData,
+  ScatterChartData,
 } from "../../interfaces";
 
 export const salesData: SalesData[] = [
@@ -98,10 +101,10 @@ export const dashboardStats = {
   conversionRate: 3.2,
 };
 
-export const pieChartData: PieChartData[] = [
-  { name: "Desktop", value: 45, color: "#3b82f6" },
-  { name: "Mobile", value: 35, color: "#10b981" },
-  { name: "Tablet", value: 20, color: "#f59e0b" },
+export const pieChartData: DeviceUsageData[] = [
+  { name: "Desktop", value: 45, color: "" },
+  { name: "Mobile", value: 35, color: "" },
+  { name: "Tablet", value: 20, color: "" },
 ];
 
 export const barChartData: BarChartData[] = [
@@ -109,4 +112,36 @@ export const barChartData: BarChartData[] = [
   { name: "Q2", sales: 1800, revenue: 36000 },
   { name: "Q3", sales: 2200, revenue: 44000 },
   { name: "Q4", sales: 1900, revenue: 38000 },
+];
+
+// New Chart Data
+export const radarChartData: RadarChartData[] = [
+  { subject: "Speed", value: 85, fullMark: 10 },
+  { subject: "Reliability", value: 92, fullMark: 10 },
+  { subject: "Comfort", value: 78, fullMark: 10 },
+  { subject: "Safety", value: 95, fullMark: 10 },
+  { subject: "Efficiency", value: 88, fullMark: 10 },
+  { subject: "Design", value: 82, fullMark: 100 },
+];
+
+export const areaChartData: AreaChartData[] = [
+  { name: "Jan", value: 400, fill: "#3b82f6" },
+  { name: "Feb", value: 300, fill: "#10b981" },
+  { name: "Mar", value: 500, fill: "#f59e0b" },
+  { name: "Apr", value: 280, fill: "#ef4444" },
+  { name: "May", value: 590, fill: "#8b5cf6" },
+  { name: "Jun", value: 480, fill: "#06b6d4" },
+];
+
+export const scatterChartData: ScatterChartData[] = [
+  { x: 100, y: 50, z: 200, category: "A" },
+  { x: 120, y: 60, z: 260, category: "A" },
+  { x: 170, y: 85, z: 400, category: "B" },
+  { x: 140, y: 70, z: 280, category: "B" },
+  { x: 150, y: 75, z: 500, category: "C" },
+  { x: 110, y: 55, z: 200, category: "C" },
+  { x: 200, y: 100, z: 300, category: "A" },
+  { x: 180, y: 90, z: 450, category: "B" },
+  { x: 160, y: 80, z: 320, category: "C" },
+  { x: 130, y: 65, z: 240, category: "A" },
 ];
