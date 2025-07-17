@@ -263,3 +263,15 @@ export interface ScatterChartWidgetProps {
   data: ScatterChartData[];
   title: string;
 }
+
+export interface ChordChartData {
+  from: string;
+  to: string;
+  size: number;
+}
+
+export interface ChordChartWidgetProps {
+  data: ChordChartData[];
+  title: string;
+  subtitle?: string;
+}

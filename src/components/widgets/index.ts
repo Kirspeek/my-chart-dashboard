@@ -26,3 +26,4 @@ export { DeviceUsageWidget } from "./device-usage";
 
 // New Chart Widgets
 export { RadarChartWidget } from "./radar-chart";
+export { default as ChordChartWidget } from "./chord-chart/ChordChartWidget";
