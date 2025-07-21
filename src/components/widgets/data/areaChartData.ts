@@ -1,0 +1,8 @@
+export const areaChartData = [
+  { name: "Jan", value: 400, fill: "#3b82f6" },
+  { name: "Feb", value: 300, fill: "#10b981" },
+  { name: "Mar", value: 500, fill: "#f59e0b" },
+  { name: "Apr", value: 280, fill: "#ef4444" },
+  { name: "May", value: 590, fill: "#8b5cf6" },
+  { name: "Jun", value: 480, fill: "#06b6d4" },
+];

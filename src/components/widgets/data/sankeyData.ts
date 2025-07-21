@@ -1,6 +1,4 @@
-// Official intercontinental migration flows (annual, in millions), ~2019/2020
-// Source: UN International Migration Stock 2020, IOM World Migration Report 2022, Niva et al. 2023 (Nature Human Behaviour)
-export const migrationData = [
+export const sankeyData = [
   { from: "Asia", to: "Europe", size: 1.8 },
   { from: "Asia", to: "Africa", size: 0.6 },
   { from: "Asia", to: "Americas", size: 1.2 },

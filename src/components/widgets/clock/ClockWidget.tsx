@@ -3,7 +3,8 @@
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { ClockWidgetProps } from "../../../../interfaces/widgets";
-import { useClockLogic, timeZones } from "src/hooks/useClockLogic";
+import { useClockLogic } from "src/hooks/useClockLogic";
+import { timeZones } from "src/constants/timeZones";
 import ClockDisplay from "./ClockDisplay";
 import WorldClocks from "./WorldClocks";
 

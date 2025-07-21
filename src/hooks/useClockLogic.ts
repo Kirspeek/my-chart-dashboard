@@ -1,16 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import type {
-  ClockState,
-  ClockActions,
-  TimeZone,
-} from "../../interfaces/widgets";
-
-export const timeZones: TimeZone[] = [
-  { label: "New York", zone: "America/New_York", utc: "UTC-5" },
-  { label: "London", zone: "Europe/London", utc: "UTC+0" },
-  { label: "Rome", zone: "Europe/Rome", utc: "UTC+1" },
-  { label: "Kyiv", zone: "Europe/Kyiv", utc: "UTC+2" },
-];
+import type { ClockState, ClockActions } from "../../interfaces/widgets";
 
 export function useClockLogic(selectedZone: string): ClockState & ClockActions {
   const [mounted, setMounted] = useState(false);

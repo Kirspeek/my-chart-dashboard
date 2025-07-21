@@ -1,0 +1,5 @@
+export const pieChartData = [
+  { name: "Desktop", value: 45, color: "" },
+  { name: "Mobile", value: 35, color: "" },
+  { name: "Tablet", value: 20, color: "" },
+];

@@ -10,7 +10,10 @@ import {
   pieChartData,
   userData,
   radarChartData,
-} from "@/lib/data";
+  migrationData,
+  sankeyData,
+  bubbleData,
+} from "@/components/widgets/data";
 import {
   ClockWidget,
   WeatherWidget,
@@ -30,9 +33,6 @@ import {
 } from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
-import { migrationData } from "@/components/widgets/chord-chart/migrationData";
-import { sankeyData } from "@/components/widgets/sankey-chart/sankeyData";
-import { bubbleData } from "@/components/widgets/bubble-chart/bubbleData";
 
 const cityMap: { [key: string]: string } = {
   "America/New_York": "New York",

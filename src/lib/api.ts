@@ -1,9 +1,9 @@
 import {
-  API_CONFIG,
   GeocodingResponse,
   WeatherForecastResponse,
-  APIError,
 } from "../../interfaces/api";
+import { API_CONFIG } from "../config/api";
+import { RequestUtils } from "../utils/requestUtils";
 
 // Re-export for backward compatibility
 export type { WeatherForecastResponse };
@@ -19,7 +19,7 @@ export class WeatherAPI {
     try {
       const url = `${API_CONFIG.WEATHER.GEOCODING}?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
 
-      const response = await fetch(url);
+      const response = await RequestUtils.fetchWithRetry(url);
 
       if (!response.ok) {
         console.error(
@@ -63,7 +63,7 @@ export class WeatherAPI {
     try {
       const url = `${API_CONFIG.WEATHER.FORECAST}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`;
 
-      const response = await fetch(url);
+      const response = await RequestUtils.fetchWithRetry(url);
 
       if (!response.ok) {
         console.error(
@@ -187,94 +187,3 @@ export class WeatherAPI {
     return cityMap[normalizedCity] || null;
   }
 }
-
-// Utility functions for API responses
-export const WeatherUtils = {
-  /**
-   * Convert weather code to description
-   */
-  getWeatherDescription(code: number): string {
-    if (code === 0) return "Clear sky";
-    if (code === 1 || code === 2 || code === 3) return "Partly cloudy";
-    if (code === 45 || code === 48) return "Fog";
-    if (code === 51 || code === 53 || code === 55) return "Drizzle";
-    if (code === 61 || code === 63 || code === 65) return "Rain";
-    if (code === 71 || code === 73 || code === 75) return "Snow";
-    if (code === 80 || code === 81 || code === 82) return "Showers";
-    if (code === 95) return "Thunderstorm";
-    if (code === 96 || code === 99) return "Thunderstorm with hail";
-    return "Unknown";
-  },
-
-  /**
-   * Get weather icon based on description
-   */
-  getWeatherIcon(desc: string): string {
-    if (/clear/i.test(desc)) return "☀️";
-    if (/cloud/i.test(desc)) return "🌤️";
-    if (/rain/i.test(desc)) return "🌧️";
-    if (/storm|thunder/i.test(desc)) return "⛈️";
-    if (/snow/i.test(desc)) return "❄️";
-    return "🌡️";
-  },
-};
-
-// Request utilities
-export const RequestUtils = {
-  /**
-   * Create a fetch request with common options
-   */
-  async fetchWithTimeout(
-    url: string,
-    options: RequestInit = {},
-    timeout = 10000
-  ): Promise<Response> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      return response;
-    } catch (error) {
-      clearTimeout(timeoutId);
-      if (error instanceof Error && error.name === "AbortError") {
-        throw new APIError("Request timeout", undefined, url);
-      }
-      throw error;
-    }
-  },
-
-  /**
-   * Retry a fetch request with exponential backoff
-   */
-  async fetchWithRetry(
-    url: string,
-    options: RequestInit = {},
-    maxRetries = 3,
-    baseDelay = 1000
-  ): Promise<Response> {
-    let lastError: Error;
-
-    for (let attempt = 0; attempt <= maxRetries; attempt++) {
-      try {
-        return await this.fetchWithTimeout(url, options);
-      } catch (error) {
-        lastError = error as Error;
-
-        if (attempt === maxRetries) {
-          break;
-        }
-
-        // Wait before retrying with exponential backoff
-        const delay = baseDelay * Math.pow(2, attempt);
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    }
-
-    throw lastError!;
-  },
-};
