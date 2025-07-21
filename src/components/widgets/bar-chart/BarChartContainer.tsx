@@ -12,7 +12,7 @@ import {
   Legend,
 } from "recharts";
 import type { ChartDataPoint } from "../../../../interfaces/widgets";
-import { useChartLogic } from "../../../hooks/useChartLogic";
+import { useChartLogic } from "src/hooks/useChartLogic";
 
 interface BarChartContainerProps {
   data: ChartDataPoint[];

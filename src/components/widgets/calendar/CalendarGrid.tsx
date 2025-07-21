@@ -3,7 +3,7 @@
 import React from "react";
 import Button3D from "../../common/3DButton";
 import type { CalendarEvent } from "../../../../interfaces/widgets";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "src/hooks/useTheme";
 
 interface CalendarGridProps {
   days: Date[];

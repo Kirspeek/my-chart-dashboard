@@ -95,7 +95,7 @@ export function useTimerLogic(): TimerState & TimerActions {
         window.removeEventListener("touchend", onPointerUp);
       };
     }
-  }, [dragging, previewDuration]);
+  }, [dragging, previewDuration, onPointerMove, onPointerUp]);
 
   // Sound on timer end
   const playEndSound = useCallback(() => {

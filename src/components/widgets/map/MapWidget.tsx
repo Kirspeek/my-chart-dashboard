@@ -3,7 +3,7 @@
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { MapWidgetProps } from "../../../../interfaces/widgets";
-import { useMapLogic } from "../../../hooks/useMapLogic";
+import { useMapLogic } from "src/hooks/useMapLogic";
 import MapSearch from "./MapSearch";
 import MapContainer from "./MapContainer";
 

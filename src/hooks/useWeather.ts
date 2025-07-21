@@ -100,7 +100,7 @@ export default function useWeather(city: string): UseWeatherReturn {
 
   useEffect(() => {
     fetchWeather(true);
-  }, [city]);
+  }, [city, fetchWeather]);
 
   return {
     forecast,

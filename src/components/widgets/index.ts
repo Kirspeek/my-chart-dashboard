@@ -27,3 +27,6 @@ export { DeviceUsageWidget } from "./device-usage";
 // New Chart Widgets
 export { RadarChartWidget } from "./radar-chart";
 export { default as ChordChartWidget } from "./chord-chart/ChordChartWidget";
+export { default as SankeyChartWidget } from "./sankey-chart/SankeyChartWidget";
+export { default as BubbleChartWidget } from "./bubble-chart/BubbleChartWidget";
+export { default as TimelineRingsWidget } from "./timeline-rings/TimelineRingsWidget";

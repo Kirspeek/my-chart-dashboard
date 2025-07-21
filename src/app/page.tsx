@@ -24,10 +24,15 @@ import {
   DeviceUsageWidget,
   RadarChartWidget,
   ChordChartWidget,
+  SankeyChartWidget,
+  BubbleChartWidget,
+  TimelineRingsWidget,
 } from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 import { migrationData } from "@/components/widgets/chord-chart/migrationData";
+import { sankeyData } from "@/components/widgets/sankey-chart/sankeyData";
+import { bubbleData } from "@/components/widgets/bubble-chart/bubbleData";
 
 const cityMap: { [key: string]: string } = {
   "America/New_York": "New York",
@@ -162,11 +167,6 @@ export default function Home() {
                 data={radarChartData}
                 title="Performance Metrics"
               />
-              <ChordChartWidget
-                data={migrationData}
-                title="Global Migrations"
-                subtitle="2023"
-              />
             </div>
             {/* Bottom row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
@@ -176,6 +176,37 @@ export default function Home() {
               <div className="h-full">
                 <DeviceUsageWidget data={pieChartData} title="Device Usage" />
               </div>
+            </div>
+            {/* Sankey Chart and Global Migrations row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
+              <div className="lg:col-span-2 h-full">
+                <SankeyChartWidget
+                  data={sankeyData}
+                  title="Global Migration Flows"
+                  subtitle="2019/2020"
+                />
+              </div>
+              <div className="h-full">
+                <ChordChartWidget
+                  data={migrationData}
+                  title="Global Migrations"
+                  subtitle="2023"
+                />
+              </div>
+            </div>
+            {/* Bubble Chart row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
+              <div className="lg:col-span-2 h-full">
+                <BubbleChartWidget
+                  data={bubbleData}
+                  title="Global Tech Investment"
+                  subtitle="Market Cap vs Growth vs Workforce Size"
+                />
+              </div>
+            </div>
+            {/* Timeline Rings row */}
+            <div className="grid grid-cols-1 gap-8 my-8">
+              <TimelineRingsWidget />
             </div>
           </div>
         </main>

@@ -24,7 +24,7 @@ export function useClockLogic(selectedZone: string): ClockState & ClockActions {
     return () => clearInterval(interval);
   }, []);
 
-  // Calculate time only when mounted to prevent hydration mismatch
+  // 'tick' is intentionally included to force re-render every second
   const mainTime = useMemo(() => {
     return mounted ? getTimeInZone(selectedZone) : new Date(0);
   }, [mounted, selectedZone, tick]);

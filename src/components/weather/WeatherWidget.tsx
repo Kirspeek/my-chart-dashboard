@@ -6,7 +6,7 @@ import WeatherText from "./WeatherText";
 import ForecastDay from "./ForecastDay";
 import { WeatherWidgetProps } from "../../../interfaces/widgets";
 import WidgetBase from "../common/WidgetBase";
-import { useWeatherLogic } from "../../hooks/useWeatherLogic";
+import { useWeatherLogic } from "@/hooks/useWeatherLogic";
 import WeatherAnimations from "./WeatherAnimations";
 import WeatherStatus from "./WeatherStatus";
 

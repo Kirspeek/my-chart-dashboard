@@ -9,8 +9,8 @@ import {
   Tooltip,
 } from "recharts";
 import type { DeviceUsageData } from "../../../../interfaces/widgets";
-import { useDeviceUsageLogic } from "../../../hooks/useDeviceUsageLogic";
-import { useTheme } from "../../../hooks/useTheme";
+import { useDeviceUsageLogic } from "src/hooks/useDeviceUsageLogic";
+import { useTheme } from "src/hooks/useTheme";
 
 interface DeviceUsageContainerProps {
   data: DeviceUsageData[];

@@ -2,7 +2,7 @@
 
 import React from "react";
 import WidgetButton from "../../common/WidgetButton";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "src/hooks/useTheme";
 
 interface ClockDisplayProps {
   mainTime: Date;

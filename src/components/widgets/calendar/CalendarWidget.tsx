@@ -3,7 +3,7 @@
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { CalendarWidgetProps } from "../../../../interfaces/widgets";
-import { useCalendarLogic } from "../../../hooks/useCalendarLogic";
+import { useCalendarLogic } from "src/hooks/useCalendarLogic";
 import CalendarHeader from "./CalendarHeader";
 import CalendarGrid from "./CalendarGrid";
 import CalendarSidebar from "./CalendarSidebar";

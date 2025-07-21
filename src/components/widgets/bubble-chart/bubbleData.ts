@@ -1,0 +1,28 @@
+// Global Tech Investment Bubble Chart Data
+// X: Market Cap (Billion USD), Y: Revenue Growth (%), Size: Employee Count (Thousands)
+export const bubbleData = [
+  // Big Tech Companies
+  { x: 2800, y: 15, size: 90, category: "Big Tech", label: "Apple" },
+  { x: 1800, y: 12, size: 80, category: "Big Tech", label: "Microsoft" },
+  { x: 1400, y: 18, size: 70, category: "Big Tech", label: "Google" },
+  { x: 1200, y: 22, size: 60, category: "Big Tech", label: "Amazon" },
+  { x: 800, y: 25, size: 50, category: "Big Tech", label: "Meta" },
+  // AI & Cloud Companies
+  { x: 600, y: 35, size: 40, category: "AI & Cloud", label: "NVIDIA" },
+  { x: 400, y: 28, size: 30, category: "AI & Cloud", label: "Salesforce" },
+  { x: 300, y: 32, size: 25, category: "AI & Cloud", label: "Adobe" },
+  { x: 250, y: 40, size: 20, category: "AI & Cloud", label: "ServiceNow" },
+  { x: 200, y: 45, size: 18, category: "AI & Cloud", label: "Palantir" },
+  // Fintech Companies
+  { x: 350, y: 20, size: 35, category: "Fintech", label: "Visa" },
+  { x: 280, y: 18, size: 32, category: "Fintech", label: "Mastercard" },
+  { x: 150, y: 30, size: 22, category: "Fintech", label: "PayPal" },
+  { x: 100, y: 35, size: 15, category: "Fintech", label: "Square" },
+  { x: 80, y: 42, size: 12, category: "Fintech", label: "Stripe" },
+  // Emerging Tech
+  { x: 120, y: 50, size: 10, category: "Emerging Tech", label: "OpenAI" },
+  { x: 90, y: 55, size: 8, category: "Emerging Tech", label: "Anthropic" },
+  { x: 70, y: 60, size: 6, category: "Emerging Tech", label: "Databricks" },
+  { x: 50, y: 65, size: 5, category: "Emerging Tech", label: "Notion" },
+  { x: 30, y: 70, size: 4, category: "Emerging Tech", label: "Figma" },
+];

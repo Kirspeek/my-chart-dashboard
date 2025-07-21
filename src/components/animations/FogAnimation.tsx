@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 const fogPng =
   "https://www.transparentpng.com/thumb/fog/fog-png-pictures-4.png";
@@ -71,8 +72,22 @@ export default function FogAnimation() {
           animation: "fog-move1 40s linear infinite",
         }}
       >
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
       </div>
       {/* Layer 2: medium speed, more visible */}
       <div
@@ -82,8 +97,22 @@ export default function FogAnimation() {
           animation: "fog-move2 18s linear infinite",
         }}
       >
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
       </div>
       {/* Layer 3: fast, subtle */}
       <div
@@ -93,8 +122,22 @@ export default function FogAnimation() {
           animation: "fog-move3 10s linear infinite",
         }}
       >
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
       </div>
       {/* Layer 4: most visible, slow drift */}
       <div
@@ -104,8 +147,22 @@ export default function FogAnimation() {
           animation: "fog-move4 25s linear infinite",
         }}
       >
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
-        <img style={fogImgStyle} src={fogPng} alt="Fog" />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
+        <Image
+          style={fogImgStyle}
+          src={fogPng}
+          alt="Fog"
+          width={800}
+          height={400}
+          unoptimized
+        />
       </div>
       {/* Gradient mask for soft fade at edges */}
       <div style={gradientMaskStyle} />

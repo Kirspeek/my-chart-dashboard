@@ -47,7 +47,7 @@ export default function MapContainer({
       map.remove();
       styleEl.remove();
     };
-  }, []);
+  }, [internalLocation]);
 
   // Update map center and marker when location changes
   useEffect(() => {

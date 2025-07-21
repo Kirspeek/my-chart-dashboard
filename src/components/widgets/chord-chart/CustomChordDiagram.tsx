@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "src/hooks/useTheme";
 import type { ChordChartData } from "../../../../interfaces/widgets";
 
 interface CustomChordDiagramProps {
@@ -128,7 +128,7 @@ export default function CustomChordDiagram({
         <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#000" flood-opacity="0.18"/>
       </filter>
     `);
-  }, [data, accent, colors, hoveredRibbon]);
+  }, [data, accent, colors, hoveredRibbon, arcColors, matrix]);
 
   return (
     <WidgetBase className="flex flex-col items-center justify-center">

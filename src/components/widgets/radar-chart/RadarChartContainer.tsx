@@ -11,8 +11,8 @@ import {
   Tooltip,
 } from "recharts";
 import type { RadarChartData } from "../../../../interfaces/widgets";
-import { useRadarChartLogic } from "../../../hooks/useRadarChartLogic";
-import { useTheme } from "../../../hooks/useTheme";
+import { useRadarChartLogic } from "src/hooks/useRadarChartLogic";
+import { useTheme } from "src/hooks/useTheme";
 
 interface RadarChartContainerProps {
   data: RadarChartData[];

@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { TimerWidgetProps } from "../../../../interfaces/components";
-import { useTimerLogic } from "../../../hooks/useTimerLogic";
+import { useTimerLogic } from "@/hooks/useTimerLogic";
 import TimerCircle from "./TimerCircle";
 import TimerControls from "./TimerControls";
 

@@ -275,3 +275,29 @@ export interface ChordChartWidgetProps {
   title: string;
   subtitle?: string;
 }
+
+export interface SankeyChartData {
+  from: string;
+  to: string;
+  size: number;
+}
+
+export interface SankeyChartWidgetProps {
+  data: SankeyChartData[];
+  title: string;
+  subtitle?: string;
+}
+
+export interface BubbleChartData {
+  x: number;
+  y: number;
+  size: number;
+  category: string;
+  label?: string;
+}
+
+export interface BubbleChartWidgetProps {
+  data: BubbleChartData[];
+  title: string;
+  subtitle?: string;
+}
