@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "src/hooks/useTheme";
 import WidgetBase from "../../common/WidgetBase";
-import { timelineData } from "../../../data/timelineData";
 
 // Utility to lighten/darken a hex color
 function shadeColor(color: string, percent: number) {
@@ -77,18 +76,35 @@ function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
   };
 }
 
+type TimelineItem = {
+  year: string;
+  color: "yellow" | "red" | "blue" | "teal" | "purple";
+  title: string;
+  desc: string;
+  progress?: number;
+};
+
 export default function TimelineRingsWidget() {
   const { accent, colors } = useTheme();
   const ringColors = colorMap(accent);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [animatedProgress, setAnimatedProgress] = useState<number[]>(() =>
-    timelineData.map(() => 0)
-  );
+  const [timelineData, setTimelineData] = useState<TimelineItem[]>([]);
+  const [animatedProgress, setAnimatedProgress] = useState<number[]>([]);
   const [animatedLineProgress, setAnimatedLineProgress] = useState<number[]>(
-    () => timelineData.map(() => 0)
+    []
   );
+
+  useEffect(() => {
+    import("../../../data/json/timelineData.json").then((mod) => {
+      const arr = (mod.default ?? mod) as TimelineItem[];
+      setTimelineData(arr);
+      setAnimatedProgress(new Array(arr.length).fill(0));
+      setAnimatedLineProgress(new Array(arr.length).fill(0));
+      setHasAnimated(false); // Reset animation state when data loads
+    });
+  }, []);
 
   // Intersection Observer to trigger animation
   useEffect(() => {
@@ -98,7 +114,7 @@ export default function TimelineRingsWidget() {
     if (typeof window !== "undefined" && "IntersectionObserver" in window) {
       observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting) {
+          if (entries[0].isIntersecting && timelineData.length > 0) {
             setHasAnimated(true);
             if (observer) observer.disconnect();
           }
@@ -106,17 +122,17 @@ export default function TimelineRingsWidget() {
         { threshold: 0.3 }
       );
       observer.observe(ref);
-    } else {
+    } else if (timelineData.length > 0) {
       setHasAnimated(true);
     }
     return () => {
       if (observer) observer.disconnect();
     };
-  }, []);
+  }, [timelineData]);
 
   // Sequential animation logic
   useEffect(() => {
-    if (!hasAnimated) return;
+    if (!hasAnimated || timelineData.length === 0) return;
     let cancelled = false;
 
     async function animateAll() {
@@ -168,7 +184,9 @@ export default function TimelineRingsWidget() {
     return () => {
       cancelled = true;
     };
-  }, [hasAnimated]);
+  }, [hasAnimated, timelineData]);
+
+  if (timelineData.length === 0) return null;
 
   return (
     <div ref={widgetRef}>
@@ -180,7 +198,7 @@ export default function TimelineRingsWidget() {
           {timelineData
             .map((item, idx): [typeof item, number] => [item, idx])
             .map(([item, idx]) => {
-              const color = ringColors[item.color];
+              const color = ringColors[item.color as RingColorKey];
               const isEven = idx % 2 === 1;
               const arcStart = 0;
               const arcEnd = arcStart + 360 * (animatedProgress[idx] ?? 0);

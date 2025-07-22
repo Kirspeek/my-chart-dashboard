@@ -4,17 +4,6 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import {
-  metricCards,
-  salesData,
-  barChartData,
-  pieChartData,
-  userData,
-  radarChartData,
-  migrationData,
-  sankeyData,
-  bubbleData,
-} from "@/components/widgets/data";
-import {
   ClockWidget,
   WeatherWidget,
   TimerWidget,
@@ -34,6 +23,18 @@ import {
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 
+interface DashboardData {
+  metricCards?: Array<any>;
+  salesData?: Array<any>;
+  barChartData?: Array<any>;
+  pieChartData?: Array<any>;
+  userData?: Array<any>;
+  radarChartData?: Array<any>;
+  migrationData?: Array<any>;
+  sankeyData?: Array<any>;
+  bubbleData?: Array<any>;
+}
+
 const cityMap: { [key: string]: string } = {
   "America/New_York": "New York",
   "Europe/London": "London",
@@ -41,42 +42,57 @@ const cityMap: { [key: string]: string } = {
   "Europe/Kyiv": "Kyiv",
 };
 
-// All cities that might be selected
 const allCities = Object.values(cityMap);
 
-// Official intercontinental migration flows (annual, in millions), ~2019/2020
-// Source: UN International Migration Stock 2020, IOM World Migration Report 2022, Niva et al. 2023 (Nature Human Behaviour)
-// const chordData = [
-//   { from: "Asia", to: "Europe", size: 1.8 },
-//   { from: "Asia", to: "Africa", size: 0.6 },
-//   { from: "Asia", to: "Americas", size: 1.2 },
-//   { from: "Asia", to: "Oceania", size: 0.2 },
-//   { from: "Europe", to: "Asia", size: 2.0 },
-//   { from: "Europe", to: "Africa", size: 0.3 },
-//   { from: "Europe", to: "Americas", size: 0.8 },
-//   { from: "Europe", to: "Oceania", size: 0.1 },
-//   { from: "Africa", to: "Asia", size: 0.7 },
-//   { from: "Africa", to: "Europe", size: 0.5 },
-//   { from: "Africa", to: "Americas", size: 0.3 },
-//   { from: "Africa", to: "Oceania", size: 0.05 },
-//   { from: "Americas", to: "Asia", size: 1.1 },
-//   { from: "Americas", to: "Europe", size: 0.7 },
-//   { from: "Americas", to: "Africa", size: 0.2 },
-//   { from: "Americas", to: "Oceania", size: 0.2 },
-//   { from: "Oceania", to: "Asia", size: 0.2 },
-//   { from: "Oceania", to: "Europe", size: 0.2 },
-//   { from: "Oceania", to: "Africa", size: 0.05 },
-//   { from: "Oceania", to: "Americas", size: 0.2 },
-// ]; // Remove this local definition
+function useDashboardData(): DashboardData {
+  const [data, setData] = useState<DashboardData>({});
+  useEffect(() => {
+    async function loadData() {
+      const [
+        metricCards,
+        salesData,
+        barChartData,
+        pieChartData,
+        userData,
+        radarChartData,
+        migrationData,
+        sankeyData,
+        bubbleData,
+      ] = await Promise.all([
+        import("../data/json/metricCards.json").then((m) => m.default),
+        import("../data/json/salesData.json").then((m) => m.default),
+        import("../data/json/barChartData.json").then((m) => m.default),
+        import("../data/json/pieChartData.json").then((m) => m.default),
+        import("../data/json/userData.json").then((m) => m.default),
+        import("../data/json/radarChartData.json").then((m) => m.default),
+        import("../data/json/migrationData.json").then((m) => m.default),
+        import("../data/json/sankeyData.json").then((m) => m.default),
+        import("../data/json/bubbleData.json").then((m) => m.default),
+      ]);
+      setData({
+        metricCards,
+        salesData,
+        barChartData,
+        pieChartData,
+        userData,
+        radarChartData,
+        migrationData,
+        sankeyData,
+        bubbleData,
+      });
+    }
+    loadData();
+  }, []);
+  return data;
+}
 
 export default function Home() {
-  const [selectedZone, setSelectedZone] = useState("Europe/London"); // Default fallback
+  const [selectedZone, setSelectedZone] = useState("Europe/London");
   const selectedCity = cityMap[selectedZone] || "London";
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // Remove isDesktop logic and useEffect
+  const data = useDashboardData();
 
-  // Preload weather for all cities
   useWeatherPreload(allCities, {
     autoPreload: true,
     preloadOnMount: true,
@@ -84,10 +100,11 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    // Only get local timezone on client side
     const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setSelectedZone(localZone);
   }, []);
+
+  if (!data.metricCards) return <div>Loading dashboard data...</div>;
 
   return (
     <div className="flex min-h-screen bg-[var(--background)]">
@@ -152,43 +169,52 @@ export default function Home() {
 
             {/* Metric cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-8">
-              {metricCards.map((metric, index) => (
+              {data.metricCards.map((metric, index) => (
                 <MetricWidget key={index} metric={metric} index={index} />
               ))}
             </div>
             {/* Charts grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
-              <LineChartWidget data={salesData} title="Sales Performance" />
-              <BarChartWidget data={barChartData} title="Quarterly Overview" />
+              <LineChartWidget
+                data={data.salesData}
+                title="Sales Performance"
+              />
+              <BarChartWidget
+                data={data.barChartData}
+                title="Quarterly Overview"
+              />
             </div>
             {/* New charts row: Performance Metrics and Chord Diagram side by side */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
               <RadarChartWidget
-                data={radarChartData}
+                data={data.radarChartData}
                 title="Performance Metrics"
               />
             </div>
             {/* Bottom row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
               <div className="lg:col-span-2 h-full">
-                <RecentUsersWidget data={userData} title="Recent Users" />
+                <RecentUsersWidget data={data.userData} title="Recent Users" />
               </div>
               <div className="h-full">
-                <DeviceUsageWidget data={pieChartData} title="Device Usage" />
+                <DeviceUsageWidget
+                  data={data.pieChartData}
+                  title="Device Usage"
+                />
               </div>
             </div>
             {/* Sankey Chart and Global Migrations row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
               <div className="lg:col-span-2 h-full">
                 <SankeyChartWidget
-                  data={sankeyData}
+                  data={data.sankeyData}
                   title="Global Migration Flows"
                   subtitle="2019/2020"
                 />
               </div>
               <div className="h-full">
                 <ChordChartWidget
-                  data={migrationData}
+                  data={data.migrationData}
                   title="Global Migrations"
                   subtitle="2023"
                 />
@@ -198,7 +224,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
               <div className="lg:col-span-2 h-full">
                 <BubbleChartWidget
-                  data={bubbleData}
+                  data={data.bubbleData}
                   title="Global Tech Investment"
                   subtitle="Market Cap vs Growth vs Workforce Size"
                 />

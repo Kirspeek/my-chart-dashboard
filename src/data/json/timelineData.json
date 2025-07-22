@@ -1,0 +1,37 @@
+[
+  {
+    "year": "2014",
+    "color": "yellow",
+    "title": "Global Solar Capacity Surges",
+    "desc": "Worldwide solar power capacity surpasses 150 GW, marking a turning point for renewable energy adoption.",
+    "progress": 0.9
+  },
+  {
+    "year": "2017",
+    "color": "red",
+    "title": "Wind Power Breaks Records",
+    "desc": "Global wind energy installations reach 500 GW, with offshore wind gaining momentum in Europe and Asia.",
+    "progress": 0.7
+  },
+  {
+    "year": "2018",
+    "color": "blue",
+    "title": "Battery Storage Innovation",
+    "desc": "Advancements in lithium-ion batteries drive down costs, enabling large-scale renewable integration.",
+    "progress": 0.5
+  },
+  {
+    "year": "2020",
+    "color": "teal",
+    "title": "Renewables Overtake Coal",
+    "desc": "For the first time, renewable energy generates more electricity than coal in the EU and US.",
+    "progress": 0.8
+  },
+  {
+    "year": "2021",
+    "color": "purple",
+    "title": "Green Hydrogen Emerges",
+    "desc": "Major investments in green hydrogen signal a new era for clean fuels and decarbonization efforts.",
+    "progress": 0.6
+  }
+]
