@@ -30,3 +30,4 @@ export { default as ChordChartWidget } from "./chord-chart/ChordChartWidget";
 export { default as SankeyChartWidget } from "./sankey-chart/SankeyChartWidget";
 export { default as BubbleChartWidget } from "./bubble-chart/BubbleChartWidget";
 export { default as TimelineRingsWidget } from "./timeline-rings/TimelineRingsWidget";
+export { default as WalletWidget } from "./wallet/WalletWidget";

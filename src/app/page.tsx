@@ -19,6 +19,7 @@ import {
   SankeyChartWidget,
   BubbleChartWidget,
   TimelineRingsWidget,
+  WalletWidget,
 } from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
@@ -167,38 +168,47 @@ export default function Home() {
               </>
             )}
 
+            {/* Wallet Widget */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8">
+              <div>
+                <WalletWidget />
+              </div>
+            </div>
             {/* Metric cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-8">
-              {data.metricCards.map((metric, index) => (
+              {(data.metricCards ?? []).map((metric, index) => (
                 <MetricWidget key={index} metric={metric} index={index} />
               ))}
             </div>
             {/* Charts grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
               <LineChartWidget
-                data={data.salesData}
+                data={data.salesData ?? []}
                 title="Sales Performance"
               />
               <BarChartWidget
-                data={data.barChartData}
+                data={data.barChartData ?? []}
                 title="Quarterly Overview"
               />
             </div>
             {/* New charts row: Performance Metrics and Chord Diagram side by side */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
               <RadarChartWidget
-                data={data.radarChartData}
+                data={data.radarChartData ?? []}
                 title="Performance Metrics"
               />
             </div>
             {/* Bottom row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
               <div className="lg:col-span-2 h-full">
-                <RecentUsersWidget data={data.userData} title="Recent Users" />
+                <RecentUsersWidget
+                  data={data.userData ?? []}
+                  title="Recent Users"
+                />
               </div>
               <div className="h-full">
                 <DeviceUsageWidget
-                  data={data.pieChartData}
+                  data={data.pieChartData ?? []}
                   title="Device Usage"
                 />
               </div>
@@ -207,14 +217,14 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
               <div className="lg:col-span-2 h-full">
                 <SankeyChartWidget
-                  data={data.sankeyData}
+                  data={data.sankeyData ?? []}
                   title="Global Migration Flows"
                   subtitle="2019/2020"
                 />
               </div>
               <div className="h-full">
                 <ChordChartWidget
-                  data={data.migrationData}
+                  data={data.migrationData ?? []}
                   title="Global Migrations"
                   subtitle="2023"
                 />
@@ -224,7 +234,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
               <div className="lg:col-span-2 h-full">
                 <BubbleChartWidget
-                  data={data.bubbleData}
+                  data={data.bubbleData ?? []}
                   title="Global Tech Investment"
                   subtitle="Market Cap vs Growth vs Workforce Size"
                 />
