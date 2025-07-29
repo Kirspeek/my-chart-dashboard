@@ -18,8 +18,8 @@ interface CardItemProps {
     logoColor: string;
     textColor: string;
     chipColor: string;
+    logoUrl?: string | null;
   };
-  bankLogoUrl?: string | null;
   form: {
     number: string;
     name: string;
@@ -32,6 +32,7 @@ interface CardItemProps {
     scheme: string;
   };
   saving: boolean;
+  fetchingBankData?: boolean;
   onCardClick: () => void;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onInputClick: (e: React.MouseEvent) => void;
@@ -59,23 +60,24 @@ export default function CardItem({
   index,
   isEditing,
   bankDesign,
-  bankLogoUrl,
   form,
   bankInfo,
   saving,
+  fetchingBankData,
   onCardClick,
   onInputChange,
   onInputClick,
   onSave,
   onCancel,
 }: CardItemProps) {
-  // Determine card background - use bank design if card has data, otherwise use color palette
-  const cardBackground = card.number
+  // Determine card background - use bank design if card has data OR if we're editing with bank info, otherwise use color palette
+  const hasBankData = card.number || (isEditing && bankInfo.bank);
+  const cardBackground = hasBankData
     ? bankDesign.background
     : cardColors[index % cardColors.length];
 
-  // Determine text color - use bank design if card has data, otherwise use dark text for pastel backgrounds
-  const cardTextColor = card.number ? bankDesign.textColor : "#222";
+  // Determine text color - use bank design if card has data OR if we're editing with bank info, otherwise use dark text for pastel backgrounds
+  const cardTextColor = hasBankData ? bankDesign.textColor : "#222";
 
   return (
     <div
@@ -117,7 +119,6 @@ export default function CardItem({
           background: cardBackground,
           textColor: cardTextColor,
         }}
-        bankLogoUrl={bankLogoUrl}
         isEditing={isEditing}
         formInputs={isEditing ? form : undefined}
         onInputChange={isEditing ? onInputChange : undefined}
@@ -126,6 +127,7 @@ export default function CardItem({
         saving={saving}
         onSave={onSave}
         onCancel={onCancel}
+        fetchingBankData={fetchingBankData}
       />
     </div>
   );

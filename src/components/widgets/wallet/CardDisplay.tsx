@@ -17,8 +17,8 @@ interface CardDisplayProps {
     logoColor: string;
     textColor: string;
     chipColor: string;
+    logoUrl?: string | null;
   };
-  bankLogoUrl?: string | null;
 
   // Display mode
   isEditing?: boolean;
@@ -44,6 +44,7 @@ interface CardDisplayProps {
 
   // Action buttons props
   saving?: boolean;
+  fetchingBankData?: boolean;
   onSave?: (e: React.FormEvent) => void;
   onCancel?: () => void;
 }
@@ -55,16 +56,20 @@ export default function CardDisplay({
   bankName,
   scheme,
   bankDesign,
-  bankLogoUrl,
   isEditing = false,
   formInputs,
   onInputChange,
   onInputClick,
   bankInfo,
   saving,
+  fetchingBankData,
   onSave,
   onCancel,
 }: CardDisplayProps) {
+  // State to track if external logo has loaded
+  const [externalLogoLoaded, setExternalLogoLoaded] = React.useState(false);
+  const [externalLogoFailed, setExternalLogoFailed] = React.useState(false);
+
   // Use form values if editing, otherwise use card values
   const displayNumber = isEditing
     ? formInputs?.number || cardNumber
@@ -74,6 +79,57 @@ export default function CardDisplay({
     ? formInputs?.exp || expirationDate
     : expirationDate;
   const displayScheme = isEditing ? formInputs?.scheme || scheme : scheme;
+
+  // Get bank logo URL from the design
+  const currentBankName = isEditing ? bankInfo?.bank : bankName;
+  // Use the bank design as is, don't override the logo URL
+  const bankDesignWithLogo = bankDesign;
+
+  // Debug logo URL
+  console.log("CardDisplay Logo Debug:", {
+    currentBankName,
+    bankDesignLogoUrl: bankDesignWithLogo.logoUrl,
+    bankDesignWithLogoUrl: bankDesignWithLogo.logoUrl,
+    bankDesignLogo: bankDesign.logo,
+    externalLogoLoaded,
+    externalLogoFailed,
+  });
+
+  // Reset logo state when bank changes
+  React.useEffect(() => {
+    setExternalLogoLoaded(false);
+    setExternalLogoFailed(false);
+  }, [currentBankName, bankDesignWithLogo.logoUrl]);
+
+  // Create a reliable text-based logo component
+  const TextLogo = ({ text, color }: { text: string; color: string }) => (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(255,255,255,0.2)",
+        borderRadius: 4,
+        padding: "2px 6px",
+        minWidth: text === "BANK" ? 40 : 24,
+        height: 24,
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "'Poppins', sans-serif",
+          fontSize: text === "BANK" ? 10 : 8,
+          fontWeight: 700,
+          color: color,
+          textAlign: "center",
+          lineHeight: 1,
+          textTransform: "uppercase",
+        }}
+      >
+        {text === "BANK" ? "BANK" : text.slice(0, 3).toUpperCase()}
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -102,35 +158,91 @@ export default function CardDisplay({
             display: "flex",
             alignItems: "center",
             gap: 8,
+            position: "relative",
+            width: 24,
+            height: 24,
           }}
         >
-          {bankLogoUrl ? (
-            <Image
-              src={bankLogoUrl}
-              alt={bankName || "Bank"}
-              width={24}
-              height={24}
-              style={{
-                filter: "brightness(0) invert(1)",
-                opacity: 0.9,
-              }}
-              onError={(e) => {
-                // Fallback to text if image fails to load
-                e.currentTarget.style.display = "none";
-              }}
-            />
+          {/* Show "BANK" for empty cards, or actual bank logo for cards with bank info */}
+          {currentBankName ? (
+            <>
+              {/* Bank logo for cards with bank info - only show if external logo failed or not loaded */}
+              {(!externalLogoLoaded || externalLogoFailed) && (
+                <div
+                  style={{
+                    width: 24,
+                    height: 24,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "4px",
+                    background: "rgba(255,255,255,0.1)",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    zIndex: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Poppins', sans-serif",
+                      fontWeight: 700,
+                      fontSize: 8,
+                      color: bankDesign.logoColor,
+                      letterSpacing: 0.5,
+                      textAlign: "center",
+                      lineHeight: 1,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {bankDesign.logo.slice(0, 3).toUpperCase()}
+                  </div>
+                </div>
+              )}
+
+              {/* External logo - only show if URL exists and hasn't failed */}
+              {bankDesignWithLogo.logoUrl &&
+                bankDesignWithLogo.logoUrl !== null &&
+                !externalLogoFailed && (
+                  <Image
+                    src={bankDesignWithLogo.logoUrl}
+                    alt={currentBankName || "Bank"}
+                    width={24}
+                    height={24}
+                    style={{
+                      filter: "brightness(0) invert(1)",
+                      opacity: 0.9,
+                      objectFit: "contain",
+                      position: "absolute",
+                      left: 0,
+                      top: 0,
+                      zIndex: 1,
+                    }}
+                    onError={(e) => {
+                      console.log(
+                        "External logo failed to load:",
+                        bankDesignWithLogo.logoUrl
+                      );
+                      e.currentTarget.style.display = "none";
+                      setExternalLogoFailed(true);
+                    }}
+                    onLoad={() => {
+                      console.log(
+                        "External logo loaded successfully:",
+                        bankDesignWithLogo.logoUrl
+                      );
+                      // Small delay to ensure smooth transition
+                      setTimeout(() => {
+                        setExternalLogoLoaded(true);
+                      }, 100);
+                    }}
+                  />
+                )}
+            </>
           ) : (
-            <div
-              style={{
-                fontFamily: "'Poppins', sans-serif",
-                fontWeight: 700,
-                fontSize: 16,
-                color: bankDesign.logoColor,
-                letterSpacing: 0.5,
-              }}
-            >
-              {bankDesign.logo}
-            </div>
+            /* Show "BANK" for empty cards */
+            <TextLogo text="BANK" color={bankDesign.logoColor} />
           )}
         </div>
 
@@ -148,7 +260,7 @@ export default function CardDisplay({
           {isEditing && (
             <>
               <button
-                type="button"
+                type="submit"
                 onClick={(e) => {
                   e.stopPropagation();
                   onSave?.(e);
@@ -162,7 +274,7 @@ export default function CardDisplay({
                   fontFamily: "'Poppins', sans-serif",
                   fontWeight: 600,
                   fontSize: 14,
-                  cursor: saving ? "not-allowed" : "pointer",
+                  cursor: "pointer",
                   opacity: saving ? 0.7 : 1,
                   transition: "all 0.2s",
                   display: "flex",
@@ -210,6 +322,8 @@ export default function CardDisplay({
             style={{
               filter: "brightness(0) invert(1)",
               opacity: 0.9,
+              width: "auto",
+              height: "auto",
             }}
             onError={(e) => {
               // Fallback to text if image fails to load
@@ -296,51 +410,6 @@ export default function CardDisplay({
             />
             <rect x="13" y="7" width="2" height="12" rx="1" fill="#bfa14a" />
             <rect x="21" y="7" width="2" height="12" rx="1" fill="#bfa14a" />
-            <rect x="7" y="12" width="22" height="2" rx="1" fill="#bfa14a" />
-            <rect
-              x="7"
-              y="10"
-              width="22"
-              height="1"
-              rx="0.5"
-              fill="#bfa14a"
-              fillOpacity="0.7"
-            />
-            <rect
-              x="7"
-              y="15"
-              width="22"
-              height="1"
-              rx="0.5"
-              fill="#bfa14a"
-              fillOpacity="0.7"
-            />
-            <rect
-              x="10"
-              y="7"
-              width="1"
-              height="12"
-              rx="0.5"
-              fill="#bfa14a"
-              fillOpacity="0.7"
-            />
-            <rect
-              x="25"
-              y="7"
-              width="1"
-              height="12"
-              rx="0.5"
-              fill="#bfa14a"
-              fillOpacity="0.7"
-            />
-            <rect
-              x="1"
-              y="1"
-              width="34"
-              height="24"
-              rx="6"
-              fill="url(#chipShadow)"
-            />
           </svg>
         </div>
 
@@ -395,8 +464,29 @@ export default function CardDisplay({
             marginTop: -8,
           }}
         >
-          {bankInfo.bank}{" "}
-          {bankInfo.scheme && `(${bankInfo.scheme.toUpperCase()})`}
+          {fetchingBankData ? (
+            <span>Loading...</span>
+          ) : (
+            <>
+              {bankInfo.bank}{" "}
+              {bankInfo.scheme && `(${bankInfo.scheme.toUpperCase()})`}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Bank info display for non-editing mode */}
+      {!isEditing && currentBankName && (
+        <div
+          style={{
+            fontFamily: "'Poppins', sans-serif",
+            fontSize: 10,
+            color: "rgba(255,255,255,0.8)",
+            textAlign: "center",
+            marginTop: -8,
+          }}
+        >
+          {currentBankName} {scheme && `(${scheme.toUpperCase()})`}
         </div>
       )}
 
