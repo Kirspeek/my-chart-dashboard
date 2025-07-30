@@ -1,0 +1,95 @@
+// API Constants and Configuration
+
+// Base URLs
+export const API_BASE_URLS = {
+  WEATHER: "https://api.openweathermap.org/data/2.5",
+  BANK_BIN: "https://api.apilayer.com/bincheck",
+  LOGO_CLEARBIT: "https://logo.clearbit.com",
+  ICONS_CDN: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons",
+} as const;
+
+// API Keys
+export const API_KEYS = {
+  WEATHER: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY || "",
+  BANK_BIN: "w3zpCvSQLybqm8M6WIIo6NrnhRMEBKxD",
+} as const;
+
+// API Endpoints
+export const API_ENDPOINTS = {
+  // Weather API
+  WEATHER: {
+    CURRENT: "/weather",
+    FORECAST: "/forecast",
+    GEOCODING: "https://api.openweathermap.org/geo/1.0/direct",
+  },
+
+  // Bank BIN API
+  BANK: {
+    BIN_CHECK: (bin: string) => `${API_BASE_URLS.BANK_BIN}/${bin}`,
+  },
+
+  // Logo and Icon APIs
+  ASSETS: {
+    BANK_LOGO: (domain: string, size: number = 48) =>
+      `${API_BASE_URLS.LOGO_CLEARBIT}/${domain}.com?size=${size}&format=png`,
+    ICON: (iconName: string) => `${API_BASE_URLS.ICONS_CDN}/${iconName}.svg`,
+  },
+} as const;
+
+// API Headers
+export const API_HEADERS = {
+  BANK_BIN: {
+    apikey: API_KEYS.BANK_BIN,
+  },
+  WEATHER: {
+    "Content-Type": "application/json",
+  },
+} as const;
+
+// API Configuration
+export const API_CONFIG = {
+  TIMEOUT: 10000, // 10 seconds
+  RETRY_ATTEMPTS: 3,
+  RETRY_DELAY: 1000, // 1 second
+  CACHE_DURATION: 10 * 60 * 1000, // 10 minutes
+} as const;
+
+// Bank-specific constants
+export const BANK_CONSTANTS = {
+  MIN_BIN_LENGTH: 6,
+  DEBOUNCE_DELAY: 500, // milliseconds
+  LOGO_SIZE: 48,
+} as const;
+
+// Weather-specific constants
+export const WEATHER_CONSTANTS = {
+  CACHE_DURATION: 10 * 60 * 1000, // 10 minutes
+  PRELOAD_CITIES: ["London", "New York", "Tokyo", "Paris", "Sydney"],
+} as const;
+
+// Error messages
+export const API_ERROR_MESSAGES = {
+  NETWORK_ERROR: "Network error occurred",
+  TIMEOUT_ERROR: "Request timed out",
+  INVALID_RESPONSE: "Invalid response from server",
+  RATE_LIMIT: "Rate limit exceeded",
+  UNAUTHORIZED: "Unauthorized access",
+  NOT_FOUND: "Resource not found",
+  BANK_BIN_INVALID: "Invalid BIN number",
+  WEATHER_CITY_NOT_FOUND: "City not found",
+} as const;
+
+// HTTP Status codes
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  RATE_LIMIT: 429,
+  INTERNAL_SERVER_ERROR: 500,
+  BAD_GATEWAY: 502,
+  SERVICE_UNAVAILABLE: 503,
+} as const;

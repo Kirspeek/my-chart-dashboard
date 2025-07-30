@@ -19,6 +19,9 @@ export type {
 // Widget interfaces
 export * from "./widgets";
 
+// Wallet interfaces
+export * from "./wallet";
+
 // Common interfaces
 export * from "./common";
 

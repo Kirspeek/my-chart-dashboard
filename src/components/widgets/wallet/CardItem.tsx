@@ -1,59 +1,13 @@
 import React from "react";
 import CardDisplay from "./CardDisplay";
+import {
+  CardItemProps,
+  WALLET_CONSTANTS,
+  CARD_COLORS,
+} from "../../../../interfaces/wallet";
 
-interface CardItemProps {
-  card: {
-    number: string;
-    name: string;
-    exp: string;
-    ccv: string;
-    bank?: string;
-    scheme?: string;
-  };
-  index: number;
-  isEditing: boolean;
-  bankDesign: {
-    background: string;
-    logo: string;
-    logoColor: string;
-    textColor: string;
-    chipColor: string;
-    logoUrl?: string | null;
-  };
-  form: {
-    number: string;
-    name: string;
-    exp: string;
-    ccv: string;
-    scheme?: string;
-  };
-  bankInfo: {
-    bank: string;
-    scheme: string;
-  };
-  saving: boolean;
-  fetchingBankData?: boolean;
-  onCardClick: () => void;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onInputClick: (e: React.MouseEvent) => void;
-  onSave: (e: React.FormEvent) => void;
-  onCancel: () => void;
-}
-
-const CARD_HEIGHT = 202;
-const CARD_OFFSET = 40;
-
-// Color palette for different cards
-const cardColors = [
-  "#F4E4A6",
-  "#F4C2C2",
-  "#B8D4E3",
-  "#B8D4B8",
-  "#D4B8F4",
-  "#F4D4B8",
-  "#B8E3F4",
-  "#F4B8D4",
-];
+const CARD_HEIGHT = WALLET_CONSTANTS.CARD_HEIGHT;
+const CARD_OFFSET = WALLET_CONSTANTS.CARD_OFFSET;
 
 export default function CardItem({
   card,
@@ -74,7 +28,7 @@ export default function CardItem({
   const hasBankData = card.number || (isEditing && bankInfo.bank);
   const cardBackground = hasBankData
     ? bankDesign.background
-    : cardColors[index % cardColors.length];
+    : CARD_COLORS[index % CARD_COLORS.length];
 
   // Determine text color - use bank design if card has data OR if we're editing with bank info, otherwise use dark text for pastel backgrounds
   const cardTextColor = hasBankData ? bankDesign.textColor : "#222";
@@ -98,20 +52,16 @@ export default function CardItem({
         transform: isEditing
           ? `translateY(-40px) scale(1.08)`
           : `translateY(${index * CARD_OFFSET}px) scale(1)`,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-        border: "none",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        overflow: "hidden",
+        boxShadow: isEditing
+          ? "0 20px 40px rgba(0,0,0,0.3)"
+          : "0 4px 8px rgba(0,0,0,0.1)",
       }}
     >
-      {/* Always show CardDisplay component, whether card is filled or empty */}
       <CardDisplay
         cardNumber={card.number}
         cardHolder={card.name}
         expirationDate={card.exp}
+        ccv={card.ccv}
         bankName={card.bank}
         scheme={card.scheme}
         bankDesign={{
@@ -125,9 +75,9 @@ export default function CardItem({
         onInputClick={isEditing ? onInputClick : undefined}
         bankInfo={isEditing ? bankInfo : undefined}
         saving={saving}
+        fetchingBankData={fetchingBankData}
         onSave={onSave}
         onCancel={onCancel}
-        fetchingBankData={fetchingBankData}
       />
     </div>
   );
