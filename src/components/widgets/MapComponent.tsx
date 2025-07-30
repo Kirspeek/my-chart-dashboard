@@ -13,12 +13,13 @@ export default function MapComponent({
   const mapContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!mapContainer.current) return;
+    const currentContainer = mapContainer.current;
+    if (!currentContainer) return;
 
     // Simple map placeholder - in a real implementation, you'd use a map library
     const canvas = document.createElement("canvas");
-    canvas.width = mapContainer.current.clientWidth;
-    canvas.height = mapContainer.current.clientHeight;
+    canvas.width = currentContainer.clientWidth;
+    canvas.height = currentContainer.clientHeight;
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     canvas.style.borderRadius = "1rem";
@@ -37,11 +38,11 @@ export default function MapComponent({
       );
     }
 
-    mapContainer.current.appendChild(canvas);
+    currentContainer.appendChild(canvas);
 
     return () => {
-      if (mapContainer.current) {
-        mapContainer.current.innerHTML = "";
+      if (currentContainer) {
+        currentContainer.innerHTML = "";
       }
     };
   }, [center, zoom]);

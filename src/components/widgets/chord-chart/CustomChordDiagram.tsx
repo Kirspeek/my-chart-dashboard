@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import { useTheme } from "src/hooks/useTheme";
@@ -19,13 +19,10 @@ export default function CustomChordDiagram({
 }: CustomChordDiagramProps) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
-  const arcColors = [
-    accent.blue,
-    accent.yellow,
-    accent.teal,
-    accent.red,
-    accent.yellow,
-  ];
+  const arcColors = useMemo(
+    () => [accent.blue, accent.yellow, accent.teal, accent.red, accent.yellow],
+    [accent.blue, accent.yellow, accent.teal, accent.red]
+  );
   const [hoveredRibbon, setHoveredRibbon] = useState<number | null>(null);
   const [tooltip, setTooltip] = useState<{
     x: number;

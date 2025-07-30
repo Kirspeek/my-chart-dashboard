@@ -23,17 +23,59 @@ import {
 } from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
+import type { UserData } from "../../interfaces/dashboard";
+
+// Specific interfaces matching the actual JSON data structures
+interface MetricCardData {
+  title: string;
+  value: string;
+  change: number;
+  icon: string;
+}
+
+interface RadarChartDataItem {
+  subject: string;
+  value: number;
+  fullMark: number;
+}
+
+interface SankeyChartDataItem {
+  from: string;
+  to: string;
+  size: number;
+}
+
+interface BubbleChartDataItem {
+  x: number;
+  y: number;
+  size: number;
+  category: string;
+  label: string;
+}
 
 interface DashboardData {
-  metricCards?: Array<any>;
-  salesData?: Array<any>;
-  barChartData?: Array<any>;
-  pieChartData?: Array<any>;
-  userData?: Array<any>;
-  radarChartData?: Array<any>;
-  migrationData?: Array<any>;
-  sankeyData?: Array<any>;
-  bubbleData?: Array<any>;
+  metricCards?: MetricCardData[];
+  salesData?: Array<{
+    month: string;
+    sales: number;
+    revenue: number;
+    profit: number;
+  }>;
+  barChartData?: Array<{
+    name: string;
+    sales: number;
+    revenue: number;
+  }>;
+  pieChartData?: Array<{
+    name: string;
+    value: number;
+    color: string;
+  }>;
+  userData?: UserData[];
+  radarChartData?: RadarChartDataItem[];
+  migrationData?: SankeyChartDataItem[];
+  sankeyData?: SankeyChartDataItem[];
+  bubbleData?: BubbleChartDataItem[];
 }
 
 const cityMap: { [key: string]: string } = {

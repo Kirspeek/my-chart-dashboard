@@ -30,20 +30,23 @@ export function useTimerLogic(): TimerState & TimerActions {
   };
 
   // Convert mouse/touch position to timer value
-  const getSecondsFromPointer = (clientX: number, clientY: number) => {
-    if (!svgRef.current) return timeLeft;
-    const rect = svgRef.current.getBoundingClientRect();
-    const center = 45; // svgSize / 2
-    const x = clientX - rect.left - center;
-    const y = clientY - rect.top - center;
-    let theta = Math.atan2(y, x) + Math.PI / 2;
-    if (theta < 0) theta += 2 * Math.PI;
-    const percent = theta / (2 * Math.PI);
-    let seconds = Math.round(percent * maxSeconds);
-    if (seconds < minSeconds) seconds = minSeconds;
-    if (seconds > maxSeconds) seconds = maxSeconds;
-    return seconds;
-  };
+  const getSecondsFromPointer = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!svgRef.current) return timeLeft;
+      const rect = svgRef.current.getBoundingClientRect();
+      const center = 45; // svgSize / 2
+      const x = clientX - rect.left - center;
+      const y = clientY - rect.top - center;
+      let theta = Math.atan2(y, x) + Math.PI / 2;
+      if (theta < 0) theta += 2 * Math.PI;
+      const percent = theta / (2 * Math.PI);
+      let seconds = Math.round(percent * maxSeconds);
+      if (seconds < minSeconds) seconds = minSeconds;
+      if (seconds > maxSeconds) seconds = maxSeconds;
+      return seconds;
+    },
+    [timeLeft, maxSeconds, minSeconds]
+  );
 
   // Drag handlers
   const onPointerDown = (e: React.MouseEvent | React.TouchEvent) => {
@@ -56,23 +59,26 @@ export function useTimerLogic(): TimerState & TimerActions {
     document.body.style.userSelect = "none";
   };
 
-  const onPointerMove = (e: MouseEvent | TouchEvent) => {
-    if (!dragging) return;
-    let clientX: number, clientY: number;
-    if ("touches" in e && e.touches && e.touches.length > 0) {
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else if ("clientX" in e && "clientY" in e) {
-      clientX = (e as MouseEvent).clientX;
-      clientY = (e as MouseEvent).clientY;
-    } else {
-      return;
-    }
-    const seconds = getSecondsFromPointer(clientX, clientY);
-    setPreviewDuration(seconds);
-  };
+  const onPointerMove = useCallback(
+    (e: MouseEvent | TouchEvent) => {
+      if (!dragging) return;
+      let clientX: number, clientY: number;
+      if ("touches" in e && e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else if ("clientX" in e && "clientY" in e) {
+        clientX = (e as MouseEvent).clientX;
+        clientY = (e as MouseEvent).clientY;
+      } else {
+        return;
+      }
+      const seconds = getSecondsFromPointer(clientX, clientY);
+      setPreviewDuration(seconds);
+    },
+    [dragging, getSecondsFromPointer]
+  );
 
-  const onPointerUp = () => {
+  const onPointerUp = useCallback(() => {
     if (previewDuration) {
       setDuration(previewDuration);
       setTimeLeft(previewDuration);
@@ -80,7 +86,7 @@ export function useTimerLogic(): TimerState & TimerActions {
     setPreviewDuration(null);
     setDragging(false);
     document.body.style.userSelect = "";
-  };
+  }, [previewDuration]);
 
   useEffect(() => {
     if (dragging) {
@@ -95,7 +101,7 @@ export function useTimerLogic(): TimerState & TimerActions {
         window.removeEventListener("touchend", onPointerUp);
       };
     }
-  }, [dragging, previewDuration, onPointerMove, onPointerUp]);
+  }, [dragging, onPointerMove, onPointerUp]);
 
   // Sound on timer end
   const playEndSound = useCallback(() => {

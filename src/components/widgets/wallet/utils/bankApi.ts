@@ -1,59 +1,80 @@
 import creditCardType from "credit-card-type";
-import { BankApiResponse, BankInfo } from "../../interfaces/wallet";
+import { BankApiResponse, BankInfo } from "../../../../../interfaces/wallet";
 import {
   API_ENDPOINTS,
   API_HEADERS,
   BANK_CONSTANTS,
-  API_ERROR_MESSAGES,
   HTTP_STATUS,
-} from "../../apis";
+} from "../../../../../apis";
 
-// Enhanced bank data fetching with better error handling
+const bankDataCache = new Map<string, BankInfo>();
+const rateLimitCache = new Map<string, number>();
+
 export const fetchBankData = async (
   cardNumber: string
 ): Promise<BankInfo | null> => {
   const digits = cardNumber.replace(/\D/g, "");
   if (digits.length < BANK_CONSTANTS.MIN_BIN_LENGTH) return null;
 
+  const bin = digits.slice(0, BANK_CONSTANTS.MIN_BIN_LENGTH);
+
+  if (bankDataCache.has(bin)) {
+    return bankDataCache.get(bin)!;
+  }
+
+  const now = Date.now();
+  const lastRequest = rateLimitCache.get(bin);
+  if (lastRequest && now - lastRequest < 1000) {
+    return null;
+  }
+
+  rateLimitCache.set(bin, now);
+
   try {
-    const res = await fetch(
-      API_ENDPOINTS.BANK.BIN_CHECK(
-        digits.slice(0, BANK_CONSTANTS.MIN_BIN_LENGTH)
-      ),
-      {
-        headers: API_HEADERS.BANK_BIN,
-      }
-    );
+    const res = await fetch(API_ENDPOINTS.BANK.BIN_CHECK(bin), {
+      headers: API_HEADERS.BANK_BIN,
+    });
 
     if (res.status === HTTP_STATUS.OK) {
       const data: BankApiResponse = await res.json();
+
       const bankName =
         data.bank_name || data.bank?.name || data.issuer?.name || "";
+
       const scheme = data.scheme || data.card?.scheme || "";
 
-      console.log("Bank API Response:", data);
-      console.log("Extracted bank name:", bankName);
-      console.log("Extracted scheme:", scheme);
-
-      return {
-        bank: bankName,
-        scheme: scheme,
-      };
-    } else if (res.status === HTTP_STATUS.UNAUTHORIZED) {
-      console.warn(API_ERROR_MESSAGES.UNAUTHORIZED);
-    } else if (res.status === HTTP_STATUS.RATE_LIMIT) {
-      console.warn(API_ERROR_MESSAGES.RATE_LIMIT);
-    } else {
-      console.warn(`Bank API error: ${res.status} ${res.statusText}`);
+      if (bankName || scheme) {
+        const result = {
+          bank: bankName,
+          scheme: scheme,
+        };
+        bankDataCache.set(bin, result);
+        return result;
+      }
     }
-  } catch (error) {
-    console.warn(API_ERROR_MESSAGES.NETWORK_ERROR, error);
+  } catch {
+    // Continue to fallback
+  }
+
+  try {
+    const cardTypes = creditCardType(digits);
+    const detectedType = cardTypes[0];
+
+    if (detectedType) {
+      const result = {
+        bank: "",
+        scheme: detectedType.type || "",
+      };
+      bankDataCache.set(bin, result);
+      return result;
+    }
+  } catch {
+    return null;
   }
 
   return null;
 };
 
-// Bank design utilities
 export const generateDynamicBankDesign = (
   bankName: string,
   scheme: string,
@@ -62,25 +83,20 @@ export const generateDynamicBankDesign = (
   const cardTypes = creditCardType(cardNumber);
   const detectedType = cardTypes[0];
 
-  // Generate a consistent color based on bank name
   const hash = bankName.split("").reduce((a, b) => {
     a = (a << 5) - a + b.charCodeAt(0);
     return a & a;
   }, 0);
 
-  // Generate colors from bank name hash
   const hue = Math.abs(hash) % 360;
-  const saturation = 60 + (Math.abs(hash) % 20); // 60-80%
-  const lightness = 30 + (Math.abs(hash) % 20); // 30-50%
+  const saturation = 60 + (Math.abs(hash) % 20);
+  const lightness = 30 + (Math.abs(hash) % 20);
 
   const primaryColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   const secondaryColor = `hsl(${hue}, ${saturation}%, ${lightness - 10}%)`;
 
-  // Extract bank domain for logo
   const bankWords = bankName.toLowerCase().split(" ");
   const domain = bankWords.join("").replace(/[^a-z0-9]/g, "");
-
-  // Generate logo text (first 3 letters of first word, or first 3 letters of bank name)
   const logoText = bankName.split(" ")[0].slice(0, 3).toUpperCase();
 
   return {
@@ -94,20 +110,15 @@ export const generateDynamicBankDesign = (
   };
 };
 
-// Modern bank design system using credit-card-type
 export const getBankDesign = (
   bankName: string,
   scheme: string,
   cardNumber: string
 ) => {
-  // Use credit-card-type to detect card type from number
   const cardTypes = creditCardType(cardNumber);
   const detectedType = cardTypes[0];
-
-  // Get bank-specific design based on bank name and detected card type
   const bankLower = bankName.toLowerCase();
 
-  // Major US Banks with authentic designs
   if (bankLower.includes("chase") || bankLower.includes("jpmorgan")) {
     return {
       background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)",
@@ -172,7 +183,6 @@ export const getBankDesign = (
     };
   }
 
-  // Digital Banks
   if (bankLower.includes("revolut") || bankLower.includes("revolut ltd")) {
     return {
       background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
@@ -233,7 +243,6 @@ export const getBankDesign = (
     };
   }
 
-  // Additional banks
   if (
     bankLower.includes("jsc universal bank") ||
     bankLower.includes("universal bank")
@@ -249,12 +258,10 @@ export const getBankDesign = (
     };
   }
 
-  // If bank name exists but not in predefined list, generate dynamic design
   if (bankName && bankName.trim() !== "") {
     return generateDynamicBankDesign(bankName, scheme, cardNumber);
   }
 
-  // Card type-based designs (fallback when bank is not recognized)
   if (detectedType?.type === "visa" && !bankName) {
     return {
       background: "linear-gradient(135deg, #1a1f71 0%, #2a5298 100%)",
@@ -291,10 +298,9 @@ export const getBankDesign = (
     };
   }
 
-  // Default fallback for empty cards
   return {
     background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    logo: "BANK", // This will show "BANK" for empty cards
+    logo: "BANK",
     logoColor: "#fff",
     textColor: "#fff",
     chipColor: "#d4af37",

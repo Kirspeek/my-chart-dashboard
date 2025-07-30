@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import { useTheme } from "src/hooks/useTheme";
@@ -45,61 +45,61 @@ export default function CustomSankeyDiagram({
     value: number;
   } | null>(null);
 
-  // Process data for Sankey diagram - create multi-column structure
-  const sourceNodes = new Set<string>();
-  const targetNodes = new Set<string>();
-
-  data.forEach(({ from, to }) => {
-    sourceNodes.add(from);
-    targetNodes.add(to);
-  });
+  // Extract unique source and target nodes
+  const sourceNodes = useMemo(() => new Set(data.map((d) => d.from)), [data]);
+  const targetNodes = useMemo(() => new Set(data.map((d) => d.to)), [data]);
 
   // Create nodes with column positioning
-  const sankeyNodes: SankeyNode[] = [
-    // Column 0: Source continents
-    ...Array.from(sourceNodes).map((name) => ({
-      id: name,
-      name,
-      value: 0,
-      column: 0,
-    })),
-    // Column 1: Intermediate categories (Major Flows, Minor Flows)
-    { id: "Major Flows", name: "Major Flows", value: 0, column: 1 },
-    { id: "Minor Flows", name: "Minor Flows", value: 0, column: 1 },
-    // Column 2: Target continents
-    ...Array.from(targetNodes).map((name) => ({
-      id: name,
-      name,
-      value: 0,
-      column: 2,
-    })),
-  ];
+  const sankeyNodes: SankeyNode[] = useMemo(
+    () => [
+      // Column 0: Source continents
+      ...Array.from(sourceNodes).map((name) => ({
+        id: name,
+        name,
+        value: 0,
+        column: 0,
+      })),
+      // Column 1: Intermediate categories (Major Flows, Minor Flows)
+      { id: "Major Flows", name: "Major Flows", value: 0, column: 1 },
+      { id: "Minor Flows", name: "Minor Flows", value: 0, column: 1 },
+      // Column 2: Target continents
+      ...Array.from(targetNodes).map((name) => ({
+        id: name,
+        name,
+        value: 0,
+        column: 2,
+      })),
+    ],
+    [sourceNodes, targetNodes]
+  );
 
   // Calculate node values
-  sankeyNodes.forEach((node) => {
-    if (node.column === 0) {
-      // Source nodes - sum outgoing flows
-      node.value = data
-        .filter((d) => d.from === node.name)
-        .reduce((sum, d) => sum + d.size, 0);
-    } else if (node.column === 1) {
-      // Intermediate nodes - categorize flows
-      if (node.name === "Major Flows") {
+  useEffect(() => {
+    sankeyNodes.forEach((node) => {
+      if (node.column === 0) {
+        // Source nodes - sum outgoing flows
         node.value = data
-          .filter((d) => d.size > 1.0)
+          .filter((d) => d.from === node.name)
           .reduce((sum, d) => sum + d.size, 0);
+      } else if (node.column === 1) {
+        // Intermediate nodes - categorize flows
+        if (node.name === "Major Flows") {
+          node.value = data
+            .filter((d) => d.size > 1.0)
+            .reduce((sum, d) => sum + d.size, 0);
+        } else {
+          node.value = data
+            .filter((d) => d.size <= 1.0)
+            .reduce((sum, d) => sum + d.size, 0);
+        }
       } else {
+        // Target nodes - sum incoming flows
         node.value = data
-          .filter((d) => d.size <= 1.0)
+          .filter((d) => d.to === node.name)
           .reduce((sum, d) => sum + d.size, 0);
       }
-    } else {
-      // Target nodes - sum incoming flows
-      node.value = data
-        .filter((d) => d.to === node.name)
-        .reduce((sum, d) => sum + d.size, 0);
-    }
-  });
+    });
+  }, [data, sankeyNodes]);
 
   useEffect(() => {
     const width = 800;

@@ -24,13 +24,11 @@ export default function CardItem({
   onSave,
   onCancel,
 }: CardItemProps) {
-  // Determine card background - use bank design if card has data OR if we're editing with bank info, otherwise use color palette
   const hasBankData = card.number || (isEditing && bankInfo.bank);
   const cardBackground = hasBankData
     ? bankDesign.background
     : CARD_COLORS[index % CARD_COLORS.length];
 
-  // Determine text color - use bank design if card has data OR if we're editing with bank info, otherwise use dark text for pastel backgrounds
   const cardTextColor = hasBankData ? bankDesign.textColor : "#222";
 
   return (
