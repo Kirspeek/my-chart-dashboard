@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CardForm, EMPTY_CARD } from "../../../interfaces/wallet";
+import { CardForm } from "../../../interfaces/wallet";
+import { EMPTY_CARD } from "../../data";
 
 export const useFormManagement = () => {
   const [form, setForm] = useState<CardForm>(EMPTY_CARD);

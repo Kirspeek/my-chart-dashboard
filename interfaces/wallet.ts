@@ -123,39 +123,6 @@ export interface BankApiResponse {
   };
 }
 
-export const WALLET_CONSTANTS = {
-  WALLET_WIDTH: 400,
-  WALLET_HEIGHT: 400,
-  POCKET_HEIGHT: 200,
-  CARD_HEIGHT: 202,
-  CARD_OFFSET: 40,
-  BORDER_RADIUS: 32,
-  TOP_PADDING: 40,
-  TOTAL_HEIGHT: 440,
-} as const;
-
-export const EMPTY_CARD: CardData = {
-  number: "",
-  name: "",
-  exp: "",
-  ccv: "",
-  bank: "",
-  scheme: "",
-};
-
-// Color palette for different cards
-export const CARD_COLORS = [
-  "#F4E4A6",
-  "#F4C2C2",
-  "#B8D4E3",
-  "#B8D4B8",
-  "#D4B8F4",
-  "#F4D4B8",
-  "#B8E3F4",
-  "#F4B8D4",
-] as const;
-
-// Consolidated base interfaces for common patterns
 export interface BaseDisplayProps {
   isEditing: boolean;
   textColor?: string;
@@ -216,7 +183,6 @@ export interface BaseBankInfoProps {
   };
 }
 
-// Enhanced base interfaces that combine common patterns
 export interface BaseBankInfoWithLoadingProps
   extends BaseBankInfoProps,
     BaseLoadingProps {}
@@ -229,7 +195,6 @@ export interface BaseDisplayWithBankDesignFullProps
   extends BaseDisplayProps,
     BaseBankDesignFullProps {}
 
-// CardDisplay component interfaces using composition
 export interface CardDisplayProps
   extends BaseCardDataProps,
     BaseBankDesignFullProps,
@@ -240,7 +205,6 @@ export interface CardDisplayProps
   isEditing?: boolean;
 }
 
-// Bank logo interfaces
 export interface BankLogoBaseProps {
   currentBankName?: string;
   bankDesign: {
@@ -257,7 +221,6 @@ export interface BankLogoExtendedProps extends BankLogoBaseProps {
   setExternalLogoFailed: (failed: boolean) => void;
 }
 
-// Action buttons interfaces
 export interface ActionButtonsProps
   extends BaseDisplayProps,
     BaseBankDesignProps,
@@ -268,7 +231,6 @@ export interface ActionButtonsProps
   isInfoVisible: boolean;
 }
 
-// Card number section interfaces
 export interface CardNumberSectionProps
   extends BaseDisplayProps,
     BaseBankDesignProps,
@@ -278,7 +240,6 @@ export interface CardNumberSectionProps
   maskedDisplayNumber: string;
 }
 
-// Bank info display interfaces
 export interface BankInfoDisplayProps
   extends BaseDisplayProps,
     BaseBankInfoProps,
@@ -287,7 +248,6 @@ export interface BankInfoDisplayProps
   scheme?: string;
 }
 
-// Card details section interfaces
 export interface CardDetailsSectionProps
   extends BaseDisplayProps,
     BaseBankDesignProps,
@@ -301,11 +261,9 @@ export interface CardDetailsSectionProps
   isExpirationDateValid: boolean;
 }
 
-// Text logo interface
 export interface TextLogoProps {
   text: string;
   color: string;
 }
 
-// Legacy interface names for backward compatibility
 export type BankLogoProps = BankLogoBaseProps;

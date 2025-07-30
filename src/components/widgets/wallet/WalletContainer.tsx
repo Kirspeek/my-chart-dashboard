@@ -1,16 +1,13 @@
 "use client";
 
 import React from "react";
-import CardItem from "./CardItem";
-import PocketContainer from "./PocketContainer";
+import { WalletContainerProps, CardData } from "../../../../interfaces/wallet";
+import { WALLET_CONSTANTS } from "../../../constants";
 import MainContainer from "./MainContainer";
+import PocketContainer from "./PocketContainer";
+import CardItem from "./CardItem";
 import AddCardButton from "./AddCardButton";
 import ClearWalletButton from "./ClearWalletButton";
-import {
-  WalletContainerProps,
-  CardData,
-  WALLET_CONSTANTS,
-} from "../../../../interfaces/wallet";
 
 export default function WalletContainer({
   cards,

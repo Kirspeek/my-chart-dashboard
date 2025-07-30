@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "src/hooks/useTheme";
 import WidgetBase from "../../common/WidgetBase";
+import type { TimelineItem } from "../../../../interfaces/widgets";
 
 // Utility to lighten/darken a hex color
 function shadeColor(color: string, percent: number) {
@@ -75,14 +76,6 @@ function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
     y: cy + r * Math.sin(rad),
   };
 }
-
-type TimelineItem = {
-  year: string;
-  color: "yellow" | "red" | "blue" | "teal" | "purple";
-  title: string;
-  desc: string;
-  progress?: number;
-};
 
 export default function TimelineRingsWidget() {
   const { accent, colors } = useTheme();

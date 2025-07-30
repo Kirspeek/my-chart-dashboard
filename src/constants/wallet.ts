@@ -1,0 +1,21 @@
+export const WALLET_CONSTANTS = {
+  WALLET_WIDTH: 400,
+  WALLET_HEIGHT: 400,
+  POCKET_HEIGHT: 200,
+  CARD_HEIGHT: 202,
+  CARD_OFFSET: 40,
+  BORDER_RADIUS: 32,
+  TOP_PADDING: 40,
+  TOTAL_HEIGHT: 440,
+} as const;
+
+export const CARD_COLORS = [
+  "#F4E4A6",
+  "#F4C2C2",
+  "#B8D4E3",
+  "#B8D4B8",
+  "#D4B8F4",
+  "#F4D4B8",
+  "#B8E3F4",
+  "#F4B8D4",
+] as const;

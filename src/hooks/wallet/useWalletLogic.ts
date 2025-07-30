@@ -1,13 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  CardData,
-  WALLET_CONSTANTS,
-  EMPTY_CARD,
-} from "../../../interfaces/wallet";
-import {
-  getBankDesign,
-  fetchBankData,
-} from "../../components/widgets/wallet/utils/bankApi";
+import { CardData } from "../../../interfaces/wallet";
+import { WALLET_CONSTANTS } from "../../constants";
+import { EMPTY_CARD } from "../../data";
+import { WalletUtils } from "../../utils";
 import { useBankData, useCardManagement, useFormManagement } from "./";
 
 const { WALLET_WIDTH, WALLET_HEIGHT, POCKET_HEIGHT } = WALLET_CONSTANTS;
@@ -123,9 +118,10 @@ export const useWalletLogic = () => {
   }, [
     nextEmptyIndex,
     editing,
-    cards.length,
+    cards,
     canAddCard,
     setCards,
+    setEditing,
     resetForm,
     clearBankInfo,
   ]);
@@ -144,7 +140,7 @@ export const useWalletLogic = () => {
           form.number.length >= 6
         ) {
           try {
-            const bankData = await fetchBankData(form.number);
+            const bankData = await WalletUtils.fetchBankData(form.number);
             if (bankData) {
               finalBankInfo = bankData;
             }
@@ -167,7 +163,16 @@ export const useWalletLogic = () => {
         clearBankInfo();
       }
     },
-    [editing, form, bankInfo, updateCard, setSaving, resetForm, clearBankInfo]
+    [
+      editing,
+      form,
+      bankInfo,
+      updateCard,
+      setSaving,
+      setEditing,
+      resetForm,
+      clearBankInfo,
+    ]
   );
 
   const handleCardClick = useCallback(
@@ -223,7 +228,7 @@ export const useWalletLogic = () => {
       const currentBank = isEditing ? bankInfo.bank : card.bank || "";
       const currentScheme = isEditing ? bankInfo.scheme : card.scheme || "";
 
-      return getBankDesign(currentBank, currentScheme, card.number);
+      return WalletUtils.getBankDesign(currentBank, currentScheme, card.number);
     },
     [editing, bankInfo]
   );

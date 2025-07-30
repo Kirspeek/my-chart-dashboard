@@ -1,10 +1,7 @@
 import React from "react";
+import { CardItemProps } from "../../../../interfaces/wallet";
+import { WALLET_CONSTANTS, CARD_COLORS } from "../../../constants";
 import CardDisplay from "./CardDisplay";
-import {
-  CardItemProps,
-  WALLET_CONSTANTS,
-  CARD_COLORS,
-} from "../../../../interfaces/wallet";
 
 const CARD_HEIGHT = WALLET_CONSTANTS.CARD_HEIGHT;
 const CARD_OFFSET = WALLET_CONSTANTS.CARD_OFFSET;

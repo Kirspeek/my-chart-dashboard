@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { BankInfo } from "../../../interfaces/wallet";
-import { fetchBankData } from "../../components/widgets/wallet/utils/bankApi";
+import { WalletUtils } from "../../utils";
 import { BANK_CONSTANTS } from "../../../apis";
 
 export const useBankData = () => {
@@ -16,7 +16,7 @@ export const useBankData = () => {
       if (cardNumber.length >= BANK_CONSTANTS.MIN_BIN_LENGTH) {
         setFetchingBankData(true);
         try {
-          const bankData = await fetchBankData(cardNumber);
+          const bankData = await WalletUtils.fetchBankData(cardNumber);
           if (bankData) {
             setBankInfo(bankData);
           } else {
