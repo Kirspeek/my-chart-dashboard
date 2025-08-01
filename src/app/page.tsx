@@ -20,12 +20,15 @@ import {
   BubbleChartWidget,
   TimelineRingsWidget,
   WalletWidget,
+  WalletCardWidget,
+  ContributionGraphWidget,
+  AggregatedSpendingWidget,
 } from "@/components/widgets";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 import type { UserData } from "../../interfaces/dashboard";
+import { WidgetHeightProvider } from "../context/WidgetHeightContext";
 
-// Specific interfaces matching the actual JSON data structures
 interface MetricCardData {
   title: string;
   value: string;
@@ -134,6 +137,7 @@ export default function Home() {
   const selectedCity = cityMap[selectedZone] || "London";
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const data = useDashboardData();
 
   useWeatherPreload(allCities, {
@@ -211,9 +215,24 @@ export default function Home() {
             )}
 
             {/* Wallet Widget */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8">
+            <WidgetHeightProvider>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8 items-stretch">
+                <div>
+                  <WalletWidget />
+                </div>
+                <div>
+                  <WalletCardWidget />
+                </div>
+                <div>
+                  <AggregatedSpendingWidget />
+                </div>
+              </div>
+            </WidgetHeightProvider>
+
+            {/* Contribution Graph Widget */}
+            <div className="grid grid-cols-1 gap-8 my-8">
               <div>
-                <WalletWidget />
+                <ContributionGraphWidget title="Financial Activity Overview" />
               </div>
             </div>
             {/* Metric cards */}

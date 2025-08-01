@@ -31,3 +31,10 @@ export { default as SankeyChartWidget } from "./sankey-chart/SankeyChartWidget";
 export { default as BubbleChartWidget } from "./bubble-chart/BubbleChartWidget";
 export { default as TimelineRingsWidget } from "./timeline-rings/TimelineRingsWidget";
 export { default as WalletWidget } from "./wallet/WalletWidget";
+
+// Wallet Card Widget
+export { default as WalletCardWidget } from "./wallet-card/WalletCardWidget";
+
+// Contribution Graph Widget
+export { default as ContributionGraphWidget } from "./contribution-graph/ContributionGraphWidget";
+export { default as AggregatedSpendingWidget } from "./aggregated-spending/AggregatedSpendingWidget";

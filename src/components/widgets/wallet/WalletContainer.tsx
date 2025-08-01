@@ -36,6 +36,7 @@ export default function WalletContainer({
         height: dynamicHeight,
         margin: "0 auto",
         marginTop: WALLET_CONSTANTS.TOP_PADDING,
+        transition: "height 0.3s ease-in-out", // Smooth transition for height changes
       }}
     >
       <MainContainer width={WALLET_WIDTH} height={dynamicHeight} zIndex={1} />
@@ -48,6 +49,7 @@ export default function WalletContainer({
           zIndex: 2,
           paddingBottom: POCKET_HEIGHT,
           top: -40,
+          transition: "all 0.3s ease-in-out", // Smooth transition for content adjustments
         }}
       >
         {cards.map((card: CardData, i: number) => {
