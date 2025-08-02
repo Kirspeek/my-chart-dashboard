@@ -1,0 +1,174 @@
+.container {
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 12px;
+  padding: 20px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.chartContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.chart {
+  position: relative;
+  width: 560px;
+  height: 260px;
+  margin: 3em auto;
+  background-image: repeating-radial-gradient(
+    center center,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1) 2px,
+    transparent 2px,
+    transparent 100%
+  );
+  background-size: 29px 29px;
+  background-position: -11px 11px;
+}
+
+.chart::before,
+.chart::after {
+  display: inline-block;
+  font-size: 0.875em;
+}
+
+.chart::before {
+  display: inline-block;
+  position: absolute;
+  left: -3.5em;
+  top: -5px;
+  content: "$4k \A $3k \A $2k \A $1k \A 0";
+  white-space: pre;
+  height: 100%;
+  line-height: 4.2;
+  text-align: right;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.chart::after {
+  content: "07:00h 21:00h";
+  width: 110%;
+  margin-left: -5%;
+  word-spacing: 36.5em;
+  padding-top: 0.5em;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.datasets {
+  width: 100%;
+  height: 100%;
+}
+
+.dataset {
+  fill-opacity: 0.8;
+  filter: url(#dropshadow);
+  transform-origin: bottom;
+  transform: scaleY(0.01);
+  opacity: 0.5;
+}
+
+.loaded .dataset {
+  opacity: 1;
+  animation: raise 0.5s ease 0.2s forwards;
+}
+
+.loaded #dataset-1 {
+  animation-delay: 0.2s;
+}
+
+.loaded #dataset-2 {
+  animation-delay: 0.1s;
+}
+
+.loaded #dataset-3 {
+  animation-delay: 0s;
+}
+
+.refreshButton {
+  position: relative;
+  top: -0.75em;
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+  border-radius: 5px;
+  padding: 0.25em 1em;
+  font-size: 1em;
+  float: right;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.refreshButton:focus {
+  outline: none;
+}
+
+.refreshButton:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.refreshIcon {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.figcaption {
+  line-height: 36px;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: 1rem;
+}
+
+/* Animations */
+@keyframes raise {
+  0% {
+    transform: scaleY(0.01);
+  }
+  75% {
+    transform: scaleY(1.1);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chart {
+    width: 100%;
+    max-width: 400px;
+    height: 200px;
+    margin: 2em auto;
+  }
+
+  .chart::before {
+    left: -2.5em;
+    font-size: 0.75em;
+  }
+
+  .chart::after {
+    font-size: 0.75em;
+    word-spacing: 20em;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart {
+    width: 100%;
+    max-width: 300px;
+    height: 150px;
+    margin: 1.5em auto;
+  }
+
+  .chart::before {
+    left: -2em;
+    font-size: 0.7em;
+  }
+
+  .chart::after {
+    font-size: 0.7em;
+    word-spacing: 15em;
+  }
+}

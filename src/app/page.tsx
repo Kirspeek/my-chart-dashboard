@@ -28,6 +28,7 @@ import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 import type { UserData } from "../../interfaces/dashboard";
 import { WidgetHeightProvider } from "../context/WidgetHeightContext";
+import { WidgetStateProvider } from "../context/WidgetStateContext";
 
 interface MetricCardData {
   title: string;
@@ -216,25 +217,31 @@ export default function Home() {
 
             {/* Wallet Widget */}
             <WidgetHeightProvider>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8 items-stretch">
-                <div>
-                  <WalletWidget />
+              <WidgetStateProvider>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8 items-stretch">
+                  <div>
+                    <WalletWidget />
+                  </div>
+                  <div>
+                    <WalletCardWidget />
+                  </div>
+                  <div>
+                    <AggregatedSpendingWidget />
+                  </div>
                 </div>
-                <div>
-                  <WalletCardWidget />
-                </div>
-                <div>
-                  <AggregatedSpendingWidget />
-                </div>
-              </div>
+              </WidgetStateProvider>
             </WidgetHeightProvider>
 
             {/* Contribution Graph Widget */}
-            <div className="grid grid-cols-1 gap-8 my-8">
-              <div>
-                <ContributionGraphWidget title="Financial Activity Overview" />
-              </div>
-            </div>
+            <WidgetHeightProvider>
+              <WidgetStateProvider>
+                <div className="grid grid-cols-1 gap-8 my-8">
+                  <div>
+                    <ContributionGraphWidget title="Financial Activity Overview" />
+                  </div>
+                </div>
+              </WidgetStateProvider>
+            </WidgetHeightProvider>
             {/* Metric cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-8">
               {(data.metricCards ?? []).map((metric, index) => (

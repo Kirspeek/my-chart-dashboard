@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { CommonComponentProps } from "./common";
 import { UserData } from "./dashboard";
+import { CardData } from "./wallet";
 
 // Clock Widget Interfaces
 export interface TimeZone {
@@ -310,3 +311,72 @@ export interface TimelineItem {
   desc: string;
   progress?: number;
 }
+
+export interface TimelineRingsWidgetProps {
+  data: TimelineItem[];
+  title: string;
+  subtitle?: string;
+}
+
+// Wheel Widget Interfaces
+export interface ExpenseData {
+  name: string;
+  value: number;
+  color: string;
+  percentage: number;
+}
+
+export interface SpendingChartProps {
+  data: ExpenseData[];
+  annualData?: ExpenseData[];
+  title?: string;
+  onClick?: () => void;
+  showCardNumber?: boolean;
+  cardNumber?: string;
+}
+
+export interface WalletCardData {
+  card: CardData;
+  balance: number;
+  monthlySpending: number;
+}
+
+export interface Point3D {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface SegmentPoint {
+  outer: Point3D;
+  inner: Point3D;
+  outerBottom: Point3D;
+  innerBottom: Point3D;
+}
+
+export interface Segment3D {
+  points: SegmentPoint[];
+  color: string;
+  data: ExpenseData;
+  startAngle: number;
+  endAngle: number;
+}
+
+export interface Face3D {
+  type: "bottom" | "outer-side" | "inner-side" | "top";
+  points: Point3D[];
+  color: string;
+  opacity: number;
+  zIndex: number;
+}
+
+export interface BottomSegmentInfoProps {
+  segment: ExpenseData | null;
+}
+
+export interface SpendingProgressProps {
+  selectedIndex: number;
+  totalCards: number;
+}
+
+export type TimePeriod = "Monthly" | "Annual";

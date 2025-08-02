@@ -1,3 +1,4 @@
-export { RequestUtils } from "./requestUtils";
-export { WeatherUtils } from "./weatherUtils";
-export { WalletUtils } from "./walletUtils";
+export * from "./walletUtils";
+export * from "./requestUtils";
+export * from "./weatherUtils";
+export * from "./wheelUtils";

@@ -1,29 +1,14 @@
 "use client";
 
 import React, { useMemo } from "react";
-import SpendingChart from "./SpendingChart";
+import SpendingChart from "../wheel/SpendingChart";
+import { useWidgetState } from "../../../context/WidgetStateContext";
+import { CardSpendingData } from "../../../../interfaces/wallet";
+import { ExpenseData, TimePeriod } from "../../../../interfaces/widgets";
 
 interface MonthlyExpensesChartProps {
-  card: CardData;
+  card: CardSpendingData;
   onClick: () => void;
-}
-
-type TimePeriod = "Monthly" | "Annual";
-
-interface ExpenseData {
-  name: string;
-  value: number;
-  color: string;
-  percentage: number;
-}
-
-interface CardData {
-  number: string;
-  name: string;
-  exp: string;
-  ccv: string;
-  bank?: string;
-  scheme?: string;
 }
 
 const generateStableExpenseData = (
@@ -97,18 +82,102 @@ export default function MonthlyExpensesChart({
   card,
   onClick,
 }: MonthlyExpensesChartProps) {
-  // Generate stable expense data based on card ID
-  const monthlyData = useMemo(() => {
-    return generateStableExpenseData(card.number || "default", "Monthly");
-  }, [card.number]);
+  const { getCurrentCardData } = useWidgetState();
+  const currentCardData = getCurrentCardData();
+
+  // Generate both monthly and annual data from current card's spending data
+  const { monthlyData, annualData } = useMemo(() => {
+    if (currentCardData) {
+      const { monthlySpending, dailySpending } = currentCardData;
+
+      // Monthly data
+      const monthlyTotal = monthlySpending.total;
+      const monthlyCategories = [
+        { name: "Food", color: "yellow" },
+        { name: "Transport", color: "blue" },
+        { name: "Entertainment", color: "red" },
+        { name: "Utilities", color: "teal" },
+      ];
+
+      const monthlyData = monthlyCategories.map((category) => {
+        const value =
+          monthlySpending.categories[
+            category.name.toLowerCase() as keyof typeof monthlySpending.categories
+          ] || 0;
+        const percentage =
+          monthlyTotal > 0 ? Math.round((value / monthlyTotal) * 100) : 0;
+
+        return {
+          name: category.name,
+          value,
+          color: category.color,
+          percentage,
+        };
+      });
+
+      // Annual data - aggregate from yearly daily spending
+      const yearlyTotal = dailySpending.yearly.reduce(
+        (sum, day) => sum + day.total,
+        0
+      );
+      const yearlyCategories = {
+        food: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.food,
+          0
+        ),
+        transport: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.transport,
+          0
+        ),
+        entertainment: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.entertainment,
+          0
+        ),
+        utilities: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.utilities,
+          0
+        ),
+      };
+
+      const annualData = monthlyCategories.map((category) => {
+        const value =
+          yearlyCategories[
+            category.name.toLowerCase() as keyof typeof yearlyCategories
+          ] || 0;
+        const percentage =
+          yearlyTotal > 0 ? Math.round((value / yearlyTotal) * 100) : 0;
+
+        return {
+          name: category.name,
+          value,
+          color: category.color,
+          percentage,
+        };
+      });
+
+      return { monthlyData, annualData };
+    }
+
+    // Fallback to generated data if no current card data
+    const fallbackMonthly = generateStableExpenseData(
+      card.cardNumber || "default",
+      "Monthly"
+    );
+    const fallbackAnnual = generateStableExpenseData(
+      card.cardNumber || "default",
+      "Annual"
+    );
+    return { monthlyData: fallbackMonthly, annualData: fallbackAnnual };
+  }, [currentCardData, card.cardNumber]);
 
   return (
     <SpendingChart
       data={monthlyData}
+      annualData={annualData}
       title="Monthly Spending"
       onClick={onClick}
       showCardNumber={true}
-      cardNumber={card.number}
+      cardNumber={currentCardData?.cardNumber || card.cardNumber}
     />
   );
 }

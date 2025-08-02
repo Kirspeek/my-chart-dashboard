@@ -16,14 +16,41 @@ interface DeviceUsageContainerProps {
   data: DeviceUsageData[];
 }
 
+function renderLegend(
+  data: DeviceUsageData[],
+  chartColors: string[],
+  colors: Record<string, string>
+) {
+  return data.map((item: DeviceUsageData, index: number) => (
+    <div key={index} className="flex items-center space-x-2">
+      <div
+        className="w-3 h-3 rounded-sm"
+        style={{ backgroundColor: chartColors[index % chartColors.length] }}
+      />
+      <span
+        className="text-sm font-medium"
+        style={{
+          color: colors.primary,
+          fontFamily: "var(--font-mono)",
+          fontWeight: 700,
+        }}
+      >
+        {item.name}
+      </span>
+    </div>
+  ));
+}
+
 export default function DeviceUsageContainer({
   data,
 }: DeviceUsageContainerProps) {
   const { tooltipStyle, formatTooltip, getChartColors } = useDeviceUsageLogic();
   const { colors } = useTheme();
-
-  // Use theme colors for chart segments
   const chartColors = getChartColors;
+  // Create a flat colors object with only string values
+  const flatColors = Object.fromEntries(
+    Object.entries(colors).filter(([, v]) => typeof v === "string")
+  ) as Record<string, string>;
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 h-full">
@@ -52,26 +79,7 @@ export default function DeviceUsageContainer({
         </RechartsPieChart>
       </ResponsiveContainer>
       <div className="flex justify-center mt-4 space-x-6">
-        {data.map((item, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <div
-              className="w-3 h-3 rounded-sm"
-              style={{
-                backgroundColor: chartColors[index % chartColors.length],
-              }}
-            />
-            <span
-              className="text-sm font-medium"
-              style={{
-                color: colors.primary,
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
-              }}
-            >
-              {item.name}
-            </span>
-          </div>
-        ))}
+        {renderLegend(data, chartColors, flatColors)}
       </div>
     </div>
   );

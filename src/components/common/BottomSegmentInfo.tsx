@@ -1,11 +1,5 @@
 import React from "react";
-
-interface ExpenseData {
-  name: string;
-  value: number;
-  color: string;
-  percentage: number;
-}
+import { ExpenseData } from "../../../interfaces/widgets";
 
 interface BottomSegmentInfoProps {
   segment: ExpenseData | null;

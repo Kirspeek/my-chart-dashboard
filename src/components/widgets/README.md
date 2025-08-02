@@ -75,7 +75,7 @@ import WeatherWidget from "@/components/weather/WeatherWidget";
 
 // Import hooks from centralized location
 import { useTimerLogic } from "@/hooks/useTimerLogic";
-import { useClockLogic, timeZones } from "@/hooks/useClockLogic";
+import { useClockLogic, timeZones } from "@/hooks";
 import { useWeatherLogic } from "@/hooks/useWeatherLogic";
 
 // Import interfaces from centralized location

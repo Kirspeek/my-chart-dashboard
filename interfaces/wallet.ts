@@ -267,3 +267,69 @@ export interface TextLogoProps {
 }
 
 export type BankLogoProps = BankLogoBaseProps;
+
+export interface CardSpendingData {
+  cardId: string;
+  cardNumber: string;
+  monthlySpending: {
+    total: number;
+    categories: {
+      food: number;
+      transport: number;
+      entertainment: number;
+      utilities: number;
+    };
+  };
+  dailySpending: {
+    monthly: Array<{
+      date: string;
+      total: number;
+      categories: {
+        food: number;
+        transport: number;
+        entertainment: number;
+        utilities: number;
+      };
+    }>;
+    yearly: Array<{
+      date: string;
+      total: number;
+      categories: {
+        food: number;
+        transport: number;
+        entertainment: number;
+        utilities: number;
+      };
+    }>;
+  };
+  isActive: boolean;
+}
+
+export interface FinancialActivityData {
+  cardId: string;
+  cardNumber: string;
+  dailySpending: Array<{
+    date: string;
+    total: number;
+    categories: {
+      food: number;
+      transport: number;
+      entertainment: number;
+      utilities: number;
+    };
+  }>;
+}
+
+export interface WidgetState {
+  currentCardId: string | null;
+  currentCardNumber: string;
+  cards: CardSpendingData[];
+  aggregatedData: {
+    totalSpending: number;
+    monthlySpending: number;
+    dailySpending: Array<{
+      date: string;
+      total: number;
+    }>;
+  };
+}

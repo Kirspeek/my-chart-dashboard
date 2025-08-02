@@ -6,6 +6,7 @@ import FinancialBarChart from "../wallet-card/FinancialBarChart";
 import { useWalletLogic } from "../../../hooks/wallet/useWalletLogic";
 import { CardData } from "../../../../interfaces/wallet";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
+import { useWidgetState } from "../../../context/WidgetStateContext";
 
 interface ExpenseData {
   name: string;
@@ -113,10 +114,88 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
 export default function AggregatedSpendingWidget() {
   const { cards } = useWalletLogic();
   const { targetHeight } = useWidgetHeight();
+  const { getCurrentCardData } = useWidgetState();
 
-  const aggregatedData = useMemo(() => {
-    return generateAggregatedExpenseData(cards);
-  }, [cards]);
+  const currentCardData = getCurrentCardData();
+
+  const { spendingData, annualSpendingData } = useMemo(() => {
+    if (currentCardData) {
+      // Show data for current card
+      const { monthlySpending, dailySpending } = currentCardData;
+
+      // Monthly data
+      const monthlyTotal = monthlySpending.total;
+      const monthlyCategories = [
+        { name: "Food", color: "yellow" },
+        { name: "Transport", color: "blue" },
+        { name: "Entertainment", color: "red" },
+        { name: "Utilities", color: "teal" },
+      ];
+
+      const monthlyData = monthlyCategories.map((category) => {
+        const value =
+          monthlySpending.categories[
+            category.name.toLowerCase() as keyof typeof monthlySpending.categories
+          ] || 0;
+        const percentage =
+          monthlyTotal > 0 ? Math.round((value / monthlyTotal) * 100) : 0;
+
+        return {
+          name: category.name,
+          value,
+          color: category.color,
+          percentage,
+        };
+      });
+
+      // Annual data - aggregate from yearly daily spending
+      const yearlyTotal = dailySpending.yearly.reduce(
+        (sum, day) => sum + day.total,
+        0
+      );
+      const yearlyCategories = {
+        food: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.food,
+          0
+        ),
+        transport: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.transport,
+          0
+        ),
+        entertainment: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.entertainment,
+          0
+        ),
+        utilities: dailySpending.yearly.reduce(
+          (sum, day) => sum + day.categories.utilities,
+          0
+        ),
+      };
+
+      const annualData = monthlyCategories.map((category) => {
+        const value =
+          yearlyCategories[
+            category.name.toLowerCase() as keyof typeof yearlyCategories
+          ] || 0;
+        const percentage =
+          yearlyTotal > 0 ? Math.round((value / yearlyTotal) * 100) : 0;
+
+        return {
+          name: category.name,
+          value,
+          color: category.color,
+          percentage,
+        };
+      });
+
+      return { spendingData: monthlyData, annualSpendingData: annualData };
+    } else {
+      // Show aggregated data for all cards
+      const monthlyData = generateAggregatedExpenseData(cards);
+      const annualData = generateAggregatedExpenseData(cards); // For now, use same data structure
+      return { spendingData: monthlyData, annualSpendingData: annualData };
+    }
+  }, [currentCardData, cards]);
 
   // Calculate dynamic styling based on height
   const widgetStyle = useMemo(
@@ -147,9 +226,11 @@ export default function AggregatedSpendingWidget() {
       >
         <div className="flex-1">
           <FinancialBarChart
-            data={aggregatedData}
+            data={spendingData}
+            annualData={annualSpendingData}
             title="Total Spending"
-            showCardNumber={false}
+            showCardNumber={!!currentCardData}
+            cardNumber={currentCardData?.cardNumber}
           />
         </div>
       </div>

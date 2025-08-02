@@ -1,9 +1,5 @@
 import React from "react";
-
-interface SpendingProgressProps {
-  selectedIndex: number;
-  totalCards: number;
-}
+import { SpendingProgressProps } from "../../../interfaces/widgets";
 
 export default function SpendingProgress({
   selectedIndex,

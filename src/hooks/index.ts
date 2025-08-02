@@ -12,6 +12,7 @@ export { useMetricLogic } from "./useMetricLogic";
 export { useChartLogic } from "./useChartLogic";
 export { useRecentUsersLogic } from "./useRecentUsersLogic";
 export { useDeviceUsageLogic } from "./useDeviceUsageLogic";
+export { useWheelWidgetLogic } from "./useWheelWidgetLogic";
 
 // Export wallet hooks
 export {

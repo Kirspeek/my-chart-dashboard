@@ -2,12 +2,12 @@
 
 import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
-import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
-import MonthlyExpensesChart from "./MonthlyExpensesChart";
+import SpendingChart from "./SpendingChart";
 import SpendingProgress from "../../common/SpendingProgress";
-import { useWidgetHeight } from "../../../context/WidgetHeightContext";
+import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
+import { generateStableExpenseData } from "../../../utils/wheelUtils";
 
-export default function WalletCardWidget() {
+export default function WheelWidget() {
   const {
     currentCard,
     selectedCardIndex,
@@ -17,22 +17,23 @@ export default function WalletCardWidget() {
     currentCardData,
   } = useWheelWidgetLogic();
 
-  const { targetHeight } = useWidgetHeight();
-
-  // Calculate dynamic styling based on height
-  const widgetStyle = useMemo(
-    () => ({
-      height: targetHeight,
-      marginTop: "40px",
-      transition: "height 0.3s ease-in-out", // Smooth transition for height changes
-    }),
-    [targetHeight]
-  );
-
   const contentStyle = useMemo(
     () => ({
-      marginTop: "-40px",
-      transition: "all 0.3s ease-in-out", // Smooth transition for content adjustments
+      opacity: 1,
+      transform: "scale(1)",
+      transition: "all 0.3s ease-in-out",
+    }),
+    []
+  );
+
+  const widgetStyle = useMemo(
+    () => ({
+      background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+      borderRadius: "16px",
+      boxShadow:
+        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
+      backdropFilter: "blur(10px)",
     }),
     []
   );
@@ -78,6 +79,16 @@ export default function WalletCardWidget() {
     );
   }
 
+  const fallbackMonthly = generateStableExpenseData(
+    currentCard?.cardNumber || "**** ****",
+    currentCardData.monthlySpending
+  );
+
+  const fallbackAnnual = generateStableExpenseData(
+    currentCard?.cardNumber || "**** ****",
+    currentCardData.monthlySpending * 12
+  );
+
   return (
     <WidgetBase
       className="w-full h-full flex flex-col items-center justify-center p-6"
@@ -89,12 +100,13 @@ export default function WalletCardWidget() {
       >
         {/* Monthly Expenses Chart */}
         <div className="flex-1">
-          {currentCard && (
-            <MonthlyExpensesChart
-              card={currentCard}
-              onClick={handleCardClick}
-            />
-          )}
+          <SpendingChart
+            data={fallbackMonthly}
+            annualData={fallbackAnnual}
+            onClick={handleCardClick}
+            showCardNumber={true}
+            cardNumber={currentCard?.cardNumber}
+          />
         </div>
 
         {/* Progress Indicators */}

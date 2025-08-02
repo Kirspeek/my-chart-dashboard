@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { WalletContainerProps, CardData } from "../../../../interfaces/wallet";
 import { WALLET_CONSTANTS } from "../../../constants";
+import { useWidgetState } from "../../../context/WidgetStateContext";
 import MainContainer from "./MainContainer";
 import PocketContainer from "./PocketContainer";
 import CardItem from "./CardItem";
@@ -28,6 +29,13 @@ export default function WalletContainer({
   setEditing,
   clearWallet,
 }: WalletContainerProps) {
+  const { refreshSpendingData } = useWidgetState();
+
+  // Update spending data whenever cards change
+  useEffect(() => {
+    refreshSpendingData(cards);
+  }, [cards, refreshSpendingData]);
+
   return (
     <div
       style={{

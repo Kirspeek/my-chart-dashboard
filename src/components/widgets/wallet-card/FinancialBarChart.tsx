@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { useTheme } from "../../../hooks/useTheme";
-import WaveAnimation from "./WaveAnimation";
+import WavesChart from "../waves-chart/WavesChart";
+import { WaveData } from "../waves-chart/logic";
 
 interface FinancialBarChartProps {
   data: ExpenseData[];
+  annualData?: ExpenseData[];
   title?: string;
   onClick?: () => void;
   showCardNumber?: boolean;
@@ -23,35 +25,51 @@ interface ExpenseData {
 
 export default function FinancialBarChart({
   data,
+  annualData,
   title = "Spending Overview",
   onClick,
   showCardNumber = false,
   cardNumber,
 }: FinancialBarChartProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("Monthly");
-  const [isAnimating, setIsAnimating] = useState(false);
   const { accent } = useTheme();
 
-  // Trigger animation when data changes
-  useEffect(() => {
-    if (data.length > 0) {
-      setIsAnimating(true);
-      const timer = setTimeout(() => {
-        setIsAnimating(false);
-      }, 5000); // 5 seconds animation duration
-      return () => clearTimeout(timer);
-    }
-  }, [data]);
-
-  // Process data with theme colors
+  // Use the appropriate data based on selected period
   const chartData = useMemo(() => {
-    if (data.length === 0) return [];
+    const dataToUse =
+      selectedPeriod === "Annual" && annualData ? annualData : data;
 
-    return data.map((item) => ({
+    if (dataToUse.length === 0) return [];
+
+    return dataToUse.map((item) => ({
       ...item,
       color: accent[item.color as keyof typeof accent] || accent.blue,
     }));
-  }, [data, accent]);
+  }, [data, annualData, selectedPeriod, accent]);
+
+  // Convert expense data to waves chart format
+  const wavesChartData = useMemo((): WaveData[] => {
+    if (chartData.length === 0) return [];
+
+    // Create waves chart datasets based on expense data
+    return [
+      {
+        id: "dataset-1",
+        color: chartData[0]?.color || "#50E3C2",
+        path: "M0,260 C0,260 22,199 64,199 C105,199 112,144 154,144 C195,144 194,126 216,126 C237,126 263,184 314,184 C365,183 386,128 434,129 C483,130 511,240 560,260 L0,260 Z",
+      },
+      {
+        id: "dataset-2",
+        color: chartData[1]?.color || "#21A6EE",
+        path: "M0,260 C35,254 63,124 88,124 C114,124 148,163 219,163 C290,163 315,100 359,100 C402,100 520,244 560,259 C560,259 0,259 0,260 Z",
+      },
+      {
+        id: "dataset-3",
+        color: chartData[2]?.color || "#807CCC",
+        path: "M0,260 C0,260 4,252 7,252 C66,252 90,102 139,102 C188,102 205,135 252,135 C299,135 309,89 330,89 C350,89 366,122 404,122 C442,122 431,98 451,98 C470,98 499,213 560,260 L0,259 Z",
+      },
+    ];
+  }, [chartData]);
 
   const totalSpending = useMemo(() => {
     const total = chartData.reduce((sum, item) => sum + item.value, 0);
@@ -81,12 +99,11 @@ export default function FinancialBarChart({
             }}
             className={`text-xs font-medium transition-colors px-2 py-1 rounded`}
             style={{
-              fontFamily: "var(--font-sans)",
-              color: selectedPeriod === "Monthly" ? "#232323" : "#888",
               backgroundColor:
                 selectedPeriod === "Monthly"
-                  ? "rgba(0,0,0,0.05)"
+                  ? "rgba(0,0,0,0.1)"
                   : "transparent",
+              color: selectedPeriod === "Monthly" ? "#232323" : "#666",
             }}
           >
             Monthly
@@ -98,12 +115,9 @@ export default function FinancialBarChart({
             }}
             className={`text-xs font-medium transition-colors px-2 py-1 rounded`}
             style={{
-              fontFamily: "var(--font-sans)",
-              color: selectedPeriod === "Annual" ? "#232323" : "#888",
               backgroundColor:
-                selectedPeriod === "Annual"
-                  ? "rgba(0,0,0,0.05)"
-                  : "transparent",
+                selectedPeriod === "Annual" ? "rgba(0,0,0,0.1)" : "transparent",
+              color: selectedPeriod === "Annual" ? "#232323" : "#666",
             }}
           >
             Annual
@@ -112,37 +126,19 @@ export default function FinancialBarChart({
       </div>
 
       {/* Total Spending Display */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-2">
         <div className="text-sm text-[#888] mb-1">{title}</div>
         <div className="text-2xl font-bold text-[#232323] font-mono">
           {totalSpending}
         </div>
       </div>
 
-      {/* Wave Chart */}
-      <div className="relative flex-1 mb-6 min-h-[12rem]">
-        <WaveAnimation data={chartData} isAnimating={isAnimating} />
-      </div>
-
-      {/* Legend */}
-      <div className="flex flex-wrap gap-3 justify-center">
-        {chartData.map((item, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: item.color }}
-            />
-            <span
-              className="text-xs"
-              style={{
-                fontFamily: "var(--font-sans)",
-                color: "#888",
-              }}
-            >
-              {item.name} ({item.percentage}%)
-            </span>
-          </div>
-        ))}
+      {/* Waves Chart */}
+      <div className="flex-1">
+        <WavesChart
+          data={wavesChartData}
+          title={`${selectedPeriod} Spending`}
+        />
       </div>
     </div>
   );
