@@ -32,6 +32,7 @@ export default function MapWidget({
         position: "relative",
         overflow: "hidden",
       }}
+      className="map-widget"
     >
       <MapSearch
         search={search}

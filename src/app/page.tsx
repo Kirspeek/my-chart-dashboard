@@ -190,7 +190,7 @@ export default function Home() {
     const isUpSwipe = distance > minSwipeDistance;
     const isDownSwipe = distance < -minSwipeDistance;
 
-    if (isUpSwipe && currentSlide < 2) {
+    if (isUpSwipe && currentSlide < 3) {
       setCurrentSlide(currentSlide + 1);
     }
     if (isDownSwipe && currentSlide > 0) {
@@ -251,11 +251,16 @@ export default function Home() {
             <div className="mobile-slide">
               <MapWidget />
             </div>
+
+            {/* Slide 4: Calendar Widget */}
+            <div className="mobile-slide">
+              <CalendarWidget />
+            </div>
           </div>
 
           {/* Slide indicators */}
           <div className="mobile-slide-indicators">
-            {[0, 1, 2].map((index) => (
+            {[0, 1, 2, 3].map((index) => (
               <div
                 key={index}
                 className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}

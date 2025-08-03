@@ -36,8 +36,36 @@ export default function MapContainer({
       zoom: 13,
       attributionControl: false,
       logoPosition: "bottom-right",
+      dragRotate: false,
+      cooperativeGestures: false,
     });
     mapRef.current = map;
+
+    // Configure touch interactions after map is loaded
+    map.on("load", () => {
+      // Disable rotation on touch
+      map.touchZoomRotate.disableRotation();
+
+      // Enable touch zoom and pan
+      map.touchZoomRotate.enable();
+      map.dragPan.enable();
+
+      // Disable scroll zoom (mouse wheel)
+      map.scrollZoom.disable();
+
+      // Prevent default touch behaviors that might interfere
+      const container = map.getContainer();
+      container.addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.touches.length === 1) {
+            // Single finger - allow pan only
+            e.preventDefault();
+          }
+        },
+        { passive: false }
+      );
+    });
 
     const styleEl = document.createElement("style");
     styleEl.innerHTML = `.mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib { display: none !important; }`;
@@ -136,6 +164,8 @@ export default function MapContainer({
         left: 0,
         right: 0,
         bottom: 0,
+        borderRadius: "inherit",
+        overflow: "hidden",
       }}
     />
   );
