@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { WaveData } from "./useWavesChartLogic";
+import { WaveData } from "../../../../../interfaces/charts";
 
 export const useWavesRenderLogic = (chartData: WaveData[]) => {
   // Generate wave paths

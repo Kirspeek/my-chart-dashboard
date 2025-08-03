@@ -9,7 +9,7 @@ export const useWheelInteractionLogic = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Mouse/Touch event handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseDown = (e: React.MouseEvent<Element>) => {
     e.preventDefault();
     setIsDragging(true);
     setHasDragged(false);
@@ -17,7 +17,7 @@ export const useWheelInteractionLogic = () => {
     setDragStartAngle(angle - rotationAngle);
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<Element>) => {
     if (!isDragging) return;
     e.preventDefault();
     setHasDragged(true);
@@ -42,7 +42,7 @@ export const useWheelInteractionLogic = () => {
   };
 
   const handleCanvasClick = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>, onClick?: () => void) => {
+    (e: React.MouseEvent<Element>, onClick?: () => void) => {
       // If user has dragged, don't trigger click
       if (hasDragged) {
         e.preventDefault();

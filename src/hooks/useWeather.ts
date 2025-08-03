@@ -6,6 +6,8 @@ import { ForecastDay } from "../../interfaces/widgets";
 export default function useWeather(city: string): UseWeatherReturn {
   const [forecast, setForecast] = useState<ForecastDay[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<ForecastDay[] | null>(null);
   const [isCached, setIsCached] = useState(false);
   const [isPreloading, setIsPreloading] = useState(false);
   const [stale, setStale] = useState(false);
@@ -19,6 +21,7 @@ export default function useWeather(city: string): UseWeatherReturn {
       staleData.forecast.length > 0
     ) {
       setForecast(staleData.forecast);
+      setData(staleData.forecast);
       setStale(staleData.isStale);
       setError(
         staleData.isStale ? "Showing last known data (may be outdated)" : null
@@ -26,6 +29,7 @@ export default function useWeather(city: string): UseWeatherReturn {
     } else if (forecast.length === 0) {
       // Only if no data at all, set loading true and clear forecast
       setForecast([]);
+      setData(null);
       setStale(false);
       setError(null);
     } // else: keep previous forecast until new data arrives
@@ -37,6 +41,7 @@ export default function useWeather(city: string): UseWeatherReturn {
   // Helper to force a fresh fetch from API
   const fetchWeather = useCallback(
     async (forceRefresh = false) => {
+      setLoading(true);
       if (forceRefresh) {
         await weatherCache.clearAll();
       }
@@ -48,6 +53,7 @@ export default function useWeather(city: string): UseWeatherReturn {
         setIsPreloading(weatherCache.isPreloading(city));
 
         if (cacheLoading) {
+          setLoading(false);
           return;
         }
 
@@ -63,20 +69,25 @@ export default function useWeather(city: string): UseWeatherReturn {
             staleData.forecast.length > 0
           ) {
             setForecast(staleData.forecast);
+            setData(staleData.forecast);
             setStale(true);
             setError("Showing last known data (may be outdated)");
           } else {
             setForecast([]);
+            setData(null);
             setStale(false);
             setError("City not found");
           }
+          setLoading(false);
           return;
         }
 
         setForecast(weatherData);
+        setData(weatherData);
         setStale(false);
         setError(null);
-      } catch (err) {
+        setLoading(false);
+      } catch {
         // On error, try to get stale data
         const staleData = weatherCache.getStaleWeather(city);
         if (
@@ -85,14 +96,16 @@ export default function useWeather(city: string): UseWeatherReturn {
           staleData.forecast.length > 0
         ) {
           setForecast(staleData.forecast);
+          setData(staleData.forecast);
           setStale(true);
           setError("Showing last known data (may be outdated)");
         } else {
           setForecast([]);
+          setData(null);
           setStale(false);
           setError("Weather fetch error");
         }
-        console.error("Weather fetch error:", err);
+        setLoading(false);
       }
     },
     [city]
@@ -105,6 +118,8 @@ export default function useWeather(city: string): UseWeatherReturn {
   return {
     forecast,
     error,
+    loading,
+    data,
     refetch: fetchWeather,
     isCached,
     isPreloading,

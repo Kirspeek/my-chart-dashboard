@@ -24,7 +24,7 @@ const Lightning = ({
 
     const gl = canvas.getContext("webgl");
     if (!gl) {
-      console.error("WebGL not supported");
+      // WebGL not supported
       return;
     }
 
@@ -121,7 +121,7 @@ const Lightning = ({
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error("Shader compile error:", gl.getShaderInfoLog(shader));
+        // Shader compile error
         gl.deleteShader(shader);
         return null;
       }
@@ -141,7 +141,8 @@ const Lightning = ({
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error("Program linking error:", gl.getProgramInfoLog(program));
+      // Program linking error
+      gl.deleteProgram(program);
       return;
     }
     gl.useProgram(program);

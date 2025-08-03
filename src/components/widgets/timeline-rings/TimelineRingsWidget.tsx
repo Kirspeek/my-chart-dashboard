@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "src/hooks/useTheme";
 import WidgetBase from "../../common/WidgetBase";
-import type { TimelineItem } from "../../../../interfaces/widgets";
+import type { TimelineItem } from "../../../../interfaces/charts";
 
 // Utility to lighten/darken a hex color
 function shadeColor(color: string, percent: number) {

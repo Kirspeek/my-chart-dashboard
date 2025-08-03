@@ -1,7 +1,4 @@
-import {
-  GeocodingResponse,
-  WeatherForecastResponse,
-} from "../../interfaces/api";
+import { WeatherForecastResponse } from "../../interfaces/api";
 import { API_CONFIG } from "../config/api";
 import { RequestUtils } from "../utils/requestUtils";
 
@@ -13,7 +10,7 @@ export class WeatherAPI {
   /**
    * Geocode a city name to get coordinates
    */
-  static async geocodeCity(
+  async geocodeCity(
     city: string
   ): Promise<{ lat: number; lon: number } | null> {
     try {
@@ -22,33 +19,21 @@ export class WeatherAPI {
       const response = await RequestUtils.fetchWithRetry(url);
 
       if (!response.ok) {
-        console.error(
-          `Geocoding API error: ${response.status} ${response.statusText}`
-        );
         throw new Error(`Geocoding API error: ${response.status}`);
       }
 
-      const data: GeocodingResponse = await response.json();
-
-      if (data.results && data.results.length > 0) {
+      const data = await response.json();
+      if (data && data.length > 0) {
         return {
-          lat: data.results[0].latitude,
-          lon: data.results[0].longitude,
+          lat: data[0].lat,
+          lon: data[0].lon,
         };
       }
 
-      console.warn(`No geocoding results found for city: ${city}`);
+      // No geocoding results found for city
       return null;
-    } catch (error) {
-      console.error("Geocoding error:", error);
-
-      // Return fallback coordinates for common cities
-      const fallbackCoords = this.getFallbackCoords(city);
-      if (fallbackCoords) {
-        console.log(`Using fallback coordinates for ${city}:`, fallbackCoords);
-        return fallbackCoords;
-      }
-
+    } catch {
+      // Geocoding error
       return null;
     }
   }
@@ -56,7 +41,7 @@ export class WeatherAPI {
   /**
    * Get weather forecast for coordinates
    */
-  static async getWeatherForecast(
+  async getWeatherForecast(
     lat: number,
     lon: number
   ): Promise<WeatherForecastResponse | null> {
@@ -66,16 +51,13 @@ export class WeatherAPI {
       const response = await RequestUtils.fetchWithRetry(url);
 
       if (!response.ok) {
-        console.error(
-          `Weather API error: ${response.status} ${response.statusText}`
-        );
         throw new Error(`Weather API error: ${response.status}`);
       }
 
       const data: WeatherForecastResponse = await response.json();
       return data;
-    } catch (error) {
-      console.error("Weather forecast error:", error);
+    } catch {
+      // Weather forecast error
       return null;
     }
   }
@@ -83,27 +65,30 @@ export class WeatherAPI {
   /**
    * Get complete weather data for a city
    */
-  static async getCityWeather(city: string): Promise<{
+  async getCityWeather(city: string): Promise<{
     forecast: WeatherForecastResponse | null;
     coords: { lat: number; lon: number } | null;
   }> {
     try {
-      const coords = await this.geocodeCity(city);
-      if (!coords) {
-        console.warn(`No coordinates found for ${city}, using mock data`);
-        return this.getMockWeatherData(city);
+      const coordinates = await this.geocodeCity(city);
+      if (!coordinates) {
+        // No geocoding results found for city
+        return WeatherAPI.getMockWeatherData(city);
       }
 
-      const forecast = await this.getWeatherForecast(coords.lat, coords.lon);
+      const forecast = await this.getWeatherForecast(
+        coordinates.lat,
+        coordinates.lon
+      );
       if (!forecast) {
-        console.warn(`Weather forecast failed for ${city}, using mock data`);
-        return this.getMockWeatherData(city);
+        // Weather forecast failed, using mock data
+        return WeatherAPI.getMockWeatherData(city);
       }
 
-      return { forecast, coords };
-    } catch (error) {
-      console.warn(`Weather API failed for ${city}, using mock data:`, error);
-      return this.getMockWeatherData(city);
+      return { forecast, coords: coordinates };
+    } catch {
+      // Weather API failed, using mock data
+      return WeatherAPI.getMockWeatherData(city);
     }
   }
 
@@ -114,7 +99,7 @@ export class WeatherAPI {
     forecast: WeatherForecastResponse;
     coords: { lat: number; lon: number } | null;
   } {
-    const coords = this.getFallbackCoords(city);
+    const coordinates = this.getFallbackCoords(city);
     const now = new Date();
 
     // Generate 5 days of mock weather data
@@ -155,7 +140,7 @@ export class WeatherAPI {
           weathercode: weatherCodes[0],
         },
       },
-      coords,
+      coords: coordinates,
     };
   }
 

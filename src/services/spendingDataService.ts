@@ -266,8 +266,8 @@ export const updateSpendingData = (cards: CardData[]): CardSpendingData[] => {
   if (existingData) {
     try {
       existingSpendingData = JSON.parse(existingData);
-    } catch (error) {
-      console.error("Error parsing existing spending data:", error);
+    } catch {
+      // Error parsing existing spending data
     }
   }
 

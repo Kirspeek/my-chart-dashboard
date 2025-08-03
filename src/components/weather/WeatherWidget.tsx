@@ -19,7 +19,6 @@ function renderForecastBlock(
   selectedDay: number,
   setSelectedDay: (i: number) => void
 ) {
-  console.log("Forecast data:", forecast); // Debug log
   if (forecast.length === 0 && !error) {
     return (
       <div style={{ color: "var(--color-gray)", fontSize: 18 }}>

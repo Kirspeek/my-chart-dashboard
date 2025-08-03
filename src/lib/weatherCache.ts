@@ -41,8 +41,8 @@ class WeatherCacheManager {
     const preloadPromises = citiesToPreload.map(async (city) => {
       try {
         await this.fetchAndCacheWeather(this.normalizeCity(city));
-      } catch (error) {
-        console.error(`Failed to preload weather for ${city}:`, error);
+      } catch {
+        // Failed to preload weather
       } finally {
         this.preloadQueue.delete(city);
       }
@@ -131,24 +131,13 @@ class WeatherCacheManager {
     });
 
     try {
+      const weatherAPI = new WeatherAPI();
       const { forecast: weatherData, coords } =
-        await WeatherAPI.getCityWeather(city);
+        await weatherAPI.getCityWeather(city);
 
-      // WeatherAPI.getCityWeather now always returns valid data (real or mock)
-      // but we should still check for safety
       if (!weatherData?.daily) {
-        console.warn(`No weather data available for ${city}, using mock data`);
-        const mockData = WeatherAPI.getMockWeatherData(city);
-        const forecast = this.processWeatherData(mockData.forecast);
-
-        this.cache.set(city, {
-          forecast,
-          coords: mockData.coords,
-          timestamp: Date.now(),
-          loading: false,
-        });
-
-        return { forecast, coords: mockData.coords, loading: false };
+        // No weather data available, using mock data
+        return this.getMockWeatherData(city);
       }
 
       const forecast = this.processWeatherData(weatherData);
@@ -162,23 +151,29 @@ class WeatherCacheManager {
       });
 
       return { forecast, coords, loading: false };
-    } catch (error) {
-      console.error(`Weather fetch error for ${city}:`, error);
-
-      // Even if there's an unexpected error, provide mock data
-      const mockData = WeatherAPI.getMockWeatherData(city);
-      const forecast = this.processWeatherData(mockData.forecast);
-
-      // Update cache with mock data
-      this.cache.set(city, {
-        forecast,
-        coords: mockData.coords,
-        timestamp: Date.now(),
-        loading: false,
-      });
-
-      return { forecast, coords: mockData.coords, loading: false };
+    } catch {
+      // Weather fetch error
+      return this.getMockWeatherData(city);
     }
+  }
+
+  private getMockWeatherData(city: string): {
+    forecast: ForecastDay[];
+    coords: { lat: number; lon: number } | null;
+    loading: boolean;
+  } {
+    const mockData = WeatherAPI.getMockWeatherData(city);
+    const forecast = this.processWeatherData(mockData.forecast);
+
+    // Update cache with mock data
+    this.cache.set(city, {
+      forecast,
+      coords: mockData.coords,
+      timestamp: Date.now(),
+      loading: false,
+    });
+
+    return { forecast, coords: mockData.coords, loading: false };
   }
 
   private processWeatherData(

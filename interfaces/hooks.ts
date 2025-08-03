@@ -1,6 +1,9 @@
 import { ForecastDay } from "./widgets";
 import { LoadingState, CacheEntry } from "./base";
 
+// Re-export CacheEntry for use in hooks
+export type { CacheEntry };
+
 // ============================================================================
 // WEATHER HOOK INTERFACES
 // ============================================================================

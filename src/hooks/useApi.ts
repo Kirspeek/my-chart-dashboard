@@ -19,7 +19,7 @@ export function useApi<T>(
 
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const cacheRef = useRef<Map<string, CacheEntry<T>>>(new Map());
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -75,7 +75,7 @@ export function useApi<T>(
           }
 
           if (attempt === retryCount) {
-            setError(lastError);
+            setError(lastError.message);
             setLoading(false);
             onError?.(lastError);
             return null;
@@ -134,9 +134,10 @@ export function useApi<T>(
 export function useWeatherApi(city: string) {
   return useApi(
     () =>
-      import("../lib/api").then(({ WeatherAPI }) =>
-        WeatherAPI.getCityWeather(city)
-      ),
+      import("../lib/api").then(({ WeatherAPI }) => {
+        const weatherAPI = new WeatherAPI();
+        return weatherAPI.getCityWeather(city);
+      }),
     {
       cacheTime: 10 * 60 * 1000, // 10 minutes for weather data
       retryCount: 2,
