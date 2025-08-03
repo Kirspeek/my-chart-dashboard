@@ -15,6 +15,7 @@ export default function WeatherStatus({
 }: WeatherStatusProps) {
   return (
     <div
+      className="weather-status-mobile"
       style={{
         fontSize: 12,
         color: isCached

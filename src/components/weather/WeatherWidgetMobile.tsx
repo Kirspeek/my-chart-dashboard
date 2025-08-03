@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import WeatherBackground from "./WeatherBackground";
+import WeatherBackgroundMobile from "./WeatherBackgroundMobile";
 import WeatherText from "./WeatherText";
-import ForecastDay from "./ForecastDay";
+import ForecastDayMobile from "./ForecastDayMobile";
 import { WeatherWidgetProps } from "../../../interfaces/widgets";
 import WidgetBase from "../common/WidgetBase";
 import { useWeatherLogic } from "@/hooks/useWeatherLogic";
@@ -11,6 +11,7 @@ import WeatherAnimations from "./WeatherAnimations";
 import WeatherStatus from "./WeatherStatus";
 import type { ForecastDay as ForecastDayType } from "../../../interfaces/widgets";
 import "../../styles/weather.css";
+import "../../styles/mobile.css";
 
 function renderForecastBlock(
   forecast: ForecastDayType[],
@@ -30,9 +31,9 @@ function renderForecastBlock(
     return <div style={{ color: "red", fontSize: 18 }}>{error}</div>;
   }
   return (
-    <div className="weather-forecast-desktop">
+    <div className="weather-forecast-mobile">
       {forecast.map((f, i) => (
-        <ForecastDay
+        <ForecastDayMobile
           key={f.day}
           day={f.day}
           icon={f.icon}
@@ -47,7 +48,7 @@ function renderForecastBlock(
   );
 }
 
-export default function WeatherWidget({
+export default function WeatherWidgetMobile({
   city = "Amsterdam",
 }: WeatherWidgetProps) {
   const {
@@ -63,15 +64,15 @@ export default function WeatherWidget({
   } = useWeatherLogic(city);
 
   return (
-    <WidgetBase className="weather-widget-desktop">
-      {/* Left: Current weather */}
+    <WidgetBase className="weather-widget-mobile">
+      {/* Top: Current weather */}
       <div
-        className="weather-left-panel-desktop"
+        className="weather-left-panel-mobile"
         style={{ overflow: isCloudy ? undefined : "hidden" }}
       >
-        <WeatherBackground desc={forecast[selectedDay]?.desc || ""}>
+        <WeatherBackgroundMobile desc={forecast[selectedDay]?.desc || ""}>
           <WeatherAnimations weatherDesc={forecast[selectedDay]?.desc || ""} />
-        </WeatherBackground>
+        </WeatherBackgroundMobile>
         {forecast[selectedDay] && dateString && (
           <WeatherText
             desc={forecast[selectedDay].desc}
@@ -84,8 +85,8 @@ export default function WeatherWidget({
           />
         )}
       </div>
-      {/* Right: Forecast */}
-      <div className="weather-right-panel-desktop">
+      {/* Bottom: Forecast */}
+      <div className="weather-right-panel-mobile">
         {/* Always show the status label to avoid layout shift */}
         <WeatherStatus
           isCached={isCached}

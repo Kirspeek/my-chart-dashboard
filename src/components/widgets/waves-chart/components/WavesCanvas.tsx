@@ -1,4 +1,5 @@
 import React from "react";
+import { ChartCanvas, RefreshButton } from "../../../common";
 
 interface WavesCanvasProps {
   chartRef: React.RefObject<HTMLDivElement | null>;
@@ -20,14 +21,7 @@ export default function WavesCanvas({
   onRefresh,
 }: WavesCanvasProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: "1rem 0",
-      }}
-    >
+    <ChartCanvas>
       <div
         ref={chartRef}
         style={{
@@ -75,30 +69,9 @@ export default function WavesCanvas({
           07:00h 21:00h
         </div>
 
-        <button
-          style={{
-            position: "relative",
-            top: "-0.75em",
-            border: "none",
-            background: "rgba(0, 0, 0, 0.1)",
-            color: "#333",
-            borderRadius: "5px",
-            padding: "0.25em 1em",
-            fontSize: "1em",
-            float: "right",
-            cursor: "pointer",
-            transition: "background-color 0.2s ease",
-          }}
-          onClick={onRefresh}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(0, 0, 0, 0.2)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(0, 0, 0, 0.1)";
-          }}
-        >
-          <span style={{ fontSize: "1.2em", fontWeight: "bold" }}>↻</span>
-        </button>
+        <div style={{ position: "relative", top: "-0.75em", float: "right" }}>
+          <RefreshButton onRefresh={onRefresh} />
+        </div>
 
         <svg viewBox="0 0 560 260">
           <defs>
@@ -135,6 +108,6 @@ export default function WavesCanvas({
           </g>
         </svg>
       </div>
-    </div>
+    </ChartCanvas>
   );
 }

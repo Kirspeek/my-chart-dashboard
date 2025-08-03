@@ -10,18 +10,18 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import type { RadarChartData } from "../../../../interfaces/widgets";
-import { useRadarChartLogic } from "src/hooks/useRadarChartLogic";
+import type { WidgetRadarChartData } from "../../../../interfaces/widgets";
+import { useChartLogic } from "src/hooks/useChartLogic";
 import { useTheme } from "src/hooks/useTheme";
 
 interface RadarChartContainerProps {
-  data: RadarChartData[];
+  data: WidgetRadarChartData[];
 }
 
 export default function RadarChartContainer({
   data,
 }: RadarChartContainerProps) {
-  const { tooltipStyle, formatTooltip } = useRadarChartLogic();
+  const { tooltipStyle, formatTooltip } = useChartLogic();
   const { colors } = useTheme();
 
   return (

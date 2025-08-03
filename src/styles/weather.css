@@ -1,0 +1,467 @@
+/* Weather Widget Styles */
+
+/* ============================================================================
+   WEATHER COLORS & THEMES
+   ============================================================================ */
+
+:root {
+  /* Weather Text Colors */
+  --weather-text-primary: #232323;
+  --weather-text-secondary: #b0b0a8;
+  --weather-text-hot: #fff;
+  --weather-text-clear: #ea7a00;
+  --weather-text-cloudy: #23405c;
+  --weather-text-teal: #425b59;
+  --weather-text-gray: #888;
+  --weather-text-thunderstorm: #fffbe7;
+  --weather-text-selected: #232323;
+  --weather-text-muted: #888;
+
+  /* Weather Background Gradients */
+  --weather-bg-partly-cloudy: linear-gradient(135deg, #e3f0ff 0%, #b3d8f7 100%);
+  --weather-bg-thunderstorm: linear-gradient(
+    to bottom,
+    #3a7ca5 0%,
+    #4a90c2 100%
+  );
+  --weather-bg-default: linear-gradient(135deg, #e0e0e0 0%, #b0b0a8 100%);
+  --weather-bg-clear: linear-gradient(135deg, #ffe88a 0%, #ffd34d 100%);
+  --weather-bg-sunny: linear-gradient(135deg, #ffe88a 0%, #ffd34d 100%);
+  --weather-bg-rain: linear-gradient(to bottom, #3a7ca5 0%, #4a90c2 100%);
+  --weather-bg-showers: linear-gradient(165deg, #ff512f 0%, #ffb347 100%);
+  --weather-bg-drizzle: linear-gradient(165deg, #ff512f 0%, #ffb347 100%);
+  --weather-bg-snow: linear-gradient(135deg, #f8fafc 0%, #e0e0e0 100%);
+  --weather-bg-fog: linear-gradient(135deg, #dbe6ef 0%, #b0b0a8 100%);
+  --weather-bg-hot: linear-gradient(165deg, #ff512f 0%, #ffb347 100%);
+  --weather-bg-cold: linear-gradient(135deg, #b3d8f7 0%, #425b59 100%);
+
+  /* Selected Button Backgrounds */
+  --weather-btn-thunderstorm: linear-gradient(135deg, #23243a 0%, #ffe066 100%);
+  --weather-btn-hot: linear-gradient(165deg, #ff512f 0%, #ffb347 100%);
+  --weather-btn-rain: linear-gradient(to bottom, #3a7ca5 0%, #4a90c2 100%);
+  --weather-btn-partly-cloudy: linear-gradient(
+    135deg,
+    #e3f0ff 0%,
+    #b3d8f7 100%
+  );
+  --weather-btn-sunny: linear-gradient(135deg, #ffe88a 0%, #ffd34d 100%);
+  --weather-btn-default: rgba(35, 35, 35, 0.12);
+
+  /* Border Radius */
+  --weather-border-radius-desktop: 2.5rem;
+  --weather-border-radius-mobile: 2rem;
+  --weather-border-radius-buttons: 1rem;
+  --weather-border-radius-buttons-mobile: 1.25rem;
+}
+
+/* ============================================================================
+   DESKTOP WEATHER WIDGET STYLES
+   ============================================================================ */
+
+.weather-widget-desktop {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.weather-left-panel-desktop {
+  flex: 1.3;
+  min-width: 220px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-top-left-radius: var(--weather-border-radius-desktop);
+  border-bottom-left-radius: var(--weather-border-radius-desktop);
+  padding: 2.2rem 2.2rem 2.2rem 3.2rem;
+  position: relative;
+  text-align: left;
+  background: transparent;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  align-self: stretch;
+}
+
+.weather-right-panel-desktop {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: var(--weather-border-radius-desktop);
+  border-bottom-right-radius: var(--weather-border-radius-desktop);
+  padding: 1.5rem 1.2rem 1.5rem 1.2rem;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.weather-background-desktop {
+  position: absolute;
+  inset: 0;
+  border-top-left-radius: var(--weather-border-radius-desktop);
+  border-bottom-left-radius: var(--weather-border-radius-desktop);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  z-index: 0;
+}
+
+.weather-text-container-desktop {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-left: 18px;
+}
+
+.weather-temperature-desktop {
+  font-weight: 700;
+  font-size: 44px;
+  font-family: var(--font-mono);
+  margin: 12px 0 0 0;
+  display: block;
+  margin-left: 0;
+}
+
+.weather-description-desktop {
+  font-style: italic;
+  font-weight: 500;
+  font-size: 18px;
+  font-family: var(--font-mono);
+  margin: 14px 0 0 0;
+  display: block;
+  margin-left: 0;
+  letter-spacing: 0.01em;
+}
+
+.weather-city-desktop {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 32px;
+  margin: 24px 0 0 0;
+  display: block;
+  margin-left: 0;
+  letter-spacing: 0.01em;
+}
+
+.weather-date-desktop {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  margin: 18px 0 0 0;
+  display: block;
+  line-height: 1.2;
+  margin-left: 0;
+}
+
+.weather-forecast-desktop {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.forecast-day-desktop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1.2rem;
+  border-radius: var(--weather-border-radius-buttons);
+  min-width: 140px;
+  min-height: 56px;
+  gap: 16px;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.forecast-day-name-desktop {
+  font-weight: 700;
+  font-size: 18px;
+  width: 40px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.forecast-day-icon-desktop {
+  font-size: 24px;
+  margin: 0 8px;
+  width: 32px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.forecast-day-temp-desktop {
+  font-weight: 500;
+  font-size: 16px;
+  width: 32px;
+  text-align: right;
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   MOBILE WEATHER WIDGET STYLES
+   ============================================================================ */
+
+.weather-widget-mobile {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 0;
+  height: 50vh;
+  overflow: hidden;
+}
+
+.weather-left-panel-mobile {
+  flex: 0.8;
+  min-width: 100%;
+  max-width: 100%;
+  border-radius: var(--weather-border-radius-mobile);
+  padding: 1rem;
+  position: relative;
+  text-align: left;
+  background: transparent;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  align-self: stretch;
+}
+
+.weather-right-panel-mobile {
+  flex: 1.2;
+  min-width: 100%;
+  border-radius: 0 0 1rem 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+  height: auto;
+  overflow: visible;
+  position: relative;
+}
+
+.weather-background-mobile {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--weather-border-radius-mobile);
+  z-index: 0;
+}
+
+.weather-text-container-mobile {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding-left: 18px;
+}
+
+.weather-temperature-mobile {
+  font-weight: 700;
+  font-size: 44px;
+  font-family: var(--font-mono);
+  margin: 12px 0 0 0;
+  display: block;
+  margin-left: 0;
+}
+
+.weather-description-mobile {
+  font-style: italic;
+  font-weight: 500;
+  font-size: 18px;
+  font-family: var(--font-mono);
+  margin: 14px 0 0 0;
+  display: block;
+  margin-left: 0;
+  letter-spacing: 0.01em;
+}
+
+.weather-city-mobile {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 32px;
+  margin: 24px 0 0 0;
+  display: block;
+  margin-left: 0;
+  letter-spacing: 0.01em;
+}
+
+.weather-date-mobile {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.01em;
+  margin: 18px 0 0 0;
+  display: block;
+  line-height: 1.2;
+  margin-left: 0;
+}
+
+.weather-forecast-mobile {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 0.5rem !important;
+  height: fit-content !important;
+  overflow: visible !important;
+}
+
+.forecast-day-mobile {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0.5rem 0.25rem !important;
+  border-radius: var(--weather-border-radius-buttons-mobile) !important;
+  min-width: 50px !important;
+  max-width: 60px !important;
+  min-height: 80px !important;
+  max-height: 90px !important;
+  gap: 0.25rem !important;
+  flex: 1 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  overflow: visible !important;
+}
+
+.forecast-day-name-mobile {
+  font-size: 0.625rem !important;
+  width: auto !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.forecast-day-icon-mobile {
+  font-size: 1rem !important;
+  margin: 0 !important;
+  width: auto !important;
+  line-height: 1 !important;
+}
+
+.forecast-day-temp-mobile {
+  font-size: 0.625rem !important;
+  width: auto !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  margin-top: 0.125rem !important;
+}
+
+.weather-status-mobile {
+  position: absolute !important;
+  top: 0.5rem !important;
+  right: 0.5rem !important;
+  font-size: 0.625rem !important;
+}
+
+/* ============================================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================================ */
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .weather-left-panel-mobile {
+    flex: 1.3 !important;
+  }
+
+  .weather-right-panel-mobile {
+    flex: 0.7 !important;
+    padding: 0.875rem !important;
+    overflow: visible !important;
+  }
+
+  .weather-forecast-mobile {
+    gap: 0.375rem !important;
+    padding: 0 0.375rem !important;
+    overflow: visible !important;
+  }
+
+  .forecast-day-mobile {
+    min-width: 45px !important;
+    max-width: 55px !important;
+    min-height: 75px !important;
+    max-height: 85px !important;
+    padding: 0.375rem 0.25rem !important;
+    border-radius: 1rem !important;
+    gap: 0.2rem !important;
+    overflow: visible !important;
+  }
+
+  .forecast-day-icon-mobile {
+    font-size: 0.875rem !important;
+  }
+
+  .forecast-day-name-mobile {
+    font-size: 0.5rem !important;
+    margin-bottom: 0.2rem !important;
+  }
+
+  .forecast-day-temp-mobile {
+    font-size: 0.5rem !important;
+    margin-top: 0.1rem !important;
+  }
+}
+
+/* Extra extra small mobile devices */
+@media (max-width: 360px) {
+  .weather-left-panel-mobile {
+    flex: 1.4 !important;
+  }
+
+  .weather-right-panel-mobile {
+    flex: 0.6 !important;
+    padding: 0.75rem !important;
+    overflow: visible !important;
+  }
+
+  .weather-forecast-mobile {
+    gap: 0.25rem !important;
+    padding: 0 0.25rem !important;
+    overflow: visible !important;
+  }
+
+  .forecast-day-mobile {
+    min-width: 40px !important;
+    max-width: 50px !important;
+    min-height: 70px !important;
+    max-height: 80px !important;
+    padding: 0.25rem 0.125rem !important;
+    border-radius: 0.75rem !important;
+    gap: 0.15rem !important;
+    overflow: visible !important;
+  }
+
+  .forecast-day-icon-mobile {
+    font-size: 0.75rem !important;
+  }
+
+  .forecast-day-name-mobile {
+    font-size: 0.5rem !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  .forecast-day-temp-mobile {
+    font-size: 0.5rem !important;
+    margin-top: 0.1rem !important;
+  }
+}

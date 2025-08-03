@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import { useTheme } from "src/hooks/useTheme";
-import type { SankeyChartData } from "../../../../interfaces/widgets";
+import type { WidgetSankeyChartData } from "../../../../interfaces/widgets";
 
 interface CustomSankeyDiagramProps {
-  data: SankeyChartData[];
+  data: WidgetSankeyChartData[];
   title: string;
   subtitle?: string;
 }

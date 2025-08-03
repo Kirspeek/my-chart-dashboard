@@ -8,6 +8,7 @@ import {
   WaveData,
 } from "./logic";
 import { WavesCanvas } from "./components";
+import { ChartHeader } from "../../common";
 
 interface WavesChartProps {
   data?: WaveData[];
@@ -41,12 +42,21 @@ export default function WavesChart({
         color: "rgba(0, 0, 0, 0.7)",
       }}
     >
+      {title && (
+        <ChartHeader
+          title={title}
+          onRefresh={handleRefreshClick}
+          showRefreshButton={true}
+        />
+      )}
+
       <WavesCanvas
         chartRef={chartRef}
         isLoaded={isLoaded}
         wavePaths={wavePaths}
         onRefresh={handleRefreshClick}
       />
+
       <div
         style={{
           lineHeight: "36px",

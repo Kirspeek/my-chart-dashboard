@@ -4,7 +4,7 @@ import Button3D from "../common/3DButton";
 import { getSelectedButtonBackground } from "../../utils/weatherUtils";
 import "../../styles/weather.css";
 
-export default function ForecastDay({
+export default function ForecastDayMobile({
   day,
   icon,
   min,
@@ -23,17 +23,17 @@ export default function ForecastDay({
       selected={selected}
       onClick={onClick}
       customBackground={weatherBackground}
-      className="forecast-day-desktop"
+      className="forecast-day-mobile"
     >
-      <span className="forecast-day-name-desktop">{day}</span>
-      <span className="forecast-day-icon-desktop">{icon}</span>
+      <span className="forecast-day-name-mobile">{day}</span>
+      <span className="forecast-day-icon-mobile">{icon}</span>
       <span
-        className="forecast-day-temp-desktop"
+        className="forecast-day-temp-mobile"
         style={{ color: "var(--weather-text-muted)" }}
       >
         {min}°
       </span>
-      <span className="forecast-day-temp-desktop">{max}°</span>
+      <span className="forecast-day-temp-mobile">{max}°</span>
       {children}
     </Button3D>
   );

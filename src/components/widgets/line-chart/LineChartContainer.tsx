@@ -11,11 +11,11 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { ChartDataPoint } from "../../../../interfaces/widgets";
+import type { WidgetLineChartData } from "../../../../interfaces/widgets";
 import { useChartLogic } from "src/hooks/useChartLogic";
 
 interface LineChartContainerProps {
-  data: ChartDataPoint[];
+  data: WidgetLineChartData[];
 }
 
 export default function LineChartContainer({ data }: LineChartContainerProps) {

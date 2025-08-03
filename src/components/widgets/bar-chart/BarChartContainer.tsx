@@ -11,11 +11,11 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { ChartDataPoint } from "../../../../interfaces/widgets";
+import type { WidgetBarChartData } from "../../../../interfaces/widgets";
 import { useChartLogic } from "src/hooks/useChartLogic";
 
 interface BarChartContainerProps {
-  data: ChartDataPoint[];
+  data: WidgetBarChartData[];
 }
 
 export default function BarChartContainer({ data }: BarChartContainerProps) {

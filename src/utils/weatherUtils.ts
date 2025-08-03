@@ -1,29 +1,215 @@
-export const WeatherUtils = {
-  /**
-   * Convert weather code to description
-   */
-  getWeatherDescription(code: number): string {
-    if (code === 0) return "Clear sky";
-    if (code === 1 || code === 2 || code === 3) return "Partly cloudy";
-    if (code === 45 || code === 48) return "Fog";
-    if (code === 51 || code === 53 || code === 55) return "Drizzle";
-    if (code === 61 || code === 63 || code === 65) return "Rain";
-    if (code === 71 || code === 73 || code === 75) return "Snow";
-    if (code === 80 || code === 81 || code === 82) return "Showers";
-    if (code === 95) return "Thunderstorm";
-    if (code === 96 || code === 99) return "Thunderstorm with hail";
-    return "Unknown";
-  },
+/* Weather Utility Functions */
 
-  /**
-   * Get weather icon based on description
-   */
-  getWeatherIcon(desc: string): string {
-    if (/clear/i.test(desc)) return "☀️";
-    if (/cloud/i.test(desc)) return "🌤️";
-    if (/rain/i.test(desc)) return "🌧️";
-    if (/storm|thunder/i.test(desc)) return "⛈️";
-    if (/snow/i.test(desc)) return "❄️";
-    return "🌡️";
-  },
-};
+export interface WeatherColors {
+  mainColor: string;
+  secondaryColor: string;
+}
+
+export interface WeatherBackground {
+  background: string;
+}
+
+export interface WeatherButtonBackground {
+  background: string;
+}
+
+/**
+ * Get weather text colors based on weather description
+ */
+export function getWeatherColors(
+  desc: string,
+  hot: boolean = false
+): WeatherColors {
+  if (hot) {
+    return {
+      mainColor: "var(--weather-text-hot)",
+      secondaryColor: "var(--weather-text-hot)",
+    };
+  }
+
+  if (/clear sky/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-clear)",
+      secondaryColor: "var(--weather-text-clear)",
+    };
+  }
+
+  if (/sunny/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-clear)",
+      secondaryColor: "var(--weather-text-clear)",
+    };
+  }
+
+  if (/partly cloudy/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-cloudy)",
+      secondaryColor: "var(--weather-text-cloudy)",
+    };
+  }
+
+  if (/cloudy/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-teal)",
+      secondaryColor: "var(--weather-text-teal)",
+    };
+  }
+
+  if (/rain/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-cloudy)",
+      secondaryColor: "var(--weather-text-cloudy)",
+    };
+  }
+
+  if (/showers/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-cloudy)",
+      secondaryColor: "var(--weather-text-cloudy)",
+    };
+  }
+
+  if (/drizzle/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-cloudy)",
+      secondaryColor: "var(--weather-text-cloudy)",
+    };
+  }
+
+  if (/snow/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-teal)",
+      secondaryColor: "var(--weather-text-teal)",
+    };
+  }
+
+  if (/fog/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-gray)",
+      secondaryColor: "var(--weather-text-gray)",
+    };
+  }
+
+  if (/thunderstorm/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-thunderstorm)",
+      secondaryColor: "var(--weather-text-thunderstorm)",
+    };
+  }
+
+  if (/cold/i.test(desc)) {
+    return {
+      mainColor: "var(--weather-text-cloudy)",
+      secondaryColor: "var(--weather-text-cloudy)",
+    };
+  }
+
+  // Default colors
+  return {
+    mainColor: "var(--weather-text-primary)",
+    secondaryColor: "var(--weather-text-secondary)",
+  };
+}
+
+/**
+ * Get weather background gradient based on weather description
+ */
+export function getWeatherBackground(desc: string): WeatherBackground {
+  if (/partly cloudy|cloudy/i.test(desc)) {
+    return { background: "var(--weather-bg-partly-cloudy)" };
+  }
+
+  if (/thunderstorm/i.test(desc)) {
+    return { background: "var(--weather-bg-thunderstorm)" };
+  }
+
+  if (/clear sky/i.test(desc)) {
+    return { background: "var(--weather-bg-clear)" };
+  }
+
+  if (/sunny/i.test(desc)) {
+    return { background: "var(--weather-bg-sunny)" };
+  }
+
+  if (/rain/i.test(desc)) {
+    return { background: "var(--weather-bg-rain)" };
+  }
+
+  if (/showers/i.test(desc)) {
+    return { background: "var(--weather-bg-showers)" };
+  }
+
+  if (/drizzle/i.test(desc)) {
+    return { background: "var(--weather-bg-drizzle)" };
+  }
+
+  if (/snow/i.test(desc)) {
+    return { background: "var(--weather-bg-snow)" };
+  }
+
+  if (/fog/i.test(desc)) {
+    return { background: "var(--weather-bg-fog)" };
+  }
+
+  if (/hot|very hot|heat|accent-red/i.test(desc)) {
+    return { background: "var(--weather-bg-hot)" };
+  }
+
+  if (/cold/i.test(desc)) {
+    return { background: "var(--weather-bg-cold)" };
+  }
+
+  // Default background
+  return { background: "var(--weather-bg-default)" };
+}
+
+/**
+ * Get selected button background gradient based on weather description
+ */
+export function getSelectedButtonBackground(
+  desc: string
+): WeatherButtonBackground {
+  if (/thunderstorm/i.test(desc)) {
+    return { background: "var(--weather-btn-thunderstorm)" };
+  }
+
+  if (/hot|very hot|heat|accent-red|showers|drizzle/i.test(desc)) {
+    return { background: "var(--weather-btn-hot)" };
+  }
+
+  if (/rain/i.test(desc)) {
+    return { background: "var(--weather-btn-rain)" };
+  }
+
+  if (/partly cloudy/i.test(desc)) {
+    return { background: "var(--weather-btn-partly-cloudy)" };
+  }
+
+  if (/clear sky|sunny/i.test(desc)) {
+    return { background: "var(--weather-btn-sunny)" };
+  }
+
+  // Default background
+  return { background: "var(--weather-btn-default)" };
+}
+
+/**
+ * Parse date string into day of week and rest of date
+ */
+export function parseDate(date: string): {
+  dayOfWeek: string;
+  restOfDate: string;
+} {
+  let dayOfWeek = "";
+  let restOfDate = date;
+
+  if (date) {
+    const match = date.match(/^(\w+),?\s*(.*)$/);
+    if (match) {
+      dayOfWeek = match[1];
+      restOfDate = match[2];
+    }
+  }
+
+  return { dayOfWeek, restOfDate };
+}

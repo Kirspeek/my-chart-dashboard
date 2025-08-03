@@ -1,15 +1,5 @@
 import { useMemo } from "react";
-
-export interface WaveData {
-  id: string;
-  color: string;
-  path: string;
-}
-
-export interface WavesChartLogicProps {
-  data?: WaveData[];
-  title?: string;
-}
+import { WaveData, WavesChartLogicProps } from "../../../../../interfaces";
 
 // Default datasets moved outside the hook to avoid dependency issues
 const defaultData: WaveData[] = [

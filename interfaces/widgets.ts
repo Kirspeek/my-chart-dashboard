@@ -1,9 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
-import { CommonComponentProps } from "./common";
+import { CommonComponentProps, BaseProps, LoadingState } from "./base";
 import { UserData } from "./dashboard";
 import { CardData } from "./wallet";
 
-// Clock Widget Interfaces
+// ============================================================================
+// CLOCK WIDGET INTERFACES
+// ============================================================================
+
 export interface TimeZone {
   label: string;
   zone: string;
@@ -25,12 +28,15 @@ export interface ClockActions {
   isDay: (hours: number) => boolean;
 }
 
-export interface ClockWidgetProps {
+export interface ClockWidgetProps extends CommonComponentProps {
   selectedZone: string;
   setSelectedZone: Dispatch<SetStateAction<string>>;
 }
 
-// Timer Widget Interfaces
+// ============================================================================
+// TIMER WIDGET INTERFACES
+// ============================================================================
+
 export interface TimerState {
   duration: number;
   timeLeft: number;
@@ -51,7 +57,14 @@ export interface TimerActions {
   getSecondsFromPointer: (clientX: number, clientY: number) => number;
 }
 
-// Weather Widget Interfaces
+export interface TimerWidgetProps extends CommonComponentProps {
+  className?: string;
+}
+
+// ============================================================================
+// WEATHER WIDGET INTERFACES
+// ============================================================================
+
 export interface WeatherState {
   selectedDay: number;
   dateString: string;
@@ -62,69 +75,8 @@ export interface WeatherActions {
   setSelectedDay: (day: number) => void;
 }
 
-export interface WeatherWidgetProps {
+export interface WeatherWidgetProps extends CommonComponentProps {
   city?: string;
-}
-
-// Map Widget Interfaces
-export interface MapState {
-  search: string;
-  searchFocused: boolean;
-  loading: boolean;
-  searchResult: [number, number] | null;
-  internalLocation: [number, number] | null;
-}
-
-export interface MapActions {
-  setSearch: (search: string) => void;
-  setSearchFocused: (focused: boolean) => void;
-  setLoading: (loading: boolean) => void;
-  setSearchResult: (result: [number, number] | null) => void;
-  setInternalLocation: (location: [number, number] | null) => void;
-  handleSearch: (e: React.FormEvent) => void;
-}
-
-export interface MapWidgetProps {
-  onMarkerChange?: (pos: { lat: number; lon: number }) => void;
-  userLocation?: [number, number];
-}
-
-// Calendar Widget Interfaces
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  date: Date;
-  description?: string;
-}
-
-export interface CalendarState {
-  currentDate: Date;
-  selectedDate: Date | null;
-  viewMode: "month" | "week" | "day";
-  events: CalendarEvent[];
-  showEventForm: boolean;
-}
-
-export interface CalendarActions {
-  setSelectedDate: (date: Date) => void;
-  setViewMode: (mode: "month" | "week" | "day") => void;
-  goToPrevious: () => void;
-  goToNext: () => void;
-  goToToday: () => void;
-  getDaysInMonth: (date: Date) => Date[];
-  getWeekDays: () => string[];
-  isToday: (date: Date) => boolean;
-  isSelected: (date: Date) => boolean;
-  isCurrentMonth: (date: Date) => boolean;
-  addEvent: (event: Omit<CalendarEvent, "id">) => void;
-  deleteEvent: (eventId: string) => void;
-  getEventsForDate: (date: Date) => CalendarEvent[];
-  toggleEventForm: () => void;
-}
-
-export interface CalendarWidgetProps {
-  onDateSelect?: (date: Date) => void;
-  initialDate?: Date;
 }
 
 export interface ForecastDay {
@@ -157,22 +109,85 @@ export interface WeatherTextProps extends CommonComponentProps {
   hot?: boolean;
 }
 
-export interface MetricCardProps extends CommonComponentProps {
-  metric: {
-    title: string;
-    value: string | number;
-    change: number;
-    changeType: "increase" | "decrease";
-    icon: string;
-  };
-  index?: number;
+export interface WeatherCacheStatusProps extends CommonComponentProps {
+  cities: string[];
 }
 
-// Metric Widget Interfaces
-export interface MetricWidgetProps {
-  metric: MetricData;
-  index?: number;
+// ============================================================================
+// MAP WIDGET INTERFACES
+// ============================================================================
+
+export interface MapState {
+  search: string;
+  searchFocused: boolean;
+  loading: boolean;
+  searchResult: [number, number] | null;
+  internalLocation: [number, number] | null;
 }
+
+export interface MapActions {
+  setSearch: (search: string) => void;
+  setSearchFocused: (focused: boolean) => void;
+  setLoading: (loading: boolean) => void;
+  setSearchResult: (result: [number, number] | null) => void;
+  setInternalLocation: (location: [number, number] | null) => void;
+  handleSearch: (e: React.FormEvent) => void;
+}
+
+export interface MapWidgetProps extends CommonComponentProps {
+  onMarkerChange?: (pos: { lat: number; lon: number }) => void;
+  userLocation?: [number, number];
+}
+
+export interface MapComponentProps extends CommonComponentProps {
+  center: [number, number];
+  zoom: number;
+}
+
+// ============================================================================
+// CALENDAR WIDGET INTERFACES
+// ============================================================================
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: Date;
+  description?: string;
+}
+
+export interface CalendarState {
+  currentDate: Date;
+  selectedDate: Date | null;
+  viewMode: "month" | "week" | "day";
+  events: CalendarEvent[];
+  showEventForm: boolean;
+}
+
+export interface CalendarActions {
+  setSelectedDate: (date: Date) => void;
+  setViewMode: (mode: "month" | "week" | "day") => void;
+  goToPrevious: () => void;
+  goToNext: () => void;
+  goToToday: () => void;
+  getDaysInMonth: (date: Date) => Date[];
+  getWeekDays: () => string[];
+  isToday: (date: Date) => boolean;
+  isSelected: (date: Date) => boolean;
+  isCurrentMonth: (date: Date) => boolean;
+  addEvent: (event: Omit<CalendarEvent, "id">) => void;
+  deleteEvent: (eventId: string) => void;
+  getEventsForDate: (date: Date) => CalendarEvent[];
+  toggleEventForm: () => void;
+}
+
+export interface CalendarWidgetProps extends CommonComponentProps {
+  onDateSelect?: (date: Date) => void;
+  initialDate?: Date;
+}
+
+// ============================================================================
+// METRIC WIDGET INTERFACES
+// ============================================================================
 
 export interface MetricData {
   title: string;
@@ -181,144 +196,22 @@ export interface MetricData {
   icon: string;
 }
 
-// Chart Widget Interfaces
-export interface ChartDataPoint {
-  month?: string;
-  name?: string;
-  sales: number;
-  revenue: number;
-  profit?: number;
+export interface MetricCardProps extends CommonComponentProps {
+  metric: MetricData & {
+    changeType: "increase" | "decrease";
+  };
+  index?: number;
 }
 
-export interface LineChartWidgetProps {
-  data: ChartDataPoint[];
-  title: string;
+export interface MetricWidgetProps extends CommonComponentProps {
+  metric: MetricData;
+  index?: number;
 }
 
-export interface BarChartWidgetProps {
-  data: ChartDataPoint[];
-  title: string;
-}
+// ============================================================================
+// WHEEL WIDGET INTERFACES
+// ============================================================================
 
-export interface ChartState {
-  data: ChartDataPoint[];
-  title: string;
-}
-
-export interface ChartActions {
-  formatValue: (value: number) => string;
-  formatTooltip: (value: number, name: string) => [string, string];
-}
-
-// Recent Users Widget Interfaces
-export interface RecentUsersWidgetProps {
-  data: UserData[];
-  title: string;
-}
-
-// Device Usage Widget Interfaces
-export interface DeviceUsageWidgetProps {
-  data: DeviceUsageData[];
-  title: string;
-}
-
-export interface DeviceUsageData {
-  name: string;
-  value: number;
-  color: string;
-}
-
-// Radar Chart Widget Interfaces
-export interface RadarChartData {
-  subject: string;
-  value: number;
-  fullMark: number;
-}
-
-export interface RadarChartWidgetProps {
-  data: RadarChartData[];
-  title: string;
-}
-
-// Area Chart Widget Interfaces
-export interface AreaChartData {
-  name: string;
-  value: number;
-  fill: string;
-}
-
-export interface AreaChartWidgetProps {
-  data: AreaChartData[];
-  title: string;
-}
-
-// Scatter Chart Widget Interfaces
-export interface ScatterChartData {
-  x: number;
-  y: number;
-  z: number;
-  category: string;
-}
-
-export interface ScatterChartWidgetProps {
-  data: ScatterChartData[];
-  title: string;
-}
-
-export interface ChordChartData {
-  from: string;
-  to: string;
-  size: number;
-}
-
-export interface ChordChartWidgetProps {
-  data: ChordChartData[];
-  title: string;
-  subtitle?: string;
-}
-
-export interface SankeyChartData {
-  from: string;
-  to: string;
-  size: number;
-}
-
-export interface SankeyChartWidgetProps {
-  data: SankeyChartData[];
-  title: string;
-  subtitle?: string;
-}
-
-export interface BubbleChartData {
-  x: number;
-  y: number;
-  size: number;
-  category: string;
-  label?: string;
-}
-
-export interface BubbleChartWidgetProps {
-  data: BubbleChartData[];
-  title: string;
-  subtitle?: string;
-}
-
-// Timeline Widget Interfaces
-export interface TimelineItem {
-  year: string;
-  color: "yellow" | "red" | "blue" | "teal" | "purple";
-  title: string;
-  desc: string;
-  progress?: number;
-}
-
-export interface TimelineRingsWidgetProps {
-  data: TimelineItem[];
-  title: string;
-  subtitle?: string;
-}
-
-// Wheel Widget Interfaces
 export interface ExpenseData {
   name: string;
   value: number;
@@ -326,7 +219,7 @@ export interface ExpenseData {
   percentage: number;
 }
 
-export interface SpendingChartProps {
+export interface SpendingChartProps extends CommonComponentProps {
   data: ExpenseData[];
   annualData?: ExpenseData[];
   title?: string;
@@ -370,13 +263,165 @@ export interface Face3D {
   zIndex: number;
 }
 
-export interface BottomSegmentInfoProps {
+export interface BottomSegmentInfoProps extends CommonComponentProps {
   segment: ExpenseData | null;
 }
 
-export interface SpendingProgressProps {
+export interface SpendingProgressProps extends CommonComponentProps {
   selectedIndex: number;
   totalCards: number;
 }
 
 export type TimePeriod = "Monthly" | "Annual";
+
+// ============================================================================
+// DATA WIDGET INTERFACES
+// ============================================================================
+
+export interface DeviceUsageData {
+  name: string;
+  value: number;
+  color: string;
+}
+
+export interface DeviceUsageWidgetProps extends CommonComponentProps {
+  data: DeviceUsageData[];
+  title: string;
+}
+
+export interface RecentUsersWidgetProps extends CommonComponentProps {
+  data: UserData[];
+  title: string;
+}
+
+// ============================================================================
+// CHART WIDGET INTERFACES
+// ============================================================================
+
+export interface WidgetBarChartData {
+  name: string;
+  value?: number;
+  sales: number;
+  revenue: number;
+}
+
+export interface BarChartWidgetProps extends CommonComponentProps {
+  data: WidgetBarChartData[];
+  title: string;
+}
+
+export interface WidgetLineChartData {
+  month: string;
+  sales: number;
+  revenue: number;
+  profit: number;
+}
+
+export interface LineChartWidgetProps extends CommonComponentProps {
+  data: WidgetLineChartData[];
+  title: string;
+}
+
+export interface WidgetRadarChartData {
+  subject: string;
+  value: number;
+  fullMark: number;
+}
+
+export interface RadarChartWidgetProps extends CommonComponentProps {
+  data: WidgetRadarChartData[];
+  title: string;
+}
+
+export interface WidgetChordChartData {
+  from: string;
+  to: string;
+  size: number;
+}
+
+export interface ChordChartWidgetProps extends CommonComponentProps {
+  data: WidgetChordChartData[];
+  title: string;
+  subtitle?: string;
+}
+
+export interface WidgetSankeyChartData {
+  from: string;
+  to: string;
+  size: number;
+}
+
+export interface SankeyChartWidgetProps extends CommonComponentProps {
+  data: WidgetSankeyChartData[];
+  title: string;
+  subtitle?: string;
+}
+
+export interface WidgetBubbleChartData {
+  x: number;
+  y: number;
+  size: number;
+  category: string;
+  label: string;
+}
+
+export interface BubbleChartWidgetProps extends CommonComponentProps {
+  data: WidgetBubbleChartData[];
+  title: string;
+  subtitle?: string;
+}
+
+export interface TimelineRingsWidgetProps extends CommonComponentProps {
+  title?: string;
+}
+
+export interface WalletWidgetProps extends CommonComponentProps {
+  title?: string;
+}
+
+export interface WalletCardWidgetProps extends CommonComponentProps {
+  title?: string;
+}
+
+export interface ContributionGraphWidgetProps extends CommonComponentProps {
+  title: string;
+}
+
+export interface AggregatedSpendingWidgetProps extends CommonComponentProps {
+  title?: string;
+}
+
+// ============================================================================
+// COMMON WIDGET INTERFACES
+// ============================================================================
+
+export interface WidgetCardProps extends CommonComponentProps {
+  variant?: "default" | "compact" | "large";
+}
+
+export interface Button3DProps extends BaseProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  selected?: boolean;
+  disabled?: boolean;
+  customBackground?: string;
+  customAccentColor?: string;
+}
+
+// ============================================================================
+// WIDGET STATE INTERFACES
+// ============================================================================
+
+export interface WidgetState extends LoadingState {
+  selectedCardIndex: number;
+  totalCards: number;
+  currentCard: CardData | null;
+  currentCardData: WalletCardData | null;
+  hasCards: boolean;
+}
+
+export interface WidgetActions {
+  handleCardClick: () => void;
+  setSelectedCardIndex: (index: number) => void;
+  refreshData: () => void;
+}

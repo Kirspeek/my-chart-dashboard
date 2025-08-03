@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import {
   ClockWidget,
   WeatherWidget,
+  WeatherWidgetMobile,
   TimerWidget,
   MapWidget,
   CalendarWidget,
@@ -138,6 +139,7 @@ export default function Home() {
   const selectedCity = cityMap[selectedZone] || "London";
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const data = useDashboardData();
 
@@ -150,6 +152,19 @@ export default function Home() {
     setMounted(true);
     const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setSelectedZone(localZone);
+
+    // Check if mobile (phones only, not tablets)
+    const checkMobile = () => {
+      // Use mobile version only for phones (≤768px)
+      // Tablets (768px-1024px) and desktop (>1024px) use desktop version
+      const isPhone = window.innerWidth <= 768;
+      setIsMobile(isPhone);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   if (!data.metricCards) return <div>Loading dashboard data...</div>;
@@ -196,7 +211,11 @@ export default function Home() {
                   {/* Column 2: Weather (70%) + Timer (30%) */}
                   <div className="h-full flex flex-col gap-8">
                     <div className="flex-1 basis-[70%] min-h-0">
-                      <WeatherWidget city={selectedCity} />
+                      {isMobile ? (
+                        <WeatherWidgetMobile city={selectedCity} />
+                      ) : (
+                        <WeatherWidget city={selectedCity} />
+                      )}
                     </div>
                     <div className="flex-1 basis-[30%] min-h-0">
                       <TimerWidget />

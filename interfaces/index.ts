@@ -1,4 +1,26 @@
-// Dashboard interfaces
+// ============================================================================
+// BASE INTERFACES
+// ============================================================================
+export * from "./base";
+
+// ============================================================================
+// CHART INTERFACES
+// ============================================================================
+export * from "./charts";
+
+// ============================================================================
+// WIDGET INTERFACES
+// ============================================================================
+export * from "./widgets";
+
+// ============================================================================
+// WALLET INTERFACES
+// ============================================================================
+export type { CardData, BankDesign, BankInfo, CardForm } from "./wallet";
+
+// ============================================================================
+// DASHBOARD INTERFACES
+// ============================================================================
 export type {
   ChartData as DashboardChartData,
   SalesData,
@@ -6,36 +28,22 @@ export type {
   DashboardStats,
 } from "./dashboard";
 
-// Chart interfaces
-export type {
-  ChartData as ChartChartData,
-  LineChartProps,
-  BarChartData,
-  BarChartProps,
-  PieChartData,
-  PieChartProps,
-} from "./charts";
-
-// Widget interfaces
-export * from "./widgets";
-
-// Wallet interfaces
-export * from "./wallet";
-
-// Common interfaces
-export * from "./common";
-
-// Theme interfaces
-export type { Theme, ThemeContextType, ThemeVars } from "./theme";
-
-// Animation interfaces
-export * from "./animations";
-
-// API interfaces
-export * from "./api";
-
-// Hooks interfaces
+// ============================================================================
+// HOOK INTERFACES
+// ============================================================================
 export * from "./hooks";
 
-// Component interfaces
-export * from "./components";
+// ============================================================================
+// API INTERFACES
+// ============================================================================
+export * from "./api";
+
+// ============================================================================
+// THEME INTERFACES
+// ============================================================================
+export * from "./theme";
+
+// ============================================================================
+// ANIMATION INTERFACES
+// ============================================================================
+export * from "./animations";

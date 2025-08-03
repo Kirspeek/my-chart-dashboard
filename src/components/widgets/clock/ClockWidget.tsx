@@ -7,6 +7,7 @@ import { useClockLogic } from "src/hooks/useClockLogic";
 import { timeZones } from "src/constants/timeZones";
 import ClockDisplay from "./ClockDisplay";
 import WorldClocks from "./WorldClocks";
+import "../../../styles/mobile.css";
 
 export default function ClockWidget({
   selectedZone,
@@ -27,7 +28,7 @@ export default function ClockWidget({
   if (!mounted) {
     return (
       <WidgetBase
-        className="flex flex-col gap-8"
+        className="flex flex-col gap-8 clock-widget-mobile"
         style={{
           width: "100%",
           padding: "2.5rem 2.5rem",
@@ -35,7 +36,7 @@ export default function ClockWidget({
       >
         <div className="w-full flex flex-col items-center justify-center">
           <div
-            className="font-mono font-extrabold"
+            className="font-mono font-extrabold clock-display-mobile"
             style={{
               fontSize: "6rem",
               color: "#232323", // light theme primary
@@ -53,7 +54,7 @@ export default function ClockWidget({
 
   return (
     <WidgetBase
-      className="flex flex-col gap-8"
+      className="flex flex-col gap-8 clock-widget-mobile"
       style={{
         width: "100%",
         padding: "2.5rem 2.5rem",

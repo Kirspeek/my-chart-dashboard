@@ -30,7 +30,7 @@ export default function WorldClocks({
   const clockAccentColor = accent.red; // Use red for clock widget
 
   return (
-    <div className="w-full flex flex-col gap-6 mt-4">
+    <div className="w-full flex flex-col gap-6 mt-4 world-clocks-mobile">
       <div className="flex flex-wrap gap-4 justify-center">
         {timeZones.map((tz) => {
           // Only calculate time when mounted to prevent hydration mismatch
@@ -45,9 +45,10 @@ export default function WorldClocks({
               selected={isLocal}
               onClick={() => setSelectedZone(tz.zone)}
               customAccentColor={clockAccentColor}
+              className="world-clock-card-mobile"
             >
               <span
-                className="text-base font-bold mono mb-1"
+                className="text-base font-bold mono mb-1 world-clock-city-mobile"
                 style={{
                   color: isLocal ? "#fff" : "#232323",
                 }}
@@ -55,7 +56,7 @@ export default function WorldClocks({
                 {tz.label}
               </span>
               <span
-                className="text-xs font-mono mb-2"
+                className="text-xs font-mono mb-2 world-clock-utc-mobile"
                 style={{
                   color: isLocal ? "#fff" : "#888",
                 }}
@@ -63,7 +64,7 @@ export default function WorldClocks({
                 {tz.utc}
               </span>
               <span
-                className="text-4xl font-mono font-extrabold mono mb-1"
+                className="text-4xl font-mono font-extrabold mono mb-1 world-clock-time-mobile"
                 style={{
                   color: isLocal ? "#fff" : "#232323",
                   letterSpacing: "0.04em",
@@ -75,7 +76,7 @@ export default function WorldClocks({
                   : "--:--"}
               </span>
               <span
-                className="text-xs font-mono"
+                className="text-xs font-mono world-clock-status-mobile"
                 style={{
                   color: isLocal ? "#fff" : isDayTime ? "#f6c700" : "#888",
                 }}

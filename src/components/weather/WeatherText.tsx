@@ -1,5 +1,7 @@
 import React from "react";
 import { WeatherTextProps } from "../../../interfaces/widgets";
+import { getWeatherColors, parseDate } from "../../utils/weatherUtils";
+import "../../styles/weather.css";
 
 export default function WeatherText({
   desc,
@@ -9,137 +11,34 @@ export default function WeatherText({
   hot = false,
   children,
 }: WeatherTextProps) {
-  let mainColor = "#232323"; // light theme black
-  let secondaryColor = "#b0b0a8"; // light theme gray-light
+  const colors = getWeatherColors(desc, hot);
+  const { dayOfWeek, restOfDate } = parseDate(date);
 
-  if (hot) {
-    mainColor = "#fff"; // white for hot weather
-    secondaryColor = "#fff"; // white for hot weather
-  } else if (/clear sky/i.test(desc)) {
-    mainColor = "#ea7a00"; // light theme orange
-    secondaryColor = "#ea7a00"; // light theme orange
-  } else if (/sunny/i.test(desc)) {
-    mainColor = "#ea7a00"; // light theme orange
-    secondaryColor = "#ea7a00"; // light theme orange
-  } else if (/partly cloudy/i.test(desc)) {
-    mainColor = "#23405c"; // light theme blue
-    secondaryColor = "#23405c"; // light theme blue
-  } else if (/cloudy/i.test(desc)) {
-    mainColor = "#425b59"; // light theme teal
-    secondaryColor = "#425b59"; // light theme teal
-  } else if (/rain/i.test(desc)) {
-    mainColor = "#23405c"; // light theme blue
-    secondaryColor = "#23405c"; // light theme blue
-  } else if (/showers/i.test(desc)) {
-    mainColor = "#23405c"; // light theme blue
-    secondaryColor = "#23405c"; // light theme blue
-  } else if (/drizzle/i.test(desc)) {
-    mainColor = "#23405c"; // light theme blue
-    secondaryColor = "#23405c"; // light theme blue
-  } else if (/snow/i.test(desc)) {
-    mainColor = "#425b59"; // light theme teal
-    secondaryColor = "#425b59"; // light theme teal
-  } else if (/fog/i.test(desc)) {
-    mainColor = "#888"; // light theme gray
-    secondaryColor = "#888"; // light theme gray
-  } else if (/thunderstorm/i.test(desc)) {
-    mainColor = "#fffbe7"; // white-barely yellow for thunderstorm
-    secondaryColor = "#fffbe7"; // white-barely yellow for thunderstorm
-  } else if (/cold/i.test(desc)) {
-    mainColor = "#23405c"; // light theme blue
-    secondaryColor = "#23405c"; // light theme blue
-  }
-
-  // Split date into day of week and rest (e.g. "Thursday 17 Jul 2025" -> "Thursday", "17 Jul 2025")
-  let dayOfWeek = "";
-  let restOfDate = date;
-  if (date) {
-    const match = date.match(/^(\w+),?\s*(.*)$/);
-    if (match) {
-      dayOfWeek = match[1];
-      restOfDate = match[2];
-    }
-  }
   return (
-    <div
-      style={{
-        position: "relative",
-        zIndex: 1,
-        width: "100%",
-        paddingLeft: 18,
-      }}
-    >
+    <div className="weather-text-container-desktop weather-text-container-mobile">
       <span
-        style={{
-          fontWeight: 700,
-          fontSize: 44,
-          fontFamily: "var(--font-mono)",
-          color: mainColor,
-          margin: "12px 0 0 0",
-          display: "block",
-          marginLeft: 0,
-        }}
+        className="weather-temperature-desktop weather-temperature-mobile"
+        style={{ color: colors.mainColor }}
       >
         {temp}°
       </span>
       <span
-        style={{
-          fontStyle: "italic",
-          fontWeight: 500,
-          fontSize: 18,
-          fontFamily: "var(--font-mono)",
-          color: secondaryColor,
-          margin: "14px 0 0 0",
-          display: "block",
-          marginLeft: 0,
-          letterSpacing: "0.01em",
-        }}
+        className="weather-description-desktop weather-description-mobile"
+        style={{ color: colors.secondaryColor }}
       >
         {desc}
       </span>
       <span
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontWeight: 900,
-          fontSize: 32,
-          color: mainColor,
-          margin: "24px 0 0 0",
-          display: "block",
-          marginLeft: 0,
-          letterSpacing: "0.01em",
-        }}
+        className="weather-city-desktop weather-city-mobile"
+        style={{ color: colors.mainColor }}
       >
         {city}
       </span>
       <span
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontWeight: 700,
-          fontSize: 20,
-          color: secondaryColor,
-          letterSpacing: "0.01em",
-          margin: "18px 0 0 0",
-          display: "block",
-          lineHeight: 1.2,
-          marginLeft: 0,
-        }}
+        className="weather-date-desktop weather-date-mobile"
+        style={{ color: colors.secondaryColor }}
       >
-        {dayOfWeek}
-      </span>
-      <span
-        style={{
-          fontFamily: "var(--font-mono)",
-          fontWeight: 400,
-          fontSize: 15,
-          color: secondaryColor,
-          letterSpacing: "0.01em",
-          margin: "2px 0 0 0",
-          display: "block",
-          lineHeight: 1.2,
-          marginLeft: 0,
-        }}
-      >
-        {restOfDate}
+        {dayOfWeek} {restOfDate}
       </span>
       {children}
     </div>

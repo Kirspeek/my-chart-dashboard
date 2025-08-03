@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import { useTheme } from "@/hooks/useTheme";
-import type { BubbleChartData } from "../../../../interfaces/widgets";
+import type { WidgetBubbleChartData } from "../../../../interfaces/widgets";
 
 interface CustomBubbleChartProps {
-  data: BubbleChartData[];
+  data: WidgetBubbleChartData[];
   title: string;
   subtitle?: string;
 }
@@ -21,7 +23,7 @@ export default function CustomBubbleChart({
   const [tooltip, setTooltip] = useState<{
     x: number;
     y: number;
-    data: BubbleChartData;
+    data: WidgetBubbleChartData;
   } | null>(null);
 
   useEffect(() => {

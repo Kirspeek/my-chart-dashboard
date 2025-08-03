@@ -1,5 +1,5 @@
 import React from "react";
-import { ContributionData } from "../logic/useContributionGraphLogic";
+import { ContributionData } from "../../../../../interfaces/charts";
 
 interface ContributionGridProps {
   weeks: ContributionData[][];
@@ -8,6 +8,8 @@ interface ContributionGridProps {
   colors: {
     secondary: string;
   };
+  onDayClick?: (date: string, value: number) => void;
+  selectedDate?: string;
 }
 
 export default function ContributionGrid({

@@ -1,11 +1,13 @@
+"use client";
+
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import { useTheme } from "src/hooks/useTheme";
-import type { ChordChartData } from "../../../../interfaces/widgets";
+import type { WidgetChordChartData } from "../../../../interfaces/widgets";
 
 interface CustomChordDiagramProps {
-  data: ChordChartData[];
+  data: WidgetChordChartData[];
   title: string;
   subtitle?: string;
 }

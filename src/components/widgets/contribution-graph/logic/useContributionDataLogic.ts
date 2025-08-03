@@ -1,12 +1,5 @@
 import { useMemo } from "react";
-import { ContributionData } from "./useContributionGraphLogic";
-
-export interface ValueRange {
-  min: number;
-  max: number;
-  color: string;
-  label: string;
-}
+import { ContributionData, ValueRange } from "../../../../../interfaces";
 
 export const useContributionDataLogic = (data: ContributionData[]) => {
   const valueRanges = useMemo(

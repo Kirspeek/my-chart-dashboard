@@ -30,7 +30,7 @@ export default function ClockDisplay({
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div
-        className="font-mono font-extrabold"
+        className="font-mono font-extrabold clock-display-mobile"
         style={{
           fontSize: "6rem",
           color: "var(--theme-text)", // theme primary text color
@@ -51,13 +51,13 @@ export default function ClockDisplay({
       </div>
       <div className="flex items-center gap-4 mt-2">
         <span
-          className="text-base font-mono text-gray-light"
+          className="text-base font-mono text-gray-light clock-date-mobile"
           style={{ color: "#b0b0a8", fontWeight: 700 }} // light theme muted
         >
           {dateStr}
         </span>
         <span
-          className="text-xs font-mono px-2 py-1 rounded-full border"
+          className="text-xs font-mono px-2 py-1 rounded-full border clock-sunrise-mobile"
           style={{
             borderColor: clockAccentColor,
             color: clockAccentColor,
@@ -68,34 +68,62 @@ export default function ClockDisplay({
           {/* Placeholder for sunrise/sunset */}
           Sun: 07:12 - 17:17
         </span>
-        <div className="flex gap-2 ml-4">
-          <WidgetButton
-            className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-              borderColor: is24h ? "#888" : clockAccentColor,
-              color: is24h ? "#888" : clockAccentColor,
-              backgroundColor: is24h ? "transparent" : `${clockAccentColor}1a`,
-            }}
-            onClick={() => setIs24h(false)}
-          >
-            12h
-          </WidgetButton>
-          <WidgetButton
-            className={`text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-              borderColor: is24h ? clockAccentColor : "#888",
-              color: is24h ? clockAccentColor : "#888",
-              backgroundColor: is24h ? `${clockAccentColor}1a` : "transparent",
-            }}
-            onClick={() => setIs24h(true)}
-          >
-            24h
-          </WidgetButton>
-        </div>
+      </div>
+
+      {/* Mobile 4-button grid layout */}
+      <div className="clock-buttons-mobile">
+        <WidgetButton
+          className={`clock-button-mobile text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+            borderColor: is24h ? "#888" : clockAccentColor,
+            color: is24h ? "#888" : clockAccentColor,
+            backgroundColor: is24h ? "transparent" : `${clockAccentColor}1a`,
+          }}
+          onClick={() => setIs24h(false)}
+        >
+          12h
+        </WidgetButton>
+        <WidgetButton
+          className={`clock-button-mobile text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+            borderColor: is24h ? clockAccentColor : "#888",
+            color: is24h ? clockAccentColor : "#888",
+            backgroundColor: is24h ? `${clockAccentColor}1a` : "transparent",
+          }}
+          onClick={() => setIs24h(true)}
+        >
+          24h
+        </WidgetButton>
+        <WidgetButton
+          className={`clock-button-mobile text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+            borderColor: "#888",
+            color: "#888",
+            backgroundColor: "transparent",
+          }}
+          onClick={() => {}}
+        >
+          UTC
+        </WidgetButton>
+        <WidgetButton
+          className={`clock-button-mobile text-xs font-mono px-3 py-1 rounded-full border transition font-bold`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+            borderColor: "#888",
+            color: "#888",
+            backgroundColor: "transparent",
+          }}
+          onClick={() => {}}
+        >
+          GMT
+        </WidgetButton>
       </div>
     </div>
   );

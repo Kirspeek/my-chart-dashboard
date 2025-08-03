@@ -1,15 +1,10 @@
 import { useMemo, useState, useEffect } from "react";
 import { useTheme } from "../../../../hooks/useTheme";
 import { useWidgetState } from "../../../../context/WidgetStateContext";
-
-export interface ContributionData {
-  date: string;
-  value: number;
-}
-
-export interface ContributionGraphLogicProps {
-  title?: string;
-}
+import {
+  ContributionData,
+  ContributionGraphLogicProps,
+} from "../../../../../interfaces/charts";
 
 const generateRandomCubeData = (): ContributionData[] => {
   const data: ContributionData[] = [];
