@@ -237,7 +237,6 @@
   align-items: stretch;
   min-height: 0;
   height: 50vh;
-  overflow: hidden;
 }
 
 .weather-left-panel-mobile {

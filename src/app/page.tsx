@@ -140,6 +140,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const data = useDashboardData();
 
@@ -167,8 +168,89 @@ export default function Home() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Touch/swipe handling for mobile
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(0);
+    setTouchStart(e.targetTouches[0].clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isUpSwipe = distance > minSwipeDistance;
+    const isDownSwipe = distance < -minSwipeDistance;
+
+    if (isUpSwipe && currentSlide < 3) {
+      setCurrentSlide(currentSlide + 1);
+    }
+    if (isDownSwipe && currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
   if (!data.metricCards) return <div>Loading dashboard data...</div>;
 
+  // Mobile swipe interface
+  if (isMobile) {
+    return (
+      <div
+        className="mobile-swipe-container"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        <div
+          className="mobile-slides-container"
+          style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
+        >
+          {/* Slide 1: Clock Widget */}
+          <div className="mobile-slide">
+            <ClockWidget
+              selectedZone={selectedZone}
+              setSelectedZone={setSelectedZone}
+            />
+          </div>
+
+          {/* Slide 2: Weather Widget */}
+          <div className="mobile-slide">
+            <WeatherWidgetMobile city={selectedCity} />
+          </div>
+
+          {/* Slide 3: Timer Widget */}
+          <div className="mobile-slide">
+            <TimerWidget />
+          </div>
+
+          {/* Slide 4: Map Widget */}
+          <div className="mobile-slide">
+            <MapWidget />
+          </div>
+        </div>
+
+        {/* Slide indicators */}
+        <div className="mobile-slide-indicators">
+          {[0, 1, 2, 3].map((index) => (
+            <div
+              key={index}
+              className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop layout (unchanged)
   return (
     <div className="flex min-h-screen bg-[var(--background)]">
       {/* Sidebar (mobile/desktop) */}

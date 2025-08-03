@@ -31,7 +31,7 @@ export default function WorldClocks({
 
   return (
     <div className="w-full flex flex-col gap-6 mt-4 world-clocks-mobile">
-      <div className="flex flex-wrap gap-4 justify-center">
+      <div className="flex flex-wrap gap-4 justify-center w-full">
         {timeZones.map((tz) => {
           // Only calculate time when mounted to prevent hydration mismatch
           const t = mounted ? getTimeInZone(tz.zone) : new Date(0);
