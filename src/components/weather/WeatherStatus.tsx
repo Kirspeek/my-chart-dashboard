@@ -15,7 +15,7 @@ export default function WeatherStatus({
 }: WeatherStatusProps) {
   return (
     <div
-      className="weather-status-mobile"
+      className="weather-status-mobile lg:weather-status-desktop"
       style={{
         fontSize: 12,
         color: isCached

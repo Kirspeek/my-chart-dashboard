@@ -209,8 +209,8 @@ export default function Home() {
                     />
                   </div>
                   {/* Column 2: Weather (70%) + Timer (30%) */}
-                  <div className="h-full flex flex-col gap-8">
-                    <div className="flex-1 basis-[70%] min-h-0">
+                  <div className="h-full flex flex-col">
+                    <div className="flex-1 basis-[70%] min-h-0 mb-8">
                       {isMobile ? (
                         <WeatherWidgetMobile city={selectedCity} />
                       ) : (

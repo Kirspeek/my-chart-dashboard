@@ -25,16 +25,18 @@ export default function ForecastDay({
       customBackground={weatherBackground}
       className="forecast-day-desktop"
     >
-      <span className="forecast-day-name-desktop">{day}</span>
-      <span className="forecast-day-icon-desktop">{icon}</span>
-      <span
-        className="forecast-day-temp-desktop"
-        style={{ color: "var(--weather-text-muted)" }}
-      >
-        {min}°
-      </span>
-      <span className="forecast-day-temp-desktop">{max}°</span>
-      {children}
+      <div className="forecast-day-content-desktop">
+        <span className="forecast-day-name-desktop">{day}</span>
+        <span className="forecast-day-icon-desktop">{icon}</span>
+        <span
+          className="forecast-day-temp-desktop"
+          style={{ color: "var(--weather-text-muted)" }}
+        >
+          {min}°
+        </span>
+        <span className="forecast-day-temp-desktop">{max}°</span>
+        {children}
+      </div>
     </Button3D>
   );
 }

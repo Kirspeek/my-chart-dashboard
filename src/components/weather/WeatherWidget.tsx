@@ -19,6 +19,7 @@ function renderForecastBlock(
   selectedDay: number,
   setSelectedDay: (i: number) => void
 ) {
+  console.log("Forecast data:", forecast); // Debug log
   if (forecast.length === 0 && !error) {
     return (
       <div style={{ color: "var(--color-gray)", fontSize: 18 }}>
@@ -63,7 +64,7 @@ export default function WeatherWidget({
   } = useWeatherLogic(city);
 
   return (
-    <WidgetBase className="weather-widget-desktop">
+    <WidgetBase className="weather-widget-desktop" style={{ padding: 0 }}>
       {/* Left: Current weather */}
       <div
         className="weather-left-panel-desktop"
