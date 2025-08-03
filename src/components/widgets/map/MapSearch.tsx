@@ -32,6 +32,7 @@ export default function MapSearch({
         justifyContent: "flex-start",
         pointerEvents: "none",
       }}
+      className="map-search-form"
     >
       <input
         type="text"
@@ -61,6 +62,7 @@ export default function MapSearch({
           opacity: searchFocused ? 1 : 0.7,
           backdropFilter: "blur(4px)",
         }}
+        className="map-search-input"
         autoComplete="off"
       />
     </form>
