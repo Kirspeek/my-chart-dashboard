@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import {
   ClockWidget,
   WeatherWidget,
@@ -189,7 +190,7 @@ export default function Home() {
     const isUpSwipe = distance > minSwipeDistance;
     const isDownSwipe = distance < -minSwipeDistance;
 
-    if (isUpSwipe && currentSlide < 3) {
+    if (isUpSwipe && currentSlide < 2) {
       setCurrentSlide(currentSlide + 1);
     }
     if (isDownSwipe && currentSlide > 0) {
@@ -202,49 +203,66 @@ export default function Home() {
   // Mobile swipe interface
   if (isMobile) {
     return (
-      <div
-        className="mobile-swipe-container"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
+      <div className="flex min-h-screen bg-[var(--background)]">
+        {/* Sidebar (mobile/desktop) */}
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        {/* Overlay for mobile sidebar */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         <div
-          className="mobile-slides-container"
-          style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
+          className="mobile-swipe-container"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
-          {/* Slide 1: Clock Widget */}
-          <div className="mobile-slide">
-            <ClockWidget
-              selectedZone={selectedZone}
-              setSelectedZone={setSelectedZone}
-            />
+          {/* Hamburger menu button */}
+          <MobileHamburgerMenu onOpenSidebar={() => setSidebarOpen(true)} />
+
+          <div
+            className="mobile-slides-container"
+            style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
+          >
+            {/* Slide 1: Clock + Weather Widgets in column */}
+            <div className="mobile-slide">
+              <div className="flex flex-col h-full pt-4">
+                <div className="h-[45vh]">
+                  <ClockWidget
+                    selectedZone={selectedZone}
+                    setSelectedZone={setSelectedZone}
+                  />
+                </div>
+                <div className="h-[65vh]">
+                  <WeatherWidgetMobile city={selectedCity} />
+                </div>
+              </div>
+            </div>
+
+            {/* Slide 2: Timer Widget */}
+            <div className="mobile-slide">
+              <TimerWidget />
+            </div>
+
+            {/* Slide 3: Map Widget */}
+            <div className="mobile-slide">
+              <MapWidget />
+            </div>
           </div>
 
-          {/* Slide 2: Weather Widget */}
-          <div className="mobile-slide">
-            <WeatherWidgetMobile city={selectedCity} />
+          {/* Slide indicators */}
+          <div className="mobile-slide-indicators">
+            {[0, 1, 2].map((index) => (
+              <div
+                key={index}
+                className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
+                onClick={() => setCurrentSlide(index)}
+              />
+            ))}
           </div>
-
-          {/* Slide 3: Timer Widget */}
-          <div className="mobile-slide">
-            <TimerWidget />
-          </div>
-
-          {/* Slide 4: Map Widget */}
-          <div className="mobile-slide">
-            <MapWidget />
-          </div>
-        </div>
-
-        {/* Slide indicators */}
-        <div className="mobile-slide-indicators">
-          {[0, 1, 2, 3].map((index) => (
-            <div
-              key={index}
-              className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
-              onClick={() => setCurrentSlide(index)}
-            />
-          ))}
         </div>
       </div>
     );

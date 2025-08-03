@@ -64,8 +64,8 @@ export default function WeatherWidgetMobile({
   } = useWeatherLogic(city);
 
   return (
-    <WidgetBase className="weather-widget-mobile">
-      {/* Top: Current weather */}
+    <WidgetBase className="weather-widget-mobile" style={{ padding: 0 }}>
+      {/* Left: Current weather */}
       <div
         className="weather-left-panel-mobile"
         style={{ overflow: isCloudy ? undefined : "hidden" }}
@@ -85,7 +85,7 @@ export default function WeatherWidgetMobile({
           />
         )}
       </div>
-      {/* Bottom: Forecast */}
+      {/* Right: Forecast */}
       <div className="weather-right-panel-mobile">
         {/* Always show the status label to avoid layout shift */}
         <WeatherStatus
