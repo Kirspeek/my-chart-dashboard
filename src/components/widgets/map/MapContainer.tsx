@@ -53,17 +53,43 @@ export default function MapContainer({
       // Disable scroll zoom (mouse wheel)
       map.scrollZoom.disable();
 
-      // Prevent default touch behaviors that might interfere
+      // Enhanced touch handling for iPhone
       const container = map.getContainer();
+
+      // Prevent default touch behaviors that might interfere
       container.addEventListener(
         "touchstart",
         (e) => {
           if (e.touches.length === 1) {
-            // Single finger - allow pan only
+            // Single finger - allow pan only, prevent zoom
+            e.preventDefault();
+          } else if (e.touches.length === 2) {
+            // Two fingers - allow pinch to zoom
+            // Don't prevent default to allow natural pinch gesture
+          }
+        },
+        { passive: false }
+      );
+
+      // Prevent touchmove interference
+      container.addEventListener(
+        "touchmove",
+        (e) => {
+          if (e.touches.length === 1) {
+            // Single finger move - allow pan
             e.preventDefault();
           }
         },
         { passive: false }
+      );
+
+      // Prevent touchend interference
+      container.addEventListener(
+        "touchend",
+        () => {
+          // Allow natural touch end behavior
+        },
+        { passive: true }
       );
     });
 

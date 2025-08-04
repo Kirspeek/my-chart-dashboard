@@ -41,28 +41,7 @@ export default function MapSearch({
         onFocus={() => onSearchFocus(true)}
         onBlur={() => onSearchFocus(false)}
         placeholder={loading ? "Searching..." : "Search places..."}
-        style={{
-          minWidth: 180,
-          maxWidth: 260,
-          width: "100%",
-          padding: "0.5rem 1rem",
-          borderRadius: 12,
-          border: "none",
-          outline: "none",
-          background: searchFocused
-            ? "rgba(255,255,255,0.95)"
-            : "rgba(255,255,255,0.5)",
-          boxShadow: searchFocused
-            ? "0 2px 12px 0 rgba(124,58,237,0.10)"
-            : "0 1px 4px 0 rgba(124,58,237,0.04)",
-          fontSize: 15,
-          color: "#222",
-          transition: "all 0.2s cubic-bezier(.4,0,.2,1)",
-          pointerEvents: "auto",
-          opacity: searchFocused ? 1 : 0.7,
-          backdropFilter: "blur(4px)",
-        }}
-        className="map-search-input"
+        className={`map-search-input ${searchFocused ? "focused" : ""}`}
         autoComplete="off"
       />
     </form>
