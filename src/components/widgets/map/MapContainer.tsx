@@ -53,44 +53,105 @@ export default function MapContainer({
       // Disable scroll zoom (mouse wheel)
       map.scrollZoom.disable();
 
-      // Enhanced touch handling for iPhone
+      // Enhanced touch handling for iPhone with swipe prevention
       const container = map.getContainer();
+      let isMapInteracting = false;
+      let touchStartY = 0;
+      let touchStartX = 0;
+      let isPinching = false;
 
-      // Prevent default touch behaviors that might interfere
+      // Prevent parent swipe when map is being interacted with
+      const preventParentSwipe = (e: TouchEvent) => {
+        if (isMapInteracting || isPinching) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      };
+
+      // Enhanced touchstart handling
       container.addEventListener(
         "touchstart",
         (e) => {
+          const touch = e.touches[0];
+          touchStartY = touch.clientY;
+          touchStartX = touch.clientX;
+
           if (e.touches.length === 1) {
-            // Single finger - allow pan only, prevent zoom
+            // Single finger - allow pan, mark as map interaction
+            isMapInteracting = true;
             e.preventDefault();
           } else if (e.touches.length === 2) {
-            // Two fingers - allow pinch to zoom
+            // Two fingers - pinch to zoom, prevent parent swipe
+            isPinching = true;
+            isMapInteracting = true;
+            e.stopPropagation();
             // Don't prevent default to allow natural pinch gesture
           }
         },
         { passive: false }
       );
 
-      // Prevent touchmove interference
+      // Enhanced touchmove handling
       container.addEventListener(
         "touchmove",
         (e) => {
-          if (e.touches.length === 1) {
-            // Single finger move - allow pan
+          if (e.touches.length === 1 && isMapInteracting) {
+            // Single finger move - allow pan, prevent parent swipe
             e.preventDefault();
+            e.stopPropagation();
+          } else if (e.touches.length === 2 && isPinching) {
+            // Two finger move - pinch zoom, prevent parent swipe
+            e.stopPropagation();
+            // Don't prevent default to allow natural pinch gesture
           }
         },
         { passive: false }
       );
 
-      // Prevent touchend interference
+      // Enhanced touchend handling
       container.addEventListener(
         "touchend",
-        () => {
-          // Allow natural touch end behavior
+        (e) => {
+          // Reset interaction flags after a short delay
+          setTimeout(() => {
+            isMapInteracting = false;
+            isPinching = false;
+          }, 100);
         },
         { passive: true }
       );
+
+      // Prevent touchcancel from propagating
+      container.addEventListener(
+        "touchcancel",
+        (e) => {
+          e.stopPropagation();
+          isMapInteracting = false;
+          isPinching = false;
+        },
+        { passive: false }
+      );
+
+      // Add touch event listeners to parent containers to prevent swipe
+      const parentSlide = container.closest(".mobile-slide");
+      if (parentSlide) {
+        parentSlide.addEventListener("touchstart", preventParentSwipe, {
+          passive: false,
+        });
+        parentSlide.addEventListener("touchmove", preventParentSwipe, {
+          passive: false,
+        });
+      }
+
+      const parentContainer = container.closest(".mobile-slides-container");
+      if (parentContainer) {
+        parentContainer.addEventListener("touchstart", preventParentSwipe, {
+          passive: false,
+        });
+        parentContainer.addEventListener("touchmove", preventParentSwipe, {
+          passive: false,
+        });
+      }
     });
 
     const styleEl = document.createElement("style");

@@ -34,6 +34,13 @@
 .mobile-slide:has(.map-widget) {
   padding: 0 !important;
   margin: 0 !important;
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.mobile-slide:has(.map-widget) .map-widget {
+  touch-action: pan-x pan-y pinch-zoom !important;
 }
 
 .mobile-slide-indicators {
@@ -98,33 +105,38 @@
 
 /* Map Widget Touch Controls */
 .mobile-slide .map-widget {
-  height: calc(100vh - 2rem) !important;
+  height: 82vh !important;
   width: calc(100vw - 2rem) !important;
   padding: 1rem !important;
-  margin: 1rem !important;
+  margin: -1rem 1rem 3rem 1rem !important;
   border-radius: 2rem !important;
-  touch-action: manipulation !important;
+  touch-action: none !important;
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 /* Map widget container styles */
 .mobile-slide .map-widget > div {
-  height: 100vh !important;
-  min-height: 100vh !important;
+  height: 82vh !important;
+  min-height: 82vh !important;
   padding: 0 !important;
   margin: 0 !important;
   border-radius: 2rem !important;
-  touch-action: manipulation !important;
+  touch-action: none !important;
   -webkit-user-select: none !important;
   user-select: none !important;
+  overflow: hidden !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 .mobile-slide .map-widget > div > div {
-  height: 100vh !important;
-  min-height: 100vh !important;
+  height: 82vh !important;
+  min-height: 82vh !important;
   padding: 0 !important;
   margin: 0 !important;
   border-radius: 2rem !important;
@@ -136,6 +148,8 @@
   -moz-user-select: none !important;
   -ms-user-select: none !important;
   user-select: none !important;
+  overflow: hidden !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 .mobile-slide .map-widget form {
@@ -208,10 +222,10 @@
 /* Tablet breakpoint */
 @media (max-width: 768px) {
   .map-widget {
-    height: calc(100vh - 2rem) !important;
-    min-height: calc(100vh - 2rem) !important;
+    height: 82vh !important;
+    min-height: 82vh !important;
     padding: 1rem !important;
-    margin: 1rem !important;
+    margin: 1rem 1rem 3rem 1rem !important;
     border-radius: 2rem !important;
   }
 
@@ -244,10 +258,10 @@
 @media (max-width: 425px) {
   /* Map Widget Mobile Styles */
   .map-widget {
-    height: calc(100vh - 2rem) !important;
-    min-height: calc(100vh - 2rem) !important;
+    height: 82vh !important;
+    min-height: 82vh !important;
     padding: 1rem !important;
-    margin: 1rem !important;
+    margin: 1rem 1rem 3rem 1rem !important;
     border-radius: 2rem !important;
   }
 
@@ -657,4 +671,34 @@
   font-size: 15px !important;
   min-width: 180px !important;
   max-width: 260px !important;
+}
+
+/* Prevent parent swipe when map is being interacted with */
+.mobile-slide:has(.map-widget) ~ .mobile-slide-indicators {
+  pointer-events: none !important;
+}
+
+.mobile-slide:has(.map-widget) .map-widget:active ~ .mobile-slide-indicators,
+.mobile-slide:has(.map-widget) .map-widget:focus ~ .mobile-slide-indicators {
+  pointer-events: none !important;
+}
+
+/* Ensure map container has proper touch handling */
+.mobile-slide .map-widget canvas {
+  touch-action: pan-x pan-y pinch-zoom !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Prevent any touch interference on map elements */
+.mobile-slide .map-widget .mapboxgl-canvas-container {
+  touch-action: pan-x pan-y pinch-zoom !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.mobile-slide .map-widget .mapboxgl-canvas {
+  touch-action: pan-x pan-y pinch-zoom !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
