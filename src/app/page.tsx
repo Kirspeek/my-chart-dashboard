@@ -26,6 +26,7 @@ import {
   ContributionGraphWidget,
   AggregatedSpendingWidget,
 } from "@/components/widgets";
+import CalendarWidgetMobile from "@/components/widgets/calendar/CalendarWidgetMobile";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 import type { UserData } from "../../interfaces/dashboard";
@@ -234,6 +235,7 @@ export default function Home() {
                   <ClockWidget
                     selectedZone={selectedZone}
                     setSelectedZone={setSelectedZone}
+                    isMobile={true}
                   />
                 </div>
                 <div className="h-[65vh]">
@@ -254,7 +256,7 @@ export default function Home() {
 
             {/* Slide 4: Calendar Widget */}
             <div className="mobile-slide">
-              <CalendarWidget />
+              <CalendarWidgetMobile />
             </div>
           </div>
 
@@ -311,6 +313,7 @@ export default function Home() {
                     <ClockWidget
                       selectedZone={selectedZone}
                       setSelectedZone={setSelectedZone}
+                      isMobile={false}
                     />
                   </div>
                   {/* Column 2: Weather (70%) + Timer (30%) */}

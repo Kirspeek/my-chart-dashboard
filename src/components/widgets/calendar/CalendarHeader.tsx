@@ -40,16 +40,16 @@ export default function CalendarHeader({
   };
 
   return (
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-2">
       {/* Navigation */}
       <div className="flex items-center gap-1">
         <Button3D
           onClick={onPrevious}
           style={{
-            padding: "0.25rem 0.5rem",
+            padding: "0.125rem 0.25rem",
             minWidth: "auto",
             minHeight: "auto",
-            fontSize: "0.75rem",
+            fontSize: "0.625rem",
           }}
         >
           ‹
@@ -57,10 +57,10 @@ export default function CalendarHeader({
         <Button3D
           onClick={onNext}
           style={{
-            padding: "0.25rem 0.5rem",
+            padding: "0.125rem 0.25rem",
             minWidth: "auto",
             minHeight: "auto",
-            fontSize: "0.75rem",
+            fontSize: "0.625rem",
           }}
         >
           ›
@@ -68,10 +68,10 @@ export default function CalendarHeader({
         <Button3D
           onClick={onToday}
           style={{
-            padding: "0.25rem 0.5rem",
+            padding: "0.125rem 0.25rem",
             minWidth: "auto",
             minHeight: "auto",
-            fontSize: "0.75rem",
+            fontSize: "0.625rem",
           }}
         >
           Today
@@ -80,7 +80,7 @@ export default function CalendarHeader({
 
       {/* Month/Year Display */}
       <div className="text-center">
-        <h3 className="text-lg font-bold text-gray-800">
+        <h3 className="text-sm font-bold text-gray-800">
           {formatDate(currentDate)}
         </h3>
       </div>
@@ -93,10 +93,10 @@ export default function CalendarHeader({
             selected={viewMode === mode}
             onClick={() => onViewModeChange(mode)}
             style={{
-              padding: "0.25rem 0.5rem",
+              padding: "0.125rem 0.25rem",
               minWidth: "auto",
               minHeight: "auto",
-              fontSize: "0.75rem",
+              fontSize: "0.625rem",
             }}
           >
             <span className="text-xs font-medium capitalize">{mode}</span>

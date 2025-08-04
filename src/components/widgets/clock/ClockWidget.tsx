@@ -12,7 +12,8 @@ import "../../../styles/mobile.css";
 export default function ClockWidget({
   selectedZone,
   setSelectedZone,
-}: ClockWidgetProps) {
+  isMobile = false,
+}: ClockWidgetProps & { isMobile?: boolean }) {
   const {
     mounted,
     is24h,
@@ -76,6 +77,7 @@ export default function ClockWidget({
         pad={pad}
         getTimeInZone={getTimeInZone}
         isDay={isDay}
+        isMobile={isMobile}
       />
     </WidgetBase>
   );

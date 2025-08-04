@@ -14,6 +14,7 @@ interface WorldClocksProps {
   pad: (n: number) => string;
   getTimeInZone: (zone: string) => Date;
   isDay: (hours: number) => boolean;
+  isMobile?: boolean;
 }
 
 export default function WorldClocks({
@@ -25,13 +26,16 @@ export default function WorldClocks({
   pad,
   getTimeInZone,
   isDay,
+  isMobile = false,
 }: WorldClocksProps) {
   const { accent } = useTheme();
   const clockAccentColor = accent.red; // Use red for clock widget
 
   return (
     <div className="w-full flex flex-col gap-6 mt-4 world-clocks-mobile">
-      <div className="flex flex-wrap gap-4 justify-center w-full">
+      <div
+        className={`grid grid-cols-2 gap-2 justify-center w-full ${isMobile ? "px-25" : "px-18"}`}
+      >
         {timeZones.map((tz) => {
           // Only calculate time when mounted to prevent hydration mismatch
           const t = mounted ? getTimeInZone(tz.zone) : new Date(0);
