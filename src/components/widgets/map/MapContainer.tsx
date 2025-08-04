@@ -56,12 +56,10 @@ export default function MapContainer({
       // Enhanced touch handling for iPhone with swipe prevention
       const container = map.getContainer();
       let isMapInteracting = false;
-      let touchStartY = 0;
-      let touchStartX = 0;
       let isPinching = false;
 
       // Prevent parent swipe when map is being interacted with
-      const preventParentSwipe = (e: TouchEvent) => {
+      const preventParentSwipe = (e: Event) => {
         if (isMapInteracting || isPinching) {
           e.stopPropagation();
           e.preventDefault();
@@ -72,10 +70,6 @@ export default function MapContainer({
       container.addEventListener(
         "touchstart",
         (e) => {
-          const touch = e.touches[0];
-          touchStartY = touch.clientY;
-          touchStartX = touch.clientX;
-
           if (e.touches.length === 1) {
             // Single finger - allow pan, mark as map interaction
             isMapInteracting = true;
@@ -111,7 +105,7 @@ export default function MapContainer({
       // Enhanced touchend handling
       container.addEventListener(
         "touchend",
-        (e) => {
+        () => {
           // Reset interaction flags after a short delay
           setTimeout(() => {
             isMapInteracting = false;
