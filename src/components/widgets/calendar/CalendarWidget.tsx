@@ -5,8 +5,7 @@ import WidgetBase from "../../common/WidgetBase";
 import { CalendarWidgetProps } from "../../../../interfaces/widgets";
 import { useCalendarLogic } from "src/hooks/useCalendarLogic";
 import CalendarHeader from "./CalendarHeader";
-import CalendarGrid from "./CalendarGrid";
-import CalendarSidebar from "./CalendarSidebar";
+import CalendarWidgetDesktop from "./CalendarWidgetDesktop";
 
 export default function CalendarWidget({
   onDateSelect,
@@ -36,16 +35,21 @@ export default function CalendarWidget({
   const days = getDaysInMonth(currentDate);
   const weekDays = getWeekDays();
 
+  React.useEffect(() => {
+    if (!selectedDate) {
+      setSelectedDate(new Date());
+    }
+  }, [selectedDate, setSelectedDate]);
+
   return (
     <WidgetBase
       style={{
         width: "100%",
-        height: "40vh",
-        minHeight: 0,
         padding: "1.5rem",
         display: "flex",
         flexDirection: "column",
       }}
+      className="lg:h-auto xl:h-[40vh]"
     >
       <CalendarHeader
         currentDate={currentDate}
@@ -56,33 +60,21 @@ export default function CalendarWidget({
         onViewModeChange={setViewMode}
       />
 
-      <div className="flex flex-1 gap-4 min-h-0">
-        {/* Left: Calendar Grid */}
-        <div className="flex-1">
-          <CalendarGrid
-            days={days}
-            weekDays={weekDays}
-            events={events}
-            viewMode={viewMode}
-            isToday={isToday}
-            isSelected={isSelected}
-            isCurrentMonth={isCurrentMonth}
-            onDateSelect={setSelectedDate}
-          />
-        </div>
-
-        {/* Right: Sidebar with selected date and events */}
-        <div className="w-48 flex-shrink-0">
-          <CalendarSidebar
-            selectedDate={selectedDate}
-            events={events}
-            onAddEvent={addEvent}
-            onDeleteEvent={deleteEvent}
-            showEventForm={showEventForm}
-            onToggleEventForm={toggleEventForm}
-          />
-        </div>
-      </div>
+      <CalendarWidgetDesktop
+        viewMode={viewMode}
+        days={days}
+        weekDays={weekDays}
+        events={events}
+        isToday={isToday}
+        isSelected={isSelected}
+        isCurrentMonth={isCurrentMonth}
+        onDateSelect={setSelectedDate}
+        selectedDate={selectedDate}
+        onAddEvent={addEvent}
+        onDeleteEvent={deleteEvent}
+        showEventForm={showEventForm}
+        onToggleEventForm={toggleEventForm}
+      />
     </WidgetBase>
   );
 }

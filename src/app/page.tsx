@@ -158,9 +158,9 @@ export default function Home() {
 
     // Check if mobile (phones only, not tablets)
     const checkMobile = () => {
-      // Use mobile version only for phones (≤768px)
-      // Tablets (768px-1024px) and desktop (>1024px) use desktop version
-      const isPhone = window.innerWidth <= 768;
+      // Use mobile slides only for phones (≤425px)
+      // Tablets (≥426px) and desktop use desktop layout
+      const isPhone = window.innerWidth <= 425;
       setIsMobile(isPhone);
     };
 
@@ -331,7 +331,7 @@ export default function Home() {
                   </div>
                 </div>
                 {/* New row: Map and Calendar widgets */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
                   <div className="h-full">
                     <MapWidget />
                   </div>
