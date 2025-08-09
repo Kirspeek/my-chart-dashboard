@@ -5,23 +5,28 @@ import WidgetBase from "../../common/WidgetBase";
 import { TimerWidgetProps } from "../../../../interfaces/components";
 
 export default function TimerWidget({ className = "" }: TimerWidgetProps) {
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
+
   return (
     <WidgetBase
       style={{
-        width: "100%",
-        padding: "0.75rem 1rem",
+        width: isMobile ? "100vw" : "100%",
+        padding: isMobile ? "0rem" : "0.75rem 1rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        height: "100%",
+        height: isMobile ? "82vh" : "100%",
+        margin: isMobile ? "0 1rem 3rem 1rem" : undefined,
+        boxSizing: "border-box",
+        borderRadius: isMobile ? "2rem" : undefined,
       }}
       className={className}
     >
       <div
         style={{
-          fontSize: "3rem",
-          fontWeight: "700",
+          fontSize: isMobile ? "1.2rem" : "3rem",
+          fontWeight: 700,
           fontStyle: "italic",
           color: "rgb(252, 128, 159)",
           padding: "0.1rem 0.3rem",

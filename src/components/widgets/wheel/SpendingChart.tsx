@@ -13,7 +13,6 @@ import { WheelHeader, WheelSpendingDisplay, WheelCanvas } from "./components";
 export default function SpendingChart({
   data,
   annualData,
-  title = "Total Spending",
   onClick,
   showCardNumber = false,
   cardNumber,
@@ -39,6 +38,8 @@ export default function SpendingChart({
     canvasRef
   );
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
+
   return (
     <div
       className="relative cursor-pointer transition-all duration-300 h-full flex flex-col"
@@ -56,8 +57,16 @@ export default function SpendingChart({
         onPeriodChange={setSelectedPeriod}
       />
 
+      {/* Mobile-only spacer before spending title */}
+      {isMobile && <div style={{ height: "0.75rem" }} />}
+
       {/* Total Spending Display */}
-      <WheelSpendingDisplay title={title} totalSpending={totalSpending} />
+      <WheelSpendingDisplay
+        title={
+          selectedPeriod === "Monthly" ? "Monthly Spending" : "Annual Spending"
+        }
+        totalSpending={totalSpending}
+      />
 
       {/* 3D Donut Chart Canvas */}
       <WheelCanvas

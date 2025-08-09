@@ -20,6 +20,8 @@ export default function WheelCanvas({
   onMouseLeave,
   onClick,
 }: WheelCanvasProps) {
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
+
   return (
     <ChartCanvas
       className="flex justify-center mb-4 flex-1 items-center"
@@ -28,15 +30,17 @@ export default function WheelCanvas({
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
+      style={{
+        width: "100%",
+        height: isMobile ? "calc(82vh - var(--spacing) * 6)" : "100%",
+      }}
     >
       <canvas
         ref={canvasRef}
-        width={350}
-        height={200}
+        width={isMobile ? 300 : 350}
+        height={isMobile ? 300 : 200}
         className={`${isDragging ? "cursor-grabbing" : "cursor-grab"} max-w-full max-h-full`}
-        style={{
-          touchAction: "none",
-        }}
+        style={{ touchAction: "none" }}
       />
     </ChartCanvas>
   );

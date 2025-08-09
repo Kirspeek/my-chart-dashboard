@@ -3,19 +3,12 @@
 import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SpendingChart from "./SpendingChart";
-import SpendingProgress from "../../common/SpendingProgress";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import { generateStableExpenseData } from "../../../utils/wheelUtils";
 
 export default function WheelWidget() {
-  const {
-    currentCard,
-    selectedCardIndex,
-    handleCardClick,
-    hasCards,
-    totalCards,
-    currentCardData,
-  } = useWheelWidgetLogic();
+  const { currentCard, handleCardClick, hasCards, currentCardData } =
+    useWheelWidgetLogic();
 
   const contentStyle = useMemo(
     () => ({
@@ -41,7 +34,7 @@ export default function WheelWidget() {
   if (!hasCards || !currentCardData) {
     return (
       <WidgetBase
-        className="w-full h-full flex flex-col items-center justify-center p-6"
+        className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
         style={widgetStyle}
       >
         <div
@@ -91,7 +84,7 @@ export default function WheelWidget() {
 
   return (
     <WidgetBase
-      className="w-full h-full flex flex-col items-center justify-center p-6"
+      className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
       style={widgetStyle}
     >
       <div
@@ -109,13 +102,7 @@ export default function WheelWidget() {
           />
         </div>
 
-        {/* Progress Indicators */}
-        <div className="mt-6">
-          <SpendingProgress
-            selectedIndex={selectedCardIndex}
-            totalCards={totalCards}
-          />
-        </div>
+        {/* Progress indicators removed */}
       </div>
     </WidgetBase>
   );

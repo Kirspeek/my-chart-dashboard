@@ -6,6 +6,7 @@ export { default as Card } from "./Card";
 export { default as SpendingProgress } from "./SpendingProgress";
 export { default as BottomSegmentInfo } from "./BottomSegmentInfo";
 export { default as ThreeDButton } from "./3DButton";
+export { default as Button } from "./Button";
 
 // New chart-specific common components
 export { default as ChartCanvas } from "./ChartCanvas";

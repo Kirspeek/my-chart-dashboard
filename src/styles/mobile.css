@@ -20,7 +20,7 @@
 }
 
 .mobile-slide {
-  width: 100%;
+  width: 100vw !important;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -106,9 +106,10 @@
 /* Map Widget Touch Controls */
 .mobile-slide .map-widget {
   height: 82vh !important;
-  width: calc(100vw - 2rem) !important;
-  padding: 1rem !important;
-  margin: -1rem 1rem 3rem 1rem !important;
+  width: 100vw !important;
+  padding: 0 !important;
+  padding-top: calc(var(--spacing) * 4) !important;
+  margin: 0 1rem 3rem 1rem !important; /* remove negative top margin */
   border-radius: 2rem !important;
   touch-action: none !important;
   -webkit-user-select: none !important;
@@ -222,7 +223,7 @@
 /* Mobile Calendar Widget Styles */
 .mobile-slide .calendar-widget-mobile {
   height: 82vh !important;
-  width: calc(100vw - 2rem) !important;
+  width: 100vw !important;
   padding: 2.5rem 1rem 1rem 1rem !important;
   margin: 0rem 1rem 3rem 1rem !important;
   border-radius: 2rem !important;
@@ -287,8 +288,10 @@
   .map-widget {
     height: 82vh !important;
     min-height: 82vh !important;
-    padding: 1rem !important;
-    margin: 1rem 1rem 3rem 1rem !important;
+    padding: 0 !important;
+    padding-top: calc(var(--spacing) * 4) !important;
+    /* Remove horizontal margin so it aligns with other widgets */
+    margin: 0 1rem 3rem 1rem !important;
     border-radius: 2rem !important;
   }
 
@@ -323,8 +326,9 @@
   .map-widget {
     height: 82vh !important;
     min-height: 82vh !important;
-    padding: 1rem !important;
-    margin: 1rem 1rem 3rem 1rem !important;
+    padding: 0 !important;
+    padding-top: calc(var(--spacing) * 4) !important;
+    margin: 0 1rem 3rem 1rem !important;
     border-radius: 2rem !important;
   }
 
@@ -778,4 +782,47 @@
   touch-action: pan-x pan-y pinch-zoom !important;
   -webkit-touch-callout: none !important;
   -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Wheel widget mobile styles */
+.mobile-slide .wheel-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 4rem 1rem !important;
+  margin: 0 1rem 3rem 1rem !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Waves chart mobile styles */
+.mobile-slide .waves-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 0 !important;
+  padding-top: calc(var(--spacing) * 4) !important;
+  margin: 0 1rem 3rem 1rem !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+}
+
+/* Contribution graph mobile styles */
+.mobile-slide .contribution-graph-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Line chart mobile styles */
+.mobile-slide .line-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }

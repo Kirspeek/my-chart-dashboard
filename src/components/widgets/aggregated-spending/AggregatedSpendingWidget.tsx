@@ -114,8 +114,21 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
 export default function AggregatedSpendingWidget() {
   const { cards } = useWalletLogic();
   const { targetHeight } = useWidgetHeight();
-  const { getCurrentCardData } = useWidgetState();
 
+  // Detect mobile to disable margin-top
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const { getCurrentCardData } = useWidgetState();
   const currentCardData = getCurrentCardData();
 
   const { spendingData, annualSpendingData } = useMemo(() => {
@@ -201,18 +214,18 @@ export default function AggregatedSpendingWidget() {
   const widgetStyle = useMemo(
     () => ({
       height: targetHeight,
-      marginTop: "40px",
+      marginTop: isMobile ? 0 : "40px",
       transition: "height 0.3s ease-in-out", // Smooth transition for height changes
     }),
-    [targetHeight]
+    [targetHeight, isMobile]
   );
 
   const contentStyle = useMemo(
     () => ({
-      marginTop: "-40px",
+      marginTop: isMobile ? 0 : "-40px",
       transition: "all 0.3s ease-in-out", // Smooth transition for content adjustments
     }),
-    []
+    [isMobile]
   );
 
   return (

@@ -215,62 +215,153 @@ export default function Home() {
           />
         )}
 
-        <div
-          className="mobile-swipe-container"
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-        >
-          {/* Hamburger menu button */}
-          <MobileHamburgerMenu onOpenSidebar={() => setSidebarOpen(true)} />
-
+        <WidgetStateProvider>
           <div
-            className="mobile-slides-container"
-            style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
+            className="mobile-swipe-container"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
-            {/* Slide 1: Clock + Weather Widgets in column */}
-            <div className="mobile-slide">
-              <div className="flex flex-col h-full pt-4">
-                <div className="h-[45vh]">
-                  <ClockWidget
-                    selectedZone={selectedZone}
-                    setSelectedZone={setSelectedZone}
-                    isMobile={true}
+            {/* Hamburger menu button */}
+            <MobileHamburgerMenu onOpenSidebar={() => setSidebarOpen(true)} />
+
+            <div
+              className="mobile-slides-container"
+              style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
+            >
+              {/* Slide 1: Clock + Weather (original combined layout) */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="h-[45vh]">
+                    <ClockWidget
+                      selectedZone={selectedZone}
+                      setSelectedZone={setSelectedZone}
+                      isMobile={true}
+                    />
+                  </div>
+                  <div className="h-[65vh]">
+                    <WeatherWidgetMobile city={selectedCity} />
+                  </div>
+                </div>
+              </div>
+              {/* Slide 2: Timer (original) */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <TimerWidget />
+                </div>
+              </div>
+              {/* Slide 3: Map (original) */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <MapWidget />
+                </div>
+              </div>
+              {/* Slide 4: Calendar (original) */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <CalendarWidgetMobile />
+                </div>
+              </div>
+              {/* Slide 6-8: Wallet-related, wrapped with providers */}
+              <WidgetHeightProvider>
+                <div className="mobile-slide">
+                  <WalletWidget />
+                </div>
+                <div className="mobile-slide">
+                  <div className="flex flex-col h-full pt-4">
+                    <WalletCardWidget />
+                  </div>
+                </div>
+                <div className="mobile-slide">
+                  <div className="flex flex-col h-full pt-4">
+                    <AggregatedSpendingWidget />
+                  </div>
+                </div>
+              </WidgetHeightProvider>
+              {/* Slide 9: Contribution Graph */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <ContributionGraphWidget title="Financial Activity Overview" />
+                </div>
+              </div>
+              {/* Slide 10: Metrics/Charts examples */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <LineChartWidget
+                    data={data.salesData ?? []}
+                    title="Sales Performance"
                   />
                 </div>
-                <div className="h-[65vh]">
-                  <WeatherWidgetMobile city={selectedCity} />
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <BarChartWidget
+                    data={data.barChartData ?? []}
+                    title="Quarterly Overview"
+                  />
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <RadarChartWidget
+                    data={data.radarChartData ?? []}
+                    title="Performance Metrics"
+                  />
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <DeviceUsageWidget
+                    data={data.pieChartData ?? []}
+                    title="Device Usage"
+                  />
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <SankeyChartWidget
+                    data={data.sankeyData ?? []}
+                    title="Global Migration Flows"
+                    subtitle="2019/2020"
+                  />
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <ChordChartWidget
+                    data={data.migrationData ?? []}
+                    title="Global Migrations"
+                    subtitle="2023"
+                  />
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <BubbleChartWidget
+                    data={data.bubbleData ?? []}
+                    title="Global Tech Investment"
+                    subtitle="Market Cap vs Growth vs Workforce Size"
+                  />
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <TimelineRingsWidget />
                 </div>
               </div>
             </div>
-
-            {/* Slide 2: Timer Widget */}
-            <div className="mobile-slide">
-              <TimerWidget />
-            </div>
-
-            {/* Slide 3: Map Widget */}
-            <div className="mobile-slide">
-              <MapWidget />
-            </div>
-
-            {/* Slide 4: Calendar Widget */}
-            <div className="mobile-slide">
-              <CalendarWidgetMobile />
+            {/* Slide indicators */}
+            <div className="mobile-slide-indicators">
+              {Array.from({ length: 16 }, (_, index) => (
+                <div
+                  key={index}
+                  className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
+                  onClick={() => setCurrentSlide(index)}
+                />
+              ))}
             </div>
           </div>
-
-          {/* Slide indicators */}
-          <div className="mobile-slide-indicators">
-            {[0, 1, 2, 3].map((index) => (
-              <div
-                key={index}
-                className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
-                onClick={() => setCurrentSlide(index)}
-              />
-            ))}
-          </div>
-        </div>
+        </WidgetStateProvider>
       </div>
     );
   }
@@ -317,7 +408,7 @@ export default function Home() {
                     />
                   </div>
                   {/* Column 2: Weather (70%) + Timer (30%) */}
-                  <div className="h-full flex flex-col gap-2">
+                  <div className="h-full flex flex-col gap-8 lg:gap-2">
                     <div className="flex-none basis-auto min-h-0 2xl:flex-none 2xl:basis-[70%]">
                       {isMobile ? (
                         <WeatherWidgetMobile city={selectedCity} />
@@ -331,7 +422,7 @@ export default function Home() {
                   </div>
                 </div>
                 {/* New row: Map and Calendar widgets */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-6 lg:mt-8 mb-8">
                   <div className="h-full">
                     <MapWidget />
                   </div>
@@ -345,14 +436,14 @@ export default function Home() {
             {/* Wallet Widget */}
             <WidgetHeightProvider>
               <WidgetStateProvider>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-8 items-stretch">
-                  <div>
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
+                  <div className="md:w-full lg:col-span-2 xl:col-span-1">
                     <WalletWidget />
                   </div>
-                  <div>
+                  <div className="md:w-full">
                     <WalletCardWidget />
                   </div>
-                  <div>
+                  <div className="md:w-full">
                     <AggregatedSpendingWidget />
                   </div>
                 </div>

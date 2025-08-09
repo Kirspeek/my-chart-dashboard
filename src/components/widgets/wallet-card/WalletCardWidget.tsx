@@ -4,50 +4,45 @@ import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import MonthlyExpensesChart from "./MonthlyExpensesChart";
-import SpendingProgress from "../../common/SpendingProgress";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
 
 export default function WalletCardWidget() {
-  const {
-    currentCard,
-    selectedCardIndex,
-    handleCardClick,
-    hasCards,
-    totalCards,
-    currentCardData,
-  } = useWheelWidgetLogic();
+  const { currentCard, handleCardClick, hasCards, currentCardData } =
+    useWheelWidgetLogic();
 
   const { targetHeight } = useWidgetHeight();
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
 
   // Calculate dynamic styling based on height
   const widgetStyle = useMemo(
     () => ({
       height: targetHeight,
-      marginTop: "40px",
-      transition: "height 0.3s ease-in-out", // Smooth transition for height changes
+      marginTop: isMobile ? undefined : "40px",
+      transition: "height 0.3s ease-in-out",
     }),
-    [targetHeight]
+    [targetHeight, isMobile]
   );
 
   const contentStyle = useMemo(
     () => ({
-      marginTop: "-40px",
-      transition: "all 0.3s ease-in-out", // Smooth transition for content adjustments
+      marginTop: isMobile ? undefined : "-40px",
+      transition: "all 0.3s ease-in-out",
     }),
-    []
+    [isMobile]
   );
 
   if (!hasCards || !currentCardData) {
     return (
       <WidgetBase
-        className="w-full h-full flex flex-col items-center justify-center p-6"
+        className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
         style={widgetStyle}
       >
         <div
           className="text-center"
           style={{
             color: "#888",
-            marginTop: "-40px",
+            marginTop: isMobile ? undefined : "-40px",
           }}
         >
           <div
@@ -80,7 +75,7 @@ export default function WalletCardWidget() {
 
   return (
     <WidgetBase
-      className="w-full h-full flex flex-col items-center justify-center p-6"
+      className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
       style={widgetStyle}
     >
       <div
@@ -97,13 +92,7 @@ export default function WalletCardWidget() {
           )}
         </div>
 
-        {/* Progress Indicators */}
-        <div className="mt-6">
-          <SpendingProgress
-            selectedIndex={selectedCardIndex}
-            totalCards={totalCards}
-          />
-        </div>
+        {/* Progress Indicators removed */}
       </div>
     </WidgetBase>
   );

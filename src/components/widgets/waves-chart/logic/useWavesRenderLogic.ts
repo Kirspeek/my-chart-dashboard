@@ -2,9 +2,10 @@ import { useMemo } from "react";
 import { WaveData } from "../../../../../interfaces/charts";
 
 export const useWavesRenderLogic = (chartData: WaveData[]) => {
-  // Generate wave paths
+  // Generate wave paths in reversed order so the last dataset renders at the bottom
   const wavePaths = useMemo(() => {
-    return chartData.map((dataset, index) => ({
+    const datasetsInRenderOrder = [...chartData].reverse();
+    return datasetsInRenderOrder.map((dataset, index) => ({
       id: dataset.id,
       className: "dataset",
       path: dataset.path,

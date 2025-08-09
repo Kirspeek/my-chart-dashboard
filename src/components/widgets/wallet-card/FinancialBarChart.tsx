@@ -26,13 +26,25 @@ interface ExpenseData {
 export default function FinancialBarChart({
   data,
   annualData,
-  title = "Spending Overview",
   onClick,
   showCardNumber = false,
   cardNumber,
 }: FinancialBarChartProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("Monthly");
   const { accent } = useTheme();
+
+  // Detect mobile for spacing adjustments
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Use the appropriate data based on selected period
   const chartData = useMemo(() => {
@@ -55,21 +67,39 @@ export default function FinancialBarChart({
     return [
       {
         id: "dataset-1",
-        color: chartData[0]?.color || "#50E3C2",
-        path: "M0,260 C0,260 22,199 64,199 C105,199 112,144 154,144 C195,144 194,126 216,126 C237,126 263,184 314,184 C365,183 386,128 434,129 C483,130 511,240 560,260 L0,260 Z",
+        color: accent.teal,
+        // Peak biased to the right
+        path:
+          chartData[0]?.color === accent.red
+            ? // Taller single-crest red (rounded, centered)
+              "M0,260 C140,230 200,160 280,85 S420,230 560,260 L560,260 L0,260 Z"
+            : // Base variant (right-biased) — taller (smoothed right end)
+              "M0,260 C80,230 140,210 200,220 C260,230 340,160 420,130 C500,120 540,200 555,235 S560,260 560,260 L0,260 Z",
       },
       {
         id: "dataset-2",
-        color: chartData[1]?.color || "#21A6EE",
-        path: "M0,260 C35,254 63,124 88,124 C114,124 148,163 219,163 C290,163 315,100 359,100 C402,100 520,244 560,259 C560,259 0,259 0,260 Z",
+        color: accent.teal,
+        // Peak biased to the left
+        path:
+          chartData[1]?.color === accent.red
+            ? // Taller single-crest red (rounded, centered)
+              "M0,260 C140,230 200,160 280,85 S420,230 560,260 L560,260 L0,260 Z"
+            : // Base variant (left-biased) — taller
+              "M0,260 C60,180 140,150 220,160 C300,175 360,220 420,200 C480,190 520,235 560,245 C545,255 552,258 560,260 L0,260 Z",
       },
       {
         id: "dataset-3",
-        color: chartData[2]?.color || "#807CCC",
-        path: "M0,260 C0,260 4,252 7,252 C66,252 90,102 139,102 C188,102 205,135 252,135 C299,135 309,89 330,89 C350,89 366,122 404,122 C442,122 431,98 451,98 C470,98 499,213 560,260 L0,259 Z",
+        color: accent.teal,
+        // Peak near center-left
+        path:
+          chartData[2]?.color === accent.red
+            ? // Taller single-crest red (rounded, centered)
+              "M0,260 C140,230 200,160 280,85 S420,230 560,260 L560,260 L0,260 Z"
+            : // Base variant (center-left) — taller
+              "M0,260 C70,220 150,200 230,190 C310,180 370,205 440,185 C500,175 540,220 520,232 C556,276 564,265 550,280 L0,260 Z",
       },
     ];
-  }, [chartData]);
+  }, [chartData, accent]);
 
   const totalSpending = useMemo(() => {
     const total = chartData.reduce((sum, item) => sum + item.value, 0);
@@ -87,7 +117,13 @@ export default function FinancialBarChart({
       onClick={handleCardClick}
     >
       {/* Card Number and Period Toggle */}
-      <div className="flex items-center justify-between mb-4">
+      <div
+        className="flex items-center justify-between mb-4"
+        style={{
+          marginTop: isMobile ? "2rem" : undefined,
+          marginBottom: isMobile ? "1.5rem" : undefined,
+        }}
+      >
         <div className="text-[#232323] text-lg font-mono">
           {showCardNumber ? cardNumber || "**** ****" : "All Cards"}
         </div>
@@ -127,14 +163,25 @@ export default function FinancialBarChart({
 
       {/* Total Spending Display */}
       <div className="text-center mb-2">
-        <div className="text-sm text-[#888] mb-1">{title}</div>
+        <div className="text-sm text-[#888] mb-1">
+          {selectedPeriod === "Monthly"
+            ? "Monthly Spending"
+            : "Annual Spending"}
+        </div>
         <div className="text-2xl font-bold text-[#232323] font-mono">
           {totalSpending}
         </div>
       </div>
 
       {/* Waves Chart */}
-      <div className="flex-1">
+      <div
+        className="flex-1"
+        style={{
+          display: isMobile ? "flex" : undefined,
+          alignItems: isMobile ? "center" : undefined,
+          justifyContent: isMobile ? "center" : undefined,
+        }}
+      >
         <WavesChart
           data={wavesChartData}
           title={`${selectedPeriod} Spending`}

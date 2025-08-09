@@ -22,15 +22,21 @@ export default function MapWidget({
     handleSearch,
   } = useMapLogic(onMarkerChange, userLocation);
 
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
+
   return (
     <WidgetBase
       style={{
-        width: "100%",
-        height: "40vh",
+        width: isMobile ? "100vw" : "100%",
+        height: isMobile ? "82vh" : "40vh",
         minHeight: 0,
         padding: 0,
+        paddingTop: isMobile ? "calc(var(--spacing) * 4)" : undefined,
+        margin: isMobile ? "0 0 3rem 0" : undefined,
         position: "relative",
         overflow: "hidden",
+        boxSizing: "border-box",
+        borderRadius: isMobile ? "2rem" : undefined,
       }}
       className="map-widget"
     >

@@ -13,7 +13,7 @@ import { WALLET_CONSTANTS } from "../constants/wallet";
 
 interface WidgetHeightContextType {
   walletHeight: number;
-  targetHeight: number;
+  targetHeight: number | string;
   updateWalletHeight: (height: number) => void;
 }
 
@@ -43,6 +43,19 @@ export const WidgetHeightProvider: React.FC<WidgetHeightProviderProps> = ({
     WALLET_CONSTANTS.WALLET_HEIGHT
   );
 
+  // Track viewport to distinguish mobile vs desktop
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   // Calculate dynamic height based on number of cards - using useMemo for immediate updates
   const calculatedWalletHeight = useMemo(() => {
     const baseHeight = WALLET_CONSTANTS.WALLET_HEIGHT;
@@ -61,10 +74,10 @@ export const WidgetHeightProvider: React.FC<WidgetHeightProviderProps> = ({
     setWalletHeight(calculatedWalletHeight);
   }, [calculatedWalletHeight]);
 
-  // Target height for the other two widgets (wheel and bar chart) - using useMemo for immediate updates
+  // Target height: apply 400px minimum only on desktop
   const targetHeight = useMemo(() => {
-    return Math.max(walletHeight, 400); // Minimum 400px
-  }, [walletHeight]);
+    return isMobile ? "82vh" : Math.max(walletHeight, 400);
+  }, [walletHeight, isMobile]);
 
   const updateWalletHeight = (height: number) => {
     setWalletHeight(height);

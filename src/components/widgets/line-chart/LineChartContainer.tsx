@@ -19,6 +19,19 @@ interface LineChartContainerProps {
 }
 
 export default function LineChartContainer({ data }: LineChartContainerProps) {
+  // Detect mobile for responsive height
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 768);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const {
     chartColors,
     formatValue,
@@ -29,7 +42,7 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
   } = useChartLogic();
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={isMobile ? "100%" : 300}>
       <RechartsLineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke={gridStyle.stroke} />
         <XAxis
