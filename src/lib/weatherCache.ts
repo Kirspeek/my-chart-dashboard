@@ -6,6 +6,14 @@ class WeatherCacheManager {
   private cache = new Map<string, CachedWeatherData>();
   private preloadQueue = new Set<string>();
   private cacheTimeout = 10 * 60 * 1000; // 10 minutes
+  private inflight = new Map<
+    string,
+    Promise<{
+      forecast: ForecastDay[];
+      coords: { lat: number; lon: number } | null;
+      loading: boolean;
+    }>
+  >();
 
   /**
    * Get weather data for a city (from cache or fetch)
@@ -19,6 +27,14 @@ class WeatherCacheManager {
     const cached = this.cache.get(normalizedCity);
 
     if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
+      if (cached.loading) {
+        const inflight = this.inflight.get(normalizedCity);
+        if (inflight) {
+          return inflight;
+        }
+        // No tracked inflight request, fall through to start a new fetch
+        return this.fetchAndCacheWeather(normalizedCity);
+      }
       return {
         forecast: cached.forecast,
         coords: cached.coords,
@@ -84,6 +100,7 @@ class WeatherCacheManager {
   clearAll(): void {
     this.cache.clear();
     this.preloadQueue.clear();
+    this.inflight.clear();
   }
 
   /**
@@ -122,39 +139,49 @@ class WeatherCacheManager {
     coords: { lat: number; lon: number } | null;
     loading: boolean;
   }> {
-    // Mark as loading
-    this.cache.set(city, {
-      forecast: [],
-      coords: null,
-      timestamp: Date.now(),
-      loading: true,
-    });
+    const existing = this.inflight.get(city);
+    if (existing) return existing;
 
-    try {
-      const weatherAPI = new WeatherAPI();
-      const { forecast: weatherData, coords } =
-        await weatherAPI.getCityWeather(city);
-
-      if (!weatherData?.daily) {
-        // No weather data available, using mock data
-        return this.getMockWeatherData(city);
-      }
-
-      const forecast = this.processWeatherData(weatherData);
-
-      // Update cache with successful data
+    const fetchPromise = (async () => {
+      // Mark as loading
       this.cache.set(city, {
-        forecast,
-        coords,
+        forecast: [],
+        coords: null,
         timestamp: Date.now(),
-        loading: false,
+        loading: true,
       });
 
-      return { forecast, coords, loading: false };
-    } catch {
-      // Weather fetch error
-      return this.getMockWeatherData(city);
-    }
+      try {
+        const weatherAPI = new WeatherAPI();
+        const { forecast: weatherData, coords } =
+          await weatherAPI.getCityWeather(city);
+
+        if (!weatherData?.daily) {
+          // No weather data available, using mock data
+          return this.getMockWeatherData(city);
+        }
+
+        const forecast = this.processWeatherData(weatherData);
+
+        // Update cache with successful data
+        this.cache.set(city, {
+          forecast,
+          coords,
+          timestamp: Date.now(),
+          loading: false,
+        });
+
+        return { forecast, coords, loading: false };
+      } catch {
+        // Weather fetch error
+        return this.getMockWeatherData(city);
+      } finally {
+        this.inflight.delete(city);
+      }
+    })();
+
+    this.inflight.set(city, fetchPromise);
+    return fetchPromise;
   }
 
   private getMockWeatherData(city: string): {

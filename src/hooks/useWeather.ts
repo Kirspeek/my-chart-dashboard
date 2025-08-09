@@ -46,16 +46,12 @@ export default function useWeather(city: string): UseWeatherReturn {
         await weatherCache.clearAll();
       }
       try {
-        const { forecast: weatherData, loading: cacheLoading } =
-          await weatherCache.getWeather(city);
+        const { forecast: weatherData } = await weatherCache.getWeather(city);
 
         setIsCached(weatherCache.isCached(city));
         setIsPreloading(weatherCache.isPreloading(city));
 
-        if (cacheLoading) {
-          setLoading(false);
-          return;
-        }
+        // Do not early-return on cacheLoading; wait for inflight to resolve
 
         if (
           !weatherData ||
@@ -112,7 +108,8 @@ export default function useWeather(city: string): UseWeatherReturn {
   );
 
   useEffect(() => {
-    fetchWeather(true);
+    // Fetch without nuking cache to leverage preloaded results
+    fetchWeather(false);
   }, [city, fetchWeather]);
 
   return {

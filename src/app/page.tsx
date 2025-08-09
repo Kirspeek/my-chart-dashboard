@@ -317,16 +317,16 @@ export default function Home() {
                     />
                   </div>
                   {/* Column 2: Weather (70%) + Timer (30%) */}
-                  <div className="h-full flex flex-col">
-                    <div className="flex-1 basis-[70%] min-h-0 mb-8">
+                  <div className="h-full flex flex-col gap-2">
+                    <div className="flex-none basis-auto min-h-0 2xl:flex-none 2xl:basis-[70%]">
                       {isMobile ? (
                         <WeatherWidgetMobile city={selectedCity} />
                       ) : (
                         <WeatherWidget city={selectedCity} />
                       )}
                     </div>
-                    <div className="flex-1 basis-[30%] min-h-0">
-                      <TimerWidget />
+                    <div className="flex-1 min-h-0 2xl:flex-none 2xl:basis-[28%]">
+                      <TimerWidget className="h-full" />
                     </div>
                   </div>
                 </div>

@@ -29,11 +29,17 @@ export default function ClockDisplay({
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
+      <style jsx>{`
+        @media (min-width: 1024px) {
+          .clock-main-size {
+            font-size: clamp(3.5rem, 5.5vw, 6rem);
+          }
+        }
+      `}</style>
       <div
-        className="font-mono font-extrabold clock-display-mobile"
+        className="font-mono font-extrabold clock-display-mobile clock-main-size"
         style={{
-          fontSize: "6rem",
-          color: "var(--theme-text)", // theme primary text color
+          color: "var(--theme-text)",
           letterSpacing: "0.04em",
           lineHeight: 1,
           textAlign: "center",
@@ -44,15 +50,15 @@ export default function ClockDisplay({
         }}
       >
         {pad(displayHours)}
-        <span style={{ color: "#888" }}>:</span> {/* light theme secondary */}
+        <span style={{ color: "#888" }}>:</span>
         {pad(minutes)}
-        <span style={{ color: "#888" }}>:</span> {/* light theme secondary */}
+        <span style={{ color: "#888" }}>:</span>
         <span style={{ color: "#888" }}>{pad(seconds)}</span>
       </div>
       <div className="flex flex-col items-center gap-2 mt-2">
         <span
           className="text-base font-mono text-gray-light clock-date-mobile"
-          style={{ color: "#b0b0a8", fontWeight: 700 }} // light theme muted
+          style={{ color: "#b0b0a8", fontWeight: 700 }}
         >
           {dateStr}
         </span>
@@ -66,7 +72,6 @@ export default function ClockDisplay({
               fontSize: "0.625rem",
             }}
           >
-            {/* Placeholder for sunrise/sunset */}
             Sun: 07:12 - 17:17
           </span>
           <WidgetButton

@@ -31,10 +31,29 @@ export default function WorldClocks({
   const { accent } = useTheme();
   const clockAccentColor = accent.red; // Use red for clock widget
 
+  const [isViewportAtLeast1440, setIsViewportAtLeast1440] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    const update = () => setIsViewportAtLeast1440(window.innerWidth >= 1440);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   return (
     <div className="w-full flex flex-col gap-6 mt-4 world-clocks-mobile">
+      <style jsx>{`
+        @media (min-width: 1024px) and (max-width: 1440px) {
+          .wc-time-desktop {
+            font-size: 1.75rem !important;
+          }
+        }
+      `}</style>
       <div
-        className={`grid grid-cols-2 gap-2 justify-center w-full ${isMobile ? "px-25" : "px-18"}`}
+        className={`grid grid-cols-2 gap-2 justify-center w-full ${
+          isMobile ? "px-25" : isViewportAtLeast1440 ? "px-18" : ""
+        }`}
       >
         {timeZones.map((tz) => {
           // Only calculate time when mounted to prevent hydration mismatch
@@ -50,6 +69,13 @@ export default function WorldClocks({
               onClick={() => setSelectedZone(tz.zone)}
               customAccentColor={clockAccentColor}
               className="world-clock-card-mobile"
+              style={
+                isMobile
+                  ? undefined
+                  : isViewportAtLeast1440
+                    ? { padding: "1rem 1.25rem", minWidth: 150, minHeight: 90 }
+                    : { padding: "1rem 0.5rem", minWidth: 0, minHeight: 20 }
+              }
             >
               <span
                 className="text-base font-bold mono mb-1 world-clock-city-mobile"
@@ -68,7 +94,7 @@ export default function WorldClocks({
                 {tz.utc}
               </span>
               <span
-                className="text-4xl font-mono font-extrabold mono mb-1 world-clock-time-mobile"
+                className="text-4xl font-mono font-extrabold mono mb-1 world-clock-time-mobile wc-time-desktop"
                 style={{
                   color: isLocal ? "#fff" : "#232323",
                   letterSpacing: "0.04em",

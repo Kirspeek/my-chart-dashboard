@@ -414,6 +414,66 @@
    RESPONSIVE BREAKPOINTS
    ============================================================================ */
 
+/* Desktop tuning for 1024–1439.98px: smaller height, tighter left, buttons fit */
+@media (min-width: 1024px) and (max-width: 1439.98px) {
+  .weather-widget-desktop {
+    align-items: stretch;
+  }
+  .weather-left-panel-desktop {
+    padding: 1.25rem;
+    max-width: none;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .weather-text-container-desktop {
+    padding-left: 0;
+  }
+  .weather-right-panel-desktop {
+    padding: 0.9rem;
+    margin-top: 0;
+    flex: 2 1 0;
+    min-width: 0;
+    align-items: stretch;
+  }
+  .weather-status-desktop {
+    right: 1rem;
+  }
+  .weather-temperature-desktop {
+    font-size: 30px;
+  }
+  .weather-description-desktop {
+    font-size: 13px;
+  }
+  .weather-city-desktop {
+    font-size: 22px;
+  }
+  .weather-date-desktop {
+    font-size: 13px;
+  }
+  .weather-forecast-desktop {
+    gap: 0.4rem;
+    align-items: stretch;
+    margin: 0;
+  }
+  .forecast-day-desktop {
+    padding: 0.5rem 0.75rem !important;
+    gap: 0.5rem;
+  }
+  .forecast-day-content-desktop {
+    gap: 0.25rem;
+  }
+  .forecast-day-name-desktop {
+    font-size: 13px;
+  }
+  .forecast-day-icon-desktop {
+    font-size: 14px;
+    min-width: 16px;
+  }
+  .forecast-day-temp-desktop {
+    font-size: 13px;
+  }
+}
+
 /* Extra small mobile devices */
 @media (max-width: 480px) {
   .weather-left-panel-mobile {
