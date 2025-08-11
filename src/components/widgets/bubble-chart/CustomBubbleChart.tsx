@@ -10,12 +10,14 @@ interface CustomBubbleChartProps {
   data: WidgetBubbleChartData[];
   title: string;
   subtitle?: string;
+  isMobile?: boolean;
 }
 
 export default function CustomBubbleChart({
   data,
   title,
   subtitle,
+  isMobile = false,
 }: CustomBubbleChartProps) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
@@ -27,224 +29,246 @@ export default function CustomBubbleChart({
   } | null>(null);
 
   useEffect(() => {
-    const width = 600;
-    const height = 400;
-    // Increase margins for better label spacing
-    const margin = { top: 20, right: 20, bottom: 56, left: 36 };
+    // Get the actual container dimensions
+    const container = ref.current?.parentElement;
+    if (!container) return;
 
-    const svg = d3
-      .select(ref.current)
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [0, 0, width, height].join(" "));
-    svg.selectAll("*").remove();
+    const updateChart = () => {
+      const containerRect = container.getBoundingClientRect();
+      const width = isMobile ? Math.min(containerRect.width * 0.95, 600) : 600;
+      const height = isMobile ? Math.min(containerRect.height * 0.9, 400) : 400;
+      // Increase margins for better label spacing
+      const margin = { top: 20, right: 20, bottom: 56, left: 36 };
 
-    // Calculate data extents with padding
-    const xMin = d3.min(data, (d) => d.x) || 0;
-    const xMax = d3.max(data, (d) => d.x) || 100;
-    const yMin = d3.min(data, (d) => d.y) || 0;
-    const yMax = d3.max(data, (d) => d.y) || 100;
-    const xPad = (xMax - xMin) * 0.1;
-    const yPad = (yMax - yMin) * 0.1;
+      const svg = d3
+        .select(ref.current)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("viewBox", [0, 0, width, height].join(" "))
+        .attr("preserveAspectRatio", "xMidYMid meet");
+      svg.selectAll("*").remove();
 
-    // Create scales with padding
-    const xScale = d3
-      .scaleLinear()
-      .domain([xMin - xPad * 0.5, xMax + xPad])
-      .range([margin.left, width - margin.right]);
+      // Calculate data extents with padding
+      const xMin = d3.min(data, (d) => d.x) || 0;
+      const xMax = d3.max(data, (d) => d.x) || 100;
+      const yMin = d3.min(data, (d) => d.y) || 0;
+      const yMax = d3.max(data, (d) => d.y) || 100;
+      const xPad = (xMax - xMin) * 0.1;
+      const yPad = (yMax - yMin) * 0.1;
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([yMin - yPad * 0.5, yMax + yPad])
-      .range([height - margin.bottom, margin.top]);
+      // Create scales with padding
+      const xScale = d3
+        .scaleLinear()
+        .domain([xMin - xPad * 0.5, xMax + xPad])
+        .range([margin.left, width - margin.right]);
 
-    // Smaller bubble size range
-    const sizeScale = d3
-      .scaleSqrt()
-      .domain([0, d3.max(data, (d) => d.size) || 100])
-      .range([6, 28]); // Smaller bubbles
+      const yScale = d3
+        .scaleLinear()
+        .domain([yMin - yPad * 0.5, yMax + yPad])
+        .range([height - margin.bottom, margin.top]);
 
-    // Color mapping to match Sankey/Chord string colors
-    // Map categories to theme accent colors
-    const categoryColorMap: Record<string, string> = {
-      "Big Tech": accent.teal, // teal
-      "AI & Cloud": accent.yellow, // yellow
-      Fintech: accent.blue, // blue
-      "Emerging Tech": accent.red, // red
-    };
-    const colorScale = (category: string) =>
-      categoryColorMap[category] || accent.red;
+      // Smaller bubble size range
+      const sizeScale = d3
+        .scaleSqrt()
+        .domain([0, d3.max(data, (d) => d.size) || 100])
+        .range([6, 28]); // Smaller bubbles
 
-    // Create categories
-    const categories = [...new Set(data.map((d) => d.category))];
+      // Color mapping to match Sankey/Chord string colors
+      // Map categories to theme accent colors
+      const categoryColorMap: Record<string, string> = {
+        "Big Tech": accent.teal, // teal
+        "AI & Cloud": accent.yellow, // yellow
+        Fintech: accent.blue, // blue
+        "Emerging Tech": accent.red, // red
+      };
+      const colorScale = (category: string) =>
+        categoryColorMap[category] || accent.red;
 
-    // Draw bubbles with new color scale
-    svg
-      .append("g")
-      .selectAll("circle")
-      .data(data)
-      .join("circle")
-      .attr("cx", (d) => xScale(d.x))
-      .attr("cy", (d) => yScale(d.y))
-      .attr("r", (d) => sizeScale(d.size))
-      .attr("fill", (d) => colorScale(d.category))
-      .attr("stroke", (d) => colorScale(d.category))
-      .attr("stroke-width", "2.5")
-      .attr("opacity", (d, i) =>
-        hoveredBubble === null || hoveredBubble === i ? 0.9 : 0.5
-      )
-      .attr("cursor", "pointer")
-      .style("filter", (d, i) =>
-        hoveredBubble === i
-          ? "drop-shadow(0 4px 10px rgba(0,0,0,0.25))"
-          : "drop-shadow(0 2px 4px rgba(0,0,0,0.10))"
-      )
-      .style("transition", "all 0.2s ease")
-      .on("mousemove", function (event, d) {
-        setHoveredBubble(data.indexOf(d));
-        const [mx, my] = d3.pointer(event);
-        setTooltip({
-          x: mx,
-          y: my,
-          data: d,
+      // Create categories
+      const categories = [...new Set(data.map((d) => d.category))];
+
+      // Draw bubbles with new color scale
+      svg
+        .append("g")
+        .selectAll("circle")
+        .data(data)
+        .join("circle")
+        .attr("cx", (d) => xScale(d.x))
+        .attr("cy", (d) => yScale(d.y))
+        .attr("r", (d) => sizeScale(d.size))
+        .attr("fill", (d) => colorScale(d.category))
+        .attr("stroke", (d) => colorScale(d.category))
+        .attr("stroke-width", "2.5")
+        .attr("opacity", (d, i) =>
+          hoveredBubble === null || hoveredBubble === i ? 0.9 : 0.5
+        )
+        .attr("cursor", "pointer")
+        .style("filter", (d, i) =>
+          hoveredBubble === i
+            ? "drop-shadow(0 4px 10px rgba(0,0,0,0.25))"
+            : "drop-shadow(0 2px 4px rgba(0,0,0,0.10))"
+        )
+        .on("mousemove", function (event, d) {
+          setHoveredBubble(data.indexOf(d));
+          const [mx, my] = d3.pointer(event);
+          setTooltip({
+            x: mx,
+            y: my,
+            data: d,
+          });
+        })
+        .on("mouseleave", function () {
+          setHoveredBubble(null);
+          setTooltip(null);
         });
-      })
-      .on("mouseleave", function () {
-        setHoveredBubble(null);
-        setTooltip(null);
-      });
 
-    // Add labels for bubbles with better styling
-    svg
-      .append("g")
-      .selectAll("text")
-      .data(data.filter((d) => d.label && d.size > 15)) // Show labels for medium+ bubbles
-      .join("text")
-      .attr("x", (d) => xScale(d.x))
-      .attr("y", (d) => yScale(d.y))
-      .attr("dy", "0.35em")
-      .attr("text-anchor", "middle")
-      .text((d) => d.label || "")
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "12px")
-      .style("font-weight", "700")
-      .style("fill", colors.primary)
-      .style("pointer-events", "none")
-      .style("text-shadow", "0 2px 4px rgba(255,255,255,0.9)")
-      .style("letter-spacing", "0.02em");
+      // Add X-axis
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(
+          d3
+            .axisBottom(xScale)
+            .tickFormat((d) => `$${d}B`)
+            .ticks(5)
+        )
+        .style("font-family", "var(--font-mono)")
+        .style("font-size", isMobile ? "10px" : "12px")
+        .style("font-weight", "600")
+        .style("fill", colors.primary)
+        .style("letter-spacing", "0.02em");
 
-    // Add axes with enhanced styling and tick padding
-    const xAxis = d3.axisBottom(xScale).ticks(8).tickPadding(12);
-    const yAxis = d3.axisLeft(yScale).ticks(8).tickPadding(12);
+      // Add Y-axis
+      svg
+        .append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(
+          d3
+            .axisLeft(yScale)
+            .tickFormat((d) => `${d}%`)
+            .ticks(5)
+        )
+        .style("font-family", "var(--font-mono)")
+        .style("font-size", isMobile ? "10px" : "12px")
+        .style("font-weight", "600")
+        .style("fill", colors.primary)
+        .style("letter-spacing", "0.02em");
 
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${height - margin.bottom})`)
-      .call(xAxis)
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "11px")
-      .style("color", colors.primary)
-      .style("font-weight", "600");
+      // Add legend
+      const legend = svg
+        .append("g")
+        .attr(
+          "transform",
+          `translate(${width - margin.right - 120},${margin.top})`
+        );
 
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left},0)`)
-      .call(yAxis)
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "11px")
-      .style("color", colors.primary)
-      .style("font-weight", "600");
+      legend
+        .selectAll("rect")
+        .data(categories)
+        .join("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 22)
+        .attr("width", 14)
+        .attr("height", 14)
+        .attr("fill", (d) => colorScale(d))
+        .attr("stroke", (d) => colorScale(d))
+        .attr("stroke-width", "2")
+        .attr("rx", "3")
+        .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
 
-    // Add axis labels with extra gap
-    svg
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", height - 16)
-      .attr("text-anchor", "middle")
-      .text("Market Cap (Billion USD)")
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "13px")
-      .style("font-weight", "700")
-      .style("fill", colors.primary)
-      .style("letter-spacing", "0.02em");
+      legend
+        .selectAll("text")
+        .data(categories)
+        .join("text")
+        .attr("x", 20)
+        .attr("y", (d, i) => i * 22 + 10)
+        .text((d) => d)
+        .style("font-family", "var(--font-mono)")
+        .style("font-size", isMobile ? "10px" : "12px")
+        .style("font-weight", "700")
+        .style("fill", colors.primary)
+        .style("letter-spacing", "0.02em");
+    };
 
-    svg
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -height / 2)
-      .attr("y", 24)
-      .attr("text-anchor", "middle")
-      .text("Revenue Growth (%)")
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "13px")
-      .style("font-weight", "700")
-      .style("fill", colors.primary)
-      .style("letter-spacing", "0.02em");
+    updateChart(); // Initial call
 
-    // Add legend with enhanced styling
-    const legend = svg
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${width - margin.right - 120}, ${margin.top + 10})`
-      );
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+          updateChart();
+        }
+      }
+    });
 
-    // Update legend to use the same color mapping
-    legend
-      .selectAll("rect")
-      .data(categories)
-      .join("rect")
-      .attr("x", 0)
-      .attr("y", (d, i) => i * 22)
-      .attr("width", 14)
-      .attr("height", 14)
-      .attr("fill", (d) => colorScale(d))
-      .attr("stroke", (d) => colorScale(d))
-      .attr("stroke-width", "2")
-      .attr("rx", "3")
-      .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
+    resizeObserver.observe(container);
 
-    legend
-      .selectAll("text")
-      .data(categories)
-      .join("text")
-      .attr("x", 20)
-      .attr("y", (d, i) => i * 22 + 10)
-      .text((d) => d)
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "12px")
-      .style("font-weight", "700")
-      .style("fill", colors.primary)
-      .style("letter-spacing", "0.02em");
-  }, [data, accent, colors, hoveredBubble]);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [data, accent, colors, hoveredBubble, isMobile]);
 
   return (
-    <WidgetBase className="flex flex-col items-center justify-center">
+    <WidgetBase
+      className={`flex flex-col items-center justify-center ${isMobile ? "bubble-chart-widget" : ""}`}
+      style={{
+        width: isMobile ? "100vw" : undefined,
+        height: isMobile ? "82vh" : undefined,
+        padding: isMobile ? 0 : undefined,
+        borderRadius: isMobile ? 0 : undefined,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <h3
-        className="text-lg font-semibold mb-4"
+        className={`text-lg font-semibold mb-4 ${isMobile ? "text-center" : ""}`}
         style={{
           color: colors.primary,
           fontFamily: "var(--font-mono)",
           fontWeight: 900,
           letterSpacing: "0.01em",
+          marginTop: isMobile ? "1rem" : undefined,
+          fontSize: isMobile ? "0.9rem" : undefined,
         }}
       >
         {title}
       </h3>
       {subtitle && (
         <div
-          className="text-base mb-4"
+          className={`text-base mb-4 ${isMobile ? "text-center" : ""}`}
           style={{
             color: "#888",
             fontFamily: "var(--font-mono)",
             fontWeight: 500,
+            fontSize: isMobile ? "0.7rem" : undefined,
           }}
         >
           {subtitle}
         </div>
       )}
-      <div style={{ position: "relative", width: 600, height: 400 }}>
-        <svg ref={ref} style={{ position: "absolute", top: 0, left: 0 }} />
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: isMobile ? "35vh" : "350px",
+          maxWidth: "600px",
+          maxHeight: "400px",
+          margin: "0 auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+        }}
+      >
+        <svg
+          ref={ref}
+          style={{
+            width: "100%",
+            height: "100%",
+            maxWidth: "100%",
+            maxHeight: "100%",
+          }}
+        />
         {tooltip && (
           <div
             style={{

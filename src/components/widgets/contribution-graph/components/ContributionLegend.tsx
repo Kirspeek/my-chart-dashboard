@@ -17,7 +17,7 @@ export default function ContributionLegend({
   React.useEffect(() => {
     const check = () => {
       if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth <= 768);
+        setIsMobile(window.innerWidth <= 425);
       }
     };
     check();

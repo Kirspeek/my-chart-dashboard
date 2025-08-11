@@ -9,5 +9,24 @@ export default function ChordChartWidget({
   title,
   subtitle,
 }: ChordChartWidgetProps) {
-  return <CustomChordDiagram data={data} title={title} subtitle={subtitle} />;
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  return (
+    <CustomChordDiagram
+      data={data}
+      title={title}
+      subtitle={subtitle}
+      isMobile={isMobile}
+    />
+  );
 }

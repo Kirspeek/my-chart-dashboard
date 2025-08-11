@@ -9,5 +9,26 @@ export default function BubbleChartWidget({
   title,
   subtitle,
 }: BubbleChartWidgetProps) {
-  return <CustomBubbleChart data={data} title={title} subtitle={subtitle} />;
+  // Detect mobile to apply full-screen sizing (only for phones, not tablets)
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        // Only apply mobile styling for phones (≤425px), tablets use desktop version
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  return (
+    <CustomBubbleChart
+      data={data}
+      title={title}
+      subtitle={subtitle}
+      isMobile={isMobile}
+    />
+  );
 }

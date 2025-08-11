@@ -21,19 +21,35 @@ interface RadarChartContainerProps {
 export default function RadarChartContainer({
   data,
 }: RadarChartContainerProps) {
+  // Detect mobile for responsive height and smaller graphic part
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const { tooltipStyle, formatTooltip } = useChartLogic();
   const { colors } = useTheme();
 
   return (
     <div className="flex flex-col items-center justify-center flex-1">
-      <ResponsiveContainer width="100%" height={300}>
-        <RechartsRadarChart data={data}>
+      <ResponsiveContainer width="100%" height={isMobile ? "100%" : 300}>
+        <RechartsRadarChart
+          data={data}
+          outerRadius={isMobile ? "50%" : "80%"} // Smaller radius for mobile
+        >
           <PolarGrid stroke={colors.borderSecondary} />
           <PolarAngleAxis
             dataKey="subject"
             tick={{
               fill: colors.primary,
-              fontSize: 12,
+              fontSize: isMobile ? 8 : 12, // Smaller font for mobile
               fontFamily: "var(--font-mono)",
               fontWeight: 700,
             }}
@@ -43,7 +59,7 @@ export default function RadarChartContainer({
             domain={[0, 100]}
             tick={{
               fill: colors.secondary,
-              fontSize: 10,
+              fontSize: isMobile ? 8 : 10, // Smaller font for mobile
               fontFamily: "var(--font-mono)",
               fontWeight: 700,
             }}
@@ -54,7 +70,7 @@ export default function RadarChartContainer({
             stroke={colors.accent.blue}
             fill={colors.accent.blue}
             fillOpacity={0.3}
-            strokeWidth={2}
+            strokeWidth={isMobile ? 1 : 2} // Thinner stroke for mobile
           />
           <Tooltip
             contentStyle={tooltipStyle}
@@ -62,6 +78,7 @@ export default function RadarChartContainer({
             labelStyle={{
               fontFamily: "var(--font-mono)",
               fontWeight: 700,
+              fontSize: isMobile ? 10 : 12, // Smaller tooltip font for mobile
             }}
           />
         </RechartsRadarChart>

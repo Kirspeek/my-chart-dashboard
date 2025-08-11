@@ -10,6 +10,7 @@ interface CustomSankeyDiagramProps {
   data: WidgetSankeyChartData[];
   title: string;
   subtitle?: string;
+  isMobile?: boolean;
 }
 
 interface SankeyNode {
@@ -35,6 +36,7 @@ export default function CustomSankeyDiagram({
   data,
   title,
   subtitle,
+  isMobile,
 }: CustomSankeyDiagramProps) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
@@ -104,265 +106,337 @@ export default function CustomSankeyDiagram({
   }, [data, sankeyNodes]);
 
   useEffect(() => {
-    const width = 800;
-    const height = 400;
-    const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+    // Get the actual container dimensions
+    const container = ref.current?.parentElement;
+    if (!container) return;
 
-    const svg = d3
-      .select(ref.current)
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", [0, 0, width, height].join(" "));
-    svg.selectAll("*").remove();
+    const updateChart = () => {
+      const containerRect = container.getBoundingClientRect();
+      const width = isMobile ? Math.min(containerRect.width * 0.9, 780) : 780;
+      const height = isMobile
+        ? Math.min(containerRect.height * 0.85, 380)
+        : 380;
+      const margin = { top: 20, right: 20, bottom: 20, left: 20 };
 
-    // Multi-column Sankey layout
-    const nodeWidth = 4; // Even thinner nodes
-    const columnWidth =
-      (width - margin.left - margin.right - nodeWidth * 3) / 2;
+      const svg = d3
+        .select(ref.current)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("viewBox", [0, 0, width, height].join(" "))
+        .attr("preserveAspectRatio", "xMidYMid meet")
+        .style("display", "block")
+        .style("margin", "0 auto"); // Center the SVG
+      svg.selectAll("*").remove();
 
-    // Position nodes by column
-    const nodesByColumn = d3.group(sankeyNodes, (d) => d.column);
+      // Multi-column Sankey layout
+      const nodeWidth = isMobile ? 2 : 4; // Even thinner nodes for mobile
+      const columnWidth =
+        (width - margin.left - margin.right - nodeWidth * 3) / 2;
 
-    nodesByColumn.forEach((nodes, column) => {
-      const x = margin.left + column * (columnWidth + nodeWidth);
-      const totalHeight = height - margin.top - margin.bottom;
-      const nodeHeight = totalHeight / nodes.length;
+      // Position nodes by column
+      const nodesByColumn = d3.group(sankeyNodes, (d) => d.column);
 
-      nodes.forEach((node, i) => {
-        node.x0 = x;
-        node.x1 = x + nodeWidth;
-        node.y0 = margin.top + i * nodeHeight;
-        node.y1 = node.y0 + nodeHeight * 0.8; // Leave some space between nodes
+      nodesByColumn.forEach((nodes, column) => {
+        const x = margin.left + column * (columnWidth + nodeWidth);
+        const totalHeight = height - margin.top - margin.bottom;
+        const nodeHeight = totalHeight / nodes.length;
+
+        nodes.forEach((node, i) => {
+          node.x0 = x;
+          node.x1 = x + nodeWidth;
+          node.y0 = margin.top + i * nodeHeight;
+          node.y1 = node.y0 + nodeHeight * 0.8; // Leave some space between nodes
+        });
       });
-    });
 
-    // Create proper Sankey flows through intermediate nodes
-    const sankeyLinksData: SankeyLink[] = [];
+      // Create proper Sankey flows through intermediate nodes
+      const sankeyLinksData: SankeyLink[] = [];
 
-    // Create a mapping to track complete flow paths
-    const flowPaths = new Map<
-      string,
-      { source: string; target: string; value: number }
-    >();
+      // Create a mapping to track complete flow paths
+      const flowPaths = new Map<
+        string,
+        { source: string; target: string; value: number }
+      >();
 
-    // Step 1: Source to Intermediate flows
-    data.forEach((link) => {
-      const sourceNode = sankeyNodes.find(
-        (n) => n.name === link.from && n.column === 0
-      );
-      const isMajorFlow = link.size > 1.0;
-      const intermediateNode = sankeyNodes.find(
-        (n) =>
-          n.name === (isMajorFlow ? "Major Flows" : "Minor Flows") &&
-          n.column === 1
-      );
+      // Step 1: Source to Intermediate flows
+      data.forEach((link) => {
+        const sourceNode = sankeyNodes.find(
+          (n) => n.name === link.from && n.column === 0
+        );
+        const isMajorFlow = link.size > 1.0;
+        const intermediateNode = sankeyNodes.find(
+          (n) =>
+            n.name === (isMajorFlow ? "Major Flows" : "Minor Flows") &&
+            n.column === 1
+        );
 
-      if (sourceNode && intermediateNode) {
-        const flowKey = `${link.from}→${link.to}`;
-        flowPaths.set(flowKey, {
-          source: link.from,
-          target: link.to,
-          value: link.size,
-        });
+        if (sourceNode && intermediateNode) {
+          const flowKey = `${link.from}→${link.to}`;
+          flowPaths.set(flowKey, {
+            source: link.from,
+            target: link.to,
+            value: link.size,
+          });
 
-        sankeyLinksData.push({
-          source: sourceNode,
-          target: intermediateNode,
-          value: link.size,
-          width: Math.max(8, link.size * 30), // Twice as large
-          flowKey, // Add flow key for tracking
-        });
-      }
-    });
+          sankeyLinksData.push({
+            source: sourceNode,
+            target: intermediateNode,
+            value: link.size,
+            width: Math.max(isMobile ? 4 : 8, link.size * (isMobile ? 15 : 30)), // Smaller flows for mobile
+            flowKey, // Add flow key for tracking
+          });
+        }
+      });
 
-    // Step 2: Intermediate to Target flows
-    data.forEach((link) => {
-      const isMajorFlow = link.size > 1.0;
-      const intermediateNode = sankeyNodes.find(
-        (n) =>
-          n.name === (isMajorFlow ? "Major Flows" : "Minor Flows") &&
-          n.column === 1
-      );
-      const targetNode = sankeyNodes.find(
-        (n) => n.name === link.to && n.column === 2
-      );
+      // Step 2: Intermediate to Target flows
+      data.forEach((link) => {
+        const isMajorFlow = link.size > 1.0;
+        const intermediateNode = sankeyNodes.find(
+          (n) =>
+            n.name === (isMajorFlow ? "Major Flows" : "Minor Flows") &&
+            n.column === 1
+        );
+        const targetNode = sankeyNodes.find(
+          (n) => n.name === link.to && n.column === 2
+        );
 
-      if (intermediateNode && targetNode) {
-        const flowKey = `${link.from}→${link.to}`;
+        if (intermediateNode && targetNode) {
+          const flowKey = `${link.from}→${link.to}`;
 
-        sankeyLinksData.push({
-          source: intermediateNode,
-          target: targetNode,
-          value: link.size,
-          width: Math.max(8, link.size * 30), // Twice as large
-          flowKey, // Add flow key for tracking
-        });
-      }
-    });
+          sankeyLinksData.push({
+            source: intermediateNode,
+            target: targetNode,
+            value: link.size,
+            width: Math.max(isMobile ? 4 : 8, link.size * (isMobile ? 15 : 30)), // Smaller flows for mobile
+            flowKey, // Add flow key for tracking
+          });
+        }
+      });
 
-    // Color scale - needed for flow strings
-    const colorScale = d3.scaleOrdinal([
-      accent.blue,
-      accent.yellow,
-      accent.teal,
-      accent.red,
-    ]);
+      // Color scale - needed for flow strings
+      const colorScale = d3.scaleOrdinal([
+        accent.blue,
+        accent.yellow,
+        accent.teal,
+        accent.red,
+      ]);
 
-    // Helper function to check if a link should be highlighted
-    const shouldHighlight = (link: SankeyLink) => {
-      if (!hoveredFlow) return false;
-      return link.flowKey === hoveredFlow;
-    };
+      // Helper function to check if a link should be highlighted
+      const shouldHighlight = (link: SankeyLink) => {
+        if (!hoveredFlow) return false;
+        return link.flowKey === hoveredFlow;
+      };
 
-    // Draw links (curved paths) - enhanced styling
-    svg
-      .append("g")
-      .selectAll("path")
-      .data(sankeyLinksData)
-      .join("path")
-      .attr("d", (d) => {
-        const source = d.source as SankeyNode;
-        const target = d.target as SankeyNode;
-        const midX = (source.x1! + target.x0!) / 2;
-        return `M ${source.x1} ${(source.y0! + source.y1!) / 2} 
+      // Draw links (curved paths) - enhanced styling
+      svg
+        .append("g")
+        .selectAll("path")
+        .data(sankeyLinksData)
+        .join("path")
+        .attr("d", (d) => {
+          const source = d.source as SankeyNode;
+          const target = d.target as SankeyNode;
+          const midX = (source.x1! + target.x0!) / 2;
+          return `M ${source.x1} ${(source.y0! + source.y1!) / 2} 
                 C ${midX} ${(source.y0! + source.y1!) / 2} 
                   ${midX} ${(target.y0! + target.y1!) / 2} 
                   ${target.x0} ${(target.y0! + target.y1!) / 2}`;
-      })
-      .attr("stroke", (d, i) => colorScale(String(i % 4))) // Restore colored flow strings
-      .attr("stroke-width", (d) => String(d.width || 8))
-      .attr("fill", "none")
-      .attr("opacity", (d) => (shouldHighlight(d) ? 1.0 : 0.4))
-      .attr("cursor", "pointer")
-      .style("filter", (d) =>
-        shouldHighlight(d) ? "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" : "none"
-      )
-      .on("mousemove", function (event, d) {
-        if (d.flowKey) {
-          setHoveredFlow(d.flowKey);
-          const [mx, my] = d3.pointer(event);
-          const flowData = flowPaths.get(d.flowKey);
-          if (flowData) {
-            setTooltip({
-              x: mx,
-              y: my,
-              from: flowData.source,
-              to: flowData.target,
-              value: flowData.value,
-            });
+        })
+        .attr("stroke", (d, i) => colorScale(String(i % 4))) // Restore colored flow strings
+        .attr("stroke-width", (d) => String(d.width || 8))
+        .attr("fill", "none")
+        .attr("opacity", (d) => (shouldHighlight(d) ? 1.0 : 0.4))
+        .attr("cursor", "pointer")
+        .style("filter", (d) =>
+          shouldHighlight(d) ? "drop-shadow(0 2px 4px rgba(0,0,0,0.3))" : "none"
+        )
+        .on("mousemove", function (event, d) {
+          if (d.flowKey) {
+            setHoveredFlow(d.flowKey);
+            const [mx, my] = d3.pointer(event);
+            const flowData = flowPaths.get(d.flowKey);
+            if (flowData) {
+              setTooltip({
+                x: mx,
+                y: my,
+                from: flowData.source,
+                to: flowData.target,
+                value: flowData.value,
+              });
+            }
           }
+        })
+        .on("mouseleave", function () {
+          setHoveredFlow(null);
+          setTooltip(null);
+        });
+
+      // Draw nodes with enhanced styling
+      svg
+        .append("g")
+        .selectAll("rect")
+        .data(sankeyNodes)
+        .join("rect")
+        .attr("x", (d) => String(d.x0!))
+        .attr("y", (d) => String(d.y0!))
+        .attr("height", (d) => String(d.y1! - d.y0!))
+        .attr("width", (d) => String(d.x1! - d.x0!))
+        .attr("fill", accent.teal) // Green color from theme
+        .attr("stroke", accent.teal) // Green border
+        .attr("stroke-width", "1") // Thinner border
+        .attr("cursor", "pointer")
+        .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.2))");
+
+      // Add node labels with enhanced styling
+      svg
+        .append("g")
+        .selectAll("text")
+        .data(sankeyNodes)
+        .join("text")
+        .attr("x", (d) => String(d.x0! < width / 2 ? d.x1! + 8 : d.x0! - 8))
+        .attr("y", (d) => String((d.y1! + d.y0!) / 2))
+        .attr("dy", "0.35em")
+        .attr("text-anchor", (d) => (d.x0! < width / 2 ? "start" : "end"))
+        .text((d) => d.name)
+        .style("font-family", "var(--font-mono)")
+        .style("font-size", isMobile ? "6px" : "13px")
+        .style("font-weight", "700")
+        .style("fill", colors.primary)
+        .style("pointer-events", "none")
+        .style("text-shadow", "0 1px 2px rgba(255,255,255,0.8)");
+    };
+
+    updateChart(); // Initial call
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+          updateChart();
         }
-      })
-      .on("mouseleave", function () {
-        setHoveredFlow(null);
-        setTooltip(null);
-      });
+      }
+    });
 
-    // Draw nodes with enhanced styling
-    svg
-      .append("g")
-      .selectAll("rect")
-      .data(sankeyNodes)
-      .join("rect")
-      .attr("x", (d) => String(d.x0!))
-      .attr("y", (d) => String(d.y0!))
-      .attr("height", (d) => String(d.y1! - d.y0!))
-      .attr("width", (d) => String(d.x1! - d.x0!))
-      .attr("fill", accent.teal) // Green color from theme
-      .attr("stroke", accent.teal) // Green border
-      .attr("stroke-width", "1") // Thinner border
-      .attr("cursor", "pointer")
-      .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.2))");
+    resizeObserver.observe(container);
 
-    // Add node labels with enhanced styling
-    svg
-      .append("g")
-      .selectAll("text")
-      .data(sankeyNodes)
-      .join("text")
-      .attr("x", (d) => String(d.x0! < width / 2 ? d.x1! + 8 : d.x0! - 8))
-      .attr("y", (d) => String((d.y1! + d.y0!) / 2))
-      .attr("dy", "0.35em")
-      .attr("text-anchor", (d) => (d.x0! < width / 2 ? "start" : "end"))
-      .text((d) => d.name)
-      .style("font-family", "var(--font-mono)")
-      .style("font-size", "13px")
-      .style("font-weight", "700")
-      .style("fill", colors.primary)
-      .style("pointer-events", "none")
-      .style("text-shadow", "0 1px 2px rgba(255,255,255,0.8)");
-  }, [data, accent, colors, hoveredFlow, sankeyNodes]);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [data, accent, colors, hoveredFlow, sankeyNodes, isMobile]);
 
   return (
-    <WidgetBase className="flex flex-col items-center justify-center">
-      <h3
-        className="text-lg font-semibold mb-4"
+    <WidgetBase
+      className={`flex flex-col items-center justify-center ${isMobile ? "sankey-chart-widget" : ""}`}
+      style={{
+        width: isMobile ? "100vw" : undefined,
+        height: isMobile ? "82vh" : undefined,
+        padding: isMobile ? 0 : undefined,
+        borderRadius: isMobile ? 0 : undefined,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div
         style={{
-          color: colors.primary,
-          fontFamily: "var(--font-mono)",
-          fontWeight: 900,
-          letterSpacing: "0.01em",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
         }}
       >
-        {title}
-      </h3>
-      {subtitle && (
-        <div
-          className="text-base mb-4"
+        <h3
+          className={`text-lg font-semibold mb-4 ${isMobile ? "text-center" : ""}`}
           style={{
-            color: "#888",
+            color: colors.primary,
             fontFamily: "var(--font-mono)",
-            fontWeight: 500,
+            fontWeight: 900,
+            letterSpacing: "0.01em",
+            marginTop: isMobile ? "1rem" : undefined,
+            fontSize: isMobile ? "0.9rem" : undefined,
           }}
         >
-          {subtitle}
-        </div>
-      )}
-      <div style={{ position: "relative", width: 800, height: 400 }}>
-        <svg ref={ref} style={{ position: "absolute", top: 0, left: 0 }} />
-        {tooltip && (
+          {title}
+        </h3>
+        {subtitle && (
           <div
+            className={`text-base mb-4 ${isMobile ? "text-center" : ""}`}
             style={{
-              position: "absolute",
-              left: tooltip.x + 10,
-              top: tooltip.y - 10,
-              background: "#fff",
-              color: colors.primary,
-              borderRadius: 12,
-              boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
-              padding: "12px 18px",
+              color: "#888",
               fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-              fontSize: 16,
-              pointerEvents: "none",
-              zIndex: 10,
-              minWidth: 180,
-              border: `2px solid ${accent.teal}`,
+              fontWeight: 500,
+              fontSize: isMobile ? "0.7rem" : undefined,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 18,
-                  height: 18,
-                  background: accent.teal,
-                  borderRadius: 4,
-                  marginRight: 8,
-                }}
-              />
-              <span>
-                {tooltip.from} → {tooltip.to}
-              </span>
-            </div>
-            <div style={{ marginTop: 8, fontWeight: 500, fontSize: 15 }}>
-              Migration (millions){" "}
-              <span style={{ float: "right", fontWeight: 900 }}>
-                {tooltip.value}
-              </span>
-            </div>
+            {subtitle}
           </div>
         )}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: isMobile ? "35vh" : "350px",
+            maxWidth: "800px",
+            maxHeight: "400px",
+            margin: "0 auto", // Center the container horizontally
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden", // Ensure content doesn't overflow
+          }}
+        >
+          <svg
+            ref={ref}
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "100%",
+              maxHeight: "100%",
+            }}
+          />
+          {tooltip && (
+            <div
+              style={{
+                position: "absolute",
+                left: tooltip.x + 10,
+                top: tooltip.y - 10,
+                background: "#fff",
+                color: colors.primary,
+                borderRadius: 12,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
+                padding: "12px 18px",
+                fontFamily: "var(--font-mono)",
+                fontWeight: 700,
+                fontSize: isMobile ? 12 : 16,
+                pointerEvents: "none",
+                zIndex: 10,
+                minWidth: 180,
+                border: `2px solid ${accent.teal}`,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: 18,
+                    height: 18,
+                    background: accent.teal,
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}
+                />
+                <span>
+                  {tooltip.from} → {tooltip.to}
+                </span>
+              </div>
+              <div style={{ marginTop: 8, fontWeight: 500, fontSize: 15 }}>
+                Migration (millions){" "}
+                <span style={{ float: "right", fontWeight: 900 }}>
+                  {tooltip.value}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </WidgetBase>
   );

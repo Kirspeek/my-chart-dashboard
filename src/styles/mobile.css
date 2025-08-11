@@ -109,7 +109,6 @@
   width: 100vw !important;
   padding: 0 !important;
   padding-top: calc(var(--spacing) * 4) !important;
-  margin: 0 1rem 3rem 1rem !important; /* remove negative top margin */
   border-radius: 2rem !important;
   touch-action: none !important;
   -webkit-user-select: none !important;
@@ -289,9 +288,6 @@
     height: 82vh !important;
     min-height: 82vh !important;
     padding: 0 !important;
-    padding-top: calc(var(--spacing) * 4) !important;
-    /* Remove horizontal margin so it aligns with other widgets */
-    margin: 0 1rem 3rem 1rem !important;
     border-radius: 2rem !important;
   }
 
@@ -818,6 +814,83 @@
 
 /* Line chart mobile styles */
 .mobile-slide .line-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Bar chart mobile styles */
+.mobile-slide .bar-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Radar chart mobile styles */
+.mobile-slide .radar-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Device usage mobile styles */
+.mobile-slide .device-usage-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Sankey chart mobile styles */
+.mobile-slide .sankey-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Chord chart mobile styles */
+.mobile-slide .chord-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Bubble chart mobile styles */
+.mobile-slide .bubble-chart-widget {
+  width: 100vw !important;
+  height: 82vh !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 2rem !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+/* Timeline rings mobile styles */
+.mobile-slide .timeline-rings-widget {
   width: 100vw !important;
   height: 82vh !important;
   padding: 1rem !important;

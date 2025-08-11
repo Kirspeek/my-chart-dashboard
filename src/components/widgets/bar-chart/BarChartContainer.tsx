@@ -19,6 +19,19 @@ interface BarChartContainerProps {
 }
 
 export default function BarChartContainer({ data }: BarChartContainerProps) {
+  // Detect mobile for responsive height
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   const {
     chartColors,
     formatValue,
@@ -29,7 +42,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
   } = useChartLogic();
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={isMobile ? "100%" : 300}>
       <RechartsBarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke={gridStyle.stroke} />
         <XAxis

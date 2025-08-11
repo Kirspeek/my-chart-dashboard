@@ -37,6 +37,10 @@ export default function MapWidget({
         overflow: "hidden",
         boxSizing: "border-box",
         borderRadius: isMobile ? "2rem" : undefined,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
       }}
       className="map-widget"
     >
