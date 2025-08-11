@@ -111,7 +111,13 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
   });
 };
 
-export default function AggregatedSpendingWidget() {
+export default function AggregatedSpendingWidget({
+  onOpenSidebar,
+  showSidebarButton = false,
+}: {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const { cards } = useWalletLogic();
   const { targetHeight } = useWidgetHeight();
 
@@ -232,6 +238,8 @@ export default function AggregatedSpendingWidget() {
     <WidgetBase
       className="w-full h-full flex flex-col items-center justify-center p-6"
       style={widgetStyle}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <div
         className="w-full max-w-sm h-full flex flex-col"

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "src/hooks/useTheme";
 import WidgetBase from "../../common/WidgetBase";
+import { WidgetTitle } from "../../common";
 import type { TimelineItem } from "../../../../interfaces/charts";
 
 // Utility to lighten/darken a hex color
@@ -77,7 +78,13 @@ function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
   };
 }
 
-export default function TimelineRingsWidget() {
+export default function TimelineRingsWidget({
+  onOpenSidebar,
+  showSidebarButton = false,
+}: {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const { accent, colors } = useTheme();
   const ringColors = colorMap(accent);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -88,6 +95,23 @@ export default function TimelineRingsWidget() {
   const [animatedLineProgress, setAnimatedLineProgress] = useState<number[]>(
     []
   );
+
+  // Detect mobile to apply responsive sizing
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        const width = window.innerWidth;
+        // Mobile: ≤425px, Tablet: 426px-1024px, Desktop: >1024px
+        setIsMobile(width <= 425);
+        setIsTablet(width > 425 && width <= 1024);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     import("../../../data/json/timelineData.json").then((mod) => {
@@ -183,233 +207,392 @@ export default function TimelineRingsWidget() {
 
   return (
     <div ref={widgetRef}>
-      <WidgetBase className="w-full flex flex-col items-center justify-center py-8">
+      <WidgetBase
+        className={`w-full flex flex-col pb-8 ${isMobile ? "timeline-rings-widget" : ""}`}
+        onOpenSidebar={onOpenSidebar}
+        showSidebarButton={showSidebarButton}
+      >
+        <WidgetTitle
+          title="Timeline of Renewable Energy Milestones"
+          variant="centered"
+          size="md"
+          className="ml-4"
+        />
+
         <div
-          className="flex flex-row items-end justify-center gap-12 w-full max-w-7xl"
-          style={{ minHeight: 340, position: "relative" }}
+          className="flex flex-row items-end justify-center gap-12 w-full max-w-7xl mt-16"
+          style={{
+            minHeight: isMobile ? 200 : isTablet ? 280 : 340, // Reduced height for tablet
+            position: "relative",
+            gap: isMobile ? "2px" : isTablet ? "16px" : "48px", // Further reduced gap for larger tablets
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: isMobile ? "center" : "center",
+          }}
         >
-          {timelineData
-            .map((item, idx): [typeof item, number] => [item, idx])
-            .map(([item, idx]) => {
-              const color = ringColors[item.color as RingColorKey];
-              const isEven = idx % 2 === 1;
-              const arcStart = 0;
-              const arcEnd = arcStart + 360 * (animatedProgress[idx] ?? 0);
-              const gapStart = arcEnd;
-              const gapEnd = 360;
-              return (
-                <div
-                  key={item.year}
-                  className="flex flex-col items-center w-56 relative"
-                >
-                  {/* For even rings, text block above, line between ring and text above */}
-                  {isEven && (
-                    <>
+          {isMobile ? (
+            // Mobile layout: 3 blocks on top, 2 blocks below
+            <>
+              {/* Top row: 3 blocks */}
+              <div
+                className="flex flex-row items-end justify-center gap-1 w-full" // Reduced from gap-2 to gap-1
+                style={{ marginBottom: "2px" }} // Reduced from 4px to 2px
+              >
+                {timelineData.slice(0, 3).map((item, idx) => {
+                  const color = ringColors[item.color as RingColorKey];
+                  const arcStart = 0;
+                  const arcEnd = arcStart + 360 * (animatedProgress[idx] ?? 0);
+                  const gapStart = arcEnd;
+                  const gapEnd = 360;
+                  return (
+                    <div
+                      key={item.year}
+                      className="flex flex-col items-center relative"
+                      style={{ width: "100px" }} // Reduced from 120px to 100px
+                    >
+                      {/* Text block above */}
                       <div
-                        className="mb-2 text-center"
+                        className="mb-1 text-center" // Reduced from mb-2 to mb-1
                         style={{
                           color,
                           fontFamily: "var(--font-mono)",
                           fontWeight: 700,
-                          fontSize: 22,
-                          letterSpacing: 1,
+                          fontSize: "8px", // Reduced from 10px to 8px
+                          letterSpacing: 0.5, // Reduced from 1 to 0.5
+                          marginBottom: "1px",
+                          lineHeight: 1.2, // Added for better text fitting
                         }}
                       >
                         {item.title}
                       </div>
                       <div
-                        className="text-base mb-2"
+                        className="text-base mb-1" // Reduced from mb-2 to mb-1
                         style={{
                           color: colors.secondary,
                           fontFamily: "var(--font-mono)",
                           fontWeight: 500,
-                          lineHeight: 1.4,
+                          lineHeight: 1.2, // Reduced from 1.4 to 1.2
+                          fontSize: "6px", // Reduced from 8px to 6px
+                          marginBottom: "1px",
                         }}
                       >
                         {item.desc}
                       </div>
+                      {/* Line between text and ring */}
                       <svg
                         width={2}
-                        height={38}
-                        style={{ display: "block", marginBottom: -8 }}
+                        height={12} // Reduced from 16 to 12
+                        style={{ display: "block", marginBottom: -1 }} // Reduced from -2 to -1
                       >
                         <line
                           x1={1}
-                          y1={38}
+                          y1={12} // Reduced from 16 to 12
                           x2={1}
-                          y2={38 - 38 * animatedLineProgress[idx]}
+                          y2={12 - 12 * animatedLineProgress[idx]} // Reduced from 16 to 12
                           stroke={color}
                           strokeWidth={2}
                           style={{ transition: "y2 0.18s" }}
                         />
                       </svg>
-                    </>
-                  )}
-                  <svg
-                    width={120}
-                    height={120}
-                    style={{ zIndex: 1, display: "block" }}
-                    onMouseLeave={() => {
-                      setHoveredIdx(null);
-                    }}
-                  >
-                    {/* SVG defs for gradients and shadow */}
-                    <defs>
-                      {/* Drop shadow filter for arc */}
-                      <filter
-                        id={`arc-shadow-${idx}`}
-                        x="-20%"
-                        y="-20%"
-                        width="140%"
-                        height="140%"
+                      {/* Ring */}
+                      <svg
+                        width={60} // Reduced from 80 to 60
+                        height={60} // Reduced from 80 to 60
+                        style={{ zIndex: 1, display: "block" }}
+                        onMouseLeave={() => setHoveredIdx(null)}
                       >
-                        <feDropShadow
-                          dx="0"
-                          dy="2"
-                          stdDeviation="2"
-                          floodColor={color}
-                          floodOpacity="0.18"
+                        <defs>
+                          <filter
+                            id={`arc-shadow-${idx}`}
+                            x="-20%"
+                            y="-20%"
+                            width="140%"
+                            height="140%"
+                          >
+                            <feDropShadow
+                              dx="0"
+                              dy="2"
+                              stdDeviation="2"
+                              floodColor={color}
+                              floodOpacity="0.18"
+                            />
+                          </filter>
+                          <linearGradient
+                            id={`arc-gradient-${idx}`}
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor={shadeColor(color, 0.45)}
+                            />
+                            <stop offset="30%" stopColor={color} />
+                            <stop
+                              offset="100%"
+                              stopColor={darkenColor(color, 0.18)}
+                            />
+                          </linearGradient>
+                          <radialGradient
+                            id={`center-gradient-${idx}`}
+                            cx="50%"
+                            cy="40%"
+                            r="60%"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor="#fff"
+                              stopOpacity="1"
+                            />
+                            <stop
+                              offset="80%"
+                              stopColor="#eaeaea"
+                              stopOpacity="0.7"
+                            />
+                            <stop
+                              offset="100%"
+                              stopColor="#d0d0d0"
+                              stopOpacity="0.3"
+                            />
+                          </radialGradient>
+                        </defs>
+                        <path
+                          d={describeArc(30, 30, 24, arcStart, arcEnd)} // Reduced from 40,40,32 to 30,30,24
+                          fill="none"
+                          stroke={color}
+                          strokeWidth={8} // Reduced from 10 to 8
+                          opacity={
+                            hoveredIdx === null
+                              ? 1
+                              : hoveredIdx === idx
+                                ? 1
+                                : 0.5
+                          }
+                          strokeLinecap="round"
+                          style={{
+                            cursor: "pointer",
+                            transition: "opacity 0.18s",
+                          }}
+                          onMouseMove={() => setHoveredIdx(idx)}
+                          onMouseEnter={() => setHoveredIdx(idx)}
                         />
-                      </filter>
-                      {/* Linear gradient for arc with highlight and shadow */}
-                      <linearGradient
-                        id={`arc-gradient-${idx}`}
-                        x1="0"
-                        y1="0"
-                        x2="1"
-                        y2="1"
-                      >
-                        <stop offset="0%" stopColor={shadeColor(color, 0.45)} />
-                        <stop offset="30%" stopColor={color} />
-                        <stop
-                          offset="100%"
-                          stopColor={darkenColor(color, 0.18)}
+                        <path
+                          d={describeArc(30, 30, 24, gapStart, gapEnd)} // Reduced from 40,40,32 to 30,30,24
+                          fill="none"
+                          stroke={color}
+                          strokeWidth={8} // Reduced from 10 to 8
+                          opacity={0.18}
+                          strokeLinecap="round"
                         />
-                      </linearGradient>
-                      {/* Radial gradient for center circle */}
-                      <radialGradient
-                        id={`center-gradient-${idx}`}
-                        cx="50%"
-                        cy="40%"
-                        r="60%"
-                      >
-                        <stop offset="0%" stopColor="#fff" stopOpacity="1" />
-                        <stop
-                          offset="80%"
-                          stopColor="#eaeaea"
-                          stopOpacity="0.7"
+                        <circle
+                          cx={30} // Reduced from 40 to 30
+                          cy={30} // Reduced from 40 to 30
+                          r={18} // Reduced from 25 to 18
+                          fill="#fff"
+                          stroke="none"
                         />
-                        <stop
-                          offset="100%"
-                          stopColor="#d0d0d0"
-                          stopOpacity="0.3"
-                        />
-                      </radialGradient>
-                    </defs>
-                    {/* Colored arc: arcStart to arcEnd (animated) */}
-                    <path
-                      d={describeArc(60, 60, 48, arcStart, arcEnd)}
-                      fill="none"
-                      stroke={color}
-                      strokeWidth={14}
-                      opacity={
-                        hoveredIdx === null ? 1 : hoveredIdx === idx ? 1 : 0.5
-                      }
-                      strokeLinecap="round"
-                      style={{
-                        cursor: "pointer",
-                        transition: "opacity 0.18s",
-                      }}
-                      onMouseMove={() => {
-                        setHoveredIdx(idx);
-                      }}
-                      onMouseEnter={() => {
-                        setHoveredIdx(idx);
-                      }}
-                    />
-                    {/* Faded arc: gapStart to gapEnd (remaining part) */}
-                    <path
-                      d={describeArc(60, 60, 48, gapStart, gapEnd)}
-                      fill="none"
-                      stroke={color}
-                      strokeWidth={14}
-                      opacity={0.18}
-                      strokeLinecap="round"
-                    />
-                    {/* Center white circle (flat) */}
-                    <circle cx={60} cy={60} r={38} fill="#fff" stroke="none" />
-                    {/* Year */}
-                    <text
-                      x="60"
-                      y="70"
-                      textAnchor="middle"
-                      fontFamily="var(--font-mono)"
-                      fontWeight="bold"
-                      fontSize="1.3rem"
-                      fill={colors.secondary}
-                      style={{ letterSpacing: 2 }}
-                    >
-                      {item.year}
-                    </text>
-                  </svg>
-                  {/* Show percent value to the side of the circle on hover, visually balanced */}
-                  {hoveredIdx === idx && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: isEven ? undefined : 140,
-                        right: isEven ? 140 : undefined,
-                        transform: "translateY(-50%)",
-                        color,
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 800,
-                        fontSize: 15,
-                        letterSpacing: 1,
-                        textAlign: "center",
-                        whiteSpace: "nowrap",
-                        pointerEvents: "none",
-                        background: "#fff",
-                        borderRadius: 8,
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                        padding: "4px 16px",
-                        border: `2px solid ${color}`,
-                      }}
-                    >
-                      {Math.round((animatedProgress[idx] ?? 0) * 100)}%
+                        <text
+                          x={30} // Reduced from 40 to 30
+                          y={35} // Reduced from 47 to 35
+                          textAnchor="middle"
+                          fontFamily="var(--font-mono)"
+                          fontWeight="bold"
+                          fontSize="0.7rem" // Reduced from 0.9rem to 0.7rem
+                          fill={colors.secondary}
+                          style={{ letterSpacing: 1 }} // Reduced from 2 to 1
+                        >
+                          {item.year}
+                        </text>
+                      </svg>
+                      {/* Hover tooltip */}
+                      {hoveredIdx === idx && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: 70, // Reduced from 90 to 70
+                            transform: "translateY(-50%)",
+                            color,
+                            fontFamily: "var(--font-mono)",
+                            fontWeight: 800,
+                            fontSize: 10, // Reduced from 12 to 10
+                            letterSpacing: 0.5, // Reduced from 1 to 0.5
+                            textAlign: "center",
+                            whiteSpace: "nowrap",
+                            pointerEvents: "none",
+                            background: "#fff",
+                            borderRadius: 6, // Reduced from 8 to 6
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                            padding: "1px 6px", // Reduced from 2px 8px to 1px 6px
+                            border: `2px solid ${color}`,
+                          }}
+                        >
+                          {Math.round((animatedProgress[idx] ?? 0) * 100)}%
+                        </div>
+                      )}
                     </div>
-                  )}
-                  {/* For even rings, add margin below ring to balance layout */}
-                  {isEven && <div style={{ height: 16 }} />}
-                  {/* For odd rings, line between ring and text below, then text block */}
-                  {!isEven && (
-                    <>
+                  );
+                })}
+              </div>
+              {/* Bottom row: 2 blocks */}
+              <div className="flex flex-row items-end justify-center gap-1 w-full">
+                {" "}
+                {/* Reduced from gap-2 to gap-1 */}
+                {timelineData.slice(3, 5).map((item, idx) => {
+                  const color = ringColors[item.color as RingColorKey];
+                  const actualIdx = idx + 3;
+                  const arcStart = 0;
+                  const arcEnd =
+                    arcStart + 360 * (animatedProgress[actualIdx] ?? 0);
+                  const gapStart = arcEnd;
+                  const gapEnd = 360;
+                  return (
+                    <div
+                      key={item.year}
+                      className="flex flex-col items-center relative"
+                      style={{ width: "100px" }} // Reduced from 120px to 100px
+                    >
+                      {/* Ring first */}
+                      <svg
+                        width={60} // Reduced from 80 to 60
+                        height={60} // Reduced from 80 to 60
+                        style={{ zIndex: 1, display: "block" }}
+                        onMouseLeave={() => setHoveredIdx(null)}
+                      >
+                        <defs>
+                          <filter
+                            id={`arc-shadow-${actualIdx}`}
+                            x="-20%"
+                            y="-20%"
+                            width="140%"
+                            height="140%"
+                          >
+                            <feDropShadow
+                              dx="0"
+                              dy="2"
+                              stdDeviation="2"
+                              floodColor={color}
+                              floodOpacity="0.18"
+                            />
+                          </filter>
+                          <linearGradient
+                            id={`arc-gradient-${actualIdx}`}
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="1"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor={shadeColor(color, 0.45)}
+                            />
+                            <stop offset="30%" stopColor={color} />
+                            <stop
+                              offset="100%"
+                              stopColor={darkenColor(color, 0.18)}
+                            />
+                          </linearGradient>
+                          <radialGradient
+                            id={`center-gradient-${actualIdx}`}
+                            cx="50%"
+                            cy="40%"
+                            r="60%"
+                          >
+                            <stop
+                              offset="0%"
+                              stopColor="#fff"
+                              stopOpacity="1"
+                            />
+                            <stop
+                              offset="80%"
+                              stopColor="#eaeaea"
+                              stopOpacity="0.7"
+                            />
+                            <stop
+                              offset="100%"
+                              stopColor="#d0d0d0"
+                              stopOpacity="0.3"
+                            />
+                          </radialGradient>
+                        </defs>
+                        <path
+                          d={describeArc(30, 30, 24, arcStart, arcEnd)} // Reduced from 40,40,32 to 30,30,24
+                          fill="none"
+                          stroke={color}
+                          strokeWidth={8} // Reduced from 10 to 8
+                          opacity={
+                            hoveredIdx === null
+                              ? 1
+                              : hoveredIdx === actualIdx
+                                ? 1
+                                : 0.5
+                          }
+                          strokeLinecap="round"
+                          style={{
+                            cursor: "pointer",
+                            transition: "opacity 0.18s",
+                          }}
+                          onMouseMove={() => setHoveredIdx(actualIdx)}
+                          onMouseEnter={() => setHoveredIdx(actualIdx)}
+                        />
+                        <path
+                          d={describeArc(30, 30, 24, gapStart, gapEnd)} // Reduced from 40,40,32 to 30,30,24
+                          fill="none"
+                          stroke={color}
+                          strokeWidth={8} // Reduced from 10 to 8
+                          opacity={0.18}
+                          strokeLinecap="round"
+                        />
+                        <circle
+                          cx={30} // Reduced from 40 to 30
+                          cy={30} // Reduced from 40 to 30
+                          r={18} // Reduced from 25 to 18
+                          fill="#fff"
+                          stroke="none"
+                        />
+                        <text
+                          x={30} // Reduced from 40 to 30
+                          y={35} // Reduced from 47 to 35
+                          textAnchor="middle"
+                          fontFamily="var(--font-mono)"
+                          fontWeight="bold"
+                          fontSize="0.7rem" // Reduced from 0.9rem to 0.7rem
+                          fill={colors.secondary}
+                          style={{ letterSpacing: 1 }} // Reduced from 2 to 1
+                        >
+                          {item.year}
+                        </text>
+                      </svg>
+                      {/* Line between ring and text */}
                       <svg
                         width={2}
-                        height={38}
-                        style={{ display: "block", marginTop: -8 }}
+                        height={12} // Reduced from 16 to 12
+                        style={{ display: "block", marginTop: -1 }} // Reduced from -2 to -1
                       >
                         <line
                           x1={1}
                           y1={0}
                           x2={1}
-                          y2={38 * animatedLineProgress[idx]}
+                          y2={12 * animatedLineProgress[actualIdx]} // Reduced from 16 to 12
                           stroke={color}
                           strokeWidth={2}
                           style={{ transition: "y2 0.18s" }}
                         />
                       </svg>
+                      {/* Text block below */}
                       <div
-                        className="mt-8 text-center"
-                        style={{ minHeight: 80 }}
+                        className="mt-1 text-center" // Reduced from mt-2 to mt-1
+                        style={{ minHeight: 40 }} // Reduced from 60 to 40
                       >
                         <div
                           className="font-bold mb-1"
                           style={{
                             color,
                             fontFamily: "var(--font-mono)",
-                            fontSize: 22,
-                            letterSpacing: 1,
+                            fontSize: "8px", // Reduced from 10px to 8px
+                            letterSpacing: 0.5, // Reduced from 1 to 0.5
+                            marginBottom: "1px", // Reduced from 2px to 1px
+                            lineHeight: 1.2, // Added for better text fitting
                           }}
                         >
                           {item.title}
@@ -420,18 +603,333 @@ export default function TimelineRingsWidget() {
                             color: colors.secondary,
                             fontFamily: "var(--font-mono)",
                             fontWeight: 500,
-                            lineHeight: 1.4,
-                            marginTop: 8,
+                            lineHeight: 1.2, // Reduced from 1.4 to 1.2
+                            marginTop: "2px", // Reduced from 4px to 2px
+                            fontSize: "6px", // Reduced from 8px to 6px
                           }}
                         >
                           {item.desc}
                         </div>
                       </div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
+                      {/* Hover tooltip */}
+                      {hoveredIdx === actualIdx && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            right: 70, // Reduced from 90 to 70
+                            transform: "translateY(-50%)",
+                            color,
+                            fontFamily: "var(--font-mono)",
+                            fontWeight: 800,
+                            fontSize: 10, // Reduced from 12 to 10
+                            letterSpacing: 0.5, // Reduced from 1 to 0.5
+                            textAlign: "center",
+                            whiteSpace: "nowrap",
+                            pointerEvents: "none",
+                            background: "#fff",
+                            borderRadius: 6, // Reduced from 8 to 6
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                            padding: "1px 6px", // Reduced from 2px 8px to 1px 6px
+                            border: `2px solid ${color}`,
+                          }}
+                        >
+                          {Math.round((animatedProgress[actualIdx] ?? 0) * 100)}
+                          %
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            // Desktop/Tablet layout: original alternating layout
+            timelineData
+              .map((item, idx): [typeof item, number] => [item, idx])
+              .map(([item, idx]) => {
+                const color = ringColors[item.color as RingColorKey];
+                const isEven = idx % 2 === 1;
+                const arcStart = 0;
+                const arcEnd = arcStart + 360 * (animatedProgress[idx] ?? 0);
+                const gapStart = arcEnd;
+                const gapEnd = 360;
+                return (
+                  <div
+                    key={item.year}
+                    className="flex flex-col items-center relative"
+                    style={{ width: isTablet ? "140px" : "224px" }} // Further reduced width for larger tablets
+                  >
+                    {/* For even rings, text block above, line between ring and text above */}
+                    {isEven && (
+                      <>
+                        <div
+                          className="mb-2 text-center"
+                          style={{
+                            color,
+                            fontFamily: "var(--font-mono)",
+                            fontWeight: 700,
+                            fontSize: isTablet ? "14px" : "22px", // Further reduced font for larger tablets
+                            letterSpacing: 1,
+                            marginBottom: isTablet ? "4px" : "8px", // Reduced margin for tablet
+                          }}
+                        >
+                          {item.title}
+                        </div>
+                        <div
+                          className="text-base mb-2"
+                          style={{
+                            color: colors.secondary,
+                            fontFamily: "var(--font-mono)",
+                            fontWeight: 500,
+                            lineHeight: 1.4,
+                            fontSize: isTablet ? "10px" : "16px", // Further reduced font for larger tablets
+                            marginBottom: isTablet ? "4px" : "8px", // Reduced margin for tablet
+                          }}
+                        >
+                          {item.desc}
+                        </div>
+                        <svg
+                          width={2}
+                          height={isTablet ? 28 : 38} // Reduced height for tablet
+                          style={{
+                            display: "block",
+                            marginBottom: isTablet ? -4 : -8, // Reduced margin for tablet
+                          }}
+                        >
+                          <line
+                            x1={1}
+                            y1={isTablet ? 28 : 38} // Reduced height for tablet
+                            x2={1}
+                            y2={
+                              (isTablet ? 28 : 38) -
+                              (isTablet ? 28 : 38) * animatedLineProgress[idx]
+                            } // Reduced height for tablet
+                            stroke={color}
+                            strokeWidth={2}
+                            style={{ transition: "y2 0.18s" }}
+                          />
+                        </svg>
+                      </>
+                    )}
+                    {/* Ring SVG */}
+                    <svg
+                      width={isTablet ? 90 : 120} // Reduced width for tablet
+                      height={isTablet ? 90 : 120} // Reduced height for tablet
+                      style={{ zIndex: 1, display: "block" }}
+                      onMouseLeave={() => {
+                        setHoveredIdx(null);
+                      }}
+                    >
+                      {/* SVG defs for gradients and shadow */}
+                      <defs>
+                        {/* Drop shadow filter for arc */}
+                        <filter
+                          id={`arc-shadow-${idx}`}
+                          x="-20%"
+                          y="-20%"
+                          width="140%"
+                          height="140%"
+                        >
+                          <feDropShadow
+                            dx="0"
+                            dy="2"
+                            stdDeviation="2"
+                            floodColor={color}
+                            floodOpacity="0.18"
+                          />
+                        </filter>
+                        {/* Linear gradient for arc with highlight and shadow */}
+                        <linearGradient
+                          id={`arc-gradient-${idx}`}
+                          x1="0"
+                          y1="0"
+                          x2="1"
+                          y2="1"
+                        >
+                          <stop
+                            offset="0%"
+                            stopColor={shadeColor(color, 0.45)}
+                          />
+                          <stop offset="30%" stopColor={color} />
+                          <stop
+                            offset="100%"
+                            stopColor={darkenColor(color, 0.18)}
+                          />
+                        </linearGradient>
+                        {/* Radial gradient for center circle */}
+                        <radialGradient
+                          id={`center-gradient-${idx}`}
+                          cx="50%"
+                          cy="40%"
+                          r="60%"
+                        >
+                          <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+                          <stop
+                            offset="80%"
+                            stopColor="#eaeaea"
+                            stopOpacity="0.7"
+                          />
+                          <stop
+                            offset="100%"
+                            stopColor="#d0d0d0"
+                            stopOpacity="0.3"
+                          />
+                        </radialGradient>
+                      </defs>
+                      {/* Colored arc: arcStart to arcEnd (animated) */}
+                      <path
+                        d={describeArc(
+                          isTablet ? 45 : 60, // Reduced center for tablet
+                          isTablet ? 45 : 60, // Reduced center for tablet
+                          isTablet ? 36 : 48, // Reduced radius for tablet
+                          arcStart,
+                          arcEnd
+                        )}
+                        fill="none"
+                        stroke={color}
+                        strokeWidth={isTablet ? 10 : 14} // Reduced stroke width for tablet
+                        opacity={
+                          hoveredIdx === null ? 1 : hoveredIdx === idx ? 1 : 0.5
+                        }
+                        strokeLinecap="round"
+                        style={{
+                          cursor: "pointer",
+                          transition: "opacity 0.18s",
+                        }}
+                        onMouseMove={() => {
+                          setHoveredIdx(idx);
+                        }}
+                        onMouseEnter={() => {
+                          setHoveredIdx(idx);
+                        }}
+                      />
+                      {/* Faded arc: gapStart to gapEnd (remaining part) */}
+                      <path
+                        d={describeArc(
+                          isTablet ? 45 : 60, // Reduced center for tablet
+                          isTablet ? 45 : 60, // Reduced center for tablet
+                          isTablet ? 36 : 48, // Reduced radius for tablet
+                          gapStart,
+                          gapEnd
+                        )}
+                        fill="none"
+                        stroke={color}
+                        strokeWidth={isTablet ? 10 : 14} // Reduced stroke width for tablet
+                        opacity={0.18}
+                        strokeLinecap="round"
+                      />
+                      {/* Center white circle (flat) */}
+                      <circle
+                        cx={isTablet ? 45 : 60} // Reduced center for tablet
+                        cy={isTablet ? 45 : 60} // Reduced center for tablet
+                        r={isTablet ? 28 : 38} // Reduced radius for tablet
+                        fill="#fff"
+                        stroke="none"
+                      />
+                      {/* Year */}
+                      <text
+                        x={isTablet ? 45 : 60} // Reduced center for tablet
+                        y={isTablet ? 52 : 70} // Reduced center for tablet
+                        textAnchor="middle"
+                        fontFamily="var(--font-mono)"
+                        fontWeight="bold"
+                        fontSize={isTablet ? "1rem" : "1.3rem"} // Smaller font for tablet
+                        fill={colors.secondary}
+                        style={{ letterSpacing: 2 }}
+                      >
+                        {item.year}
+                      </text>
+                    </svg>
+                    {/* Show percent value to the side of the circle on hover, visually balanced */}
+                    {hoveredIdx === idx && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: isEven ? undefined : isTablet ? 100 : 140, // Reduced position for tablet
+                          right: isEven ? (isTablet ? 100 : 140) : undefined, // Reduced position for tablet
+                          transform: "translateY(-50%)",
+                          color,
+                          fontFamily: "var(--font-mono)",
+                          fontWeight: 800,
+                          fontSize: isTablet ? 12 : 15, // Smaller font for tablet
+                          letterSpacing: 1,
+                          textAlign: "center",
+                          whiteSpace: "nowrap",
+                          pointerEvents: "none",
+                          background: "#fff",
+                          borderRadius: 8,
+                          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                          padding: isTablet ? "2px 12px" : "4px 16px", // Reduced padding for tablet
+                          border: `2px solid ${color}`,
+                        }}
+                      >
+                        {Math.round((animatedProgress[idx] ?? 0) * 100)}%
+                      </div>
+                    )}
+                    {/* For even rings, add margin below ring to balance layout */}
+                    {isEven && <div style={{ height: isTablet ? 12 : 16 }} />}{" "}
+                    {/* Reduced height for tablet */}
+                    {/* For odd rings, line between ring and text below, then text block */}
+                    {!isEven && (
+                      <>
+                        <svg
+                          width={2}
+                          height={isTablet ? 28 : 38} // Reduced height for tablet
+                          style={{
+                            display: "block",
+                            marginTop: isTablet ? -4 : -8, // Reduced margin for tablet
+                          }}
+                        >
+                          <line
+                            x1={1}
+                            y1={0}
+                            x2={1}
+                            y2={
+                              (isTablet ? 28 : 38) * animatedLineProgress[idx]
+                            } // Reduced height for tablet
+                            stroke={color}
+                            strokeWidth={2}
+                            style={{ transition: "y2 0.18s" }}
+                          />
+                        </svg>
+                        <div
+                          className="mt-8 text-center"
+                          style={{ minHeight: isTablet ? 60 : 80 }} // Reduced height for tablet
+                        >
+                          <div
+                            className="font-bold mb-1"
+                            style={{
+                              color,
+                              fontFamily: "var(--font-mono)",
+                              fontSize: isTablet ? "14px" : "22px", // Further reduced font for larger tablets
+                              letterSpacing: 1,
+                              marginBottom: isTablet ? "2px" : "4px", // Reduced margin for tablet
+                            }}
+                          >
+                            {item.title}
+                          </div>
+                          <div
+                            className="text-base"
+                            style={{
+                              color: colors.secondary,
+                              fontFamily: "var(--font-mono)",
+                              fontWeight: 500,
+                              lineHeight: 1.4,
+                              marginTop: isTablet ? "4px" : "8px", // Reduced margin for tablet
+                              fontSize: isTablet ? "10px" : "16px", // Further reduced font for larger tablets
+                            }}
+                          >
+                            {item.desc}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })
+          )}
         </div>
       </WidgetBase>
     </div>

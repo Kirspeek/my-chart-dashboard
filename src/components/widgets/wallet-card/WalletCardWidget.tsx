@@ -6,7 +6,13 @@ import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import MonthlyExpensesChart from "./MonthlyExpensesChart";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
 
-export default function WalletCardWidget() {
+export default function WalletCardWidget({
+  onOpenSidebar,
+  showSidebarButton = false,
+}: {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const { currentCard, handleCardClick, hasCards, currentCardData } =
     useWheelWidgetLogic();
 
@@ -37,6 +43,8 @@ export default function WalletCardWidget() {
       <WidgetBase
         className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
         style={widgetStyle}
+        onOpenSidebar={onOpenSidebar}
+        showSidebarButton={showSidebarButton}
       >
         <div
           className="text-center"
@@ -77,6 +85,8 @@ export default function WalletCardWidget() {
     <WidgetBase
       className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
       style={widgetStyle}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <div
         className="w-full max-w-sm h-full flex flex-col"

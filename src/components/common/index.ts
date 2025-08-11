@@ -13,3 +13,4 @@ export { default as ChartCanvas } from "./ChartCanvas";
 export { default as ChartHeader } from "./ChartHeader";
 export { default as PeriodSelector } from "./PeriodSelector";
 export { default as RefreshButton } from "./RefreshButton";
+export { default as WidgetTitle } from "./WidgetTitle";

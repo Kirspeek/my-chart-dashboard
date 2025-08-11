@@ -6,7 +6,15 @@ import WidgetBase from "../../common/WidgetBase";
 import BarChartHeader from "./BarChartHeader";
 import BarChartContainer from "./BarChartContainer";
 
-export default function BarChartWidget({ data, title }: BarChartWidgetProps) {
+export default function BarChartWidget({
+  data,
+  title,
+  onOpenSidebar,
+  showSidebarButton = false,
+}: BarChartWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
@@ -29,6 +37,8 @@ export default function BarChartWidget({ data, title }: BarChartWidgetProps) {
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <BarChartHeader title={title} />
       <BarChartContainer data={data} />

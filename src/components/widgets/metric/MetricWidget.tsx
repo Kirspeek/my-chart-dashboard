@@ -8,11 +8,23 @@ import MetricIcon from "./MetricIcon";
 import MetricContent from "./MetricContent";
 import MetricTrend from "./MetricTrend";
 
-export default function MetricWidget({ metric, index = 0 }: MetricWidgetProps) {
+export default function MetricWidget({
+  metric,
+  index = 0,
+  onOpenSidebar,
+  showSidebarButton = false,
+}: MetricWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const { accentColor, displayValue } = useMetricLogic(metric, index);
 
   return (
-    <WidgetBase className="flex flex-col gap-4 relative">
+    <WidgetBase
+      className="flex flex-col gap-2 relative p-4"
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
+    >
       <MetricIcon icon={metric.icon} accentColor={accentColor} />
 
       <div className="flex items-start justify-between w-full">

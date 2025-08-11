@@ -8,7 +8,12 @@ export default function SankeyChartWidget({
   data,
   title,
   subtitle,
-}: SankeyChartWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: SankeyChartWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   // Detect mobile to apply full-screen sizing (only for phones, not tablets)
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
@@ -29,6 +34,8 @@ export default function SankeyChartWidget({
       title={title}
       subtitle={subtitle}
       isMobile={isMobile}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     />
   );
 }

@@ -27,17 +27,17 @@ export default function MetricIcon({ icon, accentColor }: MetricIconProps) {
 
   return (
     <div
-      className="rounded-full flex items-center justify-center absolute top-2 right-2 z-10"
+      className="rounded-full flex items-center justify-center absolute z-10 w-8 h-8 min-w-8 min-h-8 sm:w-10 sm:h-10 sm:min-w-10 sm:min-h-10
+                 top-4 right-4 sm:top-3 sm:right-3 md:top-2 md:right-2"
       style={{
         background: accentColor,
-        width: 56,
-        height: 56,
-        minWidth: 56,
-        minHeight: 56,
         boxShadow: `0 0 0 4px var(--color-bg-card)`,
       }}
     >
-      <IconComponent style={{ color: "#fff", width: 30, height: 30 }} />
+      <IconComponent
+        style={{ color: "#fff", width: 16, height: 16 }}
+        className="sm:w-5 sm:h-5"
+      />
     </div>
   );
 }

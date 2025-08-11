@@ -8,7 +8,12 @@ export default function ChordChartWidget({
   data,
   title,
   subtitle,
-}: ChordChartWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: ChordChartWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
@@ -27,6 +32,8 @@ export default function ChordChartWidget({
       title={title}
       subtitle={subtitle}
       isMobile={isMobile}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     />
   );
 }

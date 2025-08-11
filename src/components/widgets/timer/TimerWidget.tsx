@@ -4,7 +4,14 @@ import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { TimerWidgetProps } from "../../../../interfaces/components";
 
-export default function TimerWidget({ className = "" }: TimerWidgetProps) {
+export default function TimerWidget({
+  className = "",
+  onOpenSidebar,
+  showSidebarButton = false,
+}: TimerWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
 
   return (
@@ -22,6 +29,8 @@ export default function TimerWidget({ className = "" }: TimerWidgetProps) {
         borderRadius: isMobile ? "2rem" : undefined,
       }}
       className={className}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <div
         style={{

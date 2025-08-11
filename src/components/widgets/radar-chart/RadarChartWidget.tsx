@@ -9,7 +9,12 @@ import RadarChartContainer from "./RadarChartContainer";
 export default function RadarChartWidget({
   data,
   title,
-}: RadarChartWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: RadarChartWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
@@ -32,6 +37,8 @@ export default function RadarChartWidget({
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <RadarChartHeader title={title} />
       <RadarChartContainer data={data} />

@@ -137,6 +137,8 @@ export interface WaveData {
   id: string;
   color: string;
   path: string;
+  /** Optional vertical scale factor; 1 = normal height */
+  scaleY?: number;
 }
 
 export interface WavesChartProps extends BaseChartProps {

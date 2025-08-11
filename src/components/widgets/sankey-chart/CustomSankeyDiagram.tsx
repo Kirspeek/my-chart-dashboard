@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
+import { WidgetTitle } from "../../common";
 import { useTheme } from "src/hooks/useTheme";
 import type { WidgetSankeyChartData } from "../../../../interfaces/widgets";
 
@@ -36,8 +37,12 @@ export default function CustomSankeyDiagram({
   data,
   title,
   subtitle,
-  isMobile,
-}: CustomSankeyDiagramProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: CustomSankeyDiagramProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
   const [hoveredFlow, setHoveredFlow] = useState<string | null>(null);
@@ -48,6 +53,19 @@ export default function CustomSankeyDiagram({
     to: string;
     value: number;
   } | null>(null);
+
+  // Detect mobile to apply full-screen sizing
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Extract unique source and target nodes
   const sourceNodes = useMemo(() => new Set(data.map((d) => d.from)), [data]);
@@ -325,52 +343,30 @@ export default function CustomSankeyDiagram({
 
   return (
     <WidgetBase
-      className={`flex flex-col items-center justify-center ${isMobile ? "sankey-chart-widget" : ""}`}
+      className={`flex flex-col ${isMobile ? "sankey-chart-widget" : ""}`}
       style={{
         width: isMobile ? "100vw" : undefined,
         height: isMobile ? "82vh" : undefined,
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <div
+        className="w-full h-full flex flex-col"
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
+          padding: isMobile ? "0 1rem 1rem 1rem" : "1.5rem", // Remove top padding for mobile
         }}
       >
-        <h3
-          className={`text-lg font-semibold mb-4 ${isMobile ? "text-center" : ""}`}
-          style={{
-            color: colors.primary,
-            fontFamily: "var(--font-mono)",
-            fontWeight: 900,
-            letterSpacing: "0.01em",
-            marginTop: isMobile ? "1rem" : undefined,
-            fontSize: isMobile ? "0.9rem" : undefined,
-          }}
-        >
-          {title}
-        </h3>
-        {subtitle && (
-          <div
-            className={`text-base mb-4 ${isMobile ? "text-center" : ""}`}
-            style={{
-              color: "#888",
-              fontFamily: "var(--font-mono)",
-              fontWeight: 500,
-              fontSize: isMobile ? "0.7rem" : undefined,
-            }}
-          >
-            {subtitle}
-          </div>
-        )}
+        <WidgetTitle
+          title={title}
+          subtitle={subtitle}
+          variant={isMobile ? "centered" : "default"}
+          size="md"
+        />
         <div
+          className="mt-16"
           style={{
             position: "relative",
             width: "100%",

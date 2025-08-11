@@ -11,7 +11,12 @@ import { useTheme } from "src/hooks/useTheme";
 export default function CalendarWidgetMobile({
   onDateSelect,
   initialDate,
-}: CalendarWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: CalendarWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const {
     currentDate,
     selectedDate,
@@ -99,7 +104,11 @@ export default function CalendarWidgetMobile({
     : [];
 
   return (
-    <WidgetBase className="calendar-widget-mobile">
+    <WidgetBase
+      className="calendar-widget-mobile"
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
+    >
       <CalendarHeader
         currentDate={currentDate}
         viewMode={viewMode}

@@ -3,7 +3,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
-import { useTheme } from "@/hooks/useTheme";
+import { WidgetTitle } from "../../common";
+import { useTheme } from "src/hooks/useTheme";
 import type { WidgetBubbleChartData } from "../../../../interfaces/widgets";
 
 interface CustomBubbleChartProps {
@@ -17,8 +18,12 @@ export default function CustomBubbleChart({
   data,
   title,
   subtitle,
-  isMobile = false,
-}: CustomBubbleChartProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: CustomBubbleChartProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
   const [hoveredBubble, setHoveredBubble] = useState<number | null>(null);
@@ -27,6 +32,19 @@ export default function CustomBubbleChart({
     y: number;
     data: WidgetBubbleChartData;
   } | null>(null);
+
+  // Detect mobile to apply full-screen sizing
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => {
+      if (typeof window !== "undefined") {
+        setIsMobile(window.innerWidth <= 425);
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     // Get the actual container dimensions
@@ -209,107 +227,94 @@ export default function CustomBubbleChart({
 
   return (
     <WidgetBase
-      className={`flex flex-col items-center justify-center ${isMobile ? "bubble-chart-widget" : ""}`}
+      className={`flex flex-col ${isMobile ? "bubble-chart-widget" : ""}`}
       style={{
         width: isMobile ? "100vw" : undefined,
         height: isMobile ? "82vh" : undefined,
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
-      <h3
-        className={`text-lg font-semibold mb-4 ${isMobile ? "text-center" : ""}`}
+      <div
+        className="w-full h-full flex flex-col"
         style={{
-          color: colors.primary,
-          fontFamily: "var(--font-mono)",
-          fontWeight: 900,
-          letterSpacing: "0.01em",
-          marginTop: isMobile ? "1rem" : undefined,
-          fontSize: isMobile ? "0.9rem" : undefined,
+          padding: isMobile ? "0 1rem 1rem 1rem" : "1.5rem", // Remove top padding for mobile
         }}
       >
-        {title}
-      </h3>
-      {subtitle && (
+        <WidgetTitle
+          title={title}
+          subtitle={subtitle}
+          variant={isMobile ? "centered" : "default"}
+          size="md"
+        />
         <div
-          className={`text-base mb-4 ${isMobile ? "text-center" : ""}`}
+          className="mt-16"
           style={{
-            color: "#888",
-            fontFamily: "var(--font-mono)",
-            fontWeight: 500,
-            fontSize: isMobile ? "0.7rem" : undefined,
+            position: "relative",
+            width: "100%",
+            height: isMobile ? "35vh" : "350px",
+            maxWidth: "600px",
+            maxHeight: "400px",
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
           }}
         >
-          {subtitle}
-        </div>
-      )}
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: isMobile ? "35vh" : "350px",
-          maxWidth: "600px",
-          maxHeight: "400px",
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-        }}
-      >
-        <svg
-          ref={ref}
-          style={{
-            width: "100%",
-            height: "100%",
-            maxWidth: "100%",
-            maxHeight: "100%",
-          }}
-        />
-        {tooltip && (
-          <div
+          <svg
+            ref={ref}
             style={{
-              position: "absolute",
-              left: tooltip.x + 10,
-              top: tooltip.y - 10,
-              background: "#fff",
-              color: colors.primary,
-              borderRadius: 12,
-              boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
-              padding: "12px 18px",
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-              fontSize: 16,
-              pointerEvents: "none",
-              zIndex: 10,
-              minWidth: 180,
-              border: `2px solid ${accent.teal}`,
+              width: "100%",
+              height: "100%",
+              maxWidth: "100%",
+              maxHeight: "100%",
             }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: 18,
-                  height: 18,
-                  background: accent.teal,
-                  borderRadius: 4,
-                  marginRight: 8,
-                }}
-              />
-              <span>{tooltip.data.label || tooltip.data.category}</span>
+          />
+          {tooltip && (
+            <div
+              style={{
+                position: "absolute",
+                left: tooltip.x + 10,
+                top: tooltip.y - 10,
+                background: "#fff",
+                color: colors.primary,
+                borderRadius: 12,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
+                padding: "12px 18px",
+                fontFamily: "var(--font-mono)",
+                fontWeight: 700,
+                fontSize: 16,
+                pointerEvents: "none",
+                zIndex: 10,
+                minWidth: 180,
+                border: `2px solid ${accent.teal}`,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: 18,
+                    height: 18,
+                    background: accent.teal,
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}
+                />
+                <span>{tooltip.data.label || tooltip.data.category}</span>
+              </div>
+              <div style={{ marginTop: 8, fontWeight: 500, fontSize: 15 }}>
+                Market Cap: ${tooltip.data.x}B | Growth: {tooltip.data.y}%
+              </div>
+              <div style={{ marginTop: 4, fontWeight: 500, fontSize: 15 }}>
+                Employees: {tooltip.data.size}K
+              </div>
             </div>
-            <div style={{ marginTop: 8, fontWeight: 500, fontSize: 15 }}>
-              Market Cap: ${tooltip.data.x}B | Growth: {tooltip.data.y}%
-            </div>
-            <div style={{ marginTop: 4, fontWeight: 500, fontSize: 15 }}>
-              Employees: {tooltip.data.size}K
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </WidgetBase>
   );

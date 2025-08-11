@@ -68,7 +68,7 @@ export default function DeviceUsageContainer({
   ) as Record<string, string>;
 
   return (
-    <div className="flex flex-col items-center justify-center flex-1 h-full">
+    <div className="flex flex-col items-center justify-center flex-1 h-full mt-16">
       <ResponsiveContainer
         width="100%"
         height={isMobile ? "100%" : "100%"}

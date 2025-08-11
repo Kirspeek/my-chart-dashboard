@@ -10,7 +10,12 @@ interface ContributionGraphWidgetProps {
 
 export default function ContributionGraphWidget({
   title,
-}: ContributionGraphWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: ContributionGraphWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
@@ -33,6 +38,8 @@ export default function ContributionGraphWidget({
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <ContributionGraph title={title} />
     </WidgetBase>

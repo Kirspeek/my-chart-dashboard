@@ -6,7 +6,15 @@ import WidgetBase from "../../common/WidgetBase";
 import LineChartHeader from "./LineChartHeader";
 import LineChartContainer from "./LineChartContainer";
 
-export default function LineChartWidget({ data, title }: LineChartWidgetProps) {
+export default function LineChartWidget({
+  data,
+  title,
+  onOpenSidebar,
+  showSidebarButton = false,
+}: LineChartWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
@@ -29,6 +37,8 @@ export default function LineChartWidget({ data, title }: LineChartWidgetProps) {
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <LineChartHeader title={title} />
       <LineChartContainer data={data} />

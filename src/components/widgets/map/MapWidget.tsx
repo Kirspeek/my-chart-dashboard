@@ -10,7 +10,12 @@ import MapContainer from "./MapContainer";
 export default function MapWidget({
   onMarkerChange,
   userLocation,
-}: MapWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: MapWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const {
     search,
     searchFocused,
@@ -43,6 +48,8 @@ export default function MapWidget({
         justifyContent: "center",
       }}
       className="map-widget"
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <MapSearch
         search={search}

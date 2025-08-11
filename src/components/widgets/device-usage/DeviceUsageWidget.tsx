@@ -9,7 +9,12 @@ import DeviceUsageContainer from "./DeviceUsageContainer";
 export default function DeviceUsageWidget({
   data,
   title,
-}: DeviceUsageWidgetProps) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: DeviceUsageWidgetProps & {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
@@ -32,6 +37,8 @@ export default function DeviceUsageWidget({
         padding: isMobile ? 0 : undefined,
         borderRadius: isMobile ? 0 : undefined,
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <DeviceUsageHeader title={title} />
       <DeviceUsageContainer data={data} />

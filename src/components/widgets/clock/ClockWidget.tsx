@@ -13,7 +13,13 @@ export default function ClockWidget({
   selectedZone,
   setSelectedZone,
   isMobile = false,
-}: ClockWidgetProps & { isMobile?: boolean }) {
+  onOpenSidebar,
+  showSidebarButton = false,
+}: ClockWidgetProps & {
+  isMobile?: boolean;
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}) {
   const {
     mounted,
     is24h,
@@ -60,6 +66,8 @@ export default function ClockWidget({
         width: "100%",
         padding: "2.5rem 2.5rem",
       }}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <ClockDisplay
         mainTime={mainTime}

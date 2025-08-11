@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import MobileHamburgerMenu from "@/components/MobileHamburgerMenu";
 import {
   ClockWidget,
   WeatherWidget,
@@ -222,9 +221,6 @@ export default function Home() {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            {/* Hamburger menu button */}
-            <MobileHamburgerMenu onOpenSidebar={() => setSidebarOpen(true)} />
-
             <div
               className="mobile-slides-container"
               style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
@@ -237,6 +233,8 @@ export default function Home() {
                       selectedZone={selectedZone}
                       setSelectedZone={setSelectedZone}
                       isMobile={true}
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
                     />
                   </div>
                   <div className="h-[65vh]">
@@ -247,19 +245,28 @@ export default function Home() {
               {/* Slide 2: Timer (original) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <TimerWidget />
+                  <TimerWidget
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
+                  />
                 </div>
               </div>
               {/* Slide 3: Map (original) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <MapWidget />
+                  <MapWidget
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
+                  />
                 </div>
               </div>
               {/* Slide 4: Calendar (original) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <CalendarWidgetMobile />
+                  <CalendarWidgetMobile
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
+                  />
                 </div>
               </div>
               {/* Slide 6-8: Wallet-related, wrapped with providers */}
@@ -269,27 +276,56 @@ export default function Home() {
                 </div>
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
-                    <WalletCardWidget />
+                    <WalletCardWidget
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                    />
                   </div>
                 </div>
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
-                    <AggregatedSpendingWidget />
+                    <AggregatedSpendingWidget
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                    />
                   </div>
                 </div>
               </WidgetHeightProvider>
               {/* Slide 9: Contribution Graph */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <ContributionGraphWidget title="Financial Activity Overview" />
+                  <ContributionGraphWidget
+                    title="Financial Activity Overview"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
+                  />
                 </div>
               </div>
-              {/* Slide 10: Metrics/Charts examples */}
+              {/* Slide 10: Metric Cards */}
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="flex flex-col gap-4 h-full px-4">
+                    {(data.metricCards ?? []).map((metric, index) => (
+                      <div key={index} className="h-[18vh]">
+                        <MetricWidget
+                          metric={metric}
+                          index={index}
+                          onOpenSidebar={() => setSidebarOpen(true)}
+                          showSidebarButton={index === 0}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {/* Slide 11: Metrics/Charts examples */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
                   <LineChartWidget
                     data={data.salesData ?? []}
                     title="Sales Performance"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
@@ -298,6 +334,8 @@ export default function Home() {
                   <BarChartWidget
                     data={data.barChartData ?? []}
                     title="Quarterly Overview"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
@@ -306,6 +344,8 @@ export default function Home() {
                   <RadarChartWidget
                     data={data.radarChartData ?? []}
                     title="Performance Metrics"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
@@ -314,6 +354,8 @@ export default function Home() {
                   <DeviceUsageWidget
                     data={data.pieChartData ?? []}
                     title="Device Usage"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
@@ -323,6 +365,8 @@ export default function Home() {
                     data={data.sankeyData ?? []}
                     title="Global Migration Flows"
                     subtitle="2019/2020"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
@@ -332,6 +376,8 @@ export default function Home() {
                     data={data.migrationData ?? []}
                     title="Global Migrations"
                     subtitle="2023"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
@@ -341,18 +387,23 @@ export default function Home() {
                     data={data.bubbleData ?? []}
                     title="Global Tech Investment"
                     subtitle="Market Cap vs Growth vs Workforce Size"
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
                   />
                 </div>
               </div>
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <TimelineRingsWidget />
+                  <TimelineRingsWidget
+                    onOpenSidebar={() => setSidebarOpen(true)}
+                    showSidebarButton={true}
+                  />
                 </div>
               </div>
             </div>
             {/* Slide indicators */}
             <div className="mobile-slide-indicators">
-              {Array.from({ length: 16 }, (_, index) => (
+              {Array.from({ length: 17 }, (_, index) => (
                 <div
                   key={index}
                   className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
@@ -461,7 +512,7 @@ export default function Home() {
               </WidgetStateProvider>
             </WidgetHeightProvider>
             {/* Metric cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 my-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 my-8">
               {(data.metricCards ?? []).map((metric, index) => (
                 <MetricWidget key={index} metric={metric} index={index} />
               ))}
@@ -485,8 +536,8 @@ export default function Home() {
               />
             </div>
             {/* Bottom row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
-              <div className="lg:col-span-2 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
+              <div className="lg:col-span-2 xl:col-span-2 h-full">
                 <RecentUsersWidget
                   data={data.userData ?? []}
                   title="Recent Users"
@@ -500,8 +551,8 @@ export default function Home() {
               </div>
             </div>
             {/* Sankey Chart and Global Migrations row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
-              <div className="lg:col-span-2 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
+              <div className="lg:col-span-2 xl:col-span-2 h-full">
                 <SankeyChartWidget
                   data={data.sankeyData ?? []}
                   title="Global Migration Flows"
@@ -517,8 +568,8 @@ export default function Home() {
               </div>
             </div>
             {/* Bubble Chart row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-8">
-              <div className="lg:col-span-2 h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
+              <div className="lg:col-span-2 xl:col-span-2 h-full">
                 <BubbleChartWidget
                   data={data.bubbleData ?? []}
                   title="Global Tech Investment"
