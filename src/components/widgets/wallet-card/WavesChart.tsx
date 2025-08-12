@@ -6,8 +6,8 @@ import {
   useWavesInteractionLogic,
   useWavesRenderLogic,
   WaveData,
-} from "./logic";
-import { WavesCanvas } from "./components";
+} from "./waves-logic";
+import { WavesCanvas } from "./waves-components";
 
 interface WavesChartProps {
   data?: WaveData[];
@@ -47,7 +47,6 @@ export default function WavesChart({
         wavePaths={wavePaths}
         onRefresh={handleRefreshClick}
       />
-      {/* Footer title removed as requested */}
     </div>
   );
 }

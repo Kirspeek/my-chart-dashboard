@@ -39,9 +39,6 @@ export { default as WalletCardWidget } from "./wallet-card/WalletCardWidget";
 // Wheel Widget
 export { WheelWidget } from "./wheel";
 
-// Waves Chart Widget
-export { default as WavesChartWidget } from "./waves-chart/WavesChartWidget";
-
 // Contribution Graph Widget
 export { default as ContributionGraphWidget } from "./contribution-graph/ContributionGraphWidget";
 export { default as AggregatedSpendingWidget } from "./aggregated-spending/AggregatedSpendingWidget";

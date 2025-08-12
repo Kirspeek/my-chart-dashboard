@@ -2,8 +2,8 @@
 
 import React, { useState, useMemo } from "react";
 import { useTheme } from "../../../hooks/useTheme";
-import WavesChart from "../waves-chart/WavesChart";
-import { WaveData } from "../waves-chart/logic";
+import WavesChart from "./WavesChart";
+import { WaveData } from "./waves-logic";
 
 interface FinancialBarChartProps {
   data: ExpenseData[];
@@ -116,9 +116,9 @@ export default function FinancialBarChart({
       className="relative cursor-pointer transition-all duration-300 h-full flex flex-col"
       onClick={handleCardClick}
     >
-      {/* Card Number and Period Toggle */}
+      {/* Top Section - Card Number and Period Toggle */}
       <div
-        className="flex items-center justify-between mb-4"
+        className="flex items-center justify-between"
         style={{
           marginTop: isMobile ? "2rem" : undefined,
           marginBottom: isMobile ? "1.5rem" : undefined,
@@ -161,8 +161,8 @@ export default function FinancialBarChart({
         </div>
       </div>
 
-      {/* Total Spending Display */}
-      <div className="text-center mb-2">
+      {/* Middle Section - Total Spending Display */}
+      <div className="text-center mb-4">
         <div className="text-sm text-[#888] mb-1">
           {selectedPeriod === "Monthly"
             ? "Monthly Spending"
@@ -173,13 +173,13 @@ export default function FinancialBarChart({
         </div>
       </div>
 
-      {/* Waves Chart */}
+      {/* Bottom Section - Waves Chart with negative margins to push to bottom */}
       <div
-        className="flex-1"
+        className="flex-1 flex items-end"
         style={{
-          display: isMobile ? "flex" : undefined,
-          alignItems: isMobile ? "center" : undefined,
-          justifyContent: isMobile ? "center" : undefined,
+          marginBottom: "-20px",
+          marginLeft: "-20px",
+          marginRight: "-20px",
         }}
       >
         <WavesChart

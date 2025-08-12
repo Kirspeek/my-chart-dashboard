@@ -132,26 +132,6 @@ export interface SankeyChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
-// Waves Chart
-export interface WaveData {
-  id: string;
-  color: string;
-  path: string;
-  /** Optional vertical scale factor; 1 = normal height */
-  scaleY?: number;
-}
-
-export interface WavesChartProps extends BaseChartProps {
-  data: WaveData[];
-  showGrid?: boolean;
-  showLabels?: boolean;
-}
-
-export interface WavesChartLogicProps {
-  data?: WaveData[];
-  title?: string;
-}
-
 // Contribution Graph
 export interface ContributionData {
   date: string;
