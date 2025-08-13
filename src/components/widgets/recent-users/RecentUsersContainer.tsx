@@ -42,7 +42,7 @@ export default function RecentUsersContainer({
   };
 
   return (
-    <div className="overflow-x-auto flex-1 relative group">
+    <div className="overflow-x-auto flex-1 relative group scrollbar-hide">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div className="absolute top-2 left-2 w-1 h-1 bg-[var(--accent-color)] rounded-full"></div>
@@ -57,7 +57,7 @@ export default function RecentUsersContainer({
             style={{ borderColor: colors.borderSecondary }}
           >
             <th
-              className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
@@ -69,7 +69,7 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
@@ -81,7 +81,7 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
@@ -93,7 +93,7 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
@@ -105,7 +105,7 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
@@ -129,7 +129,7 @@ export default function RecentUsersContainer({
               }}
             >
               <td
-                className="px-4 py-4 whitespace-nowrap text-sm font-medium rounded-l-lg primary-text group-hover/row:scale-105 transition-transform duration-300"
+                className="px-4 py-2 whitespace-nowrap text-sm font-medium rounded-l-lg primary-text group-hover/row:scale-105 transition-transform duration-300"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
@@ -141,7 +141,7 @@ export default function RecentUsersContainer({
                 </div>
               </td>
               <td
-                className="px-4 py-4 whitespace-nowrap text-sm secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
+                className="px-4 py-2 whitespace-nowrap text-sm secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
@@ -150,7 +150,7 @@ export default function RecentUsersContainer({
                 {user.email}
               </td>
               <td
-                className="px-4 py-4 whitespace-nowrap text-sm"
+                className="px-4 py-2 whitespace-nowrap text-sm"
                 style={{
                   color: getTextColor,
                   fontFamily: "var(--font-mono)",
@@ -164,7 +164,7 @@ export default function RecentUsersContainer({
                   <span className="secondary-text">{user.role}</span>
                 </div>
               </td>
-              <td className="px-4 py-4 whitespace-nowrap">
+              <td className="px-4 py-2 whitespace-nowrap">
                 <span
                   className="inline-flex items-center space-x-1 px-3 py-1 text-xs font-semibold rounded-full transition-all duration-300 hover:scale-105"
                   style={{
@@ -185,7 +185,7 @@ export default function RecentUsersContainer({
                 </span>
               </td>
               <td
-                className="px-4 py-4 whitespace-nowrap text-sm rounded-r-lg secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
+                className="px-4 py-2 whitespace-nowrap text-sm rounded-r-lg secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
