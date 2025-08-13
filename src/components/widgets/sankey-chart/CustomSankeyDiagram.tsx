@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "src/hooks/useTheme";
 import type { WidgetSankeyChartData } from "../../../../interfaces/widgets";
@@ -12,6 +13,8 @@ interface CustomSankeyDiagramProps {
   title: string;
   subtitle?: string;
   isMobile?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 interface SankeyNode {
@@ -39,9 +42,13 @@ export default function CustomSankeyDiagram({
   subtitle,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: CustomSankeyDiagramProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
@@ -434,6 +441,14 @@ export default function CustomSankeyDiagram({
           )}
         </div>
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

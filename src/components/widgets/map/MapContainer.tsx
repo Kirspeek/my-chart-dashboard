@@ -50,102 +50,11 @@ export default function MapContainer({
       map.touchZoomRotate.enable();
       map.dragPan.enable();
 
-      // Disable scroll zoom (mouse wheel)
+      // Disable scroll zoom (mouse wheel) to prevent conflicts
       map.scrollZoom.disable();
 
-      // Enhanced touch handling for iPhone with swipe prevention
-      const container = map.getContainer();
-      let isMapInteracting = false;
-      let isPinching = false;
-
-      // Prevent parent swipe when map is being interacted with
-      const preventParentSwipe = (e: Event) => {
-        if (isMapInteracting || isPinching) {
-          e.stopPropagation();
-          e.preventDefault();
-        }
-      };
-
-      // Enhanced touchstart handling
-      container.addEventListener(
-        "touchstart",
-        (e) => {
-          if (e.touches.length === 1) {
-            // Single finger - allow pan, mark as map interaction
-            isMapInteracting = true;
-            e.preventDefault();
-          } else if (e.touches.length === 2) {
-            // Two fingers - pinch to zoom, prevent parent swipe
-            isPinching = true;
-            isMapInteracting = true;
-            e.stopPropagation();
-            // Don't prevent default to allow natural pinch gesture
-          }
-        },
-        { passive: false }
-      );
-
-      // Enhanced touchmove handling
-      container.addEventListener(
-        "touchmove",
-        (e) => {
-          if (e.touches.length === 1 && isMapInteracting) {
-            // Single finger move - allow pan, prevent parent swipe
-            e.preventDefault();
-            e.stopPropagation();
-          } else if (e.touches.length === 2 && isPinching) {
-            // Two finger move - pinch zoom, prevent parent swipe
-            e.stopPropagation();
-            // Don't prevent default to allow natural pinch gesture
-          }
-        },
-        { passive: false }
-      );
-
-      // Enhanced touchend handling
-      container.addEventListener(
-        "touchend",
-        () => {
-          // Reset interaction flags after a short delay
-          setTimeout(() => {
-            isMapInteracting = false;
-            isPinching = false;
-          }, 100);
-        },
-        { passive: true }
-      );
-
-      // Prevent touchcancel from propagating
-      container.addEventListener(
-        "touchcancel",
-        (e) => {
-          e.stopPropagation();
-          isMapInteracting = false;
-          isPinching = false;
-        },
-        { passive: false }
-      );
-
-      // Add touch event listeners to parent containers to prevent swipe
-      const parentSlide = container.closest(".mobile-slide");
-      if (parentSlide) {
-        parentSlide.addEventListener("touchstart", preventParentSwipe, {
-          passive: false,
-        });
-        parentSlide.addEventListener("touchmove", preventParentSwipe, {
-          passive: false,
-        });
-      }
-
-      const parentContainer = container.closest(".mobile-slides-container");
-      if (parentContainer) {
-        parentContainer.addEventListener("touchstart", preventParentSwipe, {
-          passive: false,
-        });
-        parentContainer.addEventListener("touchmove", preventParentSwipe, {
-          passive: false,
-        });
-      }
+      // Enable keyboard navigation for accessibility
+      map.keyboard.enable();
     });
 
     const styleEl = document.createElement("style");

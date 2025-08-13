@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "src/hooks/useTheme";
 import type { WidgetBubbleChartData } from "../../../../interfaces/widgets";
@@ -12,6 +13,8 @@ interface CustomBubbleChartProps {
   title: string;
   subtitle?: string;
   isMobile?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export default function CustomBubbleChart({
@@ -20,9 +23,13 @@ export default function CustomBubbleChart({
   subtitle,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: CustomBubbleChartProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
@@ -316,6 +323,14 @@ export default function CustomBubbleChart({
           )}
         </div>
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

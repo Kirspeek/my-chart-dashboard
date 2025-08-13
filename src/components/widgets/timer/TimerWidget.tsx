@@ -2,12 +2,15 @@
 
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { TimerWidgetProps } from "../../../../interfaces/components";
 
 export default function TimerWidget({
   className = "",
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: TimerWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
@@ -27,6 +30,7 @@ export default function TimerWidget({
         margin: isMobile ? "0 1rem 3rem 1rem" : undefined,
         boxSizing: "border-box",
         borderRadius: isMobile ? "2rem" : undefined,
+        position: "relative",
       }}
       className={className}
       onOpenSidebar={onOpenSidebar}
@@ -46,6 +50,13 @@ export default function TimerWidget({
       >
         Timer Coming Soon!
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+        />
+      )}
     </WidgetBase>
   );
 }

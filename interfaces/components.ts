@@ -19,6 +19,8 @@ export interface Button3DProps {
 
 export interface TimerWidgetProps {
   className?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 // Weather Cache Status Interfaces

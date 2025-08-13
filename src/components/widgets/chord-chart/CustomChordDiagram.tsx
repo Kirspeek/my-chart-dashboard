@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "src/hooks/useTheme";
 import type { WidgetChordChartData } from "../../../../interfaces/widgets";
@@ -12,6 +13,8 @@ interface CustomChordDiagramProps {
   title: string;
   subtitle?: string;
   isMobile?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 const nodeOrder = ["Asia", "Europe", "Americas", "Africa", "Oceania"];
@@ -22,9 +25,13 @@ export default function CustomChordDiagram({
   subtitle,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: CustomChordDiagramProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const ref = useRef<SVGSVGElement>(null);
   const { accent, colors } = useTheme();
@@ -304,6 +311,14 @@ export default function CustomChordDiagram({
           )}
         </div>
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

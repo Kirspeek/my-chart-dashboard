@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import FinancialBarChart from "../wallet-card/FinancialBarChart";
 import { useWalletLogic } from "../../../hooks/wallet/useWalletLogic";
 import { CardData } from "../../../../interfaces/wallet";
@@ -98,25 +99,25 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
     { name: "Utilities", color: "teal" },
   ];
 
-  return categories.map((category) => {
-    const value = categoryTotals[category.name];
-    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-
-    return {
-      name: category.name,
-      value,
-      color: category.color,
-      percentage,
-    };
-  });
+  return categories.map((category) => ({
+    name: category.name,
+    value: categoryTotals[category.name],
+    color: category.color,
+    percentage:
+      total > 0 ? Math.round((categoryTotals[category.name] / total) * 100) : 0,
+  }));
 };
 
 export default function AggregatedSpendingWidget({
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const { cards } = useWalletLogic();
   const { targetHeight } = useWidgetHeight();
@@ -255,6 +256,14 @@ export default function AggregatedSpendingWidget({
           />
         </div>
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

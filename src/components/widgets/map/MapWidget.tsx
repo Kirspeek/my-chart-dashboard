@@ -2,6 +2,7 @@
 
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { MapWidgetProps } from "../../../../interfaces/widgets";
 import { useMapLogic } from "src/hooks/useMapLogic";
 import MapSearch from "./MapSearch";
@@ -12,9 +13,13 @@ export default function MapWidget({
   userLocation,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: MapWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const {
     search,
@@ -64,6 +69,14 @@ export default function MapWidget({
         searchResult={searchResult}
         onMarkerChange={onMarkerChange}
       />
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

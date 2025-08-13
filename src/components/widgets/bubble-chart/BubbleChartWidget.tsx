@@ -10,9 +10,13 @@ export default function BubbleChartWidget({
   subtitle,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: BubbleChartWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   // Detect mobile to apply full-screen sizing (only for phones, not tablets)
   const [isMobile, setIsMobile] = React.useState(false);
@@ -36,6 +40,8 @@ export default function BubbleChartWidget({
       isMobile={isMobile}
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}
+      currentSlide={currentSlide}
+      setCurrentSlide={setCurrentSlide}
     />
   );
 }

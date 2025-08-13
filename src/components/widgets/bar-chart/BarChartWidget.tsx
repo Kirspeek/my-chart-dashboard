@@ -3,6 +3,7 @@
 import React from "react";
 import { BarChartWidgetProps } from "../../../../interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import BarChartHeader from "./BarChartHeader";
 import BarChartContainer from "./BarChartContainer";
 
@@ -11,9 +12,13 @@ export default function BarChartWidget({
   title,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: BarChartWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
@@ -42,6 +47,14 @@ export default function BarChartWidget({
     >
       <BarChartHeader title={title} />
       <BarChartContainer data={data} />
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

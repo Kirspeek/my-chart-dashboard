@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { CalendarWidgetProps } from "../../../../interfaces/widgets";
 import { useCalendarLogic } from "src/hooks/useCalendarLogic";
 import CalendarHeader from "./CalendarHeader";
@@ -13,9 +14,13 @@ export default function CalendarWidgetMobile({
   initialDate,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: CalendarWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const {
     currentDate,
@@ -108,6 +113,7 @@ export default function CalendarWidgetMobile({
       className="calendar-widget-mobile"
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}
+      style={{ position: "relative" }}
     >
       <CalendarHeader
         currentDate={currentDate}
@@ -282,6 +288,14 @@ export default function CalendarWidgetMobile({
           )}
         </div>
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

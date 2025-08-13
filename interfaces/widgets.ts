@@ -31,6 +31,8 @@ export interface ClockActions {
 export interface ClockWidgetProps extends CommonComponentProps {
   selectedZone: string;
   setSelectedZone: Dispatch<SetStateAction<string>>;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 // ============================================================================
@@ -59,6 +61,8 @@ export interface TimerActions {
 
 export interface TimerWidgetProps extends CommonComponentProps {
   className?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 // ============================================================================
@@ -77,6 +81,8 @@ export interface WeatherActions {
 
 export interface WeatherWidgetProps extends CommonComponentProps {
   city?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface ForecastDay {
@@ -137,6 +143,8 @@ export interface MapActions {
 export interface MapWidgetProps extends CommonComponentProps {
   onMarkerChange?: (pos: { lat: number; lon: number }) => void;
   userLocation?: [number, number];
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface MapComponentProps extends CommonComponentProps {
@@ -183,6 +191,8 @@ export interface CalendarActions {
 export interface CalendarWidgetProps extends CommonComponentProps {
   onDateSelect?: (date: Date) => void;
   initialDate?: Date;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 // ============================================================================
@@ -206,6 +216,8 @@ export interface MetricCardProps extends CommonComponentProps {
 export interface MetricWidgetProps extends CommonComponentProps {
   metric: MetricData;
   index?: number;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 // ============================================================================
@@ -287,6 +299,8 @@ export interface DeviceUsageData {
 export interface DeviceUsageWidgetProps extends CommonComponentProps {
   data: DeviceUsageData[];
   title: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface RecentUsersWidgetProps extends CommonComponentProps {
@@ -308,6 +322,8 @@ export interface WidgetBarChartData {
 export interface BarChartWidgetProps extends CommonComponentProps {
   data: WidgetBarChartData[];
   title: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WidgetLineChartData {
@@ -320,6 +336,8 @@ export interface WidgetLineChartData {
 export interface LineChartWidgetProps extends CommonComponentProps {
   data: WidgetLineChartData[];
   title: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WidgetRadarChartData {
@@ -331,6 +349,8 @@ export interface WidgetRadarChartData {
 export interface RadarChartWidgetProps extends CommonComponentProps {
   data: WidgetRadarChartData[];
   title: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WidgetChordChartData {
@@ -343,6 +363,8 @@ export interface ChordChartWidgetProps extends CommonComponentProps {
   data: WidgetChordChartData[];
   title: string;
   subtitle?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WidgetSankeyChartData {
@@ -355,6 +377,8 @@ export interface SankeyChartWidgetProps extends CommonComponentProps {
   data: WidgetSankeyChartData[];
   title: string;
   subtitle?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WidgetBubbleChartData {
@@ -369,26 +393,38 @@ export interface BubbleChartWidgetProps extends CommonComponentProps {
   data: WidgetBubbleChartData[];
   title: string;
   subtitle?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface TimelineRingsWidgetProps extends CommonComponentProps {
   title?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WalletWidgetProps extends CommonComponentProps {
   title?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface WalletCardWidgetProps extends CommonComponentProps {
   title?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface ContributionGraphWidgetProps extends CommonComponentProps {
   title: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 export interface AggregatedSpendingWidgetProps extends CommonComponentProps {
   title?: string;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }
 
 // ============================================================================

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import SlideNavigation from "@/components/common/SlideNavigation";
 import {
   ClockWidget,
   WeatherWidget,
@@ -186,11 +187,18 @@ export default function Home() {
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
+
+    // Disable slide navigation when map widget is active (slide 3, index 2)
+    if (currentSlide === 2) {
+      return;
+    }
+
     const distance = touchStart - touchEnd;
     const isUpSwipe = distance > minSwipeDistance;
     const isDownSwipe = distance < -minSwipeDistance;
 
-    if (isUpSwipe && currentSlide < 3) {
+    if (isUpSwipe && currentSlide < 16) {
+      // Changed from 15 to 16 (0-16 = 17 slides)
       setCurrentSlide(currentSlide + 1);
     }
     if (isDownSwipe && currentSlide > 0) {
@@ -228,83 +236,132 @@ export default function Home() {
               {/* Slide 1: Clock + Weather (original combined layout) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <div className="h-[45vh]">
+                  <div className="h-[45vh] relative">
                     <ClockWidget
                       selectedZone={selectedZone}
                       setSelectedZone={setSelectedZone}
                       isMobile={true}
                       onOpenSidebar={() => setSidebarOpen(true)}
                       showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
                     />
                   </div>
-                  <div className="h-[65vh]">
-                    <WeatherWidgetMobile city={selectedCity} />
+                  <div className="h-[65vh] relative">
+                    <WeatherWidgetMobile
+                      city={selectedCity}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
                   </div>
+                  {/* Navigation buttons for slide 1 - positioned between widgets */}
+                  <SlideNavigation
+                    currentSlide={currentSlide}
+                    setCurrentSlide={setCurrentSlide}
+                    className="slide-1-navigation"
+                  />
                 </div>
               </div>
               {/* Slide 2: Timer (original) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <TimerWidget
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
+                  <div className="relative h-full">
+                    <TimerWidget
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
                 </div>
               </div>
               {/* Slide 3: Map (original) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <MapWidget
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
+                  <div className="relative h-full">
+                    <MapWidget
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                    />
+                    {/* Visual indicator that slide navigation is disabled */}
+                    <div className="absolute top-4 right-4 z-10 bg-black/20 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                      Map Mode
+                    </div>
+                    {/* Navigation buttons for map slide */}
+                    <SlideNavigation
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                      className="absolute bottom-4 right-4"
+                    />
+                  </div>
                 </div>
               </div>
               {/* Slide 4: Calendar (original) */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <CalendarWidgetMobile
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
+                  <div className="relative h-full">
+                    <CalendarWidgetMobile
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
                 </div>
               </div>
               {/* Slide 6-8: Wallet-related, wrapped with providers */}
               <WidgetHeightProvider>
                 <div className="mobile-slide">
-                  <WalletWidget />
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <WalletCardWidget
-                      onOpenSidebar={() => setSidebarOpen(true)}
-                      showSidebarButton={true}
+                  <div className="relative h-full">
+                    <WalletWidget
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
                     />
                   </div>
                 </div>
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
-                    <AggregatedSpendingWidget
-                      onOpenSidebar={() => setSidebarOpen(true)}
-                      showSidebarButton={true}
-                    />
+                    <div className="relative h-full">
+                      <WalletCardWidget
+                        onOpenSidebar={() => setSidebarOpen(true)}
+                        showSidebarButton={true}
+                        currentSlide={currentSlide}
+                        setCurrentSlide={setCurrentSlide}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="mobile-slide">
+                  <div className="flex flex-col h-full pt-4">
+                    <div className="relative h-full">
+                      <AggregatedSpendingWidget
+                        onOpenSidebar={() => setSidebarOpen(true)}
+                        showSidebarButton={true}
+                        currentSlide={currentSlide}
+                        setCurrentSlide={setCurrentSlide}
+                      />
+                    </div>
                   </div>
                 </div>
               </WidgetHeightProvider>
               {/* Slide 9: Contribution Graph */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <ContributionGraphWidget
-                    title="Financial Activity Overview"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
+                  <div className="relative h-full">
+                    <ContributionGraphWidget
+                      title="Financial Activity Overview"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
                 </div>
               </div>
               {/* Slide 10: Metric Cards */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <div className="flex flex-col gap-4 h-full px-4">
+                  <div className="flex flex-col gap-4 h-full px-4 relative">
                     {(data.metricCards ?? []).map((metric, index) => (
                       <div key={index} className="h-[18vh]">
                         <MetricWidget
@@ -316,100 +373,134 @@ export default function Home() {
                       </div>
                     ))}
                   </div>
+                  {/* Navigation buttons for the entire metric cards slide */}
+                  <SlideNavigation
+                    currentSlide={currentSlide}
+                    setCurrentSlide={setCurrentSlide}
+                    totalSlides={17}
+                  />
                 </div>
               </div>
               {/* Slide 11: Metrics/Charts examples */}
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <LineChartWidget
-                    data={data.salesData ?? []}
-                    title="Sales Performance"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
+                  <div className="relative h-full">
+                    <LineChartWidget
+                      data={data.salesData ?? []}
+                      title="Sales Performance"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="relative h-full">
+                    <BarChartWidget
+                      data={data.barChartData ?? []}
+                      title="Quarterly Overview"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="relative h-full">
+                    <RadarChartWidget
+                      data={data.radarChartData ?? []}
+                      title="Performance Metrics"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="relative h-full">
+                    <DeviceUsageWidget
+                      data={data.pieChartData ?? []}
+                      title="Device Usage"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="relative h-full">
+                    <SankeyChartWidget
+                      data={data.sankeyData ?? []}
+                      title="Global Migration Flows"
+                      subtitle="2019/2020"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mobile-slide">
+                <div className="flex flex-col h-full pt-4">
+                  <div className="relative h-full">
+                    <ChordChartWidget
+                      data={data.migrationData ?? []}
+                      title="Global Migrations"
+                      subtitle="2023"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
+                  {/* Navigation buttons for the Global Migrations slide */}
+                  <SlideNavigation
+                    currentSlide={currentSlide}
+                    setCurrentSlide={setCurrentSlide}
+                    totalSlides={17}
                   />
                 </div>
               </div>
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <BarChartWidget
-                    data={data.barChartData ?? []}
-                    title="Quarterly Overview"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
+                  <div className="relative h-full">
+                    <BubbleChartWidget
+                      data={data.bubbleData ?? []}
+                      title="Global Tech Investment"
+                      subtitle="Market Cap vs Growth vs Workforce Size"
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="mobile-slide">
                 <div className="flex flex-col h-full pt-4">
-                  <RadarChartWidget
-                    data={data.radarChartData ?? []}
-                    title="Performance Metrics"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
+                  <div className="relative h-full">
+                    <TimelineRingsWidget
+                      onOpenSidebar={() => setSidebarOpen(true)}
+                      showSidebarButton={true}
+                      currentSlide={currentSlide}
+                      setCurrentSlide={setCurrentSlide}
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="mobile-slide">
-                <div className="flex flex-col h-full pt-4">
-                  <DeviceUsageWidget
-                    data={data.pieChartData ?? []}
-                    title="Device Usage"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
-                </div>
-              </div>
-              <div className="mobile-slide">
-                <div className="flex flex-col h-full pt-4">
-                  <SankeyChartWidget
-                    data={data.sankeyData ?? []}
-                    title="Global Migration Flows"
-                    subtitle="2019/2020"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
-                </div>
-              </div>
-              <div className="mobile-slide">
-                <div className="flex flex-col h-full pt-4">
-                  <ChordChartWidget
-                    data={data.migrationData ?? []}
-                    title="Global Migrations"
-                    subtitle="2023"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
-                </div>
-              </div>
-              <div className="mobile-slide">
-                <div className="flex flex-col h-full pt-4">
-                  <BubbleChartWidget
-                    data={data.bubbleData ?? []}
-                    title="Global Tech Investment"
-                    subtitle="Market Cap vs Growth vs Workforce Size"
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
-                </div>
-              </div>
-              <div className="mobile-slide">
-                <div className="flex flex-col h-full pt-4">
-                  <TimelineRingsWidget
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={true}
-                  />
-                </div>
-              </div>
-            </div>
-            {/* Slide indicators */}
-            <div className="mobile-slide-indicators">
-              {Array.from({ length: 17 }, (_, index) => (
-                <div
-                  key={index}
-                  className={`mobile-slide-indicator ${currentSlide === index ? "active" : ""}`}
-                  onClick={() => setCurrentSlide(index)}
-                />
-              ))}
             </div>
           </div>
         </WidgetStateProvider>
@@ -581,6 +672,14 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-8 my-8">
               <TimelineRingsWidget />
             </div>
+            {/* Navigation buttons */}
+            {currentSlide !== undefined && setCurrentSlide && (
+              <SlideNavigation
+                currentSlide={currentSlide}
+                setCurrentSlide={setCurrentSlide}
+                totalSlides={17}
+              />
+            )}
           </div>
         </main>
       </div>

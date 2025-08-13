@@ -2,6 +2,7 @@
 
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import ContributionGraph from "./ContributionGraph";
 
 interface ContributionGraphWidgetProps {
@@ -12,9 +13,13 @@ export default function ContributionGraphWidget({
   title,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: ContributionGraphWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
@@ -42,6 +47,14 @@ export default function ContributionGraphWidget({
       showSidebarButton={showSidebarButton}
     >
       <ContributionGraph title={title} />
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

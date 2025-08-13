@@ -3,6 +3,7 @@
 import React from "react";
 import { LineChartWidgetProps } from "../../../../interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import LineChartHeader from "./LineChartHeader";
 import LineChartContainer from "./LineChartContainer";
 
@@ -11,9 +12,13 @@ export default function LineChartWidget({
   title,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: LineChartWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
@@ -42,6 +47,14 @@ export default function LineChartWidget({
     >
       <LineChartHeader title={title} />
       <LineChartContainer data={data} />
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

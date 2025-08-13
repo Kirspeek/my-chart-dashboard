@@ -3,6 +3,7 @@
 import React from "react";
 import { RadarChartWidgetProps } from "../../../../interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import RadarChartHeader from "./RadarChartHeader";
 import RadarChartContainer from "./RadarChartContainer";
 
@@ -11,9 +12,13 @@ export default function RadarChartWidget({
   title,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: RadarChartWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
@@ -42,6 +47,14 @@ export default function RadarChartWidget({
     >
       <RadarChartHeader title={title} />
       <RadarChartContainer data={data} />
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

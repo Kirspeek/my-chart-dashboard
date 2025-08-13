@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import WeatherBackgroundMobile from "./WeatherBackgroundMobile";
-import WeatherText from "./WeatherText";
-import ForecastDayMobile from "./ForecastDayMobile";
-import { WeatherWidgetProps } from "../../../interfaces/widgets";
 import WidgetBase from "../common/WidgetBase";
+import SlideNavigation from "../common/SlideNavigation";
+import { WeatherWidgetProps } from "../../../interfaces/widgets";
 import { useWeatherLogic } from "@/hooks/useWeatherLogic";
+import WeatherBackgroundMobile from "./WeatherBackgroundMobile";
 import WeatherAnimations from "./WeatherAnimations";
+import WeatherText from "./WeatherText";
 import WeatherStatus from "./WeatherStatus";
+import ForecastDayMobile from "./ForecastDayMobile";
 import type { ForecastDay as ForecastDayType } from "../../../interfaces/widgets";
 import "../../styles/weather.css";
 import "../../styles/mobile.css";
@@ -50,7 +51,12 @@ function renderForecastBlock(
 
 export default function WeatherWidgetMobile({
   city = "Amsterdam",
-}: WeatherWidgetProps) {
+  currentSlide,
+  setCurrentSlide,
+}: WeatherWidgetProps & {
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+}) {
   const {
     forecast,
     error,
@@ -64,7 +70,10 @@ export default function WeatherWidgetMobile({
   } = useWeatherLogic(city);
 
   return (
-    <WidgetBase className="weather-widget-mobile" style={{ padding: 0 }}>
+    <WidgetBase
+      className="weather-widget-mobile"
+      style={{ padding: 0, position: "relative" }}
+    >
       {/* Left: Current weather */}
       <div
         className="weather-left-panel-mobile"
@@ -101,6 +110,14 @@ export default function WeatherWidgetMobile({
           setSelectedDay
         )}
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && currentSlide !== 0 && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

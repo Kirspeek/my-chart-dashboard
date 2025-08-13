@@ -3,6 +3,7 @@
 import React from "react";
 import { DeviceUsageWidgetProps } from "../../../../interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import DeviceUsageHeader from "./DeviceUsageHeader";
 import DeviceUsageContainer from "./DeviceUsageContainer";
 
@@ -11,9 +12,13 @@ export default function DeviceUsageWidget({
   title,
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: DeviceUsageWidgetProps & {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
@@ -42,6 +47,14 @@ export default function DeviceUsageWidget({
     >
       <DeviceUsageHeader title={title} />
       <DeviceUsageContainer data={data} />
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

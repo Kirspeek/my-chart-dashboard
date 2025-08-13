@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "src/hooks/useTheme";
 import WidgetBase from "../../common/WidgetBase";
 import { WidgetTitle } from "../../common";
+import SlideNavigation from "../../common/SlideNavigation";
 import type { TimelineItem } from "../../../../interfaces/charts";
 
 // Utility to lighten/darken a hex color
@@ -81,9 +82,13 @@ function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
 export default function TimelineRingsWidget({
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const { accent, colors } = useTheme();
   const ringColors = colorMap(accent);
@@ -222,11 +227,12 @@ export default function TimelineRingsWidget({
         <div
           className="flex flex-row items-end justify-center gap-12 w-full max-w-7xl mt-16"
           style={{
-            minHeight: isMobile ? 200 : isTablet ? 280 : 340, // Reduced height for tablet
+            minHeight: isMobile ? 150 : isTablet ? 280 : 340, // Reduced height for mobile
             position: "relative",
-            gap: isMobile ? "2px" : isTablet ? "16px" : "48px", // Further reduced gap for larger tablets
+            gap: isMobile ? "1px" : isTablet ? "16px" : "48px", // Further reduced gap for mobile
             flexDirection: isMobile ? "column" : "row",
             alignItems: isMobile ? "center" : "center",
+            marginTop: isMobile ? "1rem" : "4rem", // Reduced margin for mobile
           }}
         >
           {isMobile ? (
@@ -247,7 +253,7 @@ export default function TimelineRingsWidget({
                     <div
                       key={item.year}
                       className="flex flex-col items-center relative"
-                      style={{ width: "100px" }} // Reduced from 120px to 100px
+                      style={{ width: isMobile ? "80px" : "100px" }} // Further reduced for mobile
                     >
                       {/* Text block above */}
                       <div
@@ -256,7 +262,7 @@ export default function TimelineRingsWidget({
                           color,
                           fontFamily: "var(--font-mono)",
                           fontWeight: 700,
-                          fontSize: "8px", // Reduced from 10px to 8px
+                          fontSize: isMobile ? "6px" : "8px", // Further reduced for mobile
                           letterSpacing: 0.5, // Reduced from 1 to 0.5
                           marginBottom: "1px",
                           lineHeight: 1.2, // Added for better text fitting
@@ -271,7 +277,7 @@ export default function TimelineRingsWidget({
                           fontFamily: "var(--font-mono)",
                           fontWeight: 500,
                           lineHeight: 1.2, // Reduced from 1.4 to 1.2
-                          fontSize: "6px", // Reduced from 8px to 6px
+                          fontSize: isMobile ? "4px" : "6px", // Further reduced for mobile
                           marginBottom: "1px",
                         }}
                       >
@@ -295,8 +301,8 @@ export default function TimelineRingsWidget({
                       </svg>
                       {/* Ring */}
                       <svg
-                        width={60} // Reduced from 80 to 60
-                        height={60} // Reduced from 80 to 60
+                        width={isMobile ? 50 : 60} // Further reduced for mobile
+                        height={isMobile ? 50 : 60} // Further reduced for mobile
                         style={{ zIndex: 1, display: "block" }}
                         onMouseLeave={() => setHoveredIdx(null)}
                       >
@@ -357,10 +363,16 @@ export default function TimelineRingsWidget({
                           </radialGradient>
                         </defs>
                         <path
-                          d={describeArc(30, 30, 24, arcStart, arcEnd)} // Reduced from 40,40,32 to 30,30,24
+                          d={describeArc(
+                            isMobile ? 25 : 30,
+                            isMobile ? 25 : 30,
+                            isMobile ? 20 : 24,
+                            arcStart,
+                            arcEnd
+                          )} // Adjusted for mobile
                           fill="none"
                           stroke={color}
-                          strokeWidth={8} // Reduced from 10 to 8
+                          strokeWidth={isMobile ? 6 : 8} // Reduced for mobile
                           opacity={
                             hoveredIdx === null
                               ? 1
@@ -377,29 +389,35 @@ export default function TimelineRingsWidget({
                           onMouseEnter={() => setHoveredIdx(idx)}
                         />
                         <path
-                          d={describeArc(30, 30, 24, gapStart, gapEnd)} // Reduced from 40,40,32 to 30,30,24
+                          d={describeArc(
+                            isMobile ? 25 : 30,
+                            isMobile ? 25 : 30,
+                            isMobile ? 20 : 24,
+                            gapStart,
+                            gapEnd
+                          )} // Adjusted for mobile
                           fill="none"
                           stroke={color}
-                          strokeWidth={8} // Reduced from 10 to 8
+                          strokeWidth={isMobile ? 6 : 8} // Reduced for mobile
                           opacity={0.18}
                           strokeLinecap="round"
                         />
                         <circle
-                          cx={30} // Reduced from 40 to 30
-                          cy={30} // Reduced from 40 to 30
-                          r={18} // Reduced from 25 to 18
+                          cx={isMobile ? 25 : 30} // Adjusted for mobile
+                          cy={isMobile ? 25 : 30} // Adjusted for mobile
+                          r={isMobile ? 15 : 18} // Adjusted for mobile
                           fill="#fff"
                           stroke="none"
                         />
                         <text
-                          x={30} // Reduced from 40 to 30
-                          y={35} // Reduced from 47 to 35
+                          x={isMobile ? 25 : 30} // Adjusted for mobile
+                          y={isMobile ? 30 : 35} // Adjusted for mobile
                           textAnchor="middle"
                           fontFamily="var(--font-mono)"
                           fontWeight="bold"
-                          fontSize="0.7rem" // Reduced from 0.9rem to 0.7rem
-                          fill={colors.secondary}
-                          style={{ letterSpacing: 1 }} // Reduced from 2 to 1
+                          fontSize={isMobile ? "0.5rem" : "0.7rem"} // Reduced for mobile
+                          fill={color}
+                          style={{ letterSpacing: 2 }}
                         >
                           {item.year}
                         </text>
@@ -450,12 +468,12 @@ export default function TimelineRingsWidget({
                     <div
                       key={item.year}
                       className="flex flex-col items-center relative"
-                      style={{ width: "100px" }} // Reduced from 120px to 100px
+                      style={{ width: isMobile ? "80px" : "100px" }} // Consistent with top row
                     >
                       {/* Ring first */}
                       <svg
-                        width={60} // Reduced from 80 to 60
-                        height={60} // Reduced from 80 to 60
+                        width={isMobile ? 50 : 60} // Consistent with top row
+                        height={isMobile ? 50 : 60} // Consistent with top row
                         style={{ zIndex: 1, display: "block" }}
                         onMouseLeave={() => setHoveredIdx(null)}
                       >
@@ -516,10 +534,16 @@ export default function TimelineRingsWidget({
                           </radialGradient>
                         </defs>
                         <path
-                          d={describeArc(30, 30, 24, arcStart, arcEnd)} // Reduced from 40,40,32 to 30,30,24
+                          d={describeArc(
+                            isMobile ? 25 : 30,
+                            isMobile ? 25 : 30,
+                            isMobile ? 20 : 24,
+                            arcStart,
+                            arcEnd
+                          )} // Consistent with top row
                           fill="none"
                           stroke={color}
-                          strokeWidth={8} // Reduced from 10 to 8
+                          strokeWidth={isMobile ? 6 : 8} // Consistent with top row
                           opacity={
                             hoveredIdx === null
                               ? 1
@@ -536,29 +560,35 @@ export default function TimelineRingsWidget({
                           onMouseEnter={() => setHoveredIdx(actualIdx)}
                         />
                         <path
-                          d={describeArc(30, 30, 24, gapStart, gapEnd)} // Reduced from 40,40,32 to 30,30,24
+                          d={describeArc(
+                            isMobile ? 25 : 30,
+                            isMobile ? 25 : 30,
+                            isMobile ? 20 : 24,
+                            gapStart,
+                            gapEnd
+                          )} // Consistent with top row
                           fill="none"
                           stroke={color}
-                          strokeWidth={8} // Reduced from 10 to 8
+                          strokeWidth={isMobile ? 6 : 8} // Consistent with top row
                           opacity={0.18}
                           strokeLinecap="round"
                         />
                         <circle
-                          cx={30} // Reduced from 40 to 30
-                          cy={30} // Reduced from 40 to 30
-                          r={18} // Reduced from 25 to 18
+                          cx={isMobile ? 25 : 30} // Consistent with top row
+                          cy={isMobile ? 25 : 30} // Consistent with top row
+                          r={isMobile ? 15 : 18} // Consistent with top row
                           fill="#fff"
                           stroke="none"
                         />
                         <text
-                          x={30} // Reduced from 40 to 30
-                          y={35} // Reduced from 47 to 35
+                          x={isMobile ? 25 : 30} // Consistent with top row
+                          y={isMobile ? 30 : 35} // Consistent with top row
                           textAnchor="middle"
                           fontFamily="var(--font-mono)"
                           fontWeight="bold"
-                          fontSize="0.7rem" // Reduced from 0.9rem to 0.7rem
-                          fill={colors.secondary}
-                          style={{ letterSpacing: 1 }} // Reduced from 2 to 1
+                          fontSize={isMobile ? "0.5rem" : "0.7rem"} // Consistent with top row
+                          fill={color}
+                          style={{ letterSpacing: 2 }}
                         >
                           {item.year}
                         </text>
@@ -582,14 +612,14 @@ export default function TimelineRingsWidget({
                       {/* Text block below */}
                       <div
                         className="mt-1 text-center" // Reduced from mt-2 to mt-1
-                        style={{ minHeight: 40 }} // Reduced from 60 to 40
+                        style={{ minHeight: isMobile ? 30 : 40 }} // Reduced for mobile
                       >
                         <div
                           className="font-bold mb-1"
                           style={{
                             color,
                             fontFamily: "var(--font-mono)",
-                            fontSize: "8px", // Reduced from 10px to 8px
+                            fontSize: isMobile ? "6px" : "8px", // Consistent with top row
                             letterSpacing: 0.5, // Reduced from 1 to 0.5
                             marginBottom: "1px", // Reduced from 2px to 1px
                             lineHeight: 1.2, // Added for better text fitting
@@ -605,7 +635,7 @@ export default function TimelineRingsWidget({
                             fontWeight: 500,
                             lineHeight: 1.2, // Reduced from 1.4 to 1.2
                             marginTop: "2px", // Reduced from 4px to 2px
-                            fontSize: "6px", // Reduced from 8px to 6px
+                            fontSize: isMobile ? "4px" : "6px", // Consistent with top row
                           }}
                         >
                           {item.desc}
@@ -931,6 +961,14 @@ export default function TimelineRingsWidget({
               })
           )}
         </div>
+        {/* Navigation buttons */}
+        {currentSlide !== undefined && setCurrentSlide && (
+          <SlideNavigation
+            currentSlide={currentSlide}
+            setCurrentSlide={setCurrentSlide}
+            totalSlides={17}
+          />
+        )}
       </WidgetBase>
     </div>
   );

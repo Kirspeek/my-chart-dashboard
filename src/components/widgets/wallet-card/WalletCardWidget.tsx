@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import MonthlyExpensesChart from "./MonthlyExpensesChart";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
@@ -9,9 +10,13 @@ import { useWidgetHeight } from "../../../context/WidgetHeightContext";
 export default function WalletCardWidget({
   onOpenSidebar,
   showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
 }: {
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
 }) {
   const { currentCard, handleCardClick, hasCards, currentCardData } =
     useWheelWidgetLogic();
@@ -77,6 +82,14 @@ export default function WalletCardWidget({
             Refresh
           </button>
         </div>
+        {/* Navigation buttons */}
+        {currentSlide !== undefined && setCurrentSlide && (
+          <SlideNavigation
+            currentSlide={currentSlide}
+            setCurrentSlide={setCurrentSlide}
+            totalSlides={16}
+          />
+        )}
       </WidgetBase>
     );
   }
@@ -104,6 +117,14 @@ export default function WalletCardWidget({
 
         {/* Progress Indicators removed */}
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }
