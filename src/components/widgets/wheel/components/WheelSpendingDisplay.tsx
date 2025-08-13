@@ -11,8 +11,8 @@ export default function WheelSpendingDisplay({
 }: WheelSpendingDisplayProps) {
   return (
     <div className="text-center mb-2">
-      <div className="text-sm text-[#888] mb-1">{title}</div>
-      <div className="text-2xl font-bold text-[#232323] font-mono">
+      <div className="text-sm secondary-text mb-1">{title}</div>
+      <div className="text-2xl font-bold primary-text font-mono">
         {totalSpending}
       </div>
     </div>

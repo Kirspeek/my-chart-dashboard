@@ -46,7 +46,7 @@ export default function ClockWidget({
             className="font-mono font-extrabold clock-display-mobile"
             style={{
               fontSize: "6rem",
-              color: "#232323", // light theme primary
+              color: "var(--primary-text)",
               letterSpacing: "0.04em",
               lineHeight: 1,
               textAlign: "center",
@@ -81,7 +81,6 @@ export default function ClockWidget({
         selectedZone={selectedZone}
         setSelectedZone={setSelectedZone}
         mounted={mounted}
-        is24h={is24h}
         pad={pad}
         getTimeInZone={getTimeInZone}
         isDay={isDay}

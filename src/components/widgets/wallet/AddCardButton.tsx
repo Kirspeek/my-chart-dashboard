@@ -47,6 +47,7 @@ export default function AddCardButton({
           "radial-gradient(circle at center, transparent 0, transparent 12px, black 12px)",
         mask: "radial-gradient(circle at center, transparent 0, transparent 12px, black 12px)",
       }}
+      className="wallet-add-button"
       onMouseEnter={(e) => {
         if (!disabled) {
           e.currentTarget.style.transform = "translateX(-50%) translateY(-1px)";

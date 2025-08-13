@@ -75,7 +75,7 @@ export function WavesCanvas({
             top: 0,
             height: "100%",
             width: `${labelWidth}px`,
-            color: "rgba(0, 0, 0, 0.7)",
+            color: "var(--secondary-text)",
             fontSize: isMobile ? "0.6em" : "0.75em", // smaller font on mobile
             lineHeight: 1,
             pointerEvents: "none",

@@ -31,15 +31,13 @@ export default function ChartHeader({
   return (
     <div className={`flex items-center justify-between mb-2 ${className}`}>
       <div className="flex flex-col">
-        {title && (
-          <div className="text-[#232323] text-lg font-mono">{title}</div>
-        )}
+        {title && <div className="text-lg font-mono primary-text">{title}</div>}
         {showCardNumber && (
-          <div className="text-[#232323] text-lg font-mono">
+          <div className="text-lg font-mono primary-text">
             {cardNumber || "**** ****"}
           </div>
         )}
-        {subtitle && <div className="text-sm text-gray-600">{subtitle}</div>}
+        {subtitle && <div className="text-sm secondary-text">{subtitle}</div>}
       </div>
 
       <div className="flex items-center gap-2">

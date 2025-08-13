@@ -2,15 +2,13 @@
 
 import React from "react";
 import Button3D from "../../common/3DButton";
-import type { TimeZone } from "../../../../interfaces/widgets";
 import { useTheme } from "src/hooks/useTheme";
 
 interface WorldClocksProps {
-  timeZones: TimeZone[];
+  timeZones: Array<{ zone: string; label: string; utc: string }>;
   selectedZone: string;
   setSelectedZone: (zone: string) => void;
   mounted: boolean;
-  is24h: boolean;
   pad: (n: number) => string;
   getTimeInZone: (zone: string) => Date;
   isDay: (hours: number) => boolean;
@@ -22,27 +20,29 @@ export default function WorldClocks({
   selectedZone,
   setSelectedZone,
   mounted,
-  is24h,
   pad,
   getTimeInZone,
   isDay,
   isMobile = false,
 }: WorldClocksProps) {
   const { accent } = useTheme();
-  const clockAccentColor = accent.red; // Use red for clock widget
+  const clockAccentColor = accent.red;
 
+  // Check if viewport is at least 1440px wide
   const [isViewportAtLeast1440, setIsViewportAtLeast1440] =
     React.useState(false);
 
   React.useEffect(() => {
-    const update = () => setIsViewportAtLeast1440(window.innerWidth >= 1440);
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    const checkViewport = () => {
+      setIsViewportAtLeast1440(window.innerWidth >= 1440);
+    };
+    checkViewport();
+    window.addEventListener("resize", checkViewport);
+    return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
   return (
-    <div className="w-full flex flex-col gap-6 mt-4 world-clocks-mobile">
+    <div className="w-full flex flex-col items-center justify-center">
       <style jsx>{`
         @media (min-width: 1024px) and (max-width: 1440px) {
           .wc-time-desktop {
@@ -78,41 +78,47 @@ export default function WorldClocks({
               }
             >
               <span
-                className="text-base font-bold mono mb-1 world-clock-city-mobile"
+                className="text-base font-bold mono mb-1 world-clock-city-mobile primary-text"
                 style={{
-                  color: isLocal ? "#fff" : "#232323",
+                  color: isLocal ? "#fff" : "var(--primary-text)",
                 }}
               >
                 {tz.label}
               </span>
               <span
-                className="text-xs font-mono mb-2 world-clock-utc-mobile"
+                className="text-xs font-mono mb-2 world-clock-utc-mobile secondary-text"
                 style={{
-                  color: isLocal ? "#fff" : "#888",
+                  color: isLocal ? "#fff" : "var(--secondary-text)",
                 }}
               >
                 {tz.utc}
               </span>
               <span
-                className="text-4xl font-mono font-extrabold mono mb-1 world-clock-time-mobile wc-time-desktop"
+                className="text-lg font-bold mono wc-time-desktop primary-text"
                 style={{
-                  color: isLocal ? "#fff" : "#232323",
-                  letterSpacing: "0.04em",
-                  lineHeight: 1.1,
+                  color: isLocal ? "#fff" : "var(--primary-text)",
                 }}
               >
-                {mounted
-                  ? `${pad(is24h ? h : h % 12 || 12)}:${pad(m)}`
-                  : "--:--"}
+                {pad(h)}:{pad(m)}
               </span>
-              <span
-                className="text-xs font-mono world-clock-status-mobile"
-                style={{
-                  color: isLocal ? "#fff" : isDayTime ? "#f6c700" : "#888",
-                }}
-              >
-                {mounted ? (isDayTime ? "☀️ Day" : "🌙 Night") : "--"}
-              </span>
+              <div className="flex items-center gap-1 mt-1">
+                <span
+                  className="text-xs font-mono secondary-text"
+                  style={{
+                    color: isLocal ? "#fff" : "var(--secondary-text)",
+                  }}
+                >
+                  {isDayTime ? "Day" : "Night"}
+                </span>
+                <span
+                  className="text-xs"
+                  style={{
+                    color: isLocal ? "#fff" : "var(--secondary-text)",
+                  }}
+                >
+                  {isDayTime ? "☀️" : "🌙"}
+                </span>
+              </div>
             </Button3D>
           );
         })}

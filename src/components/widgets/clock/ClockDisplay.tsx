@@ -37,9 +37,8 @@ export default function ClockDisplay({
         }
       `}</style>
       <div
-        className="font-mono font-extrabold clock-display-mobile clock-main-size"
+        className="font-mono font-extrabold clock-display-mobile clock-main-size clock-time"
         style={{
-          color: "var(--theme-text)",
           letterSpacing: "0.04em",
           lineHeight: 1,
           textAlign: "center",
@@ -50,15 +49,15 @@ export default function ClockDisplay({
         }}
       >
         {pad(displayHours)}
-        <span style={{ color: "#888" }}>:</span>
+        <span className="clock-colon">:</span>
         {pad(minutes)}
-        <span style={{ color: "#888" }}>:</span>
-        <span style={{ color: "#888" }}>{pad(seconds)}</span>
+        <span className="clock-colon">:</span>
+        <span className="clock-colon">{pad(seconds)}</span>
       </div>
       <div className="flex flex-col items-center gap-2 mt-2">
         <span
-          className="text-base font-mono text-gray-light clock-date-mobile"
-          style={{ color: "#b0b0a8", fontWeight: 700 }}
+          className="text-base font-mono clock-date-mobile clock-date"
+          style={{ fontWeight: 700 }}
         >
           {dateStr}
         </span>
@@ -75,13 +74,13 @@ export default function ClockDisplay({
             Sun: 07:12 - 17:17
           </span>
           <WidgetButton
-            className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold`}
+            className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold widget-button`}
             style={{
               fontFamily: "var(--font-mono)",
               fontWeight: 700,
               fontSize: "0.625rem",
-              borderColor: is24h ? "#888" : clockAccentColor,
-              color: is24h ? "#888" : clockAccentColor,
+              borderColor: is24h ? "var(--muted-text)" : clockAccentColor,
+              color: is24h ? "var(--muted-text)" : clockAccentColor,
               backgroundColor: is24h ? "transparent" : `${clockAccentColor}1a`,
             }}
             onClick={() => setIs24h(false)}
@@ -89,13 +88,13 @@ export default function ClockDisplay({
             12h
           </WidgetButton>
           <WidgetButton
-            className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold`}
+            className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold widget-button`}
             style={{
               fontFamily: "var(--font-mono)",
               fontWeight: 700,
               fontSize: "0.625rem",
-              borderColor: is24h ? clockAccentColor : "#888",
-              color: is24h ? clockAccentColor : "#888",
+              borderColor: is24h ? clockAccentColor : "var(--muted-text)",
+              color: is24h ? clockAccentColor : "var(--muted-text)",
               backgroundColor: is24h ? `${clockAccentColor}1a` : "transparent",
             }}
             onClick={() => setIs24h(true)}

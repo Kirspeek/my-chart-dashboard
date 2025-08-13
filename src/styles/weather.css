@@ -54,6 +54,51 @@
   --weather-border-radius-buttons-mobile: 1.25rem;
 }
 
+/* Dark mode overrides */
+.dark {
+  /* Weather Text Colors - Dark Mode */
+  --weather-text-primary: #ffffff;
+  --weather-text-secondary: #e0e0e0;
+  --weather-text-hot: #ffffff;
+  --weather-text-clear: #ff8c42;
+  --weather-text-cloudy: #7bc2e8;
+  --weather-text-teal: #5a7a78;
+  --weather-text-gray: #a0a0a0;
+  --weather-text-thunderstorm: #fffbe7;
+  --weather-text-selected: #ffffff;
+  --weather-text-muted: #a0a0a0;
+
+  /* Weather Background Gradients - Dark Mode */
+  --weather-bg-partly-cloudy: linear-gradient(135deg, #1a3a5a 0%, #2a4a6a 100%);
+  --weather-bg-thunderstorm: linear-gradient(
+    to bottom,
+    #2a4a6a 0%,
+    #3a5a7a 100%
+  );
+  --weather-bg-default: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  --weather-bg-clear: linear-gradient(135deg, #4a3a1a 0%, #5a4a2a 100%);
+  --weather-bg-sunny: linear-gradient(135deg, #4a3a1a 0%, #5a4a2a 100%);
+  --weather-bg-rain: linear-gradient(to bottom, #2a4a6a 0%, #3a5a7a 100%);
+  --weather-bg-showers: linear-gradient(165deg, #4a2a1a 0%, #5a3a2a 100%);
+  --weather-bg-drizzle: linear-gradient(165deg, #4a2a1a 0%, #5a3a2a 100%);
+  --weather-bg-snow: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+  --weather-bg-fog: linear-gradient(135deg, #2a3a4a 0%, #3a4a5a 100%);
+  --weather-bg-hot: linear-gradient(165deg, #4a2a1a 0%, #5a3a2a 100%);
+  --weather-bg-cold: linear-gradient(135deg, #2a4a6a 0%, #3a5a7a 100%);
+
+  /* Selected Button Backgrounds - Dark Mode */
+  --weather-btn-thunderstorm: linear-gradient(135deg, #3a3a5a 0%, #ffd066 100%);
+  --weather-btn-hot: linear-gradient(165deg, #5a2a1a 0%, #ffa347 100%);
+  --weather-btn-rain: linear-gradient(to bottom, #3a5a7a 0%, #4a6a8a 100%);
+  --weather-btn-partly-cloudy: linear-gradient(
+    135deg,
+    #2a4a6a 0%,
+    #3a5a7a 100%
+  );
+  --weather-btn-sunny: linear-gradient(135deg, #5a4a2a 0%, #6a5a3a 100%);
+  --weather-btn-default: rgba(255, 255, 255, 0.12);
+}
+
 /* ============================================================================
    DESKTOP WEATHER WIDGET STYLES
    ============================================================================ */
@@ -95,14 +140,13 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   border-top-right-radius: var(--weather-border-radius-desktop);
   border-bottom-right-radius: var(--weather-border-radius-desktop);
-  padding: 1.5rem 1.2rem 1.5rem 1.2rem;
+  padding: 1rem 1.2rem 1.5rem 1.2rem;
   min-height: 0;
   height: 100%;
   overflow: visible;
-  margin-top: 1rem;
 }
 
 .weather-background-desktop {
@@ -168,7 +212,7 @@
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
   overflow: visible;
   margin: auto;
@@ -177,11 +221,11 @@
 .forecast-day-desktop {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   padding: 1rem 3rem !important;
   border-radius: var(--weather-border-radius-buttons);
-  min-width: 100%;
+  width: 100%;
   min-height: 32px !important;
   overflow: visible;
   gap: 2rem;
@@ -194,6 +238,7 @@
   justify-content: space-between;
   width: 100%;
   gap: 0.5rem;
+  flex: 1;
 }
 
 .forecast-day-name-desktop {
@@ -410,6 +455,20 @@
   z-index: 10;
 }
 
+/* Dark mode overrides for weather status */
+.dark .weather-status-mobile {
+  background: var(--weather-btn-default) !important;
+  color: var(--weather-text-primary) !important;
+}
+
+.dark .weather-status-desktop {
+  background: var(--weather-btn-default);
+  color: var(--weather-text-primary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.5rem;
+  opacity: 0.8;
+}
+
 /* ============================================================================
    RESPONSIVE BREAKPOINTS
    ============================================================================ */
@@ -458,6 +517,8 @@
   .forecast-day-desktop {
     padding: 0.5rem 0.75rem !important;
     gap: 0.5rem;
+    align-items: stretch;
+    width: 100%;
   }
   .forecast-day-content-desktop {
     gap: 0.25rem;
@@ -471,6 +532,21 @@
   }
   .forecast-day-temp-desktop {
     font-size: 13px;
+  }
+}
+
+/* Large desktop screens (1440px and above) */
+@media (min-width: 1440px) {
+  .weather-right-panel-desktop {
+    align-items: stretch;
+  }
+  .weather-forecast-desktop {
+    align-items: stretch;
+    width: 100%;
+  }
+  .forecast-day-desktop {
+    align-items: stretch;
+    width: 100%;
   }
 }
 

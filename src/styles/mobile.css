@@ -47,6 +47,17 @@
   -webkit-transform: translateY(-50%) translateZ(0);
 }
 
+/* Hide mobile slide indicators on desktop */
+@media (min-width: 426px) {
+  .mobile-slide-indicators {
+    display: none !important;
+  }
+
+  .mobile-slide-indicator {
+    display: none !important;
+  }
+}
+
 /* Special positioning for slide 1 (Clock + Weather combined layout) */
 .mobile-slide:nth-child(1) .mobile-slide-indicators {
   top: 50vh; /* Middle of total 100vh slide height */
@@ -935,4 +946,86 @@
   overflow: visible !important; /* Changed from hidden to visible to ensure content is not cut off */
   position: relative !important;
   z-index: 1 !important;
+}
+
+/* Mobile-specific styles for better dark mode visibility */
+
+/* Dark mode overrides for mobile */
+.dark .clock-widget-mobile {
+  background: var(--widget-bg);
+  border-color: var(--widget-border);
+}
+
+.dark .clock-display-mobile {
+  color: var(--primary-text);
+}
+
+.dark .clock-date-mobile {
+  color: var(--secondary-text);
+}
+
+.dark .clock-button-mobile {
+  background: var(--button-bg);
+  border-color: var(--button-border);
+  color: var(--primary-text);
+}
+
+.dark .clock-button-mobile:hover {
+  background: var(--button-hover-bg);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.dark .world-clock-card-mobile {
+  background: var(--button-bg);
+  border-color: var(--button-border);
+}
+
+.dark .world-clock-city-mobile {
+  color: var(--primary-text);
+}
+
+.dark .world-clock-utc-mobile {
+  color: var(--secondary-text);
+}
+
+.dark .world-clock-time-mobile {
+  color: var(--primary-text);
+}
+
+.dark .world-clock-status-mobile {
+  color: var(--secondary-text);
+}
+
+/* Enhanced button visibility for mobile dark mode */
+.dark .widget-button {
+  background: var(--button-bg);
+  border-color: var(--button-border);
+  color: var(--primary-text);
+}
+
+.dark .widget-button:hover {
+  background: var(--button-hover-bg);
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+/* Enhanced text visibility for mobile dark mode */
+.dark .primary-text {
+  color: var(--primary-text);
+}
+
+.dark .secondary-text {
+  color: var(--secondary-text);
+}
+
+.dark .muted-text {
+  color: var(--muted-text);
+}
+
+/* Enhanced widget base for mobile dark mode */
+.dark .widget-base {
+  background: var(--widget-bg);
+  border-color: var(--widget-border);
+  color: var(--primary-text);
 }

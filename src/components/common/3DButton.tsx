@@ -49,20 +49,20 @@ export default function Button3D({
 
     switch (state) {
       case "normal":
-        return "rgba(35, 35, 35, 0.07)";
+        return "var(--button-bg)";
       case "hover":
-        return "rgba(35, 35, 35, 0.12)";
+        return "var(--button-hover-bg)";
       case "active":
-        return "rgba(35, 35, 35, 0.18)";
+        return "var(--button-active-bg)";
       default:
-        return "rgba(35, 35, 35, 0.07)";
+        return "var(--button-bg)";
     }
   };
 
   const normalStyle: React.CSSProperties = {
     ...baseStyle,
     background: getBackground("normal"),
-    color: selected ? "#fff" : "#232323",
+    color: selected ? "#fff" : "var(--primary-text)",
     boxShadow: selected
       ? "inset 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1)"
       : "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
@@ -72,7 +72,7 @@ export default function Button3D({
   const hoverStyle: React.CSSProperties = {
     ...baseStyle,
     background: getBackground("hover"),
-    color: selected ? "#fff" : "#232323",
+    color: selected ? "#fff" : "var(--primary-text)",
     boxShadow: selected
       ? "inset 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1)"
       : "0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)",
@@ -82,7 +82,7 @@ export default function Button3D({
   const activeStyle: React.CSSProperties = {
     ...baseStyle,
     background: getBackground("active"),
-    color: selected ? "#fff" : "#232323",
+    color: selected ? "#fff" : "var(--primary-text)",
     boxShadow:
       "inset 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 -1px 2px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1)",
     transform: "translateY(2px)",

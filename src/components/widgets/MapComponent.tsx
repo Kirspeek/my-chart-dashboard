@@ -23,11 +23,11 @@ export default function MapComponent({
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     canvas.style.borderRadius = "1rem";
-    canvas.style.background = "rgba(var(--background-rgb), 0.8)";
+    canvas.style.background = "var(--widget-bg)";
 
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      ctx.fillStyle = "rgba(35, 35, 35, 0.6)";
+      ctx.fillStyle = "var(--primary-text)";
       ctx.font = "16px var(--font-mono)";
       ctx.textAlign = "center";
       ctx.fillText(

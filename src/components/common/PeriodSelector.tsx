@@ -26,9 +26,14 @@ export default function PeriodSelector({
           className={`text-xs font-medium transition-colors px-2 py-1 rounded`}
           style={{
             fontFamily: "var(--font-sans)",
-            color: selectedPeriod === period ? "#232323" : "#888",
+            color:
+              selectedPeriod === period
+                ? "var(--primary-text)"
+                : "var(--secondary-text)",
             backgroundColor:
-              selectedPeriod === period ? "rgba(0,0,0,0.05)" : "transparent",
+              selectedPeriod === period
+                ? "var(--button-hover-bg)"
+                : "transparent",
           }}
         >
           {period}

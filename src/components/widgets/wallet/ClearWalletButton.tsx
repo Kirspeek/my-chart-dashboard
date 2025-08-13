@@ -30,6 +30,7 @@ export default function ClearWalletButton({ onClick }: ClearWalletButtonProps) {
         alignItems: "center",
         justifyContent: "center",
       }}
+      className="wallet-clear-button"
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-1px)";
         e.currentTarget.style.background = "rgba(35, 35, 35, 0.12)";
@@ -54,7 +55,6 @@ export default function ClearWalletButton({ onClick }: ClearWalletButtonProps) {
         e.currentTarget.style.boxShadow =
           "0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)";
       }}
-      title="Clear wallet for testing"
     >
       <Eraser size={16} />
     </button>

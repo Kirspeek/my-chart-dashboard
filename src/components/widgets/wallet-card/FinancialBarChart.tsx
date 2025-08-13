@@ -124,7 +124,7 @@ export default function FinancialBarChart({
           marginBottom: isMobile ? "1.5rem" : undefined,
         }}
       >
-        <div className="text-[#232323] text-lg font-mono">
+        <div className="text-lg font-mono primary-text">
           {showCardNumber ? cardNumber || "**** ****" : "All Cards"}
         </div>
         <div className="flex gap-2">
@@ -137,9 +137,12 @@ export default function FinancialBarChart({
             style={{
               backgroundColor:
                 selectedPeriod === "Monthly"
-                  ? "rgba(0,0,0,0.1)"
+                  ? "var(--button-hover-bg)"
                   : "transparent",
-              color: selectedPeriod === "Monthly" ? "#232323" : "#666",
+              color:
+                selectedPeriod === "Monthly"
+                  ? "var(--primary-text)"
+                  : "var(--secondary-text)",
             }}
           >
             Monthly
@@ -152,8 +155,13 @@ export default function FinancialBarChart({
             className={`text-xs font-medium transition-colors px-2 py-1 rounded`}
             style={{
               backgroundColor:
-                selectedPeriod === "Annual" ? "rgba(0,0,0,0.1)" : "transparent",
-              color: selectedPeriod === "Annual" ? "#232323" : "#666",
+                selectedPeriod === "Annual"
+                  ? "var(--button-hover-bg)"
+                  : "transparent",
+              color:
+                selectedPeriod === "Annual"
+                  ? "var(--primary-text)"
+                  : "var(--secondary-text)",
             }}
           >
             Annual
@@ -163,12 +171,12 @@ export default function FinancialBarChart({
 
       {/* Middle Section - Total Spending Display */}
       <div className="text-center mb-4">
-        <div className="text-sm text-[#888] mb-1">
+        <div className="text-sm secondary-text mb-1">
           {selectedPeriod === "Monthly"
             ? "Monthly Spending"
             : "Annual Spending"}
         </div>
-        <div className="text-2xl font-bold text-[#232323] font-mono">
+        <div className="text-2xl font-bold primary-text font-mono">
           {totalSpending}
         </div>
       </div>

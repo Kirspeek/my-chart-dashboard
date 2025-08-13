@@ -80,7 +80,7 @@ export default function CalendarHeader({
 
       {/* Month/Year Display */}
       <div className="text-center">
-        <h3 className="text-sm font-bold text-gray-800">
+        <h3 className="text-sm font-bold calendar-header">
           {formatDate(currentDate)}
         </h3>
       </div>
@@ -99,7 +99,7 @@ export default function CalendarHeader({
               fontSize: "0.625rem",
             }}
           >
-            <span className="text-xs font-medium capitalize">{mode}</span>
+            {mode.charAt(0).toUpperCase() + mode.slice(1)}
           </Button3D>
         ))}
       </div>

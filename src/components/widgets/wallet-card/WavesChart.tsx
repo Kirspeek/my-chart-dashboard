@@ -38,7 +38,7 @@ export default function WavesChart({
         fontFamily: "Montserrat, sans-serif",
         borderRadius: "12px",
         padding: 0,
-        color: "rgba(0, 0, 0, 0.7)",
+        color: "var(--secondary-text)",
       }}
     >
       <WavesCanvas

@@ -1,9 +1,58 @@
 "use client";
 
 import { Bell, Search, User } from "lucide-react";
-import ThemeToggle from "./ThemeToggle";
+import { useSearch } from "../context/SearchContext";
+import SearchResults from "./common/SearchResults";
+import { useState, useRef, useEffect } from "react";
 
 export default function Header() {
+  const { searchTerm, setSearchTerm } = useSearch();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Detect mobile/tablet/desktop
+  useEffect(() => {
+    const checkMobile = () => {
+      const isPhone = window.innerWidth <= 425;
+      setIsMobile(isPhone);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Close search results when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setIsSearchOpen(value.length > 0);
+  };
+
+  const handleResultClick = (slideIndex: number) => {
+    // For now, we'll just log the slide index
+    // In a real implementation, you'd navigate to that slide
+    console.log(`Navigate to slide ${slideIndex}`);
+    setIsSearchOpen(false);
+  };
+
   return (
     <header
       className="glass-panel shadow-sm"
@@ -13,11 +62,10 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <h1
-              className="text-xl"
+              className="text-xl primary-text"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 900,
-                color: "#232323",
                 letterSpacing: "0.01em",
               }}
             >
@@ -27,7 +75,7 @@ export default function Header() {
 
           <div className="flex items-center space-x-4">
             {/* Search */}
-            <div className="relative">
+            <div className="relative" ref={searchRef}>
               <div
                 style={{
                   position: "absolute",
@@ -41,21 +89,30 @@ export default function Header() {
               </div>
               <input
                 type="text"
-                placeholder="Search..."
-                className="search-mono-input w-full"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                onFocus={() => setIsSearchOpen(searchTerm.length > 0)}
+                placeholder="Search widgets..."
+                className="search-mono-input search-input-enhanced w-full"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
                   fontSize: "1rem",
-                  color: "#232323",
-                  background: "rgba(35,35,35,0.07)",
-                  border: "2px solid #e0e0e0",
+                  color: "var(--primary-text)",
+                  background: "var(--button-bg)",
+                  border: "2px solid var(--button-border)",
                   borderRadius: "1rem",
                   padding: "0.6rem 1.2rem 0.6rem 2.5rem",
                   outline: "none",
                   boxShadow: "0 2px 8px rgba(35,35,35,0.04)",
                   transition: "border 0.2s, box-shadow 0.2s",
                 }}
+              />
+              <SearchResults
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
+                onResultClick={handleResultClick}
+                isMobile={isMobile}
               />
             </div>
 
@@ -64,29 +121,26 @@ export default function Header() {
               <Bell style={{ color: "#b0b0a8", width: 28, height: 28 }} />
             </button>
 
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* User menu */}
             <div className="flex items-center space-x-3">
               <div className="flex flex-col items-end">
                 <span
+                  className="secondary-text"
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontWeight: 900,
                     fontSize: "1.1rem",
-                    color: "#232323",
                     letterSpacing: "0.01em",
                   }}
                 >
                   Admin User
                 </span>
                 <span
+                  className="secondary-text"
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontWeight: 700,
                     fontSize: "0.95rem",
-                    color: "#b0b0a8",
                     letterSpacing: "0.01em",
                   }}
                 >

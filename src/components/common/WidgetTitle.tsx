@@ -94,9 +94,9 @@ export default function WidgetTitle({
           ${variantClasses[variant]}
           ${getMarginBottom()}
           ${getMobileTopMargin()}
+          primary-text
         `}
         style={{
-          color: colors.primary || "#232323",
           fontFamily: "var(--font-mono)",
           fontWeight: 900,
           letterSpacing: "0.01em",
@@ -107,7 +107,7 @@ export default function WidgetTitle({
       {subtitle && (
         <p
           className={`
-            text-sm text-gray-600 dark:text-gray-400 text-center mb-4
+            text-sm secondary-text text-center mb-4
             ${isMobile ? "mt-1" : "mt-2"}
           `}
           style={{

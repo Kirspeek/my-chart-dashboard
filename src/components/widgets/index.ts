@@ -42,3 +42,6 @@ export { WheelWidget } from "./wheel";
 // Contribution Graph Widget
 export { default as ContributionGraphWidget } from "./contribution-graph/ContributionGraphWidget";
 export { default as AggregatedSpendingWidget } from "./aggregated-spending/AggregatedSpendingWidget";
+
+// Work in Progress Widget
+export { WorkInProgressWidget } from "./work-in-progress";

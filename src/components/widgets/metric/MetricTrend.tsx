@@ -15,16 +15,12 @@ export default function MetricTrend({ change, accentColor }: MetricTrendProps) {
         style={{ color: accentColor, width: 16, height: 16 }}
         className="sm:w-5 sm:h-5"
       />
-      <span
-        className="font-mono font-extrabold mono text-lg sm:text-2xl"
-        style={{ color: "#888" }}
-      >
+      <span className="font-mono font-extrabold mono text-lg sm:text-2xl secondary-text">
         {Math.abs(change)}%
       </span>
       <span
-        className="font-mono text-xs ml-1 truncate"
+        className="font-mono text-xs ml-1 truncate secondary-text"
         style={{
-          color: "#B0B0A8",
           opacity: 1,
           fontWeight: 700,
           letterSpacing: 1.5,

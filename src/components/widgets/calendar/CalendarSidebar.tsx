@@ -94,14 +94,14 @@ export default function CalendarSidebar({
       <div className="flex flex-col h-full">
         {/* Selected Date Display */}
         {selectedDateInfo && (
-          <div className="text-center mb-4 flex-shrink-0">
-            <div className="text-4xl font-bold text-gray-800 mb-1">
+          <div className="text-center mb-4 flex-shrink-0 mt-4">
+            <div className="text-4xl font-bold text-gray-800 mb-1 calendar-date-number">
               {selectedDateInfo.day}
             </div>
-            <div className="text-sm font-medium text-gray-600 mb-2">
+            <div className="text-sm font-medium text-gray-600 mb-2 calendar-date-day">
               {selectedDateInfo.dayName}
             </div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-500 calendar-date-month">
               {selectedDateInfo.month} {selectedDateInfo.year}
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function CalendarSidebar({
 
         {/* Events Section - Scrollable */}
         <div className="flex-1 min-h-0 mb-4">
-          <div className="text-sm font-semibold text-gray-700 mb-2 flex-shrink-0">
+          <div className="text-sm font-semibold text-gray-700 mb-2 flex-shrink-0 calendar-events-label">
             Events
           </div>
           <div className="overflow-y-auto max-h-full hide-scrollbar">

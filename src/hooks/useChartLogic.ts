@@ -39,7 +39,7 @@ export function useChartLogic() {
 
   const axisStyle = useMemo(
     () => ({
-      stroke: "#888",
+      stroke: "var(--secondary-text)",
       fontSize: 12,
       fontFamily: "var(--font-mono)",
       fontWeight: 700,
@@ -49,7 +49,7 @@ export function useChartLogic() {
 
   const gridStyle = useMemo(
     () => ({
-      stroke: "rgba(35, 35, 35, 0.1)",
+      stroke: "var(--button-border)",
       strokeDasharray: "3 3",
     }),
     []

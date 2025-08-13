@@ -21,9 +21,8 @@ export default function MetricContent({ title, value }: MetricContentProps) {
   return (
     <div className="flex-1 min-w-0 text-left ml-4.5">
       <p
-        className="text-xs font-bold uppercase mb-1 truncate text-left"
+        className="text-xs font-bold uppercase mb-1 truncate text-left secondary-text"
         style={{
-          color: "#232323",
           fontFamily: "var(--font-sans)",
           opacity: 0.7,
           letterSpacing: 1.5,
@@ -34,9 +33,8 @@ export default function MetricContent({ title, value }: MetricContentProps) {
       </p>
       <span className="flex items-baseline gap-1 justify-start">
         <span
-          className="text-2xl sm:text-3xl lg:text-5xl font-mono font-extrabold mono"
+          className="text-2xl sm:text-3xl lg:text-5xl font-mono font-extrabold mono primary-text"
           style={{
-            color: "#232323",
             letterSpacing: "0.04em",
             lineHeight: 1.1,
           }}
@@ -45,9 +43,8 @@ export default function MetricContent({ title, value }: MetricContentProps) {
         </span>
         {secondary && (
           <span
-            className="text-2xl sm:text-3xl lg:text-5xl font-mono font-extrabold mono"
+            className="text-2xl sm:text-3xl lg:text-5xl font-mono font-extrabold mono secondary-text"
             style={{
-              color: "#888",
               letterSpacing: "0.04em",
               lineHeight: 1.1,
             }}

@@ -54,7 +54,7 @@ export default function WalletCardWidget({
         <div
           className="text-center"
           style={{
-            color: "#888",
+            color: "var(--secondary-text)",
             marginTop: isMobile ? undefined : "-40px",
           }}
         >
@@ -74,7 +74,7 @@ export default function WalletCardWidget({
             onClick={() => window.location.reload()}
             className="px-4 py-2 rounded-lg hover:opacity-80 transition-opacity text-sm"
             style={{
-              backgroundColor: "#7bc2e8",
+              backgroundColor: "var(--accent-color)",
               color: "#ffffff",
               fontFamily: "var(--font-sans)",
             }}

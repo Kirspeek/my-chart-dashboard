@@ -28,7 +28,6 @@ export default function CalendarGrid({
 }: CalendarGridProps) {
   const { accent } = useTheme();
   const accentColor = accent.teal;
-  const todayBackgroundColor = "rgba(35, 35, 35, 0.15)";
 
   const safeWeekDays =
     Array.isArray(weekDays) && weekDays.length > 0
@@ -53,25 +52,25 @@ export default function CalendarGrid({
 
     return (
       <div className="w-full text-center">
-        <div className="text-6xl font-bold text-gray-800 mb-4">
+        <div className="text-6xl font-bold primary-text mb-4">
           {day.getDate()}
         </div>
-        <div className="text-lg font-medium text-gray-600 mb-2">
+        <div className="text-lg font-medium secondary-text mb-2">
           {day.toLocaleDateString("en-US", { weekday: "long" })}
         </div>
-        <div className="text-sm text-gray-500 mb-4">
+        <div className="text-sm muted-text mb-4">
           {day.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
         </div>
         {dayEvents.length > 0 && (
           <div className="text-left">
-            <div className="text-sm font-semibold text-gray-700 mb-2">
+            <div className="text-sm font-semibold primary-text mb-2">
               Today&apos;s Events:
             </div>
             {dayEvents.map((event) => (
-              <div key={event.id} className="p-2 bg-gray-50 rounded-lg mb-2">
-                <div className="font-medium text-gray-800">{event.title}</div>
+              <div key={event.id} className="p-2 widget-button rounded-lg mb-2">
+                <div className="font-medium primary-text">{event.title}</div>
                 {event.description && (
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm secondary-text">
                     {event.description}
                   </div>
                 )}
@@ -91,7 +90,7 @@ export default function CalendarGrid({
           {safeWeekDays.map((day) => (
             <div
               key={day}
-              className="text-center text-xs md:text-[10px] font-medium text-gray-600 py-1"
+              className="text-center text-xs md:text-[10px] font-medium secondary-text py-1"
             >
               {day}
             </div>
@@ -99,53 +98,42 @@ export default function CalendarGrid({
         </div>
 
         {/* Week grid */}
-        <div
-          className="grid grid-cols-7 gap-1 flex-1"
-          style={{ gridTemplateRows: "repeat(1, 1fr)" }}
-        >
-          {safeDays.map((date, index) => {
-            const isTodayDate = isToday(date);
-            const isSelectedDate = isSelected(date);
-            const hasEventsForDate = hasEvents(date);
-
-            return (
-              <Button3D
-                key={index}
-                selected={isSelectedDate}
-                onClick={() => onDateSelect(date)}
-                customBackground={
-                  isTodayDate ? todayBackgroundColor : undefined
-                }
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  padding: "0.35rem",
-                  minWidth: 0,
-                  minHeight: 0,
-                  aspectRatio: "1 / 1",
-                  fontSize: "0.875rem",
-                  borderRadius: "9999px",
-                }}
-                className="mx-auto my-auto max-w-[56px] max-h-[56px] min-[425px]:max-w-none min-[425px]:max-h-none min-[425px]:p-0.5 min-[425px]:text-[10px] lg:p-2 lg:text-sm"
-              >
-                <div className="flex flex-col items-center justify-center h-full">
-                  <span className="font-medium">{date.getDate()}</span>
-                  {hasEventsForDate && (
-                    <div
-                      className="w-1 h-1 rounded-full mt-0.5 min-[425px]:w-0.5 min-[425px]:h-0.5 lg:w-1 lg:h-1"
-                      style={{ backgroundColor: accentColor }}
-                    />
-                  )}
-                  {isTodayDate && !hasEventsForDate && (
-                    <div
-                      className="w-1 h-1 rounded-full mt-0.5 min-[425px]:w-0.5 min-[425px]:h-0.5 lg:w-1 lg:h-1"
-                      style={{ backgroundColor: accentColor }}
-                    />
-                  )}
+        <div className="grid grid-cols-7 gap-1 flex-1">
+          {safeDays.slice(0, 7).map((day, index) => (
+            <Button3D
+              key={index}
+              selected={isSelected(day)}
+              onClick={() => onDateSelect(day)}
+              customAccentColor={accentColor}
+              style={{
+                padding: "0.5rem",
+                minWidth: "auto",
+                minHeight: "auto",
+                fontSize: "0.875rem",
+                position: "relative",
+              }}
+            >
+              <div className="text-center">
+                <div
+                  className={`font-bold ${
+                    isToday(day)
+                      ? "calendar-today"
+                      : isCurrentMonth(day)
+                        ? "calendar-day"
+                        : "calendar-day-muted"
+                  }`}
+                >
+                  {day.getDate()}
                 </div>
-              </Button3D>
-            );
-          })}
+                {hasEvents(day) && (
+                  <div
+                    className="w-2 h-2 rounded-full mx-auto mt-1"
+                    style={{ backgroundColor: accentColor }}
+                  />
+                )}
+              </div>
+            </Button3D>
+          ))}
         </div>
       </div>
     );
@@ -159,61 +147,50 @@ export default function CalendarGrid({
         {safeWeekDays.map((day) => (
           <div
             key={day}
-            className="text-center text-xs md:text-[10px] font-medium text-gray-600 py-1"
+            className="text-center text-xs md:text-[10px] font-medium secondary-text py-1"
           >
             {day}
           </div>
         ))}
       </div>
 
-      {/* Calendar grid - 5 equal rows */}
-      <div
-        className="grid grid-cols-7 gap-1 flex-1"
-        style={{ gridTemplateRows: "repeat(5, 1fr)" }}
-      >
-        {safeDays.map((date, index) => {
-          const isTodayDate = isToday(date);
-          const isSelectedDate = isSelected(date);
-          const isCurrentMonthDate = isCurrentMonth(date);
-          const hasEventsForDate = hasEvents(date);
-
-          return (
-            <Button3D
-              key={index}
-              selected={isSelectedDate}
-              onClick={() => onDateSelect(date)}
-              customBackground={isTodayDate ? todayBackgroundColor : undefined}
-              style={{
-                width: "100%",
-                height: "100%",
-                padding: "0.25rem",
-                minWidth: 0,
-                minHeight: 0,
-                aspectRatio: "1 / 1",
-                fontSize: "0.75rem",
-                borderRadius: "9999px",
-                opacity: isCurrentMonthDate ? 1 : 0.4,
-              }}
-              className="mx-auto my-auto max-w-[52px] max-h-[52px] min-[425px]:max-w-none min-[425px]:max-h-none min-[425px]:p-0.5 min-[425px]:text-[10px] lg:p-2 lg:text-sm"
-            >
-              <div className="flex flex-col items-center justify-center h-full">
-                <span className="font-medium">{date.getDate()}</span>
-                {hasEventsForDate && (
-                  <div
-                    className="w-1 h-1 rounded-full mt-0.5 min-[425px]:w-0.5 min-[425px]:h-0.5 lg:w-1 lg:h-1"
-                    style={{ backgroundColor: accentColor }}
-                  />
-                )}
-                {isTodayDate && !hasEventsForDate && (
-                  <div
-                    className="w-1 h-1 rounded-full mt-0.5 min-[425px]:w-0.5 min-[425px]:h-0.5 lg:w-1 lg:h-1"
-                    style={{ backgroundColor: accentColor }}
-                  />
-                )}
+      {/* Month grid */}
+      <div className="grid grid-cols-7 gap-1 flex-1">
+        {safeDays.map((day, index) => (
+          <Button3D
+            key={index}
+            selected={isSelected(day)}
+            onClick={() => onDateSelect(day)}
+            customAccentColor={accentColor}
+            style={{
+              padding: "0.25rem",
+              minWidth: "auto",
+              minHeight: "auto",
+              fontSize: "0.75rem",
+              position: "relative",
+            }}
+          >
+            <div className="text-center">
+              <div
+                className={`font-bold ${
+                  isToday(day)
+                    ? "calendar-today"
+                    : isCurrentMonth(day)
+                      ? "calendar-day"
+                      : "calendar-day-muted"
+                }`}
+              >
+                {day.getDate()}
               </div>
-            </Button3D>
-          );
-        })}
+              {hasEvents(day) && (
+                <div
+                  className="w-1.5 h-1.5 rounded-full mx-auto mt-0.5"
+                  style={{ backgroundColor: accentColor }}
+                />
+              )}
+            </div>
+          </Button3D>
+        ))}
       </div>
     </div>
   );
