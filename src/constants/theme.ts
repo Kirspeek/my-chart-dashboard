@@ -41,6 +41,7 @@ export const darkTheme = {
       red: "#ff6b4a",
       yellow: "#ffdd6d",
       teal: "#5a7a78",
+      green: "#10b981",
       blue: "#7bc2e8",
     },
   },

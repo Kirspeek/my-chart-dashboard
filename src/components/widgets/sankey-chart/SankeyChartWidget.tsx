@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import CustomSankeyDiagram from "./CustomSankeyDiagram";
+import EnhancedSankeyDiagram from "./EnhancedSankeyDiagram";
+import MigrationFlowHeader from "./MigrationFlowHeader";
+import MigrationFlowControls from "./MigrationFlowControls";
+import MigrationFlowStats from "./MigrationFlowStats";
 import type { SankeyChartWidgetProps } from "../../../../interfaces/widgets";
 
 export default function SankeyChartWidget({
@@ -20,6 +23,15 @@ export default function SankeyChartWidget({
 }) {
   // Detect mobile to apply full-screen sizing (only for phones, not tablets)
   const [isMobile, setIsMobile] = React.useState(false);
+  const [selectedFlow, setSelectedFlow] = React.useState<string | null>(null);
+  const [viewMode, setViewMode] = React.useState<"flow" | "stats" | "trends">(
+    "flow"
+  );
+  const [animationSpeed, setAnimationSpeed] = React.useState<
+    "slow" | "normal" | "fast"
+  >("normal");
+  const [showDetails, setShowDetails] = React.useState(false);
+
   React.useEffect(() => {
     const check = () => {
       if (typeof window !== "undefined") {
@@ -33,11 +45,19 @@ export default function SankeyChartWidget({
   }, []);
 
   return (
-    <CustomSankeyDiagram
+    <EnhancedSankeyDiagram
       data={data}
       title={title}
       subtitle={subtitle}
       isMobile={isMobile}
+      selectedFlow={selectedFlow}
+      setSelectedFlow={setSelectedFlow}
+      viewMode={viewMode}
+      setViewMode={setViewMode}
+      animationSpeed={animationSpeed}
+      setAnimationSpeed={setAnimationSpeed}
+      showDetails={showDetails}
+      setShowDetails={setShowDetails}
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}
       currentSlide={currentSlide}

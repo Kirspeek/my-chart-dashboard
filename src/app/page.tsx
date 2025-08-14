@@ -20,7 +20,7 @@ import {
   ChordChartWidget,
   SankeyChartWidget,
   BubbleChartWidget,
-  TimelineRingsWidget,
+  EnhancedTimelineWidget,
   WalletWidget,
   WalletCardWidget,
   ContributionGraphWidget,
@@ -504,7 +504,7 @@ export default function Home() {
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="relative h-full">
-                      <TimelineRingsWidget
+                      <EnhancedTimelineWidget
                         onOpenSidebar={() => setSidebarOpen(true)}
                         showSidebarButton={true}
                         currentSlide={currentSlide}
@@ -688,6 +688,8 @@ export default function Home() {
                     data={data.migrationData ?? []}
                     title="Global Migrations"
                     subtitle="2023"
+                    currentSlide={currentSlide}
+                    setCurrentSlide={setCurrentSlide}
                   />
                 </div>
               </div>
@@ -703,7 +705,7 @@ export default function Home() {
               </div>
               {/* Timeline Rings row */}
               <div className="grid grid-cols-1 gap-8 my-8">
-                <TimelineRingsWidget />
+                <EnhancedTimelineWidget />
               </div>
             </div>
           </main>

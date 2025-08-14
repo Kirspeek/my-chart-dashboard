@@ -10,6 +10,7 @@ export { useCalendarLogic } from "./useCalendarLogic";
 export { useTheme } from "./useTheme";
 export { useMetricLogic } from "./useMetricLogic";
 export { useChartLogic } from "./useChartLogic";
+export { useGlobalTooltip } from "./useGlobalTooltip";
 export { useRecentUsersLogic } from "./useRecentUsersLogic";
 export { useDeviceUsageLogic } from "./useDeviceUsageLogic";
 export { useWheelWidgetLogic } from "./useWheelWidgetLogic";

@@ -607,14 +607,16 @@ export default function CustomBubbleChart({
         );
 
         // Add minimum movement threshold to prevent tiny movements
-        const minMovement = 0.5;
+        const minMovement = 1.0; // Increased threshold
         if (
           Math.abs(dragVector.x) > minMovement ||
           Math.abs(dragVector.y) > minMovement
         ) {
-          const rotationSpeed = 0.002; // Reduced from 0.01 for less sensitivity
-          mainGroup.rotation.x += dragVector.y * rotationSpeed;
-          mainGroup.rotation.y += dragVector.x * rotationSpeed;
+          const rotationSpeed = 0.0008; // Much reduced sensitivity for smoother dragging
+          const damping = 0.8; // Add damping for smoother movement
+
+          mainGroup.rotation.x += dragVector.y * rotationSpeed * damping;
+          mainGroup.rotation.y += dragVector.x * rotationSpeed * damping;
         }
 
         controlsRef.current.dragPoint.copy(dragPoint);
@@ -963,10 +965,10 @@ export default function CustomBubbleChart({
             <div className="p-3">
               {/* Combined Metrics & 3D Coordinates Grid */}
               <div className="grid grid-cols-7 gap-2">
-                {/* Total Bubbles - Pink */}
-                <div className="bg-gradient-to-br from-pink-50 to-pink-100/50 rounded-lg p-2 border border-pink-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                {/* Total Bubbles - Subtle Pink */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-lg p-2 border border-gray-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-1">
-                    <div className="w-3 h-3 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-sm">
+                    <div className="w-3 h-3 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center shadow-sm">
                       <svg
                         className="w-1.5 h-1.5 text-white"
                         fill="none"
@@ -981,19 +983,19 @@ export default function CustomBubbleChart({
                         />
                       </svg>
                     </div>
-                    <div className="text-xs text-pink-700 font-bold bg-pink-100/60 px-1.5 py-0.5 rounded-md">
+                    <div className="text-xs text-gray-700 font-bold bg-gray-100/60 px-1.5 py-0.5 rounded-md">
                       TOTAL
                     </div>
                   </div>
-                  <div className="text-lg font-bold text-pink-800 mb-1">
+                  <div className="text-lg font-bold text-gray-800 mb-1">
                     {stats.total}
                   </div>
-                  <div className="text-xs text-pink-600 font-medium">
+                  <div className="text-xs text-gray-600 font-medium">
                     Data Points
                   </div>
-                  <div className="mt-1.5 h-1 bg-pink-200/40 rounded-full overflow-hidden">
+                  <div className="mt-1.5 h-1 bg-gray-200/40 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min((stats.total / 50) * 100, 100)}%`,
                       }}
@@ -1001,10 +1003,10 @@ export default function CustomBubbleChart({
                   </div>
                 </div>
 
-                {/* Average Size - Cyan */}
-                <div className="bg-gradient-to-br from-cyan-50 to-cyan-100/50 rounded-lg p-2 border border-cyan-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                {/* Average Size - Subtle Gray */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-lg p-2 border border-gray-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-1">
-                    <div className="w-3 h-3 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-lg flex items-center justify-center shadow-sm">
+                    <div className="w-3 h-3 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center shadow-sm">
                       <svg
                         className="w-1.5 h-1.5 text-white"
                         fill="none"
@@ -1019,19 +1021,19 @@ export default function CustomBubbleChart({
                         />
                       </svg>
                     </div>
-                    <div className="text-xs text-cyan-700 font-bold bg-cyan-100/60 px-1.5 py-0.5 rounded-md">
+                    <div className="text-xs text-gray-700 font-bold bg-gray-100/60 px-1.5 py-0.5 rounded-md">
                       SIZE
                     </div>
                   </div>
-                  <div className="text-lg font-bold text-cyan-800 mb-1">
+                  <div className="text-lg font-bold text-gray-800 mb-1">
                     {stats.avgSize}K
                   </div>
-                  <div className="text-xs text-cyan-600 font-medium">
+                  <div className="text-xs text-gray-600 font-medium">
                     Employees
                   </div>
-                  <div className="mt-1.5 h-1 bg-cyan-200/40 rounded-full overflow-hidden">
+                  <div className="mt-1.5 h-1 bg-gray-200/40 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-cyan-400 to-cyan-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min((stats.avgSize / 100) * 100, 100)}%`,
                       }}
@@ -1039,10 +1041,10 @@ export default function CustomBubbleChart({
                   </div>
                 </div>
 
-                {/* Average Growth - Blue */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg p-2 border border-blue-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                {/* Average Growth - Subtle Gray */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-lg p-2 border border-gray-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-1">
-                    <div className="w-3 h-3 bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg flex items-center justify-center shadow-sm">
+                    <div className="w-3 h-3 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center shadow-sm">
                       <svg
                         className="w-1.5 h-1.5 text-white"
                         fill="none"
@@ -1057,19 +1059,19 @@ export default function CustomBubbleChart({
                         />
                       </svg>
                     </div>
-                    <div className="text-xs text-blue-700 font-bold bg-blue-100/60 px-1.5 py-0.5 rounded-md">
+                    <div className="text-xs text-gray-700 font-bold bg-gray-100/60 px-1.5 py-0.5 rounded-md">
                       GROWTH
                     </div>
                   </div>
-                  <div className="text-lg font-bold text-blue-800 mb-1">
+                  <div className="text-lg font-bold text-gray-800 mb-1">
                     {stats.avgGrowth}%
                   </div>
-                  <div className="text-xs text-blue-600 font-medium">
+                  <div className="text-xs text-gray-600 font-medium">
                     Annual
                   </div>
-                  <div className="mt-1.5 h-1 bg-blue-200/40 rounded-full overflow-hidden">
+                  <div className="mt-1.5 h-1 bg-gray-200/40 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min((stats.avgGrowth / 70) * 100, 100)}%`,
                       }}
@@ -1077,10 +1079,10 @@ export default function CustomBubbleChart({
                   </div>
                 </div>
 
-                {/* Average Market Cap - Pink */}
-                <div className="bg-gradient-to-br from-pink-50 to-pink-100/50 rounded-lg p-2 border border-pink-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                {/* Average Market Cap - Subtle Gray */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-lg p-2 border border-gray-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-1">
-                    <div className="w-3 h-3 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-sm">
+                    <div className="w-3 h-3 bg-gradient-to-br from-gray-400 to-gray-500 rounded-lg flex items-center justify-center shadow-sm">
                       <svg
                         className="w-1.5 h-1.5 text-white"
                         fill="none"
@@ -1095,19 +1097,19 @@ export default function CustomBubbleChart({
                         />
                       </svg>
                     </div>
-                    <div className="text-xs text-pink-700 font-bold bg-pink-100/60 px-1.5 py-0.5 rounded-md">
+                    <div className="text-xs text-gray-700 font-bold bg-gray-100/60 px-1.5 py-0.5 rounded-md">
                       VALUE
                     </div>
                   </div>
-                  <div className="text-lg font-bold text-pink-800 mb-1">
+                  <div className="text-lg font-bold text-gray-800 mb-1">
                     ${stats.avgMarketCap}B
                   </div>
-                  <div className="text-xs text-pink-600 font-medium">
+                  <div className="text-xs text-gray-600 font-medium">
                     Market Cap
                   </div>
-                  <div className="mt-1.5 h-1 bg-pink-200/40 rounded-full overflow-hidden">
+                  <div className="mt-1.5 h-1 bg-gray-200/40 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                       style={{
                         width: `${Math.min((stats.avgMarketCap / 2000) * 100, 100)}%`,
                       }}
@@ -1115,84 +1117,84 @@ export default function CustomBubbleChart({
                   </div>
                 </div>
 
-                {/* X-Axis - Pink */}
-                <div className="bg-gradient-to-br from-pink-50 to-pink-100/50 rounded-sm p-1 border border-pink-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+                {/* X-Axis - Subtle Gray */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-sm p-1 border border-gray-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-0.5">
-                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-pink-400 to-pink-500 rounded-sm flex items-center justify-center">
+                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-gray-400 to-gray-500 rounded-sm flex items-center justify-center">
                       <span className="text-white text-[10px] font-bold">
                         X
                       </span>
                     </div>
-                    <div className="text-[10px] text-pink-700 font-bold bg-pink-100/60 px-1 py-0.5 rounded-sm">
+                    <div className="text-[10px] text-gray-700 font-bold bg-gray-100/60 px-1 py-0.5 rounded-sm">
                       X-AXIS
                     </div>
                   </div>
                   <div className="space-y-0.5">
                     <div>
-                      <div className="text-[10px] font-bold text-pink-800">
+                      <div className="text-[10px] font-bold text-gray-800">
                         Market Cap
                       </div>
-                      <div className="text-[10px] text-pink-600">0-3000B</div>
+                      <div className="text-[10px] text-gray-600">0-3000B</div>
                     </div>
-                    <div className="h-0.5 bg-pink-200/40 rounded-full overflow-hidden">
+                    <div className="h-0.5 bg-gray-200/40 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                         style={{ width: "100%" }}
                       ></div>
                     </div>
                   </div>
                 </div>
 
-                {/* Y-Axis - Cyan */}
-                <div className="bg-gradient-to-br from-cyan-50 to-cyan-100/50 rounded-sm p-1 border border-cyan-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+                {/* Y-Axis - Subtle Gray */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-sm p-1 border border-gray-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-0.5">
-                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-sm flex items-center justify-center">
+                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-gray-400 to-gray-500 rounded-sm flex items-center justify-center">
                       <span className="text-white text-[10px] font-bold">
                         Y
                       </span>
                     </div>
-                    <div className="text-[10px] text-cyan-700 font-bold bg-cyan-100/60 px-1 py-0.5 rounded-sm">
+                    <div className="text-[10px] text-gray-700 font-bold bg-gray-100/60 px-1 py-0.5 rounded-sm">
                       Y-AXIS
                     </div>
                   </div>
                   <div className="space-y-0.5">
                     <div>
-                      <div className="text-[10px] font-bold text-cyan-800">
+                      <div className="text-[10px] font-bold text-gray-800">
                         Growth Rate
                       </div>
-                      <div className="text-[10px] text-cyan-600">0-70%</div>
+                      <div className="text-[10px] text-gray-600">0-70%</div>
                     </div>
-                    <div className="h-0.5 bg-cyan-200/40 rounded-full overflow-hidden">
+                    <div className="h-0.5 bg-gray-200/40 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-cyan-400 to-cyan-500 rounded-full transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                         style={{ width: "70%" }}
                       ></div>
                     </div>
                   </div>
                 </div>
 
-                {/* Z-Axis - Blue */}
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-sm p-1 border border-blue-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+                {/* Z-Axis - Subtle Gray */}
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-sm p-1 border border-gray-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
                   <div className="flex items-center justify-between mb-0.5">
-                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-blue-400 to-blue-500 rounded-sm flex items-center justify-center">
+                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-gray-400 to-gray-500 rounded-sm flex items-center justify-center">
                       <span className="text-white text-[10px] font-bold">
                         Z
                       </span>
                     </div>
-                    <div className="text-[10px] text-blue-700 font-bold bg-blue-100/60 px-1 py-0.5 rounded-sm">
+                    <div className="text-[10px] text-gray-700 font-bold bg-gray-100/60 px-1 py-0.5 rounded-sm">
                       Z-AXIS
                     </div>
                   </div>
                   <div className="space-y-0.5">
                     <div>
-                      <div className="text-[10px] font-bold text-blue-800">
+                      <div className="text-[10px] font-bold text-gray-800">
                         Depth
                       </div>
-                      <div className="text-[10px] text-blue-600">0-100</div>
+                      <div className="text-[10px] text-gray-600">0-100</div>
                     </div>
-                    <div className="h-0.5 bg-blue-200/40 rounded-full overflow-hidden">
+                    <div className="h-0.5 bg-gray-200/40 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-gray-400 to-gray-500 rounded-full transition-all duration-500"
                         style={{ width: "100%" }}
                       ></div>
                     </div>
