@@ -59,12 +59,14 @@ export default function CustomBubbleChart({
     rotation: { x: number; y: number; z: number };
     dragPlane: THREE.Plane | null;
     dragPoint: THREE.Vector3 | null;
+    velocity: { x: number; y: number };
   }>({
     isDragging: false,
     previousMousePosition: { x: 0, y: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     dragPlane: null,
     dragPoint: null,
+    velocity: { x: 0, y: 0 },
   });
 
   const [tooltip, setTooltip] = useState<{
@@ -76,6 +78,7 @@ export default function CustomBubbleChart({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [showParticles, setShowParticles] = useState(true);
   const [animationSpeed, setAnimationSpeed] = useState(1);
+  const [isZoomedOut, setIsZoomedOut] = useState(false);
 
   // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
@@ -147,42 +150,39 @@ export default function CustomBubbleChart({
     return threeDData.filter((item) => item.category === selectedCategory);
   }, [threeDData, selectedCategory]);
 
-  // Enhanced color mapping with gradients
-  const getBubbleColor = useCallback(
-    (category: string, intensity: number = 1) => {
-      const categoryColorMap: Record<string, string> = {
-        "Big Tech": "#FF6B9D", // Vibrant pink
-        "AI & Cloud": "#4ECDC4", // Bright turquoise
-        Fintech: "#45B7D1", // Ocean blue
-        "Emerging Tech": "#96CEB4", // Mint green
-        Healthcare: "#FFA726", // Orange
-        Energy: "#AB47BC", // Purple
-      };
-      const baseColor = categoryColorMap[category] || "#FF6B9D";
+  // Enhanced color mapping with gradients - lighter theme
+  const getBubbleColor = useCallback((category: string) => {
+    const categoryColorMap: Record<string, string> = {
+      "Big Tech": "#FF6B9D", // Bright pink
+      "AI & Cloud": "#4ECDC4", // Bright turquoise
+      Fintech: "#45B7D1", // Bright blue
+      "Emerging Tech": "#96CEB4", // Bright green
+      Healthcare: "#FFA726", // Bright orange
+      Energy: "#AB47BC", // Bright purple
+    };
+    const baseColor = categoryColorMap[category] || "#FF6B9D";
 
-      // Create gradient effect based on intensity
-      const color = new THREE.Color(baseColor);
-      color.multiplyScalar(intensity);
-      return color;
-    },
-    []
-  );
+    // Create gradient effect based on intensity - keep colors bright and vibrant
+    const color = new THREE.Color(baseColor);
+
+    console.log(
+      `Color for ${category}: base=${baseColor}, final=${color.getHexString()}`
+    );
+    return color;
+  }, []);
 
   // Enhanced bubble material with better effects
   const getBubbleMaterial = useCallback(
-    (
-      category: string,
-      isSelected: boolean = false,
-      pulseIntensity: number = 1
-    ) => {
-      const baseColor = getBubbleColor(category, pulseIntensity);
-      return new THREE.MeshPhongMaterial({
+    (category: string, isSelected: boolean = false) => {
+      const baseColor = getBubbleColor(category);
+      console.log(
+        `Creating material for ${category}:`,
+        baseColor.getHexString()
+      );
+      return new THREE.MeshBasicMaterial({
         color: baseColor,
         transparent: true,
-        opacity: isSelected ? 0.9 : 0.8,
-        shininess: isSelected ? 100 : 50,
-        specular: isSelected ? 0x666666 : 0x333333,
-        emissive: new THREE.Color(isSelected ? 0x444444 : 0x222222),
+        opacity: isSelected ? 0.95 : 0.85,
       });
     },
     [getBubbleColor]
@@ -192,30 +192,59 @@ export default function CustomBubbleChart({
   const createConnectionLines = useCallback(() => {
     const lines = new THREE.Group();
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x4ecdc4,
+      color: 0xcccccc,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.4,
+      depthTest: true,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+      linewidth: 2,
     });
 
-    // Create connections between bubbles of the same category
-    const categoryGroups: { [key: string]: THREE.Vector3[] } = {};
-
+    // Get all bubble positions - adjusted for dynamic cube size
+    const allPositions: THREE.Vector3[] = [];
+    const baseSize = isZoomedOut ? 175 : 350; // Half size when zoomed out
     filteredData.forEach((item) => {
-      if (!categoryGroups[item.category]) {
-        categoryGroups[item.category] = [];
-      }
-      const dataScaleX = 400 / 2;
-      const dataScaleY = 400 / 2;
-      const dataScaleZ = 400 / 2;
+      const dataScaleX = baseSize / 2;
+      const dataScaleY = baseSize / 2;
+      const dataScaleZ = baseSize / 2;
 
       const x = ((item.x - 1500) / 1500) * dataScaleX;
       const y = ((item.y - 35) / 35) * dataScaleY;
       const z = ((item.z - 50) / 50) * dataScaleZ;
 
-      categoryGroups[item.category].push(new THREE.Vector3(x, y, z));
+      allPositions.push(new THREE.Vector3(x, y, z));
     });
 
-    // Create lines between bubbles in the same category
+    // Create connections between nearby bubbles (within same category and nearby bubbles)
+    const maxDistance = 100; // Maximum distance for connections - adjusted for smaller cube
+
+    for (let i = 0; i < allPositions.length; i++) {
+      for (let j = i + 1; j < allPositions.length; j++) {
+        const distance = allPositions[i].distanceTo(allPositions[j]);
+
+        // Connect bubbles that are close to each other
+        if (distance < maxDistance) {
+          const geometry = new THREE.BufferGeometry().setFromPoints([
+            allPositions[i],
+            allPositions[j],
+          ]);
+          const line = new THREE.Line(geometry, lineMaterial);
+          lines.add(line);
+        }
+      }
+    }
+
+    // Also create category-based connections for stronger visual grouping
+    const categoryGroups: { [key: string]: THREE.Vector3[] } = {};
+    filteredData.forEach((item, index) => {
+      if (!categoryGroups[item.category]) {
+        categoryGroups[item.category] = [];
+      }
+      categoryGroups[item.category].push(allPositions[index]);
+    });
+
+    // Create stronger connections within categories
     Object.values(categoryGroups).forEach((positions) => {
       if (positions.length > 1) {
         for (let i = 0; i < positions.length - 1; i++) {
@@ -259,9 +288,9 @@ export default function CustomBubbleChart({
     const colors = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 600;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 600;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 600;
+      positions[i * 3] = (Math.random() - 0.5) * 700;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 700;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 700;
 
       const color = new THREE.Color();
       color.setHSL(Math.random() * 0.1 + 0.6, 0.8, 0.6);
@@ -295,13 +324,18 @@ export default function CustomBubbleChart({
       container.removeChild(container.firstChild);
     }
 
+    // Calculate canvas size accounting for padding
+    const containerStyle = window.getComputedStyle(container);
+    const paddingTop = parseFloat(containerStyle.paddingTop) || 120;
+    const paddingBottom = parseFloat(containerStyle.paddingBottom) || 400;
+
     const width = container.clientWidth;
-    const height = container.clientHeight;
+    const height = container.clientHeight + paddingTop + paddingBottom;
 
     // Scene
     const scene = new THREE.Scene();
     scene.background = null;
-    scene.fog = new THREE.Fog(0x000000, 100, 500);
+    scene.fog = new THREE.Fog(0x000000, 400, 1200);
     sceneRef.current = scene;
 
     // Camera with better positioning
@@ -319,43 +353,44 @@ export default function CustomBubbleChart({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMapping = THREE.NoToneMapping;
+    renderer.toneMappingExposure = 1.0;
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Enhanced lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight.position.set(100, 100, 100);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
     scene.add(directionalLight);
 
-    const pointLight = new THREE.PointLight(0x4ecdc4, 0.5, 300);
+    const pointLight = new THREE.PointLight(0x80deea, 0.8, 300);
     pointLight.position.set(-100, 100, -100);
     scene.add(pointLight);
 
     // Create main 3D object group
     const mainGroup = new THREE.Group();
-    mainGroup.position.set(0, 100, 0);
+    mainGroup.position.set(0, 250, 0);
     scene.add(mainGroup);
     mainGroupRef.current = mainGroup;
 
-    // Create larger and more interesting 3D box frame
-    const boxWidth = 400;
-    const boxHeight = 400;
-    const boxDepth = 400;
+    // Create dynamic 3D box frame based on zoom state
+    const baseSize = isZoomedOut ? 175 : 350; // Half size when zoomed out
+    const boxWidth = baseSize;
+    const boxHeight = baseSize;
+    const boxDepth = baseSize;
 
     // Main box frame
     const boxGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
     const boxMaterial = new THREE.MeshBasicMaterial({
-      color: 0x4ecdc4,
+      color: 0xcccccc,
       transparent: true,
-      opacity: 0.1,
+      opacity: 0.08,
       wireframe: true,
     });
     const box = new THREE.Mesh(boxGeometry, boxMaterial);
@@ -364,32 +399,32 @@ export default function CustomBubbleChart({
     // Add glowing edges
     const edges = new THREE.EdgesGeometry(boxGeometry);
     const edgeMaterial = new THREE.LineBasicMaterial({
-      color: 0x4ecdc4,
+      color: 0xcccccc,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.2,
     });
     const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
     mainGroup.add(edgeLines);
 
     // Enhanced grid helpers
-    const gridHelper1 = new THREE.GridHelper(boxWidth, 25, 0x4ecdc4, 0x2a2a2a);
+    const gridHelper1 = new THREE.GridHelper(boxWidth, 25, 0xcccccc, 0x2a2a2a);
     gridHelper1.position.y = -boxHeight / 2;
     gridHelper1.material.transparent = true;
-    gridHelper1.material.opacity = 0.3;
+    gridHelper1.material.opacity = 0.15;
     mainGroup.add(gridHelper1);
 
-    const gridHelper2 = new THREE.GridHelper(boxHeight, 25, 0x4ecdc4, 0x2a2a2a);
+    const gridHelper2 = new THREE.GridHelper(boxHeight, 25, 0xcccccc, 0x2a2a2a);
     gridHelper2.rotation.x = Math.PI / 2;
     gridHelper2.position.z = -boxDepth / 2;
     gridHelper2.material.transparent = true;
-    gridHelper2.material.opacity = 0.3;
+    gridHelper2.material.opacity = 0.15;
     mainGroup.add(gridHelper2);
 
-    const gridHelper3 = new THREE.GridHelper(boxDepth, 25, 0x4ecdc4, 0x2a2a2a);
+    const gridHelper3 = new THREE.GridHelper(boxDepth, 25, 0xcccccc, 0x2a2a2a);
     gridHelper3.rotation.z = Math.PI / 2;
     gridHelper3.position.x = -boxWidth / 2;
     gridHelper3.material.transparent = true;
-    gridHelper3.material.opacity = 0.3;
+    gridHelper3.material.opacity = 0.15;
     mainGroup.add(gridHelper3);
 
     // Create bubble group
@@ -397,9 +432,10 @@ export default function CustomBubbleChart({
     mainGroup.add(bubbleGroup);
     bubbleGroupRef.current = bubbleGroup;
 
-    // Create bubbles with enhanced features
+    // Create bubbles with enhanced features - adjusted for dynamic cube size
     filteredData.forEach((item) => {
-      const geometry = new THREE.SphereGeometry(item.size * 0.2, 32, 32);
+      const bubbleSize = isZoomedOut ? item.size * 0.1 : item.size * 0.15;
+      const geometry = new THREE.SphereGeometry(bubbleSize, 32, 32);
       const material = getBubbleMaterial(item.category, item.selected);
 
       const bubble = new THREE.Mesh(geometry, material);
@@ -473,16 +509,13 @@ export default function CustomBubbleChart({
             // Pulse animation
             if (data.pulsePhase !== undefined) {
               data.pulsePhase += 0.05 * animationSpeed;
-              const pulseIntensity = 0.8 + 0.2 * Math.sin(data.pulsePhase);
 
               // Update material for pulse effect (color only)
               if (bubble instanceof THREE.Mesh) {
-                const material = bubble.material as THREE.MeshPhongMaterial;
+                const material = bubble.material as THREE.MeshBasicMaterial;
                 if (material) {
-                  material.color = getBubbleColor(
-                    data.category,
-                    pulseIntensity
-                  );
+                  material.color = getBubbleColor(data.category);
+                  material.needsUpdate = true;
                 }
               }
             }
@@ -573,9 +606,16 @@ export default function CustomBubbleChart({
           controlsRef.current.dragPoint
         );
 
-        const rotationSpeed = 0.01;
-        mainGroup.rotation.x += dragVector.y * rotationSpeed;
-        mainGroup.rotation.y += dragVector.x * rotationSpeed;
+        // Add minimum movement threshold to prevent tiny movements
+        const minMovement = 0.5;
+        if (
+          Math.abs(dragVector.x) > minMovement ||
+          Math.abs(dragVector.y) > minMovement
+        ) {
+          const rotationSpeed = 0.002; // Reduced from 0.01 for less sensitivity
+          mainGroup.rotation.x += dragVector.y * rotationSpeed;
+          mainGroup.rotation.y += dragVector.x * rotationSpeed;
+        }
 
         controlsRef.current.dragPoint.copy(dragPoint);
       }
@@ -616,9 +656,11 @@ export default function CustomBubbleChart({
           // Highlight hovered bubble
           if (intersectedBubble instanceof THREE.Mesh) {
             const material =
-              intersectedBubble.material as THREE.MeshPhongMaterial;
-            if (material && material.emissive) {
-              material.emissive.setHex(0x333333);
+              intersectedBubble.material as THREE.MeshBasicMaterial;
+            if (material) {
+              // For MeshBasicMaterial, we can change opacity for highlighting
+              material.opacity = 1.0;
+              material.needsUpdate = true;
             }
           }
         }
@@ -627,9 +669,11 @@ export default function CustomBubbleChart({
         // Reset all bubble materials
         bubbleGroup.children.forEach((bubble) => {
           if (bubble instanceof THREE.Mesh) {
-            const material = bubble.material as THREE.MeshPhongMaterial;
-            if (material && material.emissive) {
-              material.emissive.setHex(0x111111);
+            const material = bubble.material as THREE.MeshBasicMaterial;
+            if (material) {
+              // Reset opacity for MeshBasicMaterial
+              material.opacity = 0.85;
+              material.needsUpdate = true;
             }
           }
         });
@@ -824,117 +868,337 @@ export default function CustomBubbleChart({
 
         {/* Enhanced Controls */}
         <div className="flex flex-wrap gap-4 mb-4 items-center justify-between">
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-1.5 flex-wrap">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
-                !selectedCategory ? "text-white" : "bg-gray-200 text-gray-700"
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-200 ${
+                !selectedCategory ? "text-white" : "text-gray-700"
               }`}
               style={{
-                backgroundColor: !selectedCategory ? "#4ECDC4" : undefined,
+                backgroundColor: !selectedCategory ? "#4ECDC4" : "#f3f4f6",
+                border: !selectedCategory
+                  ? "1px solid #4ECDC4"
+                  : "1px solid #e5e7eb",
               }}
             >
               All Categories
             </button>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  selectedCategory === category ? "text-white" : "text-white"
-                }`}
-                style={{
-                  backgroundColor:
+            {categories.map((category) => {
+              const categoryColor = getBubbleColor(category).getHexString();
+              return (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-200 ${
                     selectedCategory === category
-                      ? getBubbleColor(category).getHexString()
-                      : getBubbleColor(category).getHexString(),
-                  opacity: selectedCategory === category ? 1 : 0.7,
-                }}
-              >
-                {category}
-              </button>
-            ))}
+                      ? "text-white"
+                      : "text-gray-800"
+                  }`}
+                  style={{
+                    backgroundColor:
+                      selectedCategory === category
+                        ? `#${categoryColor}`
+                        : "#f8f9fa",
+                    border: `1px solid #${categoryColor}`,
+                    opacity: selectedCategory === category ? 1 : 0.9,
+                  }}
+                >
+                  {category}
+                </button>
+              );
+            })}
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Speed:</span>
-            <input
-              type="range"
-              min="0.1"
-              max="3"
-              step="0.1"
-              value={animationSpeed}
-              onChange={(e) => setAnimationSpeed(parseFloat(e.target.value))}
-              className="w-20"
-            />
-            <span className="text-sm font-mono">
-              {animationSpeed.toFixed(1)}x
-            </span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Speed:</span>
+              <input
+                type="range"
+                min="0.1"
+                max="3"
+                step="0.1"
+                value={animationSpeed}
+                onChange={(e) => setAnimationSpeed(parseFloat(e.target.value))}
+                className="w-20"
+              />
+              <span className="text-sm font-mono">
+                {animationSpeed.toFixed(1)}x
+              </span>
+            </div>
+
+            <button
+              onClick={() => setIsZoomedOut(!isZoomedOut)}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 ${
+                isZoomedOut
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {isZoomedOut ? "Zoom In" : "Zoom Out"}
+            </button>
           </div>
         </div>
 
-        {/* Enhanced Statistics with Icons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 p-4 rounded-lg text-center border border-blue-200 dark:border-blue-700">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-              {stats.total}
+        {/* Combined Metrics & 3D Coordinates */}
+        <div className="mb-6">
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-gray-200/50 shadow-lg overflow-hidden">
+            {/* Colorful Header */}
+            <div className="bg-gradient-to-r from-pink-200 via-cyan-200 to-blue-200 px-4 py-2 border-b border-gray-200/50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                  <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full animate-pulse"></div>
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-gray-800 text-sm font-semibold">
+                    Metrics & Coordinates
+                  </span>
+                </div>
+                <div className="text-gray-600 text-xs">
+                  {new Date().toLocaleTimeString()}
+                </div>
+              </div>
             </div>
-            <div className="text-sm text-blue-700 dark:text-blue-300 font-medium">
-              Total Bubbles
-            </div>
-            <div className="text-xs text-blue-500 dark:text-blue-400 mt-1">
-              Active Data Points
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-4 rounded-lg text-center border border-green-200 dark:border-green-700">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">
-              {stats.avgSize}K
-            </div>
-            <div className="text-sm text-green-700 dark:text-green-300 font-medium">
-              Avg Size
-            </div>
-            <div className="text-xs text-green-500 dark:text-green-400 mt-1">
-              Employee Count
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 p-4 rounded-lg text-center border border-purple-200 dark:border-purple-700">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">
-              {stats.avgGrowth}%
-            </div>
-            <div className="text-sm text-purple-700 dark:text-purple-300 font-medium">
-              Avg Growth
-            </div>
-            <div className="text-xs text-purple-500 dark:text-purple-400 mt-1">
-              Annual Rate
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 p-4 rounded-lg text-center border border-orange-200 dark:border-orange-700">
-            <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">
-              ${stats.avgMarketCap}B
-            </div>
-            <div className="text-sm text-orange-700 dark:text-orange-300 font-medium">
-              Avg Market Cap
-            </div>
-            <div className="text-xs text-orange-500 dark:text-orange-400 mt-1">
-              Valuation
-            </div>
-          </div>
-        </div>
 
-        {/* 3D Coordinate System Info */}
-        <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-          <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            📊 3D Coordinate System
-          </div>
-          <div className="grid grid-cols-3 gap-4 text-xs text-gray-600 dark:text-gray-400">
-            <div>
-              <span className="font-medium">X-Axis:</span> Market Cap (0-3000B)
-            </div>
-            <div>
-              <span className="font-medium">Y-Axis:</span> Growth Rate (0-70%)
-            </div>
-            <div>
-              <span className="font-medium">Z-Axis:</span> Depth (0-100)
+            {/* Content Container */}
+            <div className="p-3">
+              {/* Combined Metrics & 3D Coordinates Grid */}
+              <div className="grid grid-cols-7 gap-2">
+                {/* Total Bubbles - Pink */}
+                <div className="bg-gradient-to-br from-pink-50 to-pink-100/50 rounded-lg p-2 border border-pink-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="w-3 h-3 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-sm">
+                      <svg
+                        className="w-1.5 h-1.5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                        />
+                      </svg>
+                    </div>
+                    <div className="text-xs text-pink-700 font-bold bg-pink-100/60 px-1.5 py-0.5 rounded-md">
+                      TOTAL
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-pink-800 mb-1">
+                    {stats.total}
+                  </div>
+                  <div className="text-xs text-pink-600 font-medium">
+                    Data Points
+                  </div>
+                  <div className="mt-1.5 h-1 bg-pink-200/40 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min((stats.total / 50) * 100, 100)}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Average Size - Cyan */}
+                <div className="bg-gradient-to-br from-cyan-50 to-cyan-100/50 rounded-lg p-2 border border-cyan-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="w-3 h-3 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-lg flex items-center justify-center shadow-sm">
+                      <svg
+                        className="w-1.5 h-1.5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="text-xs text-cyan-700 font-bold bg-cyan-100/60 px-1.5 py-0.5 rounded-md">
+                      SIZE
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-cyan-800 mb-1">
+                    {stats.avgSize}K
+                  </div>
+                  <div className="text-xs text-cyan-600 font-medium">
+                    Employees
+                  </div>
+                  <div className="mt-1.5 h-1 bg-cyan-200/40 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-400 to-cyan-500 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min((stats.avgSize / 100) * 100, 100)}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Average Growth - Blue */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-lg p-2 border border-blue-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="w-3 h-3 bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg flex items-center justify-center shadow-sm">
+                      <svg
+                        className="w-1.5 h-1.5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                        />
+                      </svg>
+                    </div>
+                    <div className="text-xs text-blue-700 font-bold bg-blue-100/60 px-1.5 py-0.5 rounded-md">
+                      GROWTH
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-blue-800 mb-1">
+                    {stats.avgGrowth}%
+                  </div>
+                  <div className="text-xs text-blue-600 font-medium">
+                    Annual
+                  </div>
+                  <div className="mt-1.5 h-1 bg-blue-200/40 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min((stats.avgGrowth / 70) * 100, 100)}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Average Market Cap - Pink */}
+                <div className="bg-gradient-to-br from-pink-50 to-pink-100/50 rounded-lg p-2 border border-pink-200/40 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="w-3 h-3 bg-gradient-to-br from-pink-400 to-pink-500 rounded-lg flex items-center justify-center shadow-sm">
+                      <svg
+                        className="w-1.5 h-1.5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                        />
+                      </svg>
+                    </div>
+                    <div className="text-xs text-pink-700 font-bold bg-pink-100/60 px-1.5 py-0.5 rounded-md">
+                      VALUE
+                    </div>
+                  </div>
+                  <div className="text-lg font-bold text-pink-800 mb-1">
+                    ${stats.avgMarketCap}B
+                  </div>
+                  <div className="text-xs text-pink-600 font-medium">
+                    Market Cap
+                  </div>
+                  <div className="mt-1.5 h-1 bg-pink-200/40 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full transition-all duration-500"
+                      style={{
+                        width: `${Math.min((stats.avgMarketCap / 2000) * 100, 100)}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* X-Axis - Pink */}
+                <div className="bg-gradient-to-br from-pink-50 to-pink-100/50 rounded-sm p-1 border border-pink-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-pink-400 to-pink-500 rounded-sm flex items-center justify-center">
+                      <span className="text-white text-[10px] font-bold">
+                        X
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-pink-700 font-bold bg-pink-100/60 px-1 py-0.5 rounded-sm">
+                      X-AXIS
+                    </div>
+                  </div>
+                  <div className="space-y-0.5">
+                    <div>
+                      <div className="text-[10px] font-bold text-pink-800">
+                        Market Cap
+                      </div>
+                      <div className="text-[10px] text-pink-600">0-3000B</div>
+                    </div>
+                    <div className="h-0.5 bg-pink-200/40 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-pink-400 to-pink-500 rounded-full transition-all duration-500"
+                        style={{ width: "100%" }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Y-Axis - Cyan */}
+                <div className="bg-gradient-to-br from-cyan-50 to-cyan-100/50 rounded-sm p-1 border border-cyan-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-sm flex items-center justify-center">
+                      <span className="text-white text-[10px] font-bold">
+                        Y
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-cyan-700 font-bold bg-cyan-100/60 px-1 py-0.5 rounded-sm">
+                      Y-AXIS
+                    </div>
+                  </div>
+                  <div className="space-y-0.5">
+                    <div>
+                      <div className="text-[10px] font-bold text-cyan-800">
+                        Growth Rate
+                      </div>
+                      <div className="text-[10px] text-cyan-600">0-70%</div>
+                    </div>
+                    <div className="h-0.5 bg-cyan-200/40 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-cyan-400 to-cyan-500 rounded-full transition-all duration-500"
+                        style={{ width: "70%" }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Z-Axis - Blue */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-sm p-1 border border-blue-200/40 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <div className="w-2.5 h-2.5 bg-gradient-to-br from-blue-400 to-blue-500 rounded-sm flex items-center justify-center">
+                      <span className="text-white text-[10px] font-bold">
+                        Z
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-blue-700 font-bold bg-blue-100/60 px-1 py-0.5 rounded-sm">
+                      Z-AXIS
+                    </div>
+                  </div>
+                  <div className="space-y-0.5">
+                    <div>
+                      <div className="text-[10px] font-bold text-blue-800">
+                        Depth
+                      </div>
+                      <div className="text-[10px] text-blue-600">0-100</div>
+                    </div>
+                    <div className="h-0.5 bg-blue-200/40 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-500"
+                        style={{ width: "100%" }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -943,14 +1207,14 @@ export default function CustomBubbleChart({
           className="relative w-full"
           style={{
             width: "100%",
-            height: isMobile ? "45vh" : isFullscreen ? "75vh" : "500px",
+            height: isMobile ? "80vh" : isFullscreen ? "95vh" : "1200px",
             maxWidth: "none",
-            maxHeight: isFullscreen ? "100%" : "550px",
+            maxHeight: isFullscreen ? "100%" : "1400px",
             margin: "0",
             borderRadius: "12px",
-            overflow: "hidden",
+            overflow: "visible",
             background: "transparent",
-            padding: "20px 20px 40px 20px",
+            padding: "80px 80px 300px 80px",
           }}
         >
           <div
@@ -980,7 +1244,8 @@ export default function CustomBubbleChart({
                 pointerEvents: "none",
                 zIndex: 10,
                 minWidth: 250,
-                border: `3px solid ${getBubbleColor(tooltip.data.category).getHexString()}`,
+                border: `3px solid #${getBubbleColor(tooltip.data.category).getHexString()}`,
+                backgroundColor: `#${getBubbleColor(tooltip.data.category).getHexString()}20`,
                 transform: "translate(-50%, -100%)",
                 backdropFilter: "blur(10px)",
               }}
@@ -998,12 +1263,12 @@ export default function CustomBubbleChart({
                     display: "inline-block",
                     width: 20,
                     height: 20,
-                    background: getBubbleColor(
+                    background: `#${getBubbleColor(
                       tooltip.data.category
-                    ).getHexString(),
+                    ).getHexString()}`,
                     borderRadius: "50%",
                     marginRight: 8,
-                    boxShadow: `0 0 10px ${getBubbleColor(tooltip.data.category).getHexString()}`,
+                    boxShadow: `0 0 10px #${getBubbleColor(tooltip.data.category).getHexString()}`,
                   }}
                 />
                 <span style={{ fontSize: 16, fontWeight: 800 }}>
@@ -1036,29 +1301,33 @@ export default function CustomBubbleChart({
         {/* Enhanced Legend */}
         <div className="mt-4 flex justify-center">
           <div className="flex gap-4 flex-wrap justify-center">
-            {categories.map((category) => (
-              <div key={category} className="flex items-center gap-2">
-                <div
-                  style={{
-                    width: 16,
-                    height: 16,
-                    borderRadius: "50%",
-                    backgroundColor: getBubbleColor(category).getHexString(),
-                    boxShadow: `0 0 8px ${getBubbleColor(category).getHexString()}`,
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 600,
-                    color: "var(--primary-text)",
-                  }}
-                >
-                  {category}
-                </span>
-              </div>
-            ))}
+            {categories.map((category) => {
+              const categoryColor = getBubbleColor(category).getHexString();
+              return (
+                <div key={category} className="flex items-center gap-2">
+                  <div
+                    style={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: "50%",
+                      backgroundColor: `#${categoryColor}`,
+                      boxShadow: `0 0 8px #${categoryColor}`,
+                      border: `2px solid #${categoryColor}`,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: 600,
+                      color: "var(--primary-text)",
+                    }}
+                  >
+                    {category}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
