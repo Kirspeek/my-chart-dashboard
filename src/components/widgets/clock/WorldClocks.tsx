@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Button3D from "../../common/3DButton";
 import { useTheme } from "src/hooks/useTheme";
 import { MapPin, Clock, Globe } from "lucide-react";
@@ -28,7 +28,6 @@ export default function WorldClocks({
 }: WorldClocksProps) {
   const { accent } = useTheme();
   const clockAccentColor = accent.red;
-  const [hoveredZone, setHoveredZone] = useState<string | null>(null);
 
   // Check if viewport is at least 1440px wide
   const [isViewportAtLeast1440, setIsViewportAtLeast1440] =
@@ -54,28 +53,9 @@ export default function WorldClocks({
         .world-clock-card {
           transition: all 0.3s ease;
           position: relative;
-          overflow: hidden;
         }
         .world-clock-card:hover {
           transform: translateY(-2px);
-        }
-        .world-clock-card::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.1),
-            transparent
-          );
-          transition: left 0.5s ease;
-        }
-        .world-clock-card:hover::before {
-          left: 100%;
         }
         .time-display {
           transition: all 0.3s ease;
@@ -114,15 +94,9 @@ export default function WorldClocks({
           const m = t.getMinutes();
           const isLocal = tz.zone === selectedZone;
           const isDayTime = isDay(h);
-          const isHovered = hoveredZone === tz.zone;
 
           return (
-            <div
-              key={tz.zone}
-              onMouseEnter={() => setHoveredZone(tz.zone)}
-              onMouseLeave={() => setHoveredZone(null)}
-              className="world-clock-card"
-            >
+            <div key={tz.zone} className="world-clock-card">
               <Button3D
                 selected={isLocal}
                 onClick={() => setSelectedZone(tz.zone)}
@@ -146,7 +120,7 @@ export default function WorldClocks({
                     className="w-3 h-3 city-name"
                     style={{
                       color: isLocal ? "#fff" : "var(--secondary-text)",
-                      opacity: isHovered ? 1 : 0.7,
+                      opacity: 0.7,
                     }}
                   />
                   <span
@@ -164,7 +138,7 @@ export default function WorldClocks({
                   className="text-xs font-mono mb-2 world-clock-utc-mobile secondary-text"
                   style={{
                     color: isLocal ? "#fff" : "var(--secondary-text)",
-                    opacity: isHovered ? 1 : 0.8,
+                    opacity: 0.8,
                   }}
                 >
                   {tz.utc}
@@ -176,7 +150,7 @@ export default function WorldClocks({
                     className="w-3 h-3"
                     style={{
                       color: isLocal ? "#fff" : "var(--secondary-text)",
-                      opacity: isHovered ? 1 : 0.7,
+                      opacity: 0.7,
                     }}
                   />
                   <span
@@ -195,7 +169,7 @@ export default function WorldClocks({
                     className="text-xs font-mono secondary-text"
                     style={{
                       color: isLocal ? "#fff" : "var(--secondary-text)",
-                      opacity: isHovered ? 1 : 0.8,
+                      opacity: 0.8,
                     }}
                   >
                     {isDayTime ? "Day" : "Night"}
@@ -204,7 +178,7 @@ export default function WorldClocks({
                     className="text-xs transition-transform duration-300"
                     style={{
                       color: isLocal ? "#fff" : "var(--secondary-text)",
-                      transform: isHovered ? "scale(1.2)" : "scale(1)",
+                      transform: "scale(1)",
                     }}
                   >
                     {isDayTime ? "☀️" : "🌙"}

@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.14.1",
     "@types/d3": "^7.4.3",
     "@types/recharts": "^2.0.1",
+    "@types/three": "^0.179.0",
     "axios": "^1.11.0",
     "card-validator": "^10.0.3",
     "credit-card-type": "^10.0.2",
@@ -25,7 +26,8 @@
     "react-dom": "^19.0.0",
     "react-is": "^19.1.1",
     "react-svg-credit-card-payment-icons": "^4.0.0",
-    "recharts": "^3.1.0"
+    "recharts": "^3.1.0",
+    "three": "^0.179.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

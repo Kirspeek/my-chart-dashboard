@@ -31,6 +31,7 @@ import CalendarWidgetMobile from "@/components/widgets/calendar/CalendarWidgetMo
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
 import type { UserData } from "../../interfaces/dashboard";
+import type { PerformanceMetricsData } from "../../interfaces/widgets";
 import { WidgetHeightProvider } from "../context/WidgetHeightContext";
 import { WidgetStateProvider } from "../context/WidgetStateContext";
 import { SearchProvider } from "../context/SearchContext";
@@ -86,7 +87,7 @@ interface DashboardData {
   migrationData?: SankeyChartDataItem[];
   sankeyData?: SankeyChartDataItem[];
   bubbleData?: BubbleChartDataItem[];
-  performanceMetricsData?: RadarChartDataItem[];
+  performanceMetricsData?: PerformanceMetricsData;
 }
 
 const cityMap: { [key: string]: string } = {
@@ -133,11 +134,12 @@ function useDashboardData(): DashboardData {
         barChartData,
         pieChartData,
         userData,
-        radarChartData,
+        radarChartData: radarChartData as unknown as RadarChartDataItem[],
         migrationData,
         sankeyData,
         bubbleData,
-        performanceMetricsData,
+        performanceMetricsData:
+          performanceMetricsData as unknown as PerformanceMetricsData,
       });
     }
     loadData();
@@ -648,7 +650,10 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
                 <RadarChartWidget
                   data={
-                    data.performanceMetricsData ?? data.radarChartData ?? []
+                    (data.performanceMetricsData
+                      ?.currentMetrics as RadarChartDataItem[]) ??
+                    data.radarChartData ??
+                    []
                   }
                   title="Performance Metrics"
                 />
@@ -687,8 +692,8 @@ export default function Home() {
                 </div>
               </div>
               {/* Bubble Chart row */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
-                <div className="lg:col-span-2 xl:col-span-2 h-full">
+              <div className="grid grid-cols-1 gap-8 my-8">
+                <div className="h-full">
                   <BubbleChartWidget
                     data={data.bubbleData ?? []}
                     title="Global Tech Investment"

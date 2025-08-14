@@ -125,7 +125,7 @@
   align-items: flex-start;
   border-top-left-radius: var(--weather-border-radius-desktop);
   border-bottom-left-radius: var(--weather-border-radius-desktop);
-  padding: 5rem;
+  padding: 5rem 1rem;
   position: relative;
   text-align: left;
   background: transparent;

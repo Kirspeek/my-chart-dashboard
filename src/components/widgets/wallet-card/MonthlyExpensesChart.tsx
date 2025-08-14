@@ -229,10 +229,11 @@ export default function MonthlyExpensesChart({
                 e.stopPropagation();
                 setShowInsights(!showInsights);
               }}
-              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 ${
-                showInsights ? "bg-blue-100" : "bg-gray-100"
-              }`}
+              className="p-1.5 rounded-lg transition-all duration-200 hover:scale-105"
               style={{
+                backgroundColor: showInsights
+                  ? "var(--button-hover-bg)"
+                  : "var(--button-bg)",
                 color: showInsights ? accent.blue : "var(--secondary-text)",
               }}
             >
@@ -243,10 +244,13 @@ export default function MonthlyExpensesChart({
                 e.stopPropagation();
                 handleRefresh();
               }}
-              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 bg-gray-100 ${
+              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 ${
                 isRefreshing ? "animate-spin" : ""
               }`}
-              style={{ color: "var(--secondary-text)" }}
+              style={{
+                backgroundColor: "var(--button-bg)",
+                color: "var(--secondary-text)",
+              }}
             >
               <RefreshCw className="w-4 h-4" />
             </button>

@@ -192,10 +192,11 @@ export default function FinancialBarChart({
                 e.stopPropagation();
                 setShowAlerts(!showAlerts);
               }}
-              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 ${
-                showAlerts ? "bg-orange-100" : "bg-gray-100"
-              }`}
+              className="p-1.5 rounded-lg transition-all duration-200 hover:scale-105"
               style={{
+                backgroundColor: showAlerts
+                  ? "var(--button-hover-bg)"
+                  : "var(--button-bg)",
                 color: showAlerts ? accent.red : "var(--secondary-text)",
               }}
             >
@@ -206,10 +207,13 @@ export default function FinancialBarChart({
                 e.stopPropagation();
                 handleRefresh();
               }}
-              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 bg-gray-100 ${
+              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 ${
                 isRefreshing ? "animate-spin" : ""
               }`}
-              style={{ color: "var(--secondary-text)" }}
+              style={{
+                backgroundColor: "var(--button-bg)",
+                color: "var(--secondary-text)",
+              }}
             >
               <RefreshCw className="w-4 h-4" />
             </button>

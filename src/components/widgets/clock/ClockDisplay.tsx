@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import WidgetButton from "../../common/WidgetButton";
 import { useTheme } from "src/hooks/useTheme";
 import { Sun, Moon, Calendar } from "lucide-react";
@@ -24,12 +24,24 @@ export default function ClockDisplay({
   const clockAccentColor = accent.red;
   const [isHovered, setIsHovered] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
+  const [secondsChanged, setSecondsChanged] = useState(false);
+  const prevSecondsRef = useRef<number>(0);
 
   const hours = mainTime.getHours();
   const minutes = mainTime.getMinutes();
   const seconds = mainTime.getSeconds();
   const displayHours = is24h ? hours : hours % 12 || 12;
   const isDayTime = hours >= 6 && hours < 18;
+
+  // Detect when seconds change and trigger animation
+  useEffect(() => {
+    if (prevSecondsRef.current !== seconds) {
+      setSecondsChanged(true);
+      const timer = setTimeout(() => setSecondsChanged(false), 200);
+      prevSecondsRef.current = seconds;
+      return () => clearTimeout(timer);
+    }
+  }, [seconds]);
 
   // Auto-hide seconds after 3 seconds of inactivity
   useEffect(() => {
@@ -70,7 +82,7 @@ export default function ClockDisplay({
           }
           51%,
           100% {
-            opacity: 0.3;
+            opacity: 1;
           }
         }
         .time-segment {
@@ -79,6 +91,20 @@ export default function ClockDisplay({
         .time-segment:hover {
           transform: scale(1.05);
           color: ${clockAccentColor} !important;
+        }
+        .seconds-segment {
+          transition: all 0.2s ease;
+        }
+        .seconds-segment.changed {
+          animation: secondsFade 0.2s ease-out;
+        }
+        @keyframes secondsFade {
+          0% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 1;
+          }
         }
         .date-display {
           transition: all 0.3s ease;
@@ -107,10 +133,11 @@ export default function ClockDisplay({
         <span className="time-segment">{pad(minutes)}</span>
         <span className="clock-colon">:</span>
         <span
-          className="time-segment"
+          className={`time-segment seconds-segment ${secondsChanged ? "changed" : ""}`}
           style={{
-            opacity: showSeconds ? 1 : 0.3,
+            opacity: showSeconds ? 1 : 1,
             transition: "opacity 0.3s ease",
+            color: "var(--weather-text-secondary)",
           }}
         >
           {pad(seconds)}

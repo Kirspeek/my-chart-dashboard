@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { WeatherTextProps } from "../../../interfaces/widgets";
-import { getWeatherColors, parseDate } from "../../utils/weatherUtils";
+import { getWeatherColors } from "../../utils/weatherUtils";
 import { MapPin, Calendar, Thermometer } from "lucide-react";
 import "../../styles/weather.css";
 
@@ -13,7 +13,6 @@ export default function WeatherText({
   children,
 }: WeatherTextProps) {
   const colors = getWeatherColors(desc, hot);
-  const { dayOfWeek, restOfDate } = parseDate(date);
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -24,6 +23,8 @@ export default function WeatherText({
       style={{
         transition: "all 0.3s ease",
         transform: isHovered ? "scale(1.02)" : "scale(1)",
+        minWidth: 0,
+        width: "100%",
       }}
     >
       <style jsx>{`
@@ -36,21 +37,27 @@ export default function WeatherText({
         }
         .weather-city {
           transition: all 0.3s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .weather-city:hover {
           transform: translateX(2px);
         }
         .weather-date {
           transition: all 0.3s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .weather-date:hover {
           transform: translateY(-1px);
         }
       `}</style>
 
-      <div className="flex items-center gap-1 mb-1">
+      <div className="flex items-center gap-1 mb-1" style={{ minWidth: 0 }}>
         <Thermometer
-          className="w-4 h-4"
+          className="w-4 h-4 flex-shrink-0"
           style={{
             color: colors.mainColor,
             opacity: isHovered ? 1 : 0.7,
@@ -71,14 +78,17 @@ export default function WeatherText({
           color: colors.secondaryColor,
           opacity: isHovered ? 1 : 0.9,
           transition: "opacity 0.3s ease",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         }}
       >
         {desc}
       </span>
 
-      <div className="flex items-center gap-1 mt-1">
+      <div className="flex items-center gap-1 mt-1" style={{ minWidth: 0 }}>
         <MapPin
-          className="w-3 h-3"
+          className="w-3 h-3 flex-shrink-0"
           style={{
             color: colors.mainColor,
             opacity: isHovered ? 1 : 0.7,
@@ -87,15 +97,22 @@ export default function WeatherText({
         />
         <span
           className="weather-city-desktop weather-city-mobile weather-city"
-          style={{ color: colors.mainColor }}
+          style={{
+            color: colors.mainColor,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            flex: 1,
+            minWidth: 0,
+          }}
         >
           {city}
         </span>
       </div>
 
-      <div className="flex items-center gap-1 mt-1">
+      <div className="flex items-center gap-1 mt-1" style={{ minWidth: 0 }}>
         <Calendar
-          className="w-3 h-3"
+          className="w-3 h-3 flex-shrink-0"
           style={{
             color: colors.secondaryColor,
             opacity: isHovered ? 1 : 0.7,
@@ -104,9 +121,16 @@ export default function WeatherText({
         />
         <span
           className="weather-date-desktop weather-date-mobile weather-date"
-          style={{ color: colors.secondaryColor }}
+          style={{
+            color: colors.secondaryColor,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            flex: 1,
+            minWidth: 0,
+          }}
         >
-          {dayOfWeek} {restOfDate}
+          {date}
         </span>
       </div>
       {children}
