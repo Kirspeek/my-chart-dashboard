@@ -344,10 +344,73 @@ export interface WidgetRadarChartData {
   subject: string;
   value: number;
   fullMark: number;
+  trend?: "up" | "down" | "stable";
+  change?: number;
+}
+
+export interface PerformanceMetricsData {
+  currentMetrics: WidgetRadarChartData[];
+  historicalData: {
+    hourly: Array<{
+      time: string;
+      cpu: number;
+      memory: number;
+      network: number;
+      disk: number;
+      response: number;
+      errors: number;
+      throughput: number;
+      availability: number;
+    }>;
+    daily: Array<{
+      date: string;
+      avgCpu: number;
+      avgMemory: number;
+      avgNetwork: number;
+      avgDisk: number;
+      avgResponse: number;
+      avgErrors: number;
+      avgThroughput: number;
+      avgAvailability: number;
+    }>;
+  };
+  alerts: Array<{
+    id: number;
+    severity: "high" | "medium" | "low";
+    metric: string;
+    message: string;
+    time: string;
+    status: "active" | "resolved";
+  }>;
+  performanceScore: {
+    overall: number;
+    trend: "improving" | "declining" | "stable";
+    breakdown: {
+      infrastructure: number;
+      application: number;
+      network: number;
+      security: number;
+    };
+  };
+  capacityPlanning: {
+    currentUtilization: {
+      cpu: number;
+      memory: number;
+      storage: number;
+      network: number;
+    };
+    projectedGrowth: {
+      cpu: number;
+      memory: number;
+      storage: number;
+      network: number;
+    };
+    recommendations: string[];
+  };
 }
 
 export interface RadarChartWidgetProps extends CommonComponentProps {
-  data: WidgetRadarChartData[];
+  data: WidgetRadarChartData[] | PerformanceMetricsData;
   title: string;
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;

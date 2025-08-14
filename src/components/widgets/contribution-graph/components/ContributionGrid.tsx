@@ -19,6 +19,8 @@ interface ContributionGridProps {
     };
   };
   isMobile?: boolean;
+  onDayClick?: (day: { date: string; value: number }) => void;
+  selectedDay?: { date: string; value: number } | null;
 }
 
 export default function ContributionGrid({
@@ -118,12 +120,14 @@ export default function ContributionGrid({
 
       <div className="flex">
         <div
-          className="flex flex-col justify-between mr-2 text-xs font-medium"
+          className="flex flex-col justify-between mr-4 text-xs font-medium"
           style={{
             height: "96px",
             color: colors.secondary,
             fontFamily: "var(--font-sans)",
             letterSpacing: "0.01em",
+            minWidth: "32px",
+            paddingLeft: "8px",
           }}
         >
           <span>Mon</span>

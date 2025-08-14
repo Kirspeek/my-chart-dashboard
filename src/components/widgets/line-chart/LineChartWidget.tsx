@@ -39,14 +39,16 @@ export default function LineChartWidget({
       style={{
         width: isMobile ? "100vw" : undefined,
         height: isMobile ? "82vh" : undefined,
-        padding: isMobile ? 0 : undefined,
-        borderRadius: isMobile ? 0 : undefined,
+        padding: isMobile ? "1rem" : undefined,
+        borderRadius: isMobile ? "2rem" : undefined,
       }}
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}
     >
       <LineChartHeader title={title} />
-      <LineChartContainer data={data} />
+      <div className="flex-1 min-h-0 flex flex-col">
+        <LineChartContainer data={data} />
+      </div>
       {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation

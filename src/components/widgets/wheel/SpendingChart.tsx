@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import BottomSegmentInfo from "../../common/BottomSegmentInfo";
 import { SpendingChartProps } from "../../../../interfaces/widgets";
 import {
   useWheelChartLogic,
@@ -16,7 +15,8 @@ export default function SpendingChart({
   onClick,
   showCardNumber = false,
   cardNumber,
-}: SpendingChartProps) {
+  hideHeader = false,
+}: SpendingChartProps & { hideHeader?: boolean }) {
   // Use organized logic hooks
   const { selectedPeriod, setSelectedPeriod, currentData, totalSpending } =
     useWheelChartLogic(data, annualData);
@@ -32,11 +32,8 @@ export default function SpendingChart({
     handleCanvasClick,
   } = useWheelInteractionLogic();
 
-  const { bottomSegment } = useWheelRenderLogic(
-    currentData,
-    rotationAngle,
-    canvasRef
-  );
+  // Restore the rendering logic but don't use bottomSegment
+  useWheelRenderLogic(currentData, rotationAngle, canvasRef);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
 
@@ -50,23 +47,29 @@ export default function SpendingChart({
       }}
     >
       {/* Card Number and Period Toggle */}
-      <WheelHeader
-        showCardNumber={showCardNumber}
-        cardNumber={cardNumber}
-        selectedPeriod={selectedPeriod}
-        onPeriodChange={setSelectedPeriod}
-      />
+      {!hideHeader && (
+        <WheelHeader
+          showCardNumber={showCardNumber}
+          cardNumber={cardNumber}
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={setSelectedPeriod}
+        />
+      )}
 
       {/* Mobile-only spacer before spending title */}
-      {isMobile && <div style={{ height: "0.75rem" }} />}
+      {!hideHeader && isMobile && <div style={{ height: "0.75rem" }} />}
 
       {/* Total Spending Display */}
-      <WheelSpendingDisplay
-        title={
-          selectedPeriod === "Monthly" ? "Monthly Spending" : "Annual Spending"
-        }
-        totalSpending={totalSpending}
-      />
+      {!hideHeader && (
+        <WheelSpendingDisplay
+          title={
+            selectedPeriod === "Monthly"
+              ? "Monthly Spending"
+              : "Annual Spending"
+          }
+          totalSpending={totalSpending}
+        />
+      )}
 
       {/* 3D Donut Chart Canvas */}
       <WheelCanvas
@@ -78,9 +81,6 @@ export default function SpendingChart({
         onMouseLeave={handleMouseLeave}
         onClick={(e) => handleCanvasClick(e, onClick)}
       />
-
-      {/* Bottom Segment Info */}
-      {bottomSegment && <BottomSegmentInfo segment={bottomSegment} />}
     </div>
   );
 }

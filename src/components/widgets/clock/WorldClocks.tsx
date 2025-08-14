@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Button3D from "../../common/3DButton";
 import { useTheme } from "src/hooks/useTheme";
+import { MapPin, Clock, Globe } from "lucide-react";
 
 interface WorldClocksProps {
   timeZones: Array<{ zone: string; label: string; utc: string }>;
@@ -27,6 +28,7 @@ export default function WorldClocks({
 }: WorldClocksProps) {
   const { accent } = useTheme();
   const clockAccentColor = accent.red;
+  const [hoveredZone, setHoveredZone] = useState<string | null>(null);
 
   // Check if viewport is at least 1440px wide
   const [isViewportAtLeast1440, setIsViewportAtLeast1440] =
@@ -49,7 +51,57 @@ export default function WorldClocks({
             font-size: 1.75rem !important;
           }
         }
+        .world-clock-card {
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        .world-clock-card:hover {
+          transform: translateY(-2px);
+        }
+        .world-clock-card::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent
+          );
+          transition: left 0.5s ease;
+        }
+        .world-clock-card:hover::before {
+          left: 100%;
+        }
+        .time-display {
+          transition: all 0.3s ease;
+        }
+        .time-display:hover {
+          transform: scale(1.05);
+        }
+        .city-name {
+          transition: all 0.3s ease;
+        }
+        .city-name:hover {
+          transform: translateX(2px);
+        }
       `}</style>
+
+      {/* Header with Globe Icon */}
+      <div className="flex items-center gap-2 mb-3 opacity-70">
+        <Globe className="w-4 h-4" style={{ color: clockAccentColor }} />
+        <span
+          className="text-xs font-mono"
+          style={{ color: "var(--secondary-text)" }}
+        >
+          World Clocks
+        </span>
+      </div>
+
       <div
         className={`grid grid-cols-2 gap-2 justify-center w-full ${
           isMobile ? "px-25" : isViewportAtLeast1440 ? "px-18" : ""
@@ -62,64 +114,104 @@ export default function WorldClocks({
           const m = t.getMinutes();
           const isLocal = tz.zone === selectedZone;
           const isDayTime = isDay(h);
+          const isHovered = hoveredZone === tz.zone;
+
           return (
-            <Button3D
+            <div
               key={tz.zone}
-              selected={isLocal}
-              onClick={() => setSelectedZone(tz.zone)}
-              customAccentColor={clockAccentColor}
-              className="world-clock-card-mobile"
-              style={
-                isMobile
-                  ? undefined
-                  : isViewportAtLeast1440
-                    ? { padding: "1rem 1.25rem", minWidth: 150, minHeight: 90 }
-                    : { padding: "1rem 0.5rem", minWidth: 0, minHeight: 20 }
-              }
+              onMouseEnter={() => setHoveredZone(tz.zone)}
+              onMouseLeave={() => setHoveredZone(null)}
+              className="world-clock-card"
             >
-              <span
-                className="text-base font-bold mono mb-1 world-clock-city-mobile primary-text"
-                style={{
-                  color: isLocal ? "#fff" : "var(--primary-text)",
-                }}
+              <Button3D
+                selected={isLocal}
+                onClick={() => setSelectedZone(tz.zone)}
+                customAccentColor={clockAccentColor}
+                className="world-clock-card-mobile"
+                style={
+                  isMobile
+                    ? undefined
+                    : isViewportAtLeast1440
+                      ? {
+                          padding: "1rem 1.25rem",
+                          minWidth: 150,
+                          minHeight: 90,
+                        }
+                      : { padding: "1rem 0.5rem", minWidth: 0, minHeight: 20 }
+                }
               >
-                {tz.label}
-              </span>
-              <span
-                className="text-xs font-mono mb-2 world-clock-utc-mobile secondary-text"
-                style={{
-                  color: isLocal ? "#fff" : "var(--secondary-text)",
-                }}
-              >
-                {tz.utc}
-              </span>
-              <span
-                className="text-lg font-bold mono wc-time-desktop primary-text"
-                style={{
-                  color: isLocal ? "#fff" : "var(--primary-text)",
-                }}
-              >
-                {pad(h)}:{pad(m)}
-              </span>
-              <div className="flex items-center gap-1 mt-1">
+                {/* City Name with Location Icon */}
+                <div className="flex items-center gap-1 mb-1">
+                  <MapPin
+                    className="w-3 h-3 city-name"
+                    style={{
+                      color: isLocal ? "#fff" : "var(--secondary-text)",
+                      opacity: isHovered ? 1 : 0.7,
+                    }}
+                  />
+                  <span
+                    className="text-base font-bold mono world-clock-city-mobile primary-text city-name"
+                    style={{
+                      color: isLocal ? "#fff" : "var(--primary-text)",
+                    }}
+                  >
+                    {tz.label}
+                  </span>
+                </div>
+
+                {/* UTC Offset */}
                 <span
-                  className="text-xs font-mono secondary-text"
+                  className="text-xs font-mono mb-2 world-clock-utc-mobile secondary-text"
                   style={{
                     color: isLocal ? "#fff" : "var(--secondary-text)",
+                    opacity: isHovered ? 1 : 0.8,
                   }}
                 >
-                  {isDayTime ? "Day" : "Night"}
+                  {tz.utc}
                 </span>
-                <span
-                  className="text-xs"
-                  style={{
-                    color: isLocal ? "#fff" : "var(--secondary-text)",
-                  }}
-                >
-                  {isDayTime ? "☀️" : "🌙"}
-                </span>
-              </div>
-            </Button3D>
+
+                {/* Time Display */}
+                <div className="flex items-center gap-1">
+                  <Clock
+                    className="w-3 h-3"
+                    style={{
+                      color: isLocal ? "#fff" : "var(--secondary-text)",
+                      opacity: isHovered ? 1 : 0.7,
+                    }}
+                  />
+                  <span
+                    className="text-lg font-bold mono wc-time-desktop primary-text time-display"
+                    style={{
+                      color: isLocal ? "#fff" : "var(--primary-text)",
+                    }}
+                  >
+                    {pad(h)}:{pad(m)}
+                  </span>
+                </div>
+
+                {/* Day/Night Indicator */}
+                <div className="flex items-center gap-1 mt-1">
+                  <span
+                    className="text-xs font-mono secondary-text"
+                    style={{
+                      color: isLocal ? "#fff" : "var(--secondary-text)",
+                      opacity: isHovered ? 1 : 0.8,
+                    }}
+                  >
+                    {isDayTime ? "Day" : "Night"}
+                  </span>
+                  <span
+                    className="text-xs transition-transform duration-300"
+                    style={{
+                      color: isLocal ? "#fff" : "var(--secondary-text)",
+                      transform: isHovered ? "scale(1.2)" : "scale(1)",
+                    }}
+                  >
+                    {isDayTime ? "☀️" : "🌙"}
+                  </span>
+                </div>
+              </Button3D>
+            </div>
           );
         })}
       </div>

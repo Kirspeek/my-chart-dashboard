@@ -867,6 +867,16 @@
   border-radius: 2rem !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+.mobile-slide .line-chart-widget > div {
+  flex: 1 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 /* Bar chart mobile styles */
@@ -878,6 +888,16 @@
   border-radius: 2rem !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+.mobile-slide .bar-chart-widget > div {
+  flex: 1 !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 /* Radar chart mobile styles */

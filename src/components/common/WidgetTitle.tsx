@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "../../hooks";
 
 interface WidgetTitleProps {
   title: string;
@@ -19,7 +18,6 @@ export default function WidgetTitle({
   size = "md",
 }: WidgetTitleProps) {
   const [isMobile, setIsMobile] = React.useState(false);
-  const { colors } = useTheme();
 
   React.useEffect(() => {
     const check = () => {

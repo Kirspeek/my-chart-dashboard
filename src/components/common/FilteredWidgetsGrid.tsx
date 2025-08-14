@@ -27,6 +27,7 @@ import { WidgetHeightProvider } from "../../context/WidgetHeightContext";
 import { WidgetStateProvider } from "../../context/WidgetStateContext";
 import { X } from "lucide-react";
 import type { UserData } from "../../../interfaces/dashboard";
+import type { PerformanceMetricsData } from "../../../interfaces/widgets";
 
 interface DashboardData {
   metricCards?: Array<{
@@ -57,6 +58,7 @@ interface DashboardData {
     value: number;
     fullMark: number;
   }>;
+  performanceMetricsData?: PerformanceMetricsData;
   migrationData?: Array<{
     from: string;
     to: string;

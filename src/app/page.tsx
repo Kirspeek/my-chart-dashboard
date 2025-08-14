@@ -86,6 +86,7 @@ interface DashboardData {
   migrationData?: SankeyChartDataItem[];
   sankeyData?: SankeyChartDataItem[];
   bubbleData?: BubbleChartDataItem[];
+  performanceMetricsData?: RadarChartDataItem[];
 }
 
 const cityMap: { [key: string]: string } = {
@@ -111,6 +112,7 @@ function useDashboardData(): DashboardData {
         migrationData,
         sankeyData,
         bubbleData,
+        performanceMetricsData,
       ] = await Promise.all([
         import("../data/json/metricCards.json").then((m) => m.default),
         import("../data/json/salesData.json").then((m) => m.default),
@@ -121,6 +123,9 @@ function useDashboardData(): DashboardData {
         import("../data/json/migrationData.json").then((m) => m.default),
         import("../data/json/sankeyData.json").then((m) => m.default),
         import("../data/json/bubbleData.json").then((m) => m.default),
+        import("../data/json/performanceMetricsData.json").then(
+          (m) => m.default
+        ),
       ]);
       setData({
         metricCards,
@@ -132,6 +137,7 @@ function useDashboardData(): DashboardData {
         migrationData,
         sankeyData,
         bubbleData,
+        performanceMetricsData,
       });
     }
     loadData();
@@ -567,16 +573,17 @@ export default function Home() {
                         isMobile={false}
                       />
                     </div>
-                    {/* Column 2: Weather (70%) + Timer (30%) */}
-                    <div className="h-full flex flex-col gap-8 lg:gap-2">
-                      <div className="flex-none basis-auto min-h-0 2xl:flex-none 2xl:basis-[70%]">
+                    {/* Column 2: Weather + Timer with proper height distribution */}
+                    <div className="h-full flex flex-col">
+                      <div className="flex-none h-96 lg:h-96">
                         {isMobile ? (
                           <WeatherWidgetMobile city={selectedCity} />
                         ) : (
                           <WeatherWidget city={selectedCity} />
                         )}
                       </div>
-                      <div className="flex-1 min-h-0 2xl:flex-none 2xl:basis-[28%]">
+                      <div className="h-2 lg:h-2"></div> {/* Fixed gap */}
+                      <div className="flex-1 min-h-0">
                         <TimerWidget className="h-full" />
                       </div>
                     </div>
@@ -640,7 +647,9 @@ export default function Home() {
               {/* New charts row: Performance Metrics and Chord Diagram side by side */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
                 <RadarChartWidget
-                  data={data.radarChartData ?? []}
+                  data={
+                    data.performanceMetricsData ?? data.radarChartData ?? []
+                  }
                   title="Performance Metrics"
                 />
                 <WorkInProgressWidget />
