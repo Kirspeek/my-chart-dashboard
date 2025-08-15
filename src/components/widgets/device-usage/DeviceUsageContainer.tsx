@@ -11,6 +11,7 @@ import {
 import type { DeviceUsageData } from "../../../../interfaces/widgets";
 import { useDeviceUsageLogic } from "src/hooks/useDeviceUsageLogic";
 import { Monitor, Smartphone, Tablet, Laptop, Activity } from "lucide-react";
+import { Card, useMobileDetection } from "../../common";
 
 interface DeviceUsageContainerProps {
   data: DeviceUsageData[];
@@ -31,9 +32,12 @@ function renderLegend(
   };
 
   return data.map((item: DeviceUsageData, index: number) => (
-    <div
+    <Card
       key={index}
-      className="flex items-center space-x-3 p-2 rounded-lg hover:bg-[var(--button-hover-bg)] transition-all duration-300 group cursor-pointer"
+      variant="default"
+      size="sm"
+      hover
+      className="flex items-center space-x-3 p-2"
       style={{ animationDelay: `${index * 150}ms` }}
     >
       <div className="flex items-center space-x-2">
@@ -72,25 +76,14 @@ function renderLegend(
           %
         </span>
       </div>
-    </div>
+    </Card>
   ));
 }
 
 export default function DeviceUsageContainer({
   data,
 }: DeviceUsageContainerProps) {
-  // Detect mobile for responsive sizing and smaller graphic part
-  const [isMobile, setIsMobile] = React.useState(false);
-  React.useEffect(() => {
-    const check = () => {
-      if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth <= 425);
-      }
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const isMobile = useMobileDetection();
 
   const { tooltipStyle, formatTooltip } = useDeviceUsageLogic();
 

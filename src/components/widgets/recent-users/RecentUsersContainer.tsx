@@ -11,6 +11,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
+import { StatusBadge, Divider } from "../../common";
 
 interface RecentUsersContainerProps {
   data: UserData[];
@@ -19,7 +20,7 @@ interface RecentUsersContainerProps {
 export default function RecentUsersContainer({
   data,
 }: RecentUsersContainerProps) {
-  const { formatDate, getTextColor, getStatusColors } = useRecentUsersLogic();
+  const { formatDate, getTextColor } = useRecentUsersLogic();
   const { colors } = useTheme();
 
   const getStatusIcon = (status: string) => {
@@ -165,24 +166,14 @@ export default function RecentUsersContainer({
                 </div>
               </td>
               <td className="px-4 py-2 whitespace-nowrap">
-                <span
-                  className="inline-flex items-center space-x-1 px-3 py-1 text-xs font-semibold rounded-full transition-all duration-300 hover:scale-105"
-                  style={{
-                    backgroundColor:
-                      user.status === "active"
-                        ? `${getStatusColors.active}20`
-                        : `${getStatusColors.inactive}20`,
-                    color:
-                      user.status === "active"
-                        ? getStatusColors.active
-                        : getStatusColors.inactive,
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                  }}
+                <StatusBadge
+                  variant={user.status === "active" ? "success" : "default"}
+                  size="md"
+                  className="font-mono font-bold"
                 >
                   {getStatusIcon(user.status)}
                   <span>{user.status}</span>
-                </span>
+                </StatusBadge>
               </td>
               <td
                 className="px-4 py-2 whitespace-nowrap text-sm rounded-r-lg secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
@@ -201,17 +192,15 @@ export default function RecentUsersContainer({
         </tbody>
       </table>
 
-      {/* Summary footer */}
-      <div className="mt-4 pt-4 border-t border-[var(--button-border)] opacity-60">
-        <div className="flex justify-between items-center text-xs secondary-text">
-          <span>Total Users: {data.length}</span>
-          <span>
-            Active: {data.filter((user) => user.status === "active").length}
-          </span>
-          <span>
-            Inactive: {data.filter((user) => user.status === "inactive").length}
-          </span>
-        </div>
+      <Divider className="mt-4" />
+      <div className="flex justify-between items-center text-xs secondary-text">
+        <span>Total Users: {data.length}</span>
+        <span>
+          Active: {data.filter((user) => user.status === "active").length}
+        </span>
+        <span>
+          Inactive: {data.filter((user) => user.status === "inactive").length}
+        </span>
       </div>
     </div>
   );

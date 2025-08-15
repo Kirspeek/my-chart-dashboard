@@ -447,7 +447,7 @@ export default function EnhancedSankeyDiagram({
         .attr("height", (d) => String(d.y1! - d.y0!))
         .attr("width", (d) => String(d.x1! - d.x0!))
         .attr("fill", (d, i) => `url(#nodeGradient${i})`)
-        .attr("stroke", (d) => "rgb(66, 91, 89)")
+        .attr("stroke", () => "rgb(66, 91, 89)")
         .attr("stroke-width", "1")
         .attr("cursor", "pointer")
         .style("filter", "drop-shadow(0 3px 6px rgba(0,0,0,0.15))")
@@ -506,6 +506,8 @@ export default function EnhancedSankeyDiagram({
     isPlaying,
     animationFrame,
     viewMode,
+    isDark,
+    setSelectedFlow,
   ]);
 
   return (

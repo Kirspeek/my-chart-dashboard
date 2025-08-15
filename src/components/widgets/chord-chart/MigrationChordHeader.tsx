@@ -21,7 +21,7 @@ export default function MigrationChordHeader({
   totalMigration = 0,
   selectedFlow,
 }: MigrationChordHeaderProps) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <div className="mb-4">
@@ -69,7 +69,7 @@ export default function MigrationChordHeader({
           <div className="flex items-center space-x-1">
             <div
               className="w-2 h-2 rounded-full animate-pulse"
-              style={{ backgroundColor: colors.accent.green }}
+              style={{ backgroundColor: colors.accent.teal }}
             />
             <span
               className="text-xs font-medium"

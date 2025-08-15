@@ -16,7 +16,7 @@ export function useClockLogic(selectedZone: string): ClockState & ClockActions {
   // 'tick' is intentionally included to force re-render every second
   const mainTime = useMemo(() => {
     return mounted ? getTimeInZone(selectedZone) : new Date(0);
-  }, [mounted, selectedZone, tick]); // Added tick dependency to update every second
+  }, [mounted, selectedZone]); // tick is used to force re-render, not as a dependency
 
   useEffect(() => {
     if (mounted) {

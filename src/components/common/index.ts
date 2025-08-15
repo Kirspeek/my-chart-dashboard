@@ -1,4 +1,3 @@
-// Common components for reuse across widgets
 export { default as WidgetBase } from "./WidgetBase";
 export { default as WidgetCard } from "./WidgetCard";
 export { default as WidgetButton } from "./WidgetButton";
@@ -7,10 +6,21 @@ export { default as SpendingProgress } from "./SpendingProgress";
 export { default as BottomSegmentInfo } from "./BottomSegmentInfo";
 export { default as ThreeDButton } from "./3DButton";
 export { default as Button } from "./Button";
-
-// New chart-specific common components
 export { default as ChartCanvas } from "./ChartCanvas";
 export { default as ChartHeader } from "./ChartHeader";
 export { default as PeriodSelector } from "./PeriodSelector";
 export { default as RefreshButton } from "./RefreshButton";
 export { default as WidgetTitle } from "./WidgetTitle";
+export { default as SlideNavigation } from "./SlideNavigation";
+export { default as SearchResults } from "./SearchResults";
+export { default as FilteredWidgetsGrid } from "./FilteredWidgetsGrid";
+export { default as SimpleHeader } from "./SimpleHeader";
+export { default as WidgetWrapper } from "./WidgetWrapper";
+export { default as WidgetLayout } from "./WidgetLayout";
+export { default as ChartContainer } from "./ChartContainer";
+export { default as InteractiveButton } from "./InteractiveButton";
+export { default as StatusBadge } from "./StatusBadge";
+export { default as ProgressBar } from "./ProgressBar";
+export { default as IconButton } from "./IconButton";
+export { default as Divider } from "./Divider";
+export { useMobileDetection } from "./useMobileDetection";

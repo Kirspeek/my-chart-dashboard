@@ -19,16 +19,14 @@ interface MigrationChordStatsProps {
   data: WidgetChordChartData[];
   selectedFlow?: string | null;
   setSelectedFlow?: (flow: string | null) => void;
-  isMobile?: boolean;
 }
 
 export default function MigrationChordStats({
   data,
   selectedFlow,
   setSelectedFlow,
-  isMobile = false,
 }: MigrationChordStatsProps) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const { createTooltipHandlers } = useGlobalTooltip();
 
   // Calculate statistics
@@ -179,12 +177,12 @@ export default function MigrationChordStats({
       <div
         className="p-6 rounded-2xl"
         style={{
-          background: `linear-gradient(135deg, ${colors.accent.violet}10, ${colors.accent.violet}05)`,
-          border: `1px solid ${colors.accent.violet}20`,
+          background: `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
+          border: `1px solid ${colors.accent.blue}20`,
         }}
       >
         <div className="flex items-center space-x-2 mb-4">
-          <Star size={18} style={{ color: colors.accent.violet }} />
+          <Star size={18} style={{ color: colors.accent.blue }} />
           <h3 className="text-lg font-bold" style={{ color: colors.primary }}>
             Top Migration Flows
           </h3>
@@ -193,8 +191,7 @@ export default function MigrationChordStats({
           {topFlows.map((flow, index) => {
             const isSelected = selectedFlow === `${flow.from}→${flow.to}`;
             const tooltipHandlers = createTooltipHandlers(
-              `${flow.from} → ${flow.to}: ${flow.size}M people`,
-              colors.accent.violet
+              `${flow.from} → ${flow.to}: ${flow.size}M people`
             );
 
             return (
@@ -212,9 +209,9 @@ export default function MigrationChordStats({
                 }`}
                 style={{
                   background: isSelected
-                    ? `linear-gradient(135deg, ${colors.accent.violet}20, ${colors.accent.violet}10)`
-                    : `linear-gradient(135deg, ${colors.accent.violet}10, ${colors.accent.violet}05)`,
-                  border: `1px solid ${colors.accent.violet}30`,
+                    ? `linear-gradient(135deg, ${colors.accent.blue}20, ${colors.accent.blue}10)`
+                    : `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
+                  border: `1px solid ${colors.accent.blue}30`,
                 }}
                 {...tooltipHandlers}
               >
@@ -223,8 +220,8 @@ export default function MigrationChordStats({
                     <div
                       className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
                       style={{
-                        backgroundColor: `${colors.accent.violet}20`,
-                        color: colors.accent.violet,
+                        backgroundColor: `${colors.accent.blue}20`,
+                        color: colors.accent.blue,
                       }}
                     >
                       {index + 1}
@@ -251,14 +248,14 @@ export default function MigrationChordStats({
                   <div className="flex items-center space-x-2">
                     <span
                       className="text-lg font-bold"
-                      style={{ color: colors.accent.violet }}
+                      style={{ color: colors.accent.blue }}
                     >
                       {flow.size}M
                     </span>
                     {isSelected && (
                       <div
                         className="w-2 h-2 rounded-full animate-pulse"
-                        style={{ backgroundColor: colors.accent.violet }}
+                        style={{ backgroundColor: colors.accent.blue }}
                       />
                     )}
                   </div>
@@ -296,20 +293,20 @@ export default function MigrationChordStats({
                 style={{
                   background: `linear-gradient(135deg, ${
                     isPositive
-                      ? colors.accent.green
+                      ? colors.accent.teal
                       : isNegative
                         ? colors.accent.red
                         : colors.accent.yellow
                   }10, ${
                     isPositive
-                      ? colors.accent.green
+                      ? colors.accent.teal
                       : isNegative
                         ? colors.accent.red
                         : colors.accent.yellow
                   }05)`,
                   border: `1px solid ${
                     isPositive
-                      ? colors.accent.green
+                      ? colors.accent.teal
                       : isNegative
                         ? colors.accent.red
                         : colors.accent.yellow
@@ -323,7 +320,7 @@ export default function MigrationChordStats({
                   {isPositive && (
                     <TrendingUp
                       size={16}
-                      style={{ color: colors.accent.green }}
+                      style={{ color: colors.accent.teal }}
                     />
                   )}
                   {isNegative && (
@@ -339,7 +336,7 @@ export default function MigrationChordStats({
                     className="font-bold"
                     style={{
                       color: isPositive
-                        ? colors.accent.green
+                        ? colors.accent.teal
                         : isNegative
                           ? colors.accent.red
                           : colors.accent.yellow,

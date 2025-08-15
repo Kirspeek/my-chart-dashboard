@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
@@ -59,26 +65,37 @@ export default function EnhancedChordDiagram({
   const { accent, colors, isDark } = useTheme();
   const { createTooltipHandlers } = useGlobalTooltip();
 
-  // Theme accent color palette with reduced opacity - ensure same flow has same color
-  const flowColorMap = new Map<string, string>();
-  const flowColors = [
-    `${colors.accent.blue}60`, // Blue with 60% opacity
-    `${colors.accent.teal}60`, // Teal with 60% opacity
-    `${colors.accent.yellow}60`, // Yellow with 60% opacity
-    `${colors.accent.red}60`, // Red with 60% opacity
-  ];
+  const flowColorMap = useMemo(() => {
+    const flowColors = [
+      `${colors.accent.blue}60`, // Blue with 60% opacity
+      `${colors.accent.teal}60`, // Teal with 60% opacity
+      `${colors.accent.yellow}60`, // Yellow with 60% opacity
+      `${colors.accent.red}60`, // Red with 60% opacity
+    ];
 
-  // Assign colors to flows consistently
-  data.forEach((link, index) => {
-    const flowKey = `${link.from}→${link.to}`;
-    if (!flowColorMap.has(flowKey)) {
-      flowColorMap.set(flowKey, flowColors[index % flowColors.length]);
-    }
-  });
+    const map = new Map<string, string>();
+    // Assign colors to flows consistently
+    data.forEach((link, index) => {
+      const flowKey = `${link.from}→${link.to}`;
+      if (!map.has(flowKey)) {
+        map.set(flowKey, flowColors[index % flowColors.length]);
+      }
+    });
+    return map;
+  }, [
+    data,
+    colors.accent.blue,
+    colors.accent.teal,
+    colors.accent.yellow,
+    colors.accent.red,
+  ]);
 
-  const getFlowColor = (flowKey: string) => {
-    return flowColorMap.get(flowKey) || `${colors.accent.blue}60`;
-  };
+  const getFlowColor = useCallback(
+    (flowKey: string) => {
+      return flowColorMap.get(flowKey) || `${colors.accent.blue}60`;
+    },
+    [flowColorMap, colors.accent.blue]
+  );
 
   const [hoveredRibbon, setHoveredRibbon] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -235,21 +252,18 @@ export default function EnhancedChordDiagram({
         .style("transition", "all 0.2s ease")
         .on("mousemove", function (event, d) {
           setHoveredRibbon(chord.indexOf(d));
-          const [mx, my] = d3.pointer(event);
           const sourceName = nodeOrder[d.source.index];
           const targetName = nodeOrder[d.target.index];
-          const flowKey = `${sourceName}→${targetName}`;
 
           // Show global tooltip
           const tooltipHandlers = createTooltipHandlers(
-            `${sourceName} - ${targetName}`,
-            getFlowColor(flowKey)
+            `${sourceName} - ${targetName}`
           );
-          tooltipHandlers.onMouseMove?.(event);
+          tooltipHandlers.onMouseEnter?.(event);
         })
         .on("mouseleave", function () {
           setHoveredRibbon(null);
-          const tooltipHandlers = createTooltipHandlers();
+          const tooltipHandlers = createTooltipHandlers("");
           tooltipHandlers.onMouseLeave?.();
         })
         .on("click", function (event, d) {
@@ -320,6 +334,8 @@ export default function EnhancedChordDiagram({
     getFlowColor,
     createTooltipHandlers,
     setSelectedFlow,
+    isDark,
+    matrix,
   ]);
 
   return (
@@ -435,18 +451,20 @@ export default function EnhancedChordDiagram({
           </div>
         )}
 
-        <MigrationChordControls
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-          animationSpeed={animationSpeed}
-          setAnimationSpeed={setAnimationSpeed}
-          showDetails={showDetails}
-          setShowDetails={setShowDetails}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          onReset={handleReset}
-          isMobile={isMobile}
-        />
+        {setViewMode && setAnimationSpeed && setShowDetails && (
+          <MigrationChordControls
+            viewMode={viewMode}
+            setViewMode={setViewMode}
+            animationSpeed={animationSpeed}
+            setAnimationSpeed={setAnimationSpeed}
+            showDetails={showDetails}
+            setShowDetails={setShowDetails}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            onReset={handleReset}
+            isMobile={isMobile}
+          />
+        )}
 
         <div className="flex-1 min-h-0 mt-4">
           {viewMode === "flow" && (
@@ -484,7 +502,6 @@ export default function EnhancedChordDiagram({
               data={data}
               selectedFlow={selectedFlow}
               setSelectedFlow={setSelectedFlow}
-              isMobile={isMobile}
             />
           )}
 

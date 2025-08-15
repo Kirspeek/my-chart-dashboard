@@ -252,9 +252,7 @@ export default function MigrationFlowButton({
   };
 
   // Tooltip handlers
-  const tooltipHandlers = tooltip
-    ? createTooltipHandlers(tooltip, variantColors.bg)
-    : {};
+  const tooltipHandlers = tooltip ? createTooltipHandlers(tooltip) : {};
 
   return (
     <div

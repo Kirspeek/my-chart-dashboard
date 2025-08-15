@@ -21,7 +21,7 @@ export function useGlobalTooltip(options: UseGlobalTooltipOptions = {}) {
     });
   };
 
-  const createTooltipHandlers = (content: ReactNode, color?: string) => {
+  const createTooltipHandlers = (content: ReactNode) => {
     return {
       onMouseEnter: (event: React.MouseEvent) => {
         const rect = event.currentTarget.getBoundingClientRect();

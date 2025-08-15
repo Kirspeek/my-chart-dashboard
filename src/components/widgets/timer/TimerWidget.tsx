@@ -16,6 +16,11 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
+import {
+  InteractiveButton,
+  IconButton,
+  useMobileDetection,
+} from "../../common";
 
 interface TimerMode {
   id: string;
@@ -187,7 +192,7 @@ export default function TimerWidget({
 
       setTimeLeft(Math.max(0, Math.min(currentTimer.duration, newTimeLeft)));
     },
-    [timeLeft, currentTimer.duration]
+    [currentTimer.duration]
   );
 
   // Handle drag move
@@ -224,7 +229,7 @@ export default function TimerWidget({
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
+  const isMobile = useMobileDetection();
 
   return (
     <WidgetBase
@@ -251,43 +256,31 @@ export default function TimerWidget({
         className={`flex gap-1 justify-center ${isMobile ? "flex-wrap" : "flex-col"}`}
       >
         {timerModes.slice(0, 2).map((mode, index) => (
-          <button
+          <InteractiveButton
             key={mode.id}
             onClick={() => {
               setSelectedMode(index);
               resetTimer();
             }}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105 ${
-              selectedMode === index ? "scale-105" : ""
-            }`}
-            style={{
-              background:
-                selectedMode === index ? mode.color + "20" : "var(--button-bg)",
-              border: `1px solid ${selectedMode === index ? mode.color : "var(--button-border)"}`,
-              color:
-                selectedMode === index ? mode.color : "var(--secondary-text)",
-            }}
+            variant={selectedMode === index ? "primary" : "default"}
+            size="sm"
+            icon={<mode.icon className="w-3 h-3" />}
+            className={`${selectedMode === index ? "scale-105" : ""}`}
           >
-            <mode.icon className="w-3 h-3" />
             <span>{mode.name}</span>
-          </button>
+          </InteractiveButton>
         ))}
       </div>
 
       {/* Timer Display with Control Buttons on Sides */}
       <div className="relative flex items-center gap-2">
         {/* Left Control Button */}
-        <button
+        <IconButton
+          icon={<RotateCcw className={isMobile ? "w-5 h-5" : "w-3 h-3"} />}
           onClick={resetTimer}
-          className={`rounded-full transition-all duration-200 hover:scale-110 ${isMobile ? "p-3" : "p-1.5"}`}
-          style={{
-            background: "var(--button-bg)",
-            border: "1px solid var(--button-border)",
-            color: "var(--secondary-text)",
-          }}
-        >
-          <RotateCcw className={isMobile ? "w-5 h-5" : "w-3 h-3"} />
-        </button>
+          size={isMobile ? "lg" : "md"}
+          variant="default"
+        />
 
         {/* Progress Ring - Draggable */}
         <div

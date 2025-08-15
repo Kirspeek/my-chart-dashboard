@@ -34,6 +34,7 @@ import {
 import type { WidgetBarChartData } from "../../../../interfaces/widgets";
 import { useChartLogic } from "src/hooks/useChartLogic";
 import { useTheme } from "src/hooks/useTheme";
+import { Card, StatusBadge, useMobileDetection } from "../../common";
 
 interface BarChartContainerProps {
   data: WidgetBarChartData[];
@@ -49,7 +50,7 @@ interface TooltipProps {
 }
 
 export default function BarChartContainer({ data }: BarChartContainerProps) {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobileDetection();
   const [currentView, setCurrentView] = useState<
     "bars" | "lines" | "area" | "composed"
   >("bars");
@@ -65,17 +66,6 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
 
   const { chartColors, formatValue, axisStyle, gridStyle } = useChartLogic();
   const { colors } = useTheme();
-
-  useEffect(() => {
-    const check = () => {
-      if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth <= 425);
-      }
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   // Animated counter effect
   useEffect(() => {
@@ -710,7 +700,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
             onClick={() =>
               setCurrentView(key as "bars" | "lines" | "area" | "composed")
             }
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 ${
+            className={`flex items-center space-x-1.5 px-4 py-2 rounded-lg text-base font-medium transition-all duration-200 hover:scale-105 font-mono font-bold ${
               currentView === key ? "scale-105" : ""
             }`}
             style={{
@@ -725,7 +715,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
               fontWeight: 700,
             }}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-5 h-5" />
             {!isMobile && <span>{label}</span>}
           </button>
         ))}
@@ -774,13 +764,12 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
             badge: "Trending",
           },
         ].map((item, index) => (
-          <div
+          <Card
             key={index}
-            className="p-2 rounded-lg relative overflow-hidden min-h-[70px] group hover:scale-[1.02] transition-all duration-300"
-            style={{
-              background: "var(--button-bg)",
-              border: "1px solid var(--button-border)",
-            }}
+            variant="default"
+            size="sm"
+            hover
+            className="relative overflow-hidden min-h-[70px] group"
           >
             {/* Animated background accent */}
             <div
@@ -790,18 +779,18 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
 
             {/* Badge - moved to top-left to avoid overlap */}
             <div className="absolute top-1 left-1">
-              <div
-                className="text-xs px-1 py-0.5 rounded-full"
+              <StatusBadge
+                variant="default"
+                size="sm"
+                className="font-mono font-bold"
                 style={{
                   background: item.color + "20",
                   color: item.color,
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
                   fontSize: "0.6rem",
                 }}
               >
                 {item.badge}
-              </div>
+              </StatusBadge>
             </div>
 
             <div className="relative z-10 h-full flex flex-col justify-between pt-6">
@@ -854,7 +843,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
                 </span>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
 

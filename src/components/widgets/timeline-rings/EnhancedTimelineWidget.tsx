@@ -15,10 +15,8 @@ import {
   Zap,
   Settings,
   TrendingUp,
-  Calendar,
   Target,
   Award,
-  Lightbulb,
   Zap as Lightning,
 } from "lucide-react";
 import type { TimelineItem } from "../../../../interfaces/charts";
@@ -42,32 +40,6 @@ function shadeColor(color: string, percent: number) {
   R = Math.min(255, Math.max(0, R + (255 - R) * percent));
   G = Math.min(255, Math.max(0, G + (255 - G) * percent));
   B = Math.min(255, Math.max(0, B + (255 - B) * percent));
-  return (
-    "#" +
-    R.toString(16).padStart(2, "0") +
-    G.toString(16).padStart(2, "0") +
-    B.toString(16).padStart(2, "0")
-  );
-}
-
-function darkenColor(color: string, percent: number) {
-  // Add validation to ensure color is a valid hex string
-  if (!color || typeof color !== "string" || !color.startsWith("#")) {
-    return "#333333"; // Fallback color
-  }
-
-  let R = parseInt(color.substring(1, 3), 16);
-  let G = parseInt(color.substring(3, 5), 16);
-  let B = parseInt(color.substring(5, 7), 16);
-
-  // Check if parsing was successful
-  if (isNaN(R) || isNaN(G) || isNaN(B)) {
-    return "#333333"; // Fallback color
-  }
-
-  R = Math.round(R * (1 - percent));
-  G = Math.round(G * (1 - percent));
-  B = Math.round(B * (1 - percent));
   return (
     "#" +
     R.toString(16).padStart(2, "0") +
@@ -123,7 +95,7 @@ export default function EnhancedTimelineWidget({
   currentSlide,
   setCurrentSlide,
 }: EnhancedTimelineWidgetProps) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   const { createTooltipHandlers } = useGlobalTooltip();
 
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -394,8 +366,8 @@ export default function EnhancedTimelineWidget({
             <div
               className="relative p-3 rounded-lg overflow-hidden"
               style={{
-                background: `linear-gradient(135deg, ${colors.accent.green}15, ${colors.accent.green}05)`,
-                border: `1px solid ${colors.accent.green}25`,
+                background: `linear-gradient(135deg, ${colors.accent.teal}15, ${colors.accent.teal}05)`,
+                border: `1px solid ${colors.accent.teal}25`,
               }}
             >
               <div className="flex items-center justify-between">
@@ -415,9 +387,9 @@ export default function EnhancedTimelineWidget({
                 </div>
                 <div
                   className="p-1.5 rounded-md"
-                  style={{ backgroundColor: `${colors.accent.green}20` }}
+                  style={{ backgroundColor: `${colors.accent.teal}20` }}
                 >
-                  <Award size={12} style={{ color: colors.accent.green }} />
+                  <Award size={12} style={{ color: colors.accent.teal }} />
                 </div>
               </div>
             </div>
@@ -492,18 +464,17 @@ export default function EnhancedTimelineWidget({
                   onClick={() => setIsPlaying(!isPlaying)}
                   className="relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${colors.accent.green}20, ${colors.accent.green}10)`,
-                    border: `1px solid ${colors.accent.green}30`,
+                    background: `linear-gradient(135deg, ${colors.accent.teal}20, ${colors.accent.teal}10)`,
+                    border: `1px solid ${colors.accent.teal}30`,
                   }}
                   {...createTooltipHandlers(
-                    isPlaying ? "Pause animation" : "Play animation",
-                    colors.accent.green
+                    isPlaying ? "Pause animation" : "Play animation"
                   )}
                 >
                   {isPlaying ? (
-                    <Pause size={18} style={{ color: colors.accent.green }} />
+                    <Pause size={18} style={{ color: colors.accent.teal }} />
                   ) : (
-                    <Play size={18} style={{ color: colors.accent.green }} />
+                    <Play size={18} style={{ color: colors.accent.teal }} />
                   )}
                 </button>
 
@@ -530,10 +501,7 @@ export default function EnhancedTimelineWidget({
                             : `linear-gradient(135deg, ${colors.accent.yellow}10, ${colors.accent.yellow}05)`,
                           border: `1px solid ${colors.accent.yellow}30`,
                         }}
-                        {...createTooltipHandlers(
-                          `${speed.label} speed`,
-                          colors.accent.yellow
-                        )}
+                        {...createTooltipHandlers(`${speed.label} speed`)}
                       >
                         <Icon
                           size={14}
@@ -556,10 +524,7 @@ export default function EnhancedTimelineWidget({
                     background: `linear-gradient(135deg, ${colors.accent.red}20, ${colors.accent.red}10)`,
                     border: `1px solid ${colors.accent.red}30`,
                   }}
-                  {...createTooltipHandlers(
-                    "Reset to default",
-                    colors.accent.red
-                  )}
+                  {...createTooltipHandlers("Reset to default")}
                 >
                   <RotateCcw size={18} style={{ color: colors.accent.red }} />
                 </button>
@@ -573,27 +538,24 @@ export default function EnhancedTimelineWidget({
                 }`}
                 style={{
                   background: showDetails
-                    ? `linear-gradient(135deg, ${colors.accent.violet}20, ${colors.accent.violet}10)`
-                    : `linear-gradient(135deg, ${colors.accent.violet}10, ${colors.accent.violet}05)`,
-                  border: `1px solid ${colors.accent.violet}30`,
+                    ? `linear-gradient(135deg, ${colors.accent.blue}20, ${colors.accent.blue}10)`
+                    : `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
+                  border: `1px solid ${colors.accent.blue}30`,
                 }}
                 {...createTooltipHandlers(
-                  showDetails ? "Hide details" : "Show details",
-                  colors.accent.violet
+                  showDetails ? "Hide details" : "Show details"
                 )}
               >
                 <Settings
                   size={18}
                   style={{
-                    color: showDetails
-                      ? colors.accent.violet
-                      : colors.secondary,
+                    color: showDetails ? colors.accent.blue : colors.secondary,
                   }}
                 />
                 {showDetails && (
                   <div
                     className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-pulse"
-                    style={{ backgroundColor: colors.accent.violet }}
+                    style={{ backgroundColor: colors.accent.blue }}
                   />
                 )}
               </button>
@@ -604,7 +566,7 @@ export default function EnhancedTimelineWidget({
               <div className="flex items-center space-x-2">
                 <div
                   className="w-2 h-2 rounded-full animate-pulse"
-                  style={{ backgroundColor: colors.accent.green }}
+                  style={{ backgroundColor: colors.accent.teal }}
                 />
                 <span
                   className="text-xs font-medium"
