@@ -16,11 +16,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
-import {
-  InteractiveButton,
-  IconButton,
-  useMobileDetection,
-} from "../../common";
+import { IconButton, useMobileDetection } from "../../common";
 
 interface TimerMode {
   id: string;
@@ -256,19 +252,26 @@ export default function TimerWidget({
         className={`flex gap-1 justify-center ${isMobile ? "flex-wrap" : "flex-col"}`}
       >
         {timerModes.slice(0, 2).map((mode, index) => (
-          <InteractiveButton
+          <button
             key={mode.id}
             onClick={() => {
               setSelectedMode(index);
               resetTimer();
             }}
-            variant={selectedMode === index ? "primary" : "default"}
-            size="sm"
-            icon={<mode.icon className="w-3 h-3" />}
-            className={`${selectedMode === index ? "scale-105" : ""}`}
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105 ${
+              selectedMode === index ? "scale-105" : ""
+            }`}
+            style={{
+              background:
+                selectedMode === index ? mode.color + "20" : "var(--button-bg)",
+              border: `1px solid ${selectedMode === index ? mode.color : "var(--button-border)"}`,
+              color:
+                selectedMode === index ? mode.color : "var(--secondary-text)",
+            }}
           >
+            <mode.icon className="w-3 h-3" />
             <span>{mode.name}</span>
-          </InteractiveButton>
+          </button>
         ))}
       </div>
 
