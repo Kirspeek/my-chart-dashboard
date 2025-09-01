@@ -13,8 +13,12 @@ import {
 } from "recharts";
 import type { LineChartProps } from "../../interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
+import { useTheme } from "../hooks/useTheme";
 
 export default function LineChart({ data, title }: LineChartProps) {
+  const { colorsTheme } = useTheme();
+  const lineChartColors = colorsTheme.widgets.lineChart;
+
   return (
     <WidgetBase>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -22,17 +26,17 @@ export default function LineChart({ data, title }: LineChartProps) {
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <RechartsLineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+          <CartesianGrid strokeDasharray="3 3" stroke={lineChartColors.grid} />
+          <XAxis dataKey="month" stroke={lineChartColors.axis} fontSize={12} />
           <YAxis
-            stroke="#6b7280"
+            stroke={lineChartColors.axis}
             fontSize={12}
             tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#ffffff",
-              border: "1px solid #e5e7eb",
+              backgroundColor: lineChartColors.tooltip.background,
+              border: `1px solid ${lineChartColors.tooltip.border}`,
               borderRadius: "8px",
               boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
             }}
@@ -45,25 +49,25 @@ export default function LineChart({ data, title }: LineChartProps) {
           <Line
             type="monotone"
             dataKey="sales"
-            stroke="#3b82f6"
+            stroke={lineChartColors.lines.sales}
             strokeWidth={2}
-            dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+            dot={{ fill: lineChartColors.lines.sales, strokeWidth: 2, r: 4 }}
             activeDot={{ r: 6 }}
           />
           <Line
             type="monotone"
             dataKey="revenue"
-            stroke="#10b981"
+            stroke={lineChartColors.lines.revenue}
             strokeWidth={2}
-            dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+            dot={{ fill: lineChartColors.lines.revenue, strokeWidth: 2, r: 4 }}
             activeDot={{ r: 6 }}
           />
           <Line
             type="monotone"
             dataKey="profit"
-            stroke="#f59e0b"
+            stroke={lineChartColors.lines.profit}
             strokeWidth={2}
-            dot={{ fill: "#f59e0b", strokeWidth: 2, r: 4 }}
+            dot={{ fill: lineChartColors.lines.profit, strokeWidth: 2, r: 4 }}
             activeDot={{ r: 6 }}
           />
         </RechartsLineChart>

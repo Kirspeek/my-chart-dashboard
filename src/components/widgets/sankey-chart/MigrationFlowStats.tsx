@@ -34,7 +34,8 @@ export default function MigrationFlowStats({
   data,
   selectedFlow,
 }: MigrationFlowStatsProps) {
-  const { colors } = useTheme();
+  const { colors, colorsTheme } = useTheme();
+  const sankeyChartColors = colorsTheme.widgets.sankeyChart;
 
   // Calculate comprehensive statistics
   const stats: FlowStats = React.useMemo(() => {
@@ -90,20 +91,20 @@ export default function MigrationFlowStats({
 
   const getTrendIcon = (value: number) => {
     if (value > 0)
-      return <TrendingUp className="w-4 h-4" style={{ color: "#34D399" }} />;
+      return <TrendingUp className="w-4 h-4" style={{ color: sankeyChartColors.stats.trend.positive }} />;
     if (value < 0)
-      return <TrendingDown className="w-4 h-4" style={{ color: "#EF4444" }} />;
+      return <TrendingDown className="w-4 h-4" style={{ color: sankeyChartColors.stats.trend.negative }} />;
     return <Minus className="w-4 h-4" style={{ color: colors.secondary }} />;
   };
 
   const getContinentColor = (continent: string) => {
     const colors = [
-      "#E0E7FF", // Very Light Indigo
-      "#F0FDF4", // Very Light Green
-      "#FEF3C7", // Very Light Yellow
-      "#FEE2E2", // Very Light Red
-      "#F3E8FF", // Very Light Purple
-      "#ECFDF5", // Very Light Emerald
+      sankeyChartColors.stats.background.primary, // Very Light Indigo
+      sankeyChartColors.stats.background.secondary, // Very Light Green
+      sankeyChartColors.stats.background.tertiary, // Very Light Yellow
+      sankeyChartColors.stats.background.quaternary, // Very Light Red
+      sankeyChartColors.stats.background.quinary, // Very Light Purple
+      sankeyChartColors.stats.background.senary, // Very Light Emerald
     ];
     const index = continent.charCodeAt(0) % colors.length;
     return colors[index];
@@ -126,11 +127,11 @@ export default function MigrationFlowStats({
             <div
               className="flex items-center justify-center w-12 h-12 rounded-xl"
               style={{
-                background: "#818CF8",
+                background: sankeyChartColors.button.background,
                 boxShadow: "0 2px 8px rgba(129, 140, 248, 0.2)",
               }}
             >
-              <Globe className="w-6 h-6 text-white" />
+              <Globe className="w-6 h-6" style={{ color: sankeyChartColors.stats.text }} />
             </div>
             <div>
               <div
@@ -170,11 +171,11 @@ export default function MigrationFlowStats({
             <div
               className="flex items-center justify-center w-12 h-12 rounded-xl"
               style={{
-                background: "#34D399",
+                background: sankeyChartColors.stats.trend.positive,
                 boxShadow: "0 2px 8px rgba(52, 211, 153, 0.2)",
               }}
             >
-              <Users className="w-6 h-6 text-white" />
+              <Users className="w-6 h-6" style={{ color: sankeyChartColors.stats.text }} />
             </div>
             <div>
               <div
@@ -223,11 +224,11 @@ export default function MigrationFlowStats({
           <div
             className="flex items-center justify-center w-8 h-8 rounded-lg"
             style={{
-              background: "#8B5CF6",
+              background: sankeyChartColors.stats.background.quinary,
               boxShadow: "0 1px 4px rgba(139, 92, 246, 0.2)",
             }}
           >
-            <Activity className="w-4 h-4 text-white" />
+            <Activity className="w-4 h-4" style={{ color: sankeyChartColors.stats.text }} />
           </div>
           <span>Top Migration Flows</span>
         </div>
@@ -297,8 +298,8 @@ export default function MigrationFlowStats({
                   <div
                     className="px-3 py-1 rounded-full text-xs font-bold"
                     style={{
-                      background: "#818CF8",
-                      color: "#fff",
+                      background: sankeyChartColors.button.background,
+                      color: sankeyChartColors.stats.text,
                       fontFamily: "var(--font-mono)",
                       boxShadow: "0 1px 4px rgba(129, 140, 248, 0.2)",
                     }}
@@ -374,9 +375,9 @@ export default function MigrationFlowStats({
                     style={{
                       color:
                         stats.net > 0
-                          ? "#34D399"
+                          ? sankeyChartColors.stats.trend.positive
                           : stats.net < 0
-                            ? "#EF4444"
+                            ? sankeyChartColors.stats.trend.negative
                             : colors.secondary,
                       fontFamily: "var(--font-mono)",
                       fontWeight: 800,

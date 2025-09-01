@@ -1,26 +1,81 @@
 import { motion } from "framer-motion";
+import { useTheme } from "../../hooks/useTheme";
 
 // A soft, stylized cloud SVG
-const CloudSVG = ({ style = {} }: { style?: React.CSSProperties }) => (
-  <svg
-    width="180"
-    height="120"
-    viewBox="0 0 180 80"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={style}
-  >
-    {/* Main cloud ellipses */}
-    <ellipse cx="70" cy="54" rx="54" ry="26" fill="#fff" fillOpacity="0.85" />
-    <ellipse cx="120" cy="48" rx="38" ry="20" fill="#fff" fillOpacity="0.7" />
-    <ellipse cx="95" cy="38" rx="44" ry="18" fill="#e0e0e0" fillOpacity="0.5" />
-    {/* Lower puffs for smooth rounded bottom */}
-    <ellipse cx="60" cy="68" rx="18" ry="12" fill="#fff" fillOpacity="0.7" />
-    <ellipse cx="85" cy="72" rx="14" ry="10" fill="#fff" fillOpacity="0.6" />
-    <ellipse cx="110" cy="68" rx="12" ry="8" fill="#e0e0e0" fillOpacity="0.4" />
-    <ellipse cx="130" cy="62" rx="10" ry="7" fill="#fff" fillOpacity="0.4" />
-  </svg>
-);
+const CloudSVG = ({ style = {} }: { style?: React.CSSProperties }) => {
+  const { colorsTheme } = useTheme();
+  const cloudAnimationColors = colorsTheme.widgets.cloudAnimation;
+
+  return (
+    <svg
+      width="180"
+      height="120"
+      viewBox="0 0 180 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={style}
+    >
+      {/* Main cloud ellipses */}
+      <ellipse
+        cx="70"
+        cy="54"
+        rx="54"
+        ry="26"
+        fill={cloudAnimationColors.primary}
+        fillOpacity="0.85"
+      />
+      <ellipse
+        cx="120"
+        cy="48"
+        rx="38"
+        ry="20"
+        fill={cloudAnimationColors.primary}
+        fillOpacity="0.7"
+      />
+      <ellipse
+        cx="95"
+        cy="38"
+        rx="44"
+        ry="18"
+        fill={cloudAnimationColors.secondary}
+        fillOpacity="0.5"
+      />
+      {/* Lower puffs for smooth rounded bottom */}
+      <ellipse
+        cx="60"
+        cy="68"
+        rx="18"
+        ry="12"
+        fill={cloudAnimationColors.primary}
+        fillOpacity="0.7"
+      />
+      <ellipse
+        cx="85"
+        cy="72"
+        rx="14"
+        ry="10"
+        fill={cloudAnimationColors.primary}
+        fillOpacity="0.6"
+      />
+      <ellipse
+        cx="110"
+        cy="68"
+        rx="12"
+        ry="8"
+        fill={cloudAnimationColors.secondary}
+        fillOpacity="0.4"
+      />
+      <ellipse
+        cx="130"
+        cy="62"
+        rx="10"
+        ry="7"
+        fill={cloudAnimationColors.primary}
+        fillOpacity="0.4"
+      />
+    </svg>
+  );
+};
 
 export default function CloudAnimation() {
   // Animate clouds from left to right and loop

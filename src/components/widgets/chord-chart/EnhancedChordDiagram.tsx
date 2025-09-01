@@ -62,7 +62,8 @@ export default function EnhancedChordDiagram({
   totalMigration = 0,
 }: EnhancedChordDiagramProps) {
   const ref = useRef<SVGSVGElement>(null);
-  const { accent, colors, isDark } = useTheme();
+  const { accent, colors, isDark, colorsTheme } = useTheme();
+  const chordChartColors = colorsTheme.widgets.chordChart;
   const { createTooltipHandlers } = useGlobalTooltip();
 
   const flowColorMap = useMemo(() => {
@@ -180,7 +181,7 @@ export default function EnhancedChordDiagram({
         .append("rect")
         .attr("width", width)
         .attr("height", height)
-        .attr("fill", "url(#backgroundPattern)");
+        .attr("fill", chordChartColors.background.pattern);
 
       const chord = d3.chord().padAngle(0.05).sortSubgroups(d3.descending)(
         matrix

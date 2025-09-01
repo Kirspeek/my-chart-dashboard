@@ -65,7 +65,8 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
   const [hoveredQuarter, setHoveredQuarter] = useState<string | null>(null);
 
   const { chartColors, formatValue, axisStyle, gridStyle } = useChartLogic();
-  const { colors } = useTheme();
+  const { colors, colorsTheme } = useTheme();
+  const barChartColors = colorsTheme.widgets.barChart;
 
   // Animated counter effect
   useEffect(() => {
@@ -166,9 +167,9 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
         <div
           className="p-3 rounded-lg shadow-lg border-0"
           style={{
-            background: "rgba(255, 255, 255, 0.95)",
+            background: barChartColors.tooltip.background,
             backdropFilter: "blur(10px)",
-            border: "1px solid rgba(0, 0, 0, 0.1)",
+            border: `1px solid ${barChartColors.tooltip.border}`,
           }}
         >
           <div
@@ -388,13 +389,13 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
                   r: 5,
                   fill: chartColors.revenue,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: barChartColors.chart.dotStroke,
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.revenue,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: barChartColors.chart.dotStroke,
                 }}
               />
               <Line
@@ -407,13 +408,13 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
                   r: 5,
                   fill: chartColors.sales,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: barChartColors.chart.dotStroke,
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.sales,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: barChartColors.chart.dotStroke,
                 }}
               />
             </RechartsLineChart>
@@ -593,7 +594,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
                   r: 4,
                   fill: chartColors.sales,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: barChartColors.chart.dotStroke,
                 }}
               />
             </ComposedChart>

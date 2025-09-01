@@ -26,8 +26,8 @@ export default function CalendarGrid({
   isCurrentMonth,
   onDateSelect,
 }: CalendarGridProps) {
-  const { accent } = useTheme();
-  const accentColor = accent.teal;
+  const { colorsTheme } = useTheme();
+  const calendarColors = colorsTheme.widgets.calendar;
 
   const safeWeekDays =
     Array.isArray(weekDays) && weekDays.length > 0
@@ -104,7 +104,7 @@ export default function CalendarGrid({
               key={index}
               selected={isSelected(day)}
               onClick={() => onDateSelect(day)}
-              customAccentColor={accentColor}
+              customAccentColor={calendarColors.accentColor}
               style={{
                 padding: "0.5rem",
                 minWidth: "auto",
@@ -128,7 +128,7 @@ export default function CalendarGrid({
                 {hasEvents(day) && (
                   <div
                     className="w-2 h-2 rounded-full mx-auto mt-1"
-                    style={{ backgroundColor: accentColor }}
+                    style={{ backgroundColor: calendarColors.accentColor }}
                   />
                 )}
               </div>
@@ -161,7 +161,7 @@ export default function CalendarGrid({
             key={index}
             selected={isSelected(day)}
             onClick={() => onDateSelect(day)}
-            customAccentColor={accentColor}
+            customAccentColor={calendarColors.accentColor}
             style={{
               padding: "0.25rem",
               minWidth: "auto",
@@ -185,7 +185,7 @@ export default function CalendarGrid({
               {hasEvents(day) && (
                 <div
                   className="w-1.5 h-1.5 rounded-full mx-auto mt-0.5"
-                  style={{ backgroundColor: accentColor }}
+                  style={{ backgroundColor: calendarColors.accentColor }}
                 />
               )}
             </div>

@@ -12,6 +12,7 @@ import type { DeviceUsageData } from "../../../../interfaces/widgets";
 import { useDeviceUsageLogic } from "src/hooks/useDeviceUsageLogic";
 import { Monitor, Smartphone, Tablet, Laptop, Activity } from "lucide-react";
 import { Card, useMobileDetection } from "../../common";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface DeviceUsageContainerProps {
   data: DeviceUsageData[];
@@ -84,35 +85,18 @@ export default function DeviceUsageContainer({
   data,
 }: DeviceUsageContainerProps) {
   const isMobile = useMobileDetection();
+  const { colorsTheme } = useTheme();
+  const deviceUsageColors = colorsTheme.widgets.deviceUsage;
 
   const { tooltipStyle, formatTooltip } = useDeviceUsageLogic();
 
   const totalUsage = data.reduce((sum, item) => sum + item.value, 0);
 
   // Complex color palette with opacity variations using theme accent
-  const complexColors = [
-    // Primary colors with opacity variations using theme accent
-    "rgba(234, 122, 0, 0.6)", // Accent with lower opacity
-    "rgba(234, 122, 0, 0.5)", // Accent with opacity
-    "rgba(234, 122, 0, 0.4)", // Accent with opacity
-    "rgba(234, 122, 0, 0.35)", // Accent with opacity
-    "rgba(234, 122, 0, 0.3)", // Accent with opacity
-    "rgba(234, 122, 0, 0.25)", // Accent with opacity
-    "rgba(234, 122, 0, 0.2)", // Accent with opacity
-    "rgba(234, 122, 0, 0.15)", // Accent with opacity
-  ];
+  const complexColors = deviceUsageColors.opacity.primary;
 
   // Secondary colors for gradients using theme accent
-  const secondaryColors = [
-    "rgba(234, 122, 0, 0.15)",
-    "rgba(234, 122, 0, 0.12)",
-    "rgba(234, 122, 0, 0.1)",
-    "rgba(234, 122, 0, 0.08)",
-    "rgba(234, 122, 0, 0.06)",
-    "rgba(234, 122, 0, 0.04)",
-    "rgba(234, 122, 0, 0.02)",
-    "rgba(234, 122, 0, 0.01)",
-  ];
+  const secondaryColors = deviceUsageColors.opacity.secondary;
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 h-full relative group">
@@ -188,7 +172,7 @@ export default function DeviceUsageContainer({
               }}
               outerRadius={isMobile ? 60 : 80}
               innerRadius={isMobile ? 20 : 30}
-              fill="#8884d8"
+              fill={deviceUsageColors.colors.fill}
               dataKey="value"
               stroke="var(--widget-bg)"
               strokeWidth={4}
@@ -226,7 +210,7 @@ export default function DeviceUsageContainer({
                 border: "2px solid var(--widget-border)",
                 borderRadius: "12px",
                 color: "var(--primary-text)",
-                boxShadow: "0 8px 32px 0 rgba(35, 35, 35, 0.18)",
+                boxShadow: `0 8px 32px 0 ${deviceUsageColors.shadow}`,
                 backdropFilter: "blur(8px)",
                 WebkitBackdropFilter: "blur(8px)",
                 opacity: 0.95,

@@ -1,21 +1,55 @@
 import { useMemo } from "react";
 import { ContributionData, ValueRange } from "../../../../../interfaces";
+import { useTheme } from "../../../../hooks/useTheme";
 
 export const useContributionDataLogic = (data: ContributionData[]) => {
+  const { colorsTheme } = useTheme();
+  const contributionGraphColors = colorsTheme.widgets.contributionGraph;
+
   const valueRanges = useMemo(
     (): ValueRange[] => [
-      { min: 0, max: 0, color: "#ebedf0", label: "No activity" },
-      { min: 1, max: 20, color: "#FFE9EF", label: "Very Low" },
-      { min: 21, max: 40, color: "#FFC9D7", label: "Low" },
-      { min: 41, max: 60, color: "#FFBCCD", label: "Medium-Low" },
-      { min: 61, max: 80, color: "#FF9CB5", label: "Medium" },
-      { min: 81, max: 100, color: "#FC809F", label: "High" },
+      {
+        min: 0,
+        max: 0,
+        color: contributionGraphColors.valueRanges.noActivity,
+        label: "No activity",
+      },
+      {
+        min: 1,
+        max: 20,
+        color: contributionGraphColors.valueRanges.veryLow,
+        label: "Very Low",
+      },
+      {
+        min: 21,
+        max: 40,
+        color: contributionGraphColors.valueRanges.low,
+        label: "Low",
+      },
+      {
+        min: 41,
+        max: 60,
+        color: contributionGraphColors.valueRanges.mediumLow,
+        label: "Medium-Low",
+      },
+      {
+        min: 61,
+        max: 80,
+        color: contributionGraphColors.valueRanges.medium,
+        label: "Medium",
+      },
+      {
+        min: 81,
+        max: 100,
+        color: contributionGraphColors.valueRanges.high,
+        label: "High",
+      },
     ],
-    []
+    [contributionGraphColors.valueRanges]
   );
 
   const getColorForValue = (value: number): string => {
-    if (value === 0) return "#ebedf0";
+    if (value === 0) return contributionGraphColors.valueRanges.noActivity;
     const range = valueRanges.find((r) => value >= r.min && value <= r.max);
     return range ? range.color : valueRanges[0].color;
   };

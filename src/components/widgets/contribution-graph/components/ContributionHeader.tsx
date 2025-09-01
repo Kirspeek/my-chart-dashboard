@@ -1,5 +1,6 @@
 import React from "react";
 import { WidgetTitle } from "../../../common";
+import { useTheme } from "../../../../hooks/useTheme";
 
 interface ContributionHeaderProps {
   title: string;
@@ -20,6 +21,9 @@ export default function ContributionHeader({
   isRealTime = true,
   setIsRealTime,
 }: ContributionHeaderProps) {
+  const { colorsTheme } = useTheme();
+  const contributionGraphColors = colorsTheme.widgets.contributionGraph;
+
   // Create subtitle with financial data
   const subtitle = `Total: $${totalYearSpending.toLocaleString()} | Avg: $${averageDailySpending}/day`;
 
@@ -38,21 +42,21 @@ export default function ContributionHeader({
         <div
           className="flex items-center space-x-2 px-3 py-1.5 rounded-full"
           style={{
-            background: "linear-gradient(135deg, #FFE9EF 0%, #FFC9D7 100%)",
-            border: "2px solid #FC809F",
-            boxShadow: "0 2px 8px rgba(252, 128, 159, 0.15)",
+            background: contributionGraphColors.header.background,
+            border: `2px solid ${contributionGraphColors.header.border}`,
+            boxShadow: contributionGraphColors.header.shadow,
           }}
         >
           <div className="flex items-center space-x-2">
             <div className="relative">
               <div
                 className="w-2.5 h-2.5 rounded-full animate-pulse"
-                style={{ background: "#FC809F" }}
+                style={{ background: contributionGraphColors.header.text }}
               />
               <div
                 className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping"
                 style={{
-                  background: "#FC809F",
+                  background: contributionGraphColors.header.text,
                   opacity: 0.3,
                 }}
               />
@@ -60,7 +64,7 @@ export default function ContributionHeader({
             <span
               className="text-xs font-bold"
               style={{
-                color: "#FC809F",
+                color: contributionGraphColors.header.text,
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
                 textTransform: "uppercase",
@@ -72,15 +76,22 @@ export default function ContributionHeader({
           </div>
           <div
             className="w-px h-3 mx-1.5"
-            style={{ background: "#FC809F", opacity: 0.3 }}
+            style={{
+              background: contributionGraphColors.header.text,
+              opacity: 0.3,
+            }}
           />
           <button
             onClick={() => setIsRealTime(!isRealTime)}
             className="text-xs px-2 py-0.5 rounded-full transition-all duration-200 font-bold"
             style={{
-              background: isRealTime ? "#FC809F" : "transparent",
-              color: isRealTime ? "white" : "#FC809F",
-              border: `1px solid ${isRealTime ? "#FC809F" : "#FC809F"}`,
+              background: isRealTime
+                ? contributionGraphColors.header.buttonBackground
+                : "transparent",
+              color: isRealTime
+                ? contributionGraphColors.header.buttonText
+                : contributionGraphColors.header.text,
+              border: `1px solid ${contributionGraphColors.header.buttonBorder}`,
               fontFamily: "var(--font-mono)",
               fontWeight: 700,
             }}

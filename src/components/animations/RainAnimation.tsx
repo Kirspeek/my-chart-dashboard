@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "../../hooks/useTheme";
 
 const NB_DROPS = 60;
 
@@ -8,6 +9,8 @@ function randRange(min: number, max: number) {
 }
 
 export default function RainAnimation() {
+  const { colorsTheme } = useTheme();
+  const rainAnimationColors = colorsTheme.widgets.rainAnimation;
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export default function RainAnimation() {
         height: "100%",
         pointerEvents: "none",
         overflow: "hidden",
-        background: "linear-gradient(to bottom, #3a7ca5 0%, #274472 100%)",
+        background: rainAnimationColors.background,
       }}
       className="rain-animation"
     >
@@ -57,8 +60,14 @@ export default function RainAnimation() {
               y2="1"
               gradientTransform="scale(1,90)"
             >
-              <stop offset="0%" stopColor="#fff" />
-              <stop offset="100%" stopColor="#dbe6ef" />
+              <stop
+                offset="0%"
+                stopColor={rainAnimationColors.cloudGradient.start}
+              />
+              <stop
+                offset="100%"
+                stopColor={rainAnimationColors.cloudGradient.end}
+              />
             </linearGradient>
           </defs>
           <path
@@ -94,8 +103,14 @@ export default function RainAnimation() {
               y2="1"
               gradientTransform="scale(1,60)"
             >
-              <stop offset="0%" stopColor="#fff" />
-              <stop offset="100%" stopColor="#dbe6ef" />
+              <stop
+                offset="0%"
+                stopColor={rainAnimationColors.cloudGradient.start}
+              />
+              <stop
+                offset="100%"
+                stopColor={rainAnimationColors.cloudGradient.end}
+              />
             </linearGradient>
           </defs>
           <path
@@ -131,8 +146,14 @@ export default function RainAnimation() {
               y2="1"
               gradientTransform="scale(1,56)"
             >
-              <stop offset="0%" stopColor="#fff" />
-              <stop offset="100%" stopColor="#dbe6ef" />
+              <stop
+                offset="0%"
+                stopColor={rainAnimationColors.cloudGradient.start}
+              />
+              <stop
+                offset="100%"
+                stopColor={rainAnimationColors.cloudGradient.end}
+              />
             </linearGradient>
           </defs>
           <path
@@ -166,7 +187,7 @@ export default function RainAnimation() {
       })}
       <style>{`
         .drop {
-          background: linear-gradient(to bottom, rgba(13,52,58,1) 0%, rgba(255,255,255,0.6) 100%);
+          background: linear-gradient(to bottom, ${rainAnimationColors.dropGradient.start} 0%, ${rainAnimationColors.dropGradient.end} 100%);
         }
         @keyframes fall {
           to { margin-top: 900px; }

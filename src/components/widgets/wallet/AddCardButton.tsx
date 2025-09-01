@@ -2,6 +2,7 @@
 
 import React from "react";
 import { AddCardButtonProps } from "../../../../interfaces/wallet";
+import { useTheme } from "../../../hooks/useTheme";
 
 export default function AddCardButton({
   onClick,
@@ -9,6 +10,9 @@ export default function AddCardButton({
   cardCount = 0,
   maxCards = 20,
 }: AddCardButtonProps) {
+  const { colorsTheme } = useTheme();
+  const walletColors = colorsTheme.widgets.wallet;
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -34,13 +38,12 @@ export default function AddCardButton({
         width: 60,
         height: 60,
         borderRadius: "50%",
-        background: "rgba(35, 35, 35, 0.07)",
+        background: walletColors.buttonColors.background,
         border: "none",
         color: "transparent",
         fontSize: 24,
         cursor: disabled ? "not-allowed" : "pointer",
-        boxShadow:
-          "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+        boxShadow: walletColors.buttonColors.shadow,
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         zIndex: 20,
         WebkitMask:
@@ -51,31 +54,33 @@ export default function AddCardButton({
       onMouseEnter={(e) => {
         if (!disabled) {
           e.currentTarget.style.transform = "translateX(-50%) translateY(-1px)";
-          e.currentTarget.style.background = "rgba(35, 35, 35, 0.12)";
+          e.currentTarget.style.background =
+            walletColors.buttonColors.backgroundHover;
           e.currentTarget.style.boxShadow =
-            "0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)";
+            walletColors.buttonColors.shadowHover;
         }
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateX(-50%) translateY(0)";
-        e.currentTarget.style.background = "rgba(35, 35, 35, 0.07)";
-        e.currentTarget.style.boxShadow =
-          "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)";
+        e.currentTarget.style.background = walletColors.buttonColors.background;
+        e.currentTarget.style.boxShadow = walletColors.buttonColors.shadow;
       }}
       onMouseDown={(e) => {
         if (!disabled) {
           e.currentTarget.style.transform = "translateX(-50%) translateY(2px)";
-          e.currentTarget.style.background = "rgba(35, 35, 35, 0.18)";
+          e.currentTarget.style.background =
+            walletColors.buttonColors.backgroundActive;
           e.currentTarget.style.boxShadow =
-            "inset 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 -1px 2px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1)";
+            walletColors.buttonColors.shadowActive;
         }
       }}
       onMouseUp={(e) => {
         if (!disabled) {
           e.currentTarget.style.transform = "translateX(-50%) translateY(-1px)";
-          e.currentTarget.style.background = "rgba(35, 35, 35, 0.12)";
+          e.currentTarget.style.background =
+            walletColors.buttonColors.backgroundHover;
           e.currentTarget.style.boxShadow =
-            "0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)";
+            walletColors.buttonColors.shadowHover;
         }
       }}
     >

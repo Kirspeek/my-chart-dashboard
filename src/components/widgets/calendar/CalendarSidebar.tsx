@@ -24,8 +24,8 @@ export default function CalendarSidebar({
 }: CalendarSidebarProps) {
   const [newEventTitle, setNewEventTitle] = useState("");
   const [newEventDescription, setNewEventDescription] = useState("");
-  const { accent } = useTheme();
-  const accentColor = accent.teal;
+  const { colorsTheme } = useTheme();
+  const calendarColors = colorsTheme.widgets.calendar;
 
   const handleAddClick = () => {
     if (!selectedDate || !newEventTitle.trim()) return;
@@ -95,13 +95,22 @@ export default function CalendarSidebar({
         {/* Selected Date Display */}
         {selectedDateInfo && (
           <div className="text-center mb-4 flex-shrink-0 mt-4">
-            <div className="text-4xl font-bold text-gray-800 mb-1 calendar-date-number">
+            <div
+              className="text-4xl font-bold mb-1 calendar-date-number"
+              style={{ color: calendarColors.textColors.primary }}
+            >
               {selectedDateInfo.day}
             </div>
-            <div className="text-sm font-medium text-gray-600 mb-2 calendar-date-day">
+            <div
+              className="text-sm font-medium mb-2 calendar-date-day"
+              style={{ color: calendarColors.textColors.secondary }}
+            >
               {selectedDateInfo.dayName}
             </div>
-            <div className="text-xs text-gray-500 calendar-date-month">
+            <div
+              className="text-xs calendar-date-month"
+              style={{ color: calendarColors.textColors.muted }}
+            >
               {selectedDateInfo.month} {selectedDateInfo.year}
             </div>
           </div>
@@ -109,25 +118,42 @@ export default function CalendarSidebar({
 
         {/* Events Section - Scrollable */}
         <div className="flex-1 min-h-0 mb-4">
-          <div className="text-sm font-semibold text-gray-700 mb-2 flex-shrink-0 calendar-events-label">
+          <div
+            className="text-sm font-semibold mb-2 flex-shrink-0 calendar-events-label"
+            style={{ color: calendarColors.textColors.label }}
+          >
             Events
           </div>
           <div className="overflow-y-auto max-h-full hide-scrollbar">
             <div className="space-y-2">
               {dayEvents.length === 0 ? (
-                <div className="text-xs text-gray-500 italic">No events</div>
+                <div
+                  className="text-xs italic"
+                  style={{ color: calendarColors.textColors.muted }}
+                >
+                  No events
+                </div>
               ) : (
                 dayEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-2 rounded-lg"
+                    style={{
+                      backgroundColor: calendarColors.backgroundColors.event,
+                    }}
                   >
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-800 truncate">
+                      <div
+                        className="text-sm font-medium truncate"
+                        style={{ color: calendarColors.textColors.primary }}
+                      >
                         {event.title}
                       </div>
                       {event.description && (
-                        <div className="text-xs text-gray-600 truncate">
+                        <div
+                          className="text-xs truncate"
+                          style={{ color: calendarColors.textColors.secondary }}
+                        >
                           {event.description}
                         </div>
                       )}
@@ -135,7 +161,7 @@ export default function CalendarSidebar({
                     <button
                       onClick={() => onDeleteEvent(event.id)}
                       className="ml-2 text-xs hover:opacity-70"
-                      style={{ color: accentColor }}
+                      style={{ color: calendarColors.accentColor }}
                     >
                       ×
                     </button>
@@ -155,9 +181,22 @@ export default function CalendarSidebar({
                 placeholder="Event title"
                 value={newEventTitle}
                 onChange={(e) => setNewEventTitle(e.target.value)}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent bg-white/30 backdrop-blur-sm"
+                className="w-full px-2 py-1 text-xs rounded focus:outline-none backdrop-blur-sm"
                 style={{
+                  border: `1px solid ${calendarColors.borderColors.input}`,
+                  backgroundColor: calendarColors.backgroundColors.input,
                   boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                  color: calendarColors.textColors.primary,
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor =
+                    calendarColors.borderColors.focus;
+                  e.target.style.boxShadow = `0 0 0 1px ${calendarColors.borderColors.focus}`;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor =
+                    calendarColors.borderColors.input;
+                  e.target.style.boxShadow = "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
                 }}
               />
               <input
@@ -165,9 +204,22 @@ export default function CalendarSidebar({
                 placeholder="Description (optional)"
                 value={newEventDescription}
                 onChange={(e) => setNewEventDescription(e.target.value)}
-                className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent bg-white/30 backdrop-blur-sm"
+                className="w-full px-2 py-1 text-xs rounded focus:outline-none backdrop-blur-sm"
                 style={{
+                  border: `1px solid ${calendarColors.borderColors.input}`,
+                  backgroundColor: calendarColors.backgroundColors.input,
                   boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                  color: calendarColors.textColors.primary,
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor =
+                    calendarColors.borderColors.focus;
+                  e.target.style.boxShadow = `0 0 0 1px ${calendarColors.borderColors.focus}`;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor =
+                    calendarColors.borderColors.input;
+                  e.target.style.boxShadow = "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
                 }}
               />
               <div className="flex gap-1">

@@ -11,10 +11,12 @@ import {
 } from "recharts";
 import type { PieChartProps } from "../../interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
-
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
+import { useTheme } from "../hooks/useTheme";
 
 export default function PieChart({ data, title }: PieChartProps) {
+  const { colorsTheme } = useTheme();
+  const pieChartColors = colorsTheme.widgets.pieChart;
+
   return (
     <WidgetBase>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -31,20 +33,22 @@ export default function PieChart({ data, title }: PieChartProps) {
               `${name} ${((percent || 0) * 100).toFixed(0)}%`
             }
             outerRadius={80}
-            fill="#8884d8"
+            fill={pieChartColors.fill}
             dataKey="value"
           >
             {data.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
+                fill={
+                  pieChartColors.colors[index % pieChartColors.colors.length]
+                }
               />
             ))}
           </Pie>
           <Tooltip
             contentStyle={{
-              backgroundColor: "#ffffff",
-              border: "1px solid #e5e7eb",
+              backgroundColor: pieChartColors.tooltip.background,
+              border: `1px solid ${pieChartColors.tooltip.border}`,
               borderRadius: "8px",
               boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
             }}

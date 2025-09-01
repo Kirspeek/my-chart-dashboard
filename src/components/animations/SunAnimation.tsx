@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function SunAnimation() {
+  const { colorsTheme } = useTheme();
+  const sunAnimationColors = colorsTheme.widgets.sunAnimation;
   // Animation timing
   const duration = 2.2;
   const width = 220;
@@ -45,8 +48,8 @@ export default function SunAnimation() {
       </g>
       <defs>
         <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#FFF59D" />
-          <stop offset="100%" stopColor="#FFD54F" />
+          <stop offset="0%" stopColor={sunAnimationColors.gradient.start} />
+          <stop offset="100%" stopColor={sunAnimationColors.gradient.end} />
         </radialGradient>
         <filter id="sunGlow" x="-30%" y="-30%" width="160%" height="160%">
           <feGaussianBlur stdDeviation="18" result="coloredBlur" />

@@ -6,6 +6,7 @@ import SlideNavigation from "../../common/SlideNavigation";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import MonthlyExpensesChart from "./MonthlyExpensesChart";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
+import { useTheme } from "../../../hooks/useTheme";
 
 export default function WalletCardWidget({
   onOpenSidebar,
@@ -22,6 +23,8 @@ export default function WalletCardWidget({
     useWheelWidgetLogic();
 
   const { targetHeight } = useWidgetHeight();
+  const { colorsTheme } = useTheme();
+  const walletCardColors = colorsTheme.widgets.walletCard;
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
 
@@ -75,7 +78,7 @@ export default function WalletCardWidget({
             className="px-4 py-2 rounded-lg hover:opacity-80 transition-opacity text-sm"
             style={{
               backgroundColor: "var(--accent-color)",
-              color: "#ffffff",
+              color: walletCardColors.button.text,
               fontFamily: "var(--font-sans)",
             }}
           >

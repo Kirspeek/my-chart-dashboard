@@ -34,7 +34,8 @@ export default function CustomChordDiagram({
   setCurrentSlide?: (slide: number) => void;
 }) {
   const ref = useRef<SVGSVGElement>(null);
-  const { accent, colors } = useTheme();
+  const { accent, colors, colorsTheme } = useTheme();
+  const chordChartColors = colorsTheme.widgets.chordChart;
   const arcColors = useMemo(
     () => [accent.blue, accent.yellow, accent.teal, accent.red, accent.yellow],
     [accent.blue, accent.yellow, accent.teal, accent.red]
@@ -272,7 +273,7 @@ export default function CustomChordDiagram({
                 position: "absolute",
                 left: tooltip.x + 10,
                 top: tooltip.y - 10,
-                background: "#fff",
+                background: chordChartColors.background.tooltip,
                 color: colors.primary,
                 borderRadius: 12,
                 boxShadow: "0 4px 16px rgba(0,0,0,0.10)",

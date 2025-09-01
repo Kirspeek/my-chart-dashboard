@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface TimerCircleProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
@@ -19,11 +20,12 @@ export default function TimerCircle({
   onPointerDown,
   formatTime,
 }: TimerCircleProps) {
+  const { colorsTheme } = useTheme();
+  const timerColors = colorsTheme.widgets.timer;
   const svgSize = 90;
   const radius = 38;
   const center = svgSize / 2;
   const knobRadius = 7;
-  const accentColor = "#ff9a9a";
 
   // Progress and angle for arc/knob (remaining time, not elapsed)
   const percentLeft = currentTimeLeft / currentDuration;
@@ -59,7 +61,7 @@ export default function TimerCircle({
           cy={center}
           r={radius}
           fill="none"
-          stroke="#ccc"
+          stroke={timerColors.circleColors.background}
           strokeWidth="6"
         />
         {/* Progress arc (remaining time, accent color) */}
@@ -68,7 +70,7 @@ export default function TimerCircle({
           cy={center}
           r={radius}
           fill="none"
-          stroke={accentColor}
+          stroke={timerColors.circleColors.progress}
           strokeWidth="6"
           strokeLinecap="round"
           strokeDasharray={arcDasharray}
@@ -85,8 +87,8 @@ export default function TimerCircle({
           cx={knobX}
           cy={knobY}
           r={knobRadius}
-          fill="#fff"
-          stroke={accentColor}
+          fill={timerColors.circleColors.knob}
+          stroke={timerColors.circleColors.knobBorder}
           strokeWidth="3"
           style={{ cursor: "pointer" }}
           onMouseDown={onPointerDown}
@@ -107,7 +109,7 @@ export default function TimerCircle({
           fontFamily: "var(--font-mono)",
           fontWeight: 700,
           fontSize: 36,
-          color: accentColor,
+          color: timerColors.circleColors.progress,
           letterSpacing: "0.04em",
           userSelect: "none",
           pointerEvents: "none",

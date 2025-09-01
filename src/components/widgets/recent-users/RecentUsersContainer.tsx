@@ -21,7 +21,8 @@ export default function RecentUsersContainer({
   data,
 }: RecentUsersContainerProps) {
   const { formatDate, getTextColor } = useRecentUsersLogic();
-  const { colors } = useTheme();
+  const { colorsTheme } = useTheme();
+  const recentUsersColors = colorsTheme.widgets.recentUsers;
 
   const getStatusIcon = (status: string) => {
     return status === "active" ? (
@@ -46,22 +47,32 @@ export default function RecentUsersContainer({
     <div className="overflow-x-auto flex-1 relative group scrollbar-hide">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div className="absolute top-2 left-2 w-1 h-1 bg-[var(--accent-color)] rounded-full"></div>
-        <div className="absolute top-6 right-4 w-0.5 h-0.5 bg-[var(--accent-color)] rounded-full"></div>
-        <div className="absolute bottom-4 left-6 w-0.5 h-0.5 bg-[var(--accent-color)] rounded-full"></div>
+        <div 
+          className="absolute top-2 left-2 w-1 h-1 rounded-full"
+          style={{ backgroundColor: recentUsersColors.background.pattern }}
+        ></div>
+        <div 
+          className="absolute top-6 right-4 w-0.5 h-0.5 rounded-full"
+          style={{ backgroundColor: recentUsersColors.background.pattern }}
+        ></div>
+        <div 
+          className="absolute bottom-4 left-6 w-0.5 h-0.5 rounded-full"
+          style={{ backgroundColor: recentUsersColors.background.pattern }}
+        ></div>
       </div>
 
       <table className="min-w-full h-full relative z-10">
         <thead>
-          <tr
-            className="border-b border-opacity-30 sticky top-0"
-            style={{ borderColor: colors.borderSecondary }}
-          >
+                  <tr
+          className="border-b border-opacity-30 sticky top-0"
+          style={{ borderColor: colorsTheme.borderSecondary }}
+        >
             <th
-              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
+                color: recentUsersColors.table.headerText,
               }}
             >
               <div className="flex items-center space-x-2">
@@ -70,10 +81,11 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
+                color: recentUsersColors.table.headerText,
               }}
             >
               <div className="flex items-center space-x-2">
@@ -82,10 +94,11 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
+                color: recentUsersColors.table.headerText,
               }}
             >
               <div className="flex items-center space-x-2">
@@ -94,10 +107,11 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
+                color: recentUsersColors.table.headerText,
               }}
             >
               <div className="flex items-center space-x-2">
@@ -106,10 +120,11 @@ export default function RecentUsersContainer({
               </div>
             </th>
             <th
-              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider primary-text"
+              className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider"
               style={{
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
+                color: recentUsersColors.table.headerText,
               }}
             >
               <div className="flex items-center space-x-2">
@@ -123,29 +138,46 @@ export default function RecentUsersContainer({
           {data.map((user, index) => (
             <tr
               key={user.id}
-              className="hover:bg-[var(--button-hover-bg)] transition-all duration-300 rounded-lg group/row"
+              className="transition-all duration-300 rounded-lg group/row"
               style={{
                 borderRadius: "8px",
                 animationDelay: `${index * 100}ms`,
               }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = recentUsersColors.table.rowHover;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
             >
               <td
-                className="px-4 py-2 whitespace-nowrap text-sm font-medium rounded-l-lg primary-text group-hover/row:scale-105 transition-transform duration-300"
+                className="px-4 py-2 whitespace-nowrap text-sm font-medium rounded-l-lg group-hover/row:scale-105 transition-transform duration-300"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
+                  color: recentUsersColors.text.primary,
                 }}
               >
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-[var(--accent-color)] rounded-full opacity-60"></div>
+                  <div 
+                    className="w-2 h-2 rounded-full opacity-60"
+                    style={{ backgroundColor: recentUsersColors.table.accentDot }}
+                  ></div>
                   <span>{user.name}</span>
                 </div>
               </td>
               <td
-                className="px-4 py-2 whitespace-nowrap text-sm secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
+                className="px-4 py-2 whitespace-nowrap text-sm transition-colors duration-300"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
+                  color: recentUsersColors.text.secondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = recentUsersColors.text.hover;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = recentUsersColors.text.secondary;
                 }}
               >
                 {user.email}
@@ -159,10 +191,13 @@ export default function RecentUsersContainer({
                 }}
               >
                 <div className="flex items-center space-x-2">
-                  <div className="text-[var(--accent-color)] opacity-70">
+                  <div 
+                    className="opacity-70"
+                    style={{ color: recentUsersColors.table.roleIcon }}
+                  >
                     {getRoleIcon(user.role)}
                   </div>
-                  <span className="secondary-text">{user.role}</span>
+                  <span style={{ color: recentUsersColors.text.secondary }}>{user.role}</span>
                 </div>
               </td>
               <td className="px-4 py-2 whitespace-nowrap">
@@ -176,14 +211,24 @@ export default function RecentUsersContainer({
                 </StatusBadge>
               </td>
               <td
-                className="px-4 py-2 whitespace-nowrap text-sm rounded-r-lg secondary-text group-hover/row:text-[var(--accent-color)] transition-colors duration-300"
+                className="px-4 py-2 whitespace-nowrap text-sm rounded-r-lg transition-colors duration-300"
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontWeight: 700,
+                  color: recentUsersColors.text.secondary,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = recentUsersColors.text.hover;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = recentUsersColors.text.secondary;
                 }}
               >
                 <div className="flex items-center space-x-2">
-                  <Clock className="w-3 h-3 opacity-60" />
+                  <Clock 
+                    className="w-3 h-3 opacity-60" 
+                    style={{ color: recentUsersColors.table.clockIcon }}
+                  />
                   <span>{formatDate(user.lastLogin)}</span>
                 </div>
               </td>
@@ -193,7 +238,10 @@ export default function RecentUsersContainer({
       </table>
 
       <Divider className="mt-4" />
-      <div className="flex justify-between items-center text-xs secondary-text">
+      <div 
+        className="flex justify-between items-center text-xs"
+        style={{ color: recentUsersColors.text.secondary }}
+      >
         <span>Total Users: {data.length}</span>
         <span>
           Active: {data.filter((user) => user.status === "active").length}

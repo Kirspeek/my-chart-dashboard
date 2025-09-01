@@ -33,7 +33,8 @@ export default function MigrationFlowButton({
   tooltipTitle,
   tooltipSubtitle,
 }: MigrationFlowButtonProps) {
-  const { colors, isDark } = useTheme();
+  const { colors, isDark, colorsTheme } = useTheme();
+  const sankeyChartColors = colorsTheme.widgets.sankeyChart;
   const { createTooltipHandlers } = useGlobalTooltip({
     title: tooltipTitle,
     subtitle: tooltipSubtitle,
@@ -46,7 +47,7 @@ export default function MigrationFlowButton({
           bg: `${colors.accent.blue}80`,
           hover: `${colors.accent.blue}90`,
           active: colors.accent.blue,
-          text: "#ffffff",
+          text: sankeyChartColors.button.text,
         };
       case "secondary":
         return {
@@ -66,21 +67,21 @@ export default function MigrationFlowButton({
           bg: `${colors.accent.teal}80`,
           hover: `${colors.accent.teal}90`,
           active: colors.accent.teal,
-          text: "#ffffff",
+          text: sankeyChartColors.button.text,
         };
       case "danger":
         return {
           bg: `${colors.accent.red}80`,
           hover: `${colors.accent.red}90`,
           active: colors.accent.red,
-          text: "#ffffff",
+          text: sankeyChartColors.button.text,
         };
       default:
         return {
           bg: `${colors.accent.blue}80`,
           hover: `${colors.accent.blue}90`,
           active: colors.accent.blue,
-          text: "#ffffff",
+          text: sankeyChartColors.button.text,
         };
     }
   };

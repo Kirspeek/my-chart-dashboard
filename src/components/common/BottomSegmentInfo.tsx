@@ -1,12 +1,13 @@
 import React from "react";
 import { ExpenseData } from "../../../interfaces/widgets";
 import Button from "./Button";
+import { useTheme } from "../../hooks/useTheme";
 
 interface BottomSegmentInfoProps {
   segment: ExpenseData | null;
 }
 
-function getReadableTextColor(bg: string): string {
+function getReadableTextColor(bg: string, bottomSegmentInfoColors: { darkText: string; lightText: string }): string {
   // Supports hex #rrggbb or rgb(a)
   let r = 35,
     g = 35,
@@ -33,14 +34,17 @@ function getReadableTextColor(bg: string): string {
   });
   const luminance = 0.2126 * R + 0.7152 * G + 0.0722 * B;
   // Choose dark text for light backgrounds; light text for dark backgrounds
-  return luminance > 0.5 ? "#232323" : "#ffffff";
+  return luminance > 0.5 ? bottomSegmentInfoColors.darkText : bottomSegmentInfoColors.lightText;
 }
 
 export default function BottomSegmentInfo({ segment }: BottomSegmentInfoProps) {
+  const { colorsTheme } = useTheme();
+  const bottomSegmentInfoColors = colorsTheme.widgets.bottomSegmentInfo;
+  
   if (!segment) return null;
 
   const bgColor = segment.color;
-  const textColor = getReadableTextColor(bgColor);
+  const textColor = getReadableTextColor(bgColor, bottomSegmentInfoColors);
 
   return (
     <div className="mb-2 flex items-center justify-center">
@@ -53,11 +57,11 @@ export default function BottomSegmentInfo({ segment }: BottomSegmentInfoProps) {
           borderRadius: 10,
           background: bgColor,
           color: textColor,
-          border: `1px solid rgba(0,0,0,${textColor === "#ffffff" ? 0.15 : 0.08})`,
+          border: `1px solid rgba(0,0,0,${textColor === bottomSegmentInfoColors.lightText ? bottomSegmentInfoColors.borderOpacity.dark : bottomSegmentInfoColors.borderOpacity.light})`,
           boxShadow:
-            textColor === "#ffffff"
-              ? "0 8px 14px rgba(0,0,0,0.12), 0 2px 5px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.15)"
-              : "0 8px 14px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)",
+            textColor === bottomSegmentInfoColors.lightText
+              ? bottomSegmentInfoColors.shadow.dark
+              : bottomSegmentInfoColors.shadow.light,
         }}
       >
         <span className="text-sm font-semibold tracking-tight">

@@ -3,6 +3,7 @@
 import React, { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTheme } from "../../../hooks/useTheme";
 
 const MAPBOX_TOKEN =
   "pk.eyJ1Ijoia2lyc3BlZWVrIiwiYSI6ImNtZDV1ZTV3cjAya2gybHM5dnd5aXN1NXkifQ.Vf1XkeuyhzH0TfaclbFOBw";
@@ -20,6 +21,8 @@ export default function MapContainer({
   searchResult,
   onMarkerChange,
 }: MapContainerProps) {
+  const { colorsTheme } = useTheme();
+  const mapColors = colorsTheme.widgets.map;
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markerRef = useRef<mapboxgl.Marker | null>(null);
@@ -83,8 +86,8 @@ export default function MapContainer({
       markerEl.style.animation = "pulse 1.5s infinite";
       markerEl.innerHTML = `
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <path d="M16 29C16 29 26 20.5 26 13C26 7.477 21.523 3 16 3C10.477 3 6 7.477 6 13C6 20.5 16 29 16 29Z" stroke="#222" stroke-width="2.5" fill="white"/>
-          <circle cx="16" cy="13" r="4.5" stroke="#222" stroke-width="2.5" fill="none"/>
+          <path d="M16 29C16 29 26 20.5 26 13C26 7.477 21.523 3 16 3C10.477 3 6 7.477 6 13C6 20.5 16 29 16 29Z" stroke="${mapColors.markerColors.stroke}" stroke-width="2.5" fill="${mapColors.markerColors.fill}"/>
+          <circle cx="16" cy="13" r="4.5" stroke="${mapColors.markerColors.stroke}" stroke-width="2.5" fill="none"/>
         </svg>
       `;
       markerRef.current = new mapboxgl.Marker({
@@ -121,8 +124,8 @@ export default function MapContainer({
       markerEl.style.animation = "pulse 1.5s infinite";
       markerEl.innerHTML = `
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-          <path d="M16 29C16 29 26 20.5 26 13C26 7.477 21.523 3 16 3C10.477 3 6 7.477 6 13C6 20.5 16 29 16 29Z" stroke="#222" stroke-width="2.5" fill="white"/>
-          <circle cx="16" cy="13" r="4.5" stroke="#222" stroke-width="2.5" fill="none"/>
+          <path d="M16 29C16 29 26 20.5 26 13C26 7.477 21.523 3 16 3C10.477 3 6 7.477 6 13C6 20.5 16 29 16 29Z" stroke="${mapColors.markerColors.stroke}" stroke-width="2.5" fill="${mapColors.markerColors.fill}"/>
+          <circle cx="16" cy="13" r="4.5" stroke="${mapColors.markerColors.stroke}" stroke-width="2.5" fill="none"/>
         </svg>
       `;
       markerRef.current = new mapboxgl.Marker({

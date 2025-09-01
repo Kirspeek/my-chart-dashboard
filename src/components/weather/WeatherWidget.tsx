@@ -10,6 +10,7 @@ import { useWeatherLogic } from "@/hooks/useWeatherLogic";
 import WeatherAnimations from "./WeatherAnimations";
 import WeatherStatus from "./WeatherStatus";
 import type { ForecastDay as ForecastDayType } from "../../../interfaces/widgets";
+import { useTheme } from "@/hooks/useTheme";
 import "../../styles/weather.css";
 
 function renderForecastBlock(
@@ -17,17 +18,31 @@ function renderForecastBlock(
   error: string | null,
   isPreloading: boolean,
   selectedDay: number,
-  setSelectedDay: (i: number) => void
+  setSelectedDay: (i: number) => void,
+  weatherColors: {
+    loadingText: string;
+    errorText: string;
+    statusColors: {
+      cached: string;
+      preloading: string;
+      stale: string;
+      fallback: string;
+    };
+  }
 ) {
   if (forecast.length === 0 && !error) {
     return (
-      <div style={{ color: "var(--color-gray)", fontSize: 18 }}>
+      <div style={{ color: weatherColors.loadingText, fontSize: 18 }}>
         {isPreloading ? "Preloading..." : "Loading..."}
       </div>
     );
   }
   if (forecast.length === 0 && error) {
-    return <div style={{ color: "red", fontSize: 18 }}>{error}</div>;
+    return (
+      <div style={{ color: weatherColors.errorText, fontSize: 18 }}>
+        {error}
+      </div>
+    );
   }
   return (
     <div className="weather-forecast-desktop">
@@ -50,6 +65,8 @@ function renderForecastBlock(
 export default function WeatherWidget({
   city = "Amsterdam",
 }: WeatherWidgetProps) {
+  const { colorsTheme } = useTheme();
+  const weatherColors = colorsTheme.widgets.weather;
   const {
     forecast,
     error,
@@ -97,7 +114,8 @@ export default function WeatherWidget({
           error,
           isPreloading,
           selectedDay,
-          setSelectedDay
+          setSelectedDay,
+          weatherColors
         )}
       </div>
     </WidgetBase>

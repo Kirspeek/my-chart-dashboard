@@ -67,7 +67,8 @@ export default function EnhancedSankeyDiagram({
   setCurrentSlide,
 }: EnhancedSankeyDiagramProps) {
   const ref = useRef<SVGSVGElement>(null);
-  const { accent, colors, isDark } = useTheme();
+  const { accent, colors, isDark, colorsTheme } = useTheme();
+  const sankeyChartColors = colorsTheme.widgets.sankeyChart;
   const [hoveredFlow, setHoveredFlow] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<{
     x: number;
@@ -198,7 +199,7 @@ export default function EnhancedSankeyDiagram({
         .append("rect")
         .attr("width", width)
         .attr("height", height)
-        .attr("fill", "url(#backgroundPattern)");
+        .attr("fill", sankeyChartColors.background.pattern);
 
       // Layout nodes
       const nodeWidth = isMobile ? 1 : 2;
@@ -585,7 +586,7 @@ export default function EnhancedSankeyDiagram({
                     position: "fixed",
                     left: tooltip.x + 10,
                     top: tooltip.y - 10,
-                    background: "#fff",
+                    background: sankeyChartColors.background.tooltip,
                     color: colors.primary,
                     borderRadius: 12,
                     boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
@@ -596,7 +597,7 @@ export default function EnhancedSankeyDiagram({
                     pointerEvents: "none",
                     zIndex: 9999,
                     minWidth: 180,
-                    border: `1px solid #818CF8`,
+                    border: `1px solid ${sankeyChartColors.button.border}`,
                   }}
                 >
                   <div
@@ -607,7 +608,7 @@ export default function EnhancedSankeyDiagram({
                         display: "inline-block",
                         width: 18,
                         height: 18,
-                        background: "#818CF8",
+                        background: sankeyChartColors.button.background,
                         borderRadius: 4,
                         marginRight: 8,
                       }}

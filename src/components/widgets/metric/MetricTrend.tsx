@@ -2,6 +2,7 @@
 
 import React from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface MetricTrendProps {
   change: number;
@@ -14,9 +15,12 @@ export default function MetricTrend({
   accentColor,
   isHovered = false,
 }: MetricTrendProps) {
+  const { colorsTheme } = useTheme();
+  const metricColors = colorsTheme.widgets.metric;
+
   const isPositive = change >= 0;
   const TrendIcon = isPositive ? TrendingUp : TrendingDown;
-  const trendColor = isPositive ? accentColor : "#ef4444"; // red for negative
+  const trendColor = isPositive ? accentColor : metricColors.trend.negative;
 
   return (
     <div

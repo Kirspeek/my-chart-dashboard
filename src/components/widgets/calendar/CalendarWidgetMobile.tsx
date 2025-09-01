@@ -54,9 +54,8 @@ export default function CalendarWidgetMobile({
 
   const days = getDaysInMonth(currentDate);
   const weekDays = getWeekDays();
-  const { accent } = useTheme();
-  const accentColor = accent.teal;
-  const todayBackgroundColor = "rgba(35, 35, 35, 0.15)";
+  const { colorsTheme } = useTheme();
+  const calendarColors = colorsTheme.widgets.calendar;
 
   const hasEvents = (date: Date) => {
     return events.some(
@@ -133,7 +132,8 @@ export default function CalendarWidgetMobile({
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="text-center text-xs font-medium text-gray-600 py-1"
+                  className="text-center text-xs font-medium py-1"
+                  style={{ color: calendarColors.textColors.secondary }}
                 >
                   {day}
                 </div>
@@ -154,7 +154,7 @@ export default function CalendarWidgetMobile({
                     selected={isSelectedDate}
                     onClick={() => setSelectedDate(date)}
                     customBackground={
-                      isTodayDate ? todayBackgroundColor : undefined
+                      isTodayDate ? calendarColors.todayBackground : undefined
                     }
                     className="calendar-date-circle"
                     style={{
@@ -171,13 +171,17 @@ export default function CalendarWidgetMobile({
                       {hasEventsForDate && (
                         <div
                           className="w-0.5 h-0.5 rounded-full mt-0.5"
-                          style={{ backgroundColor: accentColor }}
+                          style={{
+                            backgroundColor: calendarColors.accentColor,
+                          }}
                         />
                       )}
                       {isTodayDate && !hasEventsForDate && (
                         <div
                           className="w-0.5 h-0.5 rounded-full mt-0.5"
-                          style={{ backgroundColor: accentColor }}
+                          style={{
+                            backgroundColor: calendarColors.accentColor,
+                          }}
                         />
                       )}
                     </div>
@@ -195,28 +199,46 @@ export default function CalendarWidgetMobile({
               {/* Selected Date Display and Events in Row */}
               <div className="flex items-center justify-between mb-2">
                 <div className="text-left">
-                  <div className="text-sm font-bold text-gray-800">
+                  <div
+                    className="text-sm font-bold"
+                    style={{ color: calendarColors.textColors.primary }}
+                  >
                     {selectedDateInfo.day}
                   </div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div
+                    className="text-xs font-medium"
+                    style={{ color: calendarColors.textColors.secondary }}
+                  >
                     {selectedDateInfo.dayName}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div
+                    className="text-xs"
+                    style={{ color: calendarColors.textColors.muted }}
+                  >
                     {selectedDateInfo.month} {selectedDateInfo.year}
                   </div>
                 </div>
 
                 {/* Events List - Inline with date */}
                 <div className="text-right">
-                  <div className="text-xs font-semibold text-gray-700">
+                  <div
+                    className="text-xs font-semibold"
+                    style={{ color: calendarColors.textColors.label }}
+                  >
                     Events ({dayEvents.length})
                   </div>
                   {dayEvents.length === 0 ? (
-                    <div className="text-xs text-gray-500 italic">
+                    <div
+                      className="text-xs italic"
+                      style={{ color: calendarColors.textColors.muted }}
+                    >
                       No events
                     </div>
                   ) : (
-                    <div className="text-xs text-gray-600">
+                    <div
+                      className="text-xs"
+                      style={{ color: calendarColors.textColors.secondary }}
+                    >
                       {dayEvents.map((event) => (
                         <div key={event.id} className="truncate">
                           {event.title}
@@ -236,9 +258,23 @@ export default function CalendarWidgetMobile({
                       placeholder="Add event"
                       value={newEventTitle}
                       onChange={(e) => setNewEventTitle(e.target.value)}
-                      className="w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent bg-white"
+                      className="w-full px-2 py-1 text-xs rounded focus:outline-none"
                       style={{
+                        border: `1px solid ${calendarColors.borderColors.input}`,
+                        backgroundColor: calendarColors.backgroundColors.input,
                         boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                        color: calendarColors.textColors.primary,
+                      }}
+                      onFocus={(e) => {
+                        e.target.style.borderColor =
+                          calendarColors.borderColors.focus;
+                        e.target.style.boxShadow = `0 0 0 1px ${calendarColors.borderColors.focus}`;
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor =
+                          calendarColors.borderColors.input;
+                        e.target.style.boxShadow =
+                          "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
                       }}
                     />
                     <div className="flex gap-1">

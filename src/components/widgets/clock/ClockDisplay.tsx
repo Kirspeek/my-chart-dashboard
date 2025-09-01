@@ -20,8 +20,8 @@ export default function ClockDisplay({
   pad,
   setIs24h,
 }: ClockDisplayProps) {
-  const { accent } = useTheme();
-  const clockAccentColor = accent.red;
+  const { colorsTheme } = useTheme();
+  const clockColors = colorsTheme.widgets.clock;
   const [isHovered, setIsHovered] = useState(false);
   const [showSeconds, setShowSeconds] = useState(true);
   const [secondsChanged, setSecondsChanged] = useState(false);
@@ -90,7 +90,7 @@ export default function ClockDisplay({
         }
         .time-segment:hover {
           transform: scale(1.05);
-          color: ${clockAccentColor} !important;
+          color: ${clockColors.accentColor} !important;
         }
         .seconds-segment {
           transition: all 0.2s ease;
@@ -149,11 +149,14 @@ export default function ClockDisplay({
         <div
           className="date-display flex items-center gap-2 px-3 py-1 rounded-full"
           style={{
-            background: isHovered ? `${clockAccentColor}10` : "transparent",
-            border: `1px solid ${isHovered ? clockAccentColor : "transparent"}`,
+            background: isHovered ? clockColors.hoverBackground : "transparent",
+            border: `1px solid ${isHovered ? clockColors.accentColor : "transparent"}`,
           }}
         >
-          <Calendar className="w-3 h-3" style={{ color: clockAccentColor }} />
+          <Calendar
+            className="w-3 h-3"
+            style={{ color: clockColors.accentColor }}
+          />
           <span
             className="text-base font-mono clock-date-mobile clock-date"
             style={{ fontWeight: 700 }}
@@ -167,9 +170,11 @@ export default function ClockDisplay({
           <div
             className="flex items-center gap-1 px-2 py-1 rounded-full border transition-all duration-300 hover:scale-105"
             style={{
-              borderColor: clockAccentColor,
-              color: clockAccentColor,
-              background: isHovered ? `${clockAccentColor}10` : "transparent",
+              borderColor: clockColors.accentColor,
+              color: clockColors.accentColor,
+              background: isHovered
+                ? clockColors.hoverBackground
+                : "transparent",
             }}
           >
             {isDayTime ? (
@@ -196,11 +201,15 @@ export default function ClockDisplay({
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
                 fontSize: "0.625rem",
-                borderColor: is24h ? "var(--muted-text)" : clockAccentColor,
-                color: is24h ? "var(--muted-text)" : clockAccentColor,
+                borderColor: is24h
+                  ? clockColors.inactiveBorder
+                  : clockColors.accentColor,
+                color: is24h
+                  ? clockColors.inactiveText
+                  : clockColors.accentColor,
                 backgroundColor: is24h
                   ? "transparent"
-                  : `${clockAccentColor}1a`,
+                  : clockColors.activeBackground,
               }}
               onClick={() => setIs24h(false)}
             >
@@ -212,10 +221,14 @@ export default function ClockDisplay({
                 fontFamily: "var(--font-mono)",
                 fontWeight: 700,
                 fontSize: "0.625rem",
-                borderColor: is24h ? clockAccentColor : "var(--muted-text)",
-                color: is24h ? clockAccentColor : "var(--muted-text)",
+                borderColor: is24h
+                  ? clockColors.accentColor
+                  : clockColors.inactiveBorder,
+                color: is24h
+                  ? clockColors.accentColor
+                  : clockColors.inactiveText,
                 backgroundColor: is24h
-                  ? `${clockAccentColor}1a`
+                  ? clockColors.activeBackground
                   : "transparent",
               }}
               onClick={() => setIs24h(true)}

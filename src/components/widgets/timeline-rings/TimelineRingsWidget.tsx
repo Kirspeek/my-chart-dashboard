@@ -37,13 +37,14 @@ function darkenColor(color: string, percent: number) {
 
 type RingColorKey = "yellow" | "red" | "blue" | "teal" | "purple";
 const colorMap = (
-  accent: Record<string, string>
+  accent: Record<string, string>,
+  timelineRingsColors: { purple: string }
 ): Record<RingColorKey, string> => ({
   yellow: accent.yellow,
   red: accent.red,
   blue: accent.blue,
   teal: accent.teal,
-  purple: "#b39ddb", // fallback for purple, not in theme
+  purple: timelineRingsColors.purple, // fallback for purple, not in theme
 });
 
 // SVG arc helper for a half-circle (left or right)
@@ -90,8 +91,9 @@ export default function TimelineRingsWidget({
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;
 }) {
-  const { accent, colors } = useTheme();
-  const ringColors = colorMap(accent);
+  const { accent, colors, colorsTheme } = useTheme();
+  const timelineRingsColors = colorsTheme.widgets.timelineRings;
+  const ringColors = colorMap(accent, timelineRingsColors);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -347,17 +349,17 @@ export default function TimelineRingsWidget({
                           >
                             <stop
                               offset="0%"
-                              stopColor="#fff"
+                              stopColor={timelineRingsColors.gradient.stop1}
                               stopOpacity="1"
                             />
                             <stop
                               offset="80%"
-                              stopColor="#eaeaea"
+                              stopColor={timelineRingsColors.gradient.stop2}
                               stopOpacity="0.7"
                             />
                             <stop
                               offset="100%"
-                              stopColor="#d0d0d0"
+                              stopColor={timelineRingsColors.gradient.stop3}
                               stopOpacity="0.3"
                             />
                           </radialGradient>
@@ -406,7 +408,7 @@ export default function TimelineRingsWidget({
                           cx={isMobile ? 25 : 30} // Adjusted for mobile
                           cy={isMobile ? 25 : 30} // Adjusted for mobile
                           r={isMobile ? 15 : 18} // Adjusted for mobile
-                          fill="#fff"
+                          fill={timelineRingsColors.fill}
                           stroke="none"
                         />
                         <text
@@ -438,7 +440,7 @@ export default function TimelineRingsWidget({
                             textAlign: "center",
                             whiteSpace: "nowrap",
                             pointerEvents: "none",
-                            background: "#fff",
+                            background: timelineRingsColors.background,
                             borderRadius: 6, // Reduced from 8 to 6
                             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                             padding: "1px 6px", // Reduced from 2px 8px to 1px 6px
@@ -518,17 +520,17 @@ export default function TimelineRingsWidget({
                           >
                             <stop
                               offset="0%"
-                              stopColor="#fff"
+                              stopColor={timelineRingsColors.gradient.stop1}
                               stopOpacity="1"
                             />
                             <stop
                               offset="80%"
-                              stopColor="#eaeaea"
+                              stopColor={timelineRingsColors.gradient.stop2}
                               stopOpacity="0.7"
                             />
                             <stop
                               offset="100%"
-                              stopColor="#d0d0d0"
+                              stopColor={timelineRingsColors.gradient.stop3}
                               stopOpacity="0.3"
                             />
                           </radialGradient>
@@ -577,7 +579,7 @@ export default function TimelineRingsWidget({
                           cx={isMobile ? 25 : 30} // Consistent with top row
                           cy={isMobile ? 25 : 30} // Consistent with top row
                           r={isMobile ? 15 : 18} // Consistent with top row
-                          fill="#fff"
+                          fill={timelineRingsColors.fill}
                           stroke="none"
                         />
                         <text
@@ -657,7 +659,7 @@ export default function TimelineRingsWidget({
                             textAlign: "center",
                             whiteSpace: "nowrap",
                             pointerEvents: "none",
-                            background: "#fff",
+                            background: timelineRingsColors.background,
                             borderRadius: 6, // Reduced from 8 to 6
                             boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                             padding: "1px 6px", // Reduced from 2px 8px to 1px 6px
@@ -794,15 +796,19 @@ export default function TimelineRingsWidget({
                           cy="40%"
                           r="60%"
                         >
-                          <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+                          <stop
+                            offset="0%"
+                            stopColor={timelineRingsColors.gradient.stop1}
+                            stopOpacity="1"
+                          />
                           <stop
                             offset="80%"
-                            stopColor="#eaeaea"
+                            stopColor={timelineRingsColors.gradient.stop2}
                             stopOpacity="0.7"
                           />
                           <stop
                             offset="100%"
-                            stopColor="#d0d0d0"
+                            stopColor={timelineRingsColors.gradient.stop3}
                             stopOpacity="0.3"
                           />
                         </radialGradient>
@@ -854,7 +860,7 @@ export default function TimelineRingsWidget({
                         cx={isTablet ? 45 : 60} // Reduced center for tablet
                         cy={isTablet ? 45 : 60} // Reduced center for tablet
                         r={isTablet ? 28 : 38} // Reduced radius for tablet
-                        fill="#fff"
+                        fill={timelineRingsColors.fill}
                         stroke="none"
                       />
                       {/* Year */}
@@ -888,7 +894,7 @@ export default function TimelineRingsWidget({
                           textAlign: "center",
                           whiteSpace: "nowrap",
                           pointerEvents: "none",
-                          background: "#fff",
+                          background: timelineRingsColors.background,
                           borderRadius: 8,
                           boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                           padding: isTablet ? "2px 12px" : "4px 16px", // Reduced padding for tablet

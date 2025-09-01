@@ -22,10 +22,14 @@ import {
 import type { TimelineItem } from "../../../../interfaces/charts";
 
 // Utility to lighten/darken a hex color
-function shadeColor(color: string, percent: number) {
+function shadeColor(
+  color: string,
+  percent: number,
+  fallbackColor: string = "#666666"
+) {
   // Add validation to ensure color is a valid hex string
   if (!color || typeof color !== "string" || !color.startsWith("#")) {
-    return "#666666"; // Fallback color
+    return fallbackColor; // Fallback color
   }
 
   let R = parseInt(color.substring(1, 3), 16);
@@ -34,7 +38,7 @@ function shadeColor(color: string, percent: number) {
 
   // Check if parsing was successful
   if (isNaN(R) || isNaN(G) || isNaN(B)) {
-    return "#666666"; // Fallback color
+    return fallbackColor; // Fallback color
   }
 
   R = Math.min(255, Math.max(0, R + (255 - R) * percent));
@@ -95,7 +99,8 @@ export default function EnhancedTimelineWidget({
   currentSlide,
   setCurrentSlide,
 }: EnhancedTimelineWidgetProps) {
-  const { colors } = useTheme();
+  const { colors, colorsTheme } = useTheme();
+  const timelineRingsColors = colorsTheme.widgets.timelineRings;
   const { createTooltipHandlers } = useGlobalTooltip();
 
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -274,9 +279,12 @@ export default function EnhancedTimelineWidget({
       red: colors.accent.red,
       blue: colors.accent.blue,
       teal: colors.accent.teal,
-      purple: "#b39ddb", // fallback for purple, not in theme
+      purple: timelineRingsColors.purple, // fallback for purple, not in theme
     };
-    return colorMap[colorKeys[idx % colorKeys.length]] || "#3b82f6";
+    return (
+      colorMap[colorKeys[idx % colorKeys.length]] ||
+      timelineRingsColors.fallback
+    );
   };
 
   const viewModes = [
@@ -720,22 +728,22 @@ export default function EnhancedTimelineWidget({
                           >
                             <stop
                               offset="0%"
-                              stopColor="#ffffff"
+                              stopColor={timelineRingsColors.gradient.stop1}
                               stopOpacity="1"
                             />
                             <stop
                               offset="40%"
-                              stopColor="#ffffff"
+                              stopColor={timelineRingsColors.gradient.stop2}
                               stopOpacity="0.95"
                             />
                             <stop
                               offset="70%"
-                              stopColor="#ffffff"
+                              stopColor={timelineRingsColors.gradient.stop3}
                               stopOpacity="0.7"
                             />
                             <stop
                               offset="100%"
-                              stopColor="#ffffff"
+                              stopColor={timelineRingsColors.gradient.stop1}
                               stopOpacity="0.3"
                             />
                           </radialGradient>

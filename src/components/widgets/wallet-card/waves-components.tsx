@@ -1,5 +1,6 @@
 import React from "react";
 import { ChartCanvas, Button } from "../../common";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface WavesCanvasProps {
   chartRef: React.RefObject<HTMLDivElement | null>;
@@ -21,6 +22,9 @@ export function WavesCanvas({
   wavePaths,
   onRefresh,
 }: WavesCanvasProps) {
+  const { colorsTheme } = useTheme();
+  const walletCardColors = colorsTheme.widgets.walletCard;
+
   // Axis config to match SVG viewBox dimensions
   const chartWidth = 560;
   const chartHeight = 260; // baseline at 260 in paths
@@ -61,8 +65,7 @@ export function WavesCanvas({
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "center", // Center the chart horizontally
-          backgroundImage:
-            "repeating-radial-gradient(center center, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1) 2px, transparent 2px, transparent 100%)",
+          backgroundImage: walletCardColors.waves.background,
           backgroundSize: "29px 29px",
           backgroundPosition: "-11px 11px",
         }}

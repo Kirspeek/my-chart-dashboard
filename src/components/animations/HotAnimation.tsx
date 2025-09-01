@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function HotAnimation() {
+  const { colorsTheme } = useTheme();
+  const hotAnimationColors = colorsTheme.widgets.hotAnimation;
   // Animation timing
   const duration = 2.2;
 
@@ -79,8 +82,8 @@ export default function HotAnimation() {
           width={tubeW}
           height={tubeH}
           rx={tubeW / 2.2}
-          fill="#fff"
-          stroke="#444"
+          fill={hotAnimationColors.thermometer.fill}
+          stroke={hotAnimationColors.thermometer.stroke}
           strokeWidth={2}
         />
         {/* Tick marks */}
@@ -92,7 +95,7 @@ export default function HotAnimation() {
             width={tickLen}
             height={1.5}
             rx={0.75}
-            fill="#444"
+            fill={hotAnimationColors.thermometer.stroke}
             opacity={0.7}
           />
         ))}
@@ -111,14 +114,16 @@ export default function HotAnimation() {
           cy={bulbCY}
           r={bulbR}
           fill="url(#mercuryGrad)"
-          stroke="#444"
+          stroke={hotAnimationColors.thermometer.stroke}
           strokeWidth={2.5}
-          initial={{ filter: "drop-shadow(0 0 0px #ff5722)" }}
+          initial={{
+            filter: `drop-shadow(0 0 0px ${hotAnimationColors.thermometer.glow})`,
+          }}
           animate={{
             filter: [
-              "drop-shadow(0 0 0px #ff5722)",
-              "drop-shadow(0 0 10px #ff5722)",
-              "drop-shadow(0 0 0px #ff5722)",
+              `drop-shadow(0 0 0px ${hotAnimationColors.thermometer.glow})`,
+              `drop-shadow(0 0 10px ${hotAnimationColors.thermometer.glow})`,
+              `drop-shadow(0 0 0px ${hotAnimationColors.thermometer.glow})`,
             ],
           }}
           transition={{
@@ -131,12 +136,24 @@ export default function HotAnimation() {
         {/* SVG Gradients and Filters */}
         <defs>
           <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#FFF59D" />
-            <stop offset="100%" stopColor="#FFD54F" />
+            <stop
+              offset="0%"
+              stopColor={hotAnimationColors.sunGradient.start}
+            />
+            <stop
+              offset="100%"
+              stopColor={hotAnimationColors.sunGradient.end}
+            />
           </radialGradient>
           <linearGradient id="mercuryGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ff7043" />
-            <stop offset="100%" stopColor="#d32f2f" />
+            <stop
+              offset="0%"
+              stopColor={hotAnimationColors.thermometer.mercury}
+            />
+            <stop
+              offset="100%"
+              stopColor={hotAnimationColors.thermometer.mercury}
+            />
           </linearGradient>
           <filter id="sunGlow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="4" result="coloredBlur" />

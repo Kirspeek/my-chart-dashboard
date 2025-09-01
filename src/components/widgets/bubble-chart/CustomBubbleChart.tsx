@@ -13,6 +13,7 @@ import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import type { WidgetBubbleChartData } from "../../../../interfaces/widgets";
 import { RotateCcw, Maximize2, Minimize2, Zap } from "lucide-react";
+import { useTheme } from "src/hooks/useTheme";
 
 interface CustomBubbleChartProps {
   data: WidgetBubbleChartData[];
@@ -44,6 +45,8 @@ export default function CustomBubbleChart({
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;
 }) {
+  const { colorsTheme } = useTheme();
+  const bubbleChartColors = colorsTheme.widgets.bubbleChart;
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -153,14 +156,15 @@ export default function CustomBubbleChart({
   // Enhanced color mapping with gradients - lighter theme
   const getBubbleColor = useCallback((category: string) => {
     const categoryColorMap: Record<string, string> = {
-      "Big Tech": "#FF6B9D", // Bright pink
-      "AI & Cloud": "#4ECDC4", // Bright turquoise
-      Fintech: "#45B7D1", // Bright blue
-      "Emerging Tech": "#96CEB4", // Bright green
-      Healthcare: "#FFA726", // Bright orange
-      Energy: "#AB47BC", // Bright purple
+      "Big Tech": bubbleChartColors.categoryColors.bigTech,
+      "AI & Cloud": bubbleChartColors.categoryColors.aiCloud,
+      Fintech: bubbleChartColors.categoryColors.fintech,
+      "Emerging Tech": bubbleChartColors.categoryColors.emergingTech,
+      Healthcare: bubbleChartColors.categoryColors.healthcare,
+      Energy: bubbleChartColors.categoryColors.energy,
     };
-    const baseColor = categoryColorMap[category] || "#FF6B9D";
+    const baseColor =
+      categoryColorMap[category] || bubbleChartColors.categoryColors.default;
 
     // Create gradient effect based on intensity - keep colors bright and vibrant
     const color = new THREE.Color(baseColor);
@@ -877,10 +881,12 @@ export default function CustomBubbleChart({
                 !selectedCategory ? "text-white" : "text-gray-700"
               }`}
               style={{
-                backgroundColor: !selectedCategory ? "#4ECDC4" : "#f3f4f6",
+                backgroundColor: !selectedCategory
+                  ? bubbleChartColors.button.background
+                  : bubbleChartColors.button.selectedBackground,
                 border: !selectedCategory
-                  ? "1px solid #4ECDC4"
-                  : "1px solid #e5e7eb",
+                  ? `1px solid ${bubbleChartColors.button.border}`
+                  : `1px solid ${bubbleChartColors.button.selectedBorder}`,
               }}
             >
               All Categories
@@ -900,7 +906,7 @@ export default function CustomBubbleChart({
                     backgroundColor:
                       selectedCategory === category
                         ? `#${categoryColor}`
-                        : "#f8f9fa",
+                        : bubbleChartColors.button.text,
                     border: `1px solid #${categoryColor}`,
                     opacity: selectedCategory === category ? 1 : 0.9,
                   }}

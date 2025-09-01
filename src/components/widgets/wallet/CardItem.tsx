@@ -1,7 +1,8 @@
 import React from "react";
 import { CardItemProps } from "../../../../interfaces/wallet";
-import { WALLET_CONSTANTS, CARD_COLORS } from "../../../constants";
+import { WALLET_CONSTANTS } from "../../../constants";
 import CardDisplay from "./CardDisplay";
+import { useTheme } from "../../../hooks/useTheme";
 
 const CARD_HEIGHT = WALLET_CONSTANTS.CARD_HEIGHT;
 const CARD_OFFSET = WALLET_CONSTANTS.CARD_OFFSET;
@@ -21,12 +22,19 @@ export default function CardItem({
   onSave,
   onCancel,
 }: CardItemProps) {
+  const { colorsTheme } = useTheme();
+  const walletColors = colorsTheme.widgets.wallet;
+
   const hasBankData = card.number || (isEditing && bankInfo.bank);
   const cardBackground = hasBankData
     ? bankDesign.background
-    : CARD_COLORS[index % CARD_COLORS.length];
+    : walletColors.cardColors.defaultBackgrounds[
+        index % walletColors.cardColors.defaultBackgrounds.length
+      ];
 
-  const cardTextColor = hasBankData ? bankDesign.textColor : "#222";
+  const cardTextColor = hasBankData
+    ? bankDesign.textColor
+    : walletColors.cardColors.defaultText;
 
   return (
     <div

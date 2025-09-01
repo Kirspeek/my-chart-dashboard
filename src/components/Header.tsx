@@ -4,9 +4,12 @@ import { Bell, Search, User } from "lucide-react";
 import { useSearch } from "../context/SearchContext";
 import SearchResults from "./common/SearchResults";
 import { useState, useRef, useEffect } from "react";
+import { useTheme } from "../hooks/useTheme";
 
 export default function Header() {
   const { searchTerm, setSearchTerm } = useSearch();
+  const { colorsTheme } = useTheme();
+  const headerColors = colorsTheme.widgets.header;
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -85,7 +88,9 @@ export default function Header() {
                   pointerEvents: "none",
                 }}
               >
-                <Search style={{ color: "#b0b0a8", width: 24, height: 24 }} />
+                <Search
+                  style={{ color: headerColors.icon, width: 24, height: 24 }}
+                />
               </div>
               <input
                 type="text"
@@ -118,7 +123,9 @@ export default function Header() {
 
             {/* Notifications */}
             <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
-              <Bell style={{ color: "#b0b0a8", width: 28, height: 28 }} />
+              <Bell
+                style={{ color: headerColors.icon, width: 28, height: 28 }}
+              />
             </button>
 
             {/* User menu */}
@@ -148,7 +155,9 @@ export default function Header() {
                 </span>
               </div>
               <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
-                <User style={{ color: "#b0b0a8", width: 28, height: 28 }} />
+                <User
+                  style={{ color: headerColors.icon, width: 28, height: 28 }}
+                />
               </button>
             </div>
           </div>

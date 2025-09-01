@@ -65,7 +65,8 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const { chartColors, formatValue, axisStyle, gridStyle } = useChartLogic();
-  const { colors } = useTheme();
+  const { colors, colorsTheme } = useTheme();
+  const lineChartColors = colorsTheme.widgets.lineChart;
 
   useEffect(() => {
     const check = () => {
@@ -200,9 +201,9 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
         <div
           className="p-3 rounded-lg shadow-lg border-0"
           style={{
-            background: "rgba(255, 255, 255, 0.95)",
+            background: lineChartColors.tooltip.background,
             backdropFilter: "blur(10px)",
-            border: "1px solid rgba(0, 0, 0, 0.1)",
+            border: `1px solid ${lineChartColors.tooltip.border}`,
           }}
         >
           <div
@@ -336,13 +337,13 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
                   r: 5,
                   fill: chartColors.sales,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.sales,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
               />
               <Line
@@ -355,13 +356,13 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
                   r: 5,
                   fill: chartColors.revenue,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.revenue,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
               />
               <Line
@@ -374,13 +375,13 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
                   r: 5,
                   fill: chartColors.profit,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.profit,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
               />
             </RechartsLineChart>
@@ -572,7 +573,7 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
                   r: 4,
                   fill: chartColors.sales,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
               />
               <Line
@@ -585,7 +586,7 @@ export default function LineChartContainer({ data }: LineChartContainerProps) {
                   r: 4,
                   fill: chartColors.profit,
                   strokeWidth: 2,
-                  stroke: "#fff",
+                  stroke: lineChartColors.chart.dotStroke,
                 }}
               />
             </ComposedChart>

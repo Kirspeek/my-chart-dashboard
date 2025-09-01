@@ -26,8 +26,8 @@ export default function WorldClocks({
   isDay,
   isMobile = false,
 }: WorldClocksProps) {
-  const { accent } = useTheme();
-  const clockAccentColor = accent.red;
+  const { colorsTheme } = useTheme();
+  const clockColors = colorsTheme.widgets.clock;
 
   // Check if viewport is at least 1440px wide
   const [isViewportAtLeast1440, setIsViewportAtLeast1440] =
@@ -73,7 +73,7 @@ export default function WorldClocks({
 
       {/* Header with Globe Icon */}
       <div className="flex items-center gap-2 mb-3 opacity-70">
-        <Globe className="w-4 h-4" style={{ color: clockAccentColor }} />
+        <Globe className="w-4 h-4" style={{ color: clockColors.accentColor }} />
         <span
           className="text-xs font-mono"
           style={{ color: "var(--secondary-text)" }}
@@ -100,7 +100,7 @@ export default function WorldClocks({
               <Button3D
                 selected={isLocal}
                 onClick={() => setSelectedZone(tz.zone)}
-                customAccentColor={clockAccentColor}
+                customAccentColor={clockColors.accentColor}
                 className="world-clock-card-mobile"
                 style={
                   isMobile

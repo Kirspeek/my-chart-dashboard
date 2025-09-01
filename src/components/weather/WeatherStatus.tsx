@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Zap, RefreshCw, AlertTriangle } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
 
 interface WeatherStatusProps {
   isCached: boolean;
@@ -14,32 +15,35 @@ export default function WeatherStatus({
   isPreloading,
   stale,
 }: WeatherStatusProps) {
+  const { colorsTheme } = useTheme();
+  const weatherColors = colorsTheme.widgets.weather;
+
   const getStatusInfo = () => {
     if (isCached) {
       return {
         icon: <Zap className="w-3 h-3" />,
         text: "Instant",
-        color: "var(--color-gray)",
+        color: weatherColors.statusColors.cached,
       };
     }
     if (isPreloading) {
       return {
         icon: <RefreshCw className="w-3 h-3 animate-spin" />,
         text: "Updating...",
-        color: "#eab308", // yellow for preloading
+        color: weatherColors.statusColors.preloading,
       };
     }
     if (stale) {
       return {
         icon: <AlertTriangle className="w-3 h-3" />,
         text: "Outdated",
-        color: "#f87171", // red for stale
+        color: weatherColors.statusColors.stale,
       };
     }
     return {
       icon: null,
       text: "",
-      color: "#b0b0a8", // fallback gray
+      color: weatherColors.statusColors.fallback,
     };
   };
 

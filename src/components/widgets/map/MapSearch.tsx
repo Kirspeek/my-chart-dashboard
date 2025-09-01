@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTheme } from "../../../hooks/useTheme";
 
 interface MapSearchProps {
   search: string;
@@ -19,6 +20,8 @@ export default function MapSearch({
   onSearchFocus,
   onSubmit,
 }: MapSearchProps) {
+  const { colorsTheme } = useTheme();
+  const mapColors = colorsTheme.widgets.map;
   return (
     <form
       onSubmit={onSubmit}
@@ -43,6 +46,11 @@ export default function MapSearch({
         placeholder={loading ? "Searching..." : "Search places..."}
         className={`map-search-input ${searchFocused ? "focused" : ""}`}
         autoComplete="off"
+        style={{
+          background: mapColors.searchColors.background,
+          color: mapColors.searchColors.text,
+          boxShadow: `0 1px 4px 0 ${mapColors.searchColors.shadow}`,
+        }}
       />
     </form>
   );

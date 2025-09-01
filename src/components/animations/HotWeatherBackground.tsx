@@ -4,34 +4,49 @@ import {
   HotWeatherBackgroundProps,
   HotCloudSVGProps,
 } from "../../../interfaces/animations";
+import { useTheme } from "../../hooks/useTheme";
 
 // Thin, wispy orange cloud SVG
-const HotCloudSVG = ({ style = {} }: HotCloudSVGProps) => (
-  <svg width="160" height="40" viewBox="0 0 160 40" fill="none" style={style}>
-    <ellipse
-      cx="50"
-      cy="28"
-      rx="48"
-      ry="10"
-      fill="#ffb347"
-      fillOpacity="0.32"
-    />
-    <ellipse
-      cx="110"
-      cy="18"
-      rx="32"
-      ry="7"
-      fill="#ff7043"
-      fillOpacity="0.22"
-    />
-    <ellipse cx="80" cy="12" rx="38" ry="6" fill="#ffd580" fillOpacity="0.18" />
-  </svg>
-);
+const HotCloudSVG = ({ style = {} }: HotCloudSVGProps) => {
+  const { colorsTheme } = useTheme();
+  const hotWeatherColors = colorsTheme.widgets.hotWeatherBackground;
+
+  return (
+    <svg width="160" height="40" viewBox="0 0 160 40" fill="none" style={style}>
+      <ellipse
+        cx="50"
+        cy="28"
+        rx="48"
+        ry="10"
+        fill={hotWeatherColors.cloudColors.primary}
+        fillOpacity="0.32"
+      />
+      <ellipse
+        cx="110"
+        cy="18"
+        rx="32"
+        ry="7"
+        fill={hotWeatherColors.cloudColors.secondary}
+        fillOpacity="0.22"
+      />
+      <ellipse
+        cx="80"
+        cy="12"
+        rx="38"
+        ry="6"
+        fill={hotWeatherColors.cloudColors.tertiary}
+        fillOpacity="0.18"
+      />
+    </svg>
+  );
+};
 
 export default function HotWeatherBackground({
   children,
   inset = false,
 }: HotWeatherBackgroundProps) {
+  const { colorsTheme } = useTheme();
+  const hotWeatherColors = colorsTheme.widgets.hotWeatherBackground;
   // HotAnimation logic
   const duration = 2.2;
   const width = 60;
@@ -83,7 +98,7 @@ export default function HotWeatherBackground({
           width: "100%",
           height: "100%",
           zIndex: 0,
-          background: "linear-gradient(165deg, #ff512f 0%, #ffb347 100%)",
+          background: hotWeatherColors.background,
         }}
       />
       {/* Animated clouds */}

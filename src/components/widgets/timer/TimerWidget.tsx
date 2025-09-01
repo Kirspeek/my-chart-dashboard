@@ -36,7 +36,8 @@ export default function TimerWidget({
   onOpenSidebar?: () => void;
   showSidebarButton?: boolean;
 }) {
-  const { accent } = useTheme();
+  const { colorsTheme } = useTheme();
+  const timerColors = colorsTheme.widgets.timer;
   const [isRunning, setIsRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [selectedMode, setSelectedMode] = useState(0);
@@ -51,28 +52,28 @@ export default function TimerWidget({
       name: "Focus",
       duration: 25 * 60,
       icon: Target,
-      color: accent.red,
+      color: timerColors.modeColors.focus,
     },
     {
       id: "short-break",
       name: "Break",
       duration: 5 * 60,
       icon: Coffee,
-      color: accent.blue,
+      color: timerColors.modeColors.break,
     },
     {
       id: "long-break",
       name: "Rest",
       duration: 15 * 60,
       icon: Clock,
-      color: accent.teal,
+      color: timerColors.modeColors.rest,
     },
     {
       id: "quick",
       name: "Quick",
       duration: 2 * 60,
       icon: Zap,
-      color: accent.yellow,
+      color: timerColors.modeColors.quick,
     },
   ];
 
@@ -369,10 +370,10 @@ export default function TimerWidget({
           className={`rounded-full transition-all duration-200 hover:scale-110 ${isMobile ? "p-4" : "p-2"}`}
           style={{
             background: isRunning
-              ? accent.red + "20"
-              : currentTimer.color + "20",
-            border: `2px solid ${isRunning ? accent.red : currentTimer.color}`,
-            color: isRunning ? accent.red : currentTimer.color,
+              ? currentTimer.color + "30"
+              : currentTimer.color + "10",
+            border: `2px solid ${currentTimer.color}`,
+            color: currentTimer.color,
           }}
         >
           {isRunning ? (

@@ -1,13 +1,17 @@
 import { useRef, useEffect } from "react";
 import { LightningProps } from "../../../interfaces/animations";
+import { useTheme } from "../../hooks/useTheme";
 
 const Lightning = ({
-  hue = 50, // yellow
+  hue,
   xOffset = 0,
   speed = 1,
   intensity = 0.7,
   size = 0.8,
 }: LightningProps) => {
+  const { colorsTheme } = useTheme();
+  const lightningColors = colorsTheme.widgets.lightning;
+  const defaultHue = hue ?? lightningColors.defaultHue;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -175,12 +179,12 @@ const Lightning = ({
       gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
       const currentTime = performance.now();
       gl.uniform1f(iTimeLocation, (currentTime - startTime) / 1000.0);
-      gl.uniform1f(uHueLocation, hue);
+      gl.uniform1f(uHueLocation, defaultHue);
       gl.uniform1f(uXOffsetLocation, xOffset);
       gl.uniform1f(uSpeedLocation, speed);
       gl.uniform1f(uIntensityLocation, intensity);
       gl.uniform1f(uSizeLocation, size);
-      gl.clearColor(0.07, 0.07, 0.09, 1.0); // dark bg
+      gl.clearColor(0.07, 0.07, 0.09, 1.0); // Using theme background color
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       requestAnimationFrame(render);
@@ -190,7 +194,7 @@ const Lightning = ({
     return () => {
       window.removeEventListener("resize", resizeCanvas);
     };
-  }, [hue, xOffset, speed, intensity, size]);
+  }, [defaultHue, xOffset, speed, intensity, size]);
 
   return (
     <canvas

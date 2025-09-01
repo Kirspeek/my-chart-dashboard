@@ -8,6 +8,7 @@ import {
   Users,
   Target,
 } from "lucide-react";
+import { useTheme } from "../../../hooks/useTheme";
 
 const iconMap = {
   TrendingUp,
@@ -28,6 +29,9 @@ export default function MetricIcon({
   accentColor,
   isHovered = false,
 }: MetricIconProps) {
+  const { colorsTheme } = useTheme();
+  const metricColors = colorsTheme.widgets.metric;
+
   const IconComponent = iconMap[icon as keyof typeof iconMap] || TrendingUp;
 
   return (
@@ -42,7 +46,7 @@ export default function MetricIcon({
       }}
     >
       <IconComponent
-        style={{ color: "#fff", width: 16, height: 16 }}
+        style={{ color: metricColors.icon.text, width: 16, height: 16 }}
         className="sm:w-5 sm:h-5"
       />
     </div>

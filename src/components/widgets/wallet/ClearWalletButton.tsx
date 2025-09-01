@@ -3,8 +3,12 @@
 import React from "react";
 import { Eraser } from "lucide-react";
 import { ClearWalletButtonProps } from "../../../../interfaces/wallet";
+import { useTheme } from "../../../hooks/useTheme";
 
 export default function ClearWalletButton({ onClick }: ClearWalletButtonProps) {
+  const { colorsTheme } = useTheme();
+  const walletColors = colorsTheme.widgets.wallet;
+
   return (
     <button
       onClick={onClick}
@@ -15,16 +19,15 @@ export default function ClearWalletButton({ onClick }: ClearWalletButtonProps) {
         width: 40,
         height: 40,
         borderRadius: "50%",
-        background: "rgba(35, 35, 35, 0.07)",
+        background: walletColors.buttonColors.background,
         border: "none",
-        color: "white",
+        color: walletColors.buttonColors.text,
         fontSize: 16,
         fontFamily: "var(--font-sans)",
         fontWeight: 600,
         cursor: "pointer",
         zIndex: 20,
-        boxShadow:
-          "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+        boxShadow: walletColors.buttonColors.shadow,
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         display: "flex",
         alignItems: "center",
@@ -33,27 +36,27 @@ export default function ClearWalletButton({ onClick }: ClearWalletButtonProps) {
       className="wallet-clear-button"
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-1px)";
-        e.currentTarget.style.background = "rgba(35, 35, 35, 0.12)";
-        e.currentTarget.style.boxShadow =
-          "0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)";
+        e.currentTarget.style.background =
+          walletColors.buttonColors.backgroundHover;
+        e.currentTarget.style.boxShadow = walletColors.buttonColors.shadowHover;
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0)";
-        e.currentTarget.style.background = "rgba(35, 35, 35, 0.07)";
-        e.currentTarget.style.boxShadow =
-          "0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.1)";
+        e.currentTarget.style.background = walletColors.buttonColors.background;
+        e.currentTarget.style.boxShadow = walletColors.buttonColors.shadow;
       }}
       onMouseDown={(e) => {
         e.currentTarget.style.transform = "translateY(2px)";
-        e.currentTarget.style.background = "rgba(35, 35, 35, 0.18)";
+        e.currentTarget.style.background =
+          walletColors.buttonColors.backgroundActive;
         e.currentTarget.style.boxShadow =
-          "inset 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 -1px 2px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1)";
+          walletColors.buttonColors.shadowActive;
       }}
       onMouseUp={(e) => {
         e.currentTarget.style.transform = "translateY(-1px)";
-        e.currentTarget.style.background = "rgba(35, 35, 35, 0.12)";
-        e.currentTarget.style.boxShadow =
-          "0 6px 12px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.15)";
+        e.currentTarget.style.background =
+          walletColors.buttonColors.backgroundHover;
+        e.currentTarget.style.boxShadow = walletColors.buttonColors.shadowHover;
       }}
     >
       <Eraser size={16} />

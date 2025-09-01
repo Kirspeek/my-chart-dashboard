@@ -5,10 +5,13 @@ import WidgetBase from "../../common/WidgetBase";
 import SpendingChart from "./SpendingChart";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import { generateStableExpenseData } from "../../../utils/wheelUtils";
+import { useTheme } from "../../../hooks/useTheme";
 
 export default function WheelWidget() {
   const { currentCard, handleCardClick, hasCards, currentCardData } =
     useWheelWidgetLogic();
+  const { colorsTheme } = useTheme();
+  const wheelColors = colorsTheme.widgets.wheel;
 
   const contentStyle = useMemo(
     () => ({
@@ -21,14 +24,13 @@ export default function WheelWidget() {
 
   const widgetStyle = useMemo(
     () => ({
-      background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+      background: wheelColors.background.gradient,
       borderRadius: "16px",
-      boxShadow:
-        "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-      border: "1px solid rgba(255, 255, 255, 0.2)",
+      boxShadow: wheelColors.background.shadow,
+      border: `1px solid ${wheelColors.background.border}`,
       backdropFilter: "blur(10px)",
     }),
-    []
+    [wheelColors.background]
   );
 
   if (!hasCards || !currentCardData) {
@@ -61,7 +63,7 @@ export default function WheelWidget() {
             className="px-4 py-2 rounded-lg hover:opacity-80 transition-opacity text-sm"
             style={{
               backgroundColor: "var(--accent-color)",
-              color: "#ffffff",
+              color: wheelColors.button.text,
               fontFamily: "var(--font-sans)",
             }}
           >
