@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "src/hooks/useTheme";
-import { useGlobalTooltip } from "src/hooks/useGlobalTooltip";
+import { useTheme } from "@/hooks/useTheme";
+import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
 import {
   Play,
   Pause,

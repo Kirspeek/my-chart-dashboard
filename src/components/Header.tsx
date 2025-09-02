@@ -4,7 +4,7 @@ import { Bell, Search, User } from "lucide-react";
 import { useSearch } from "../context/SearchContext";
 import SearchResults from "./common/SearchResults";
 import { useState, useRef, useEffect } from "react";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function Header() {
   const { searchTerm, setSearchTerm } = useSearch();

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { MetricWidgetProps } from "../../../../interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
-import { useMetricLogic } from "src/hooks/useMetricLogic";
+import { useMetricLogic } from "@/hooks/useMetricLogic";
 import MetricIcon from "./MetricIcon";
 import MetricContent from "./MetricContent";
 import MetricTrend from "./MetricTrend";

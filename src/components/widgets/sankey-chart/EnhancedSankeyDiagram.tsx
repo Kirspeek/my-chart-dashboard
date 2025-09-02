@@ -7,7 +7,7 @@ import SlideNavigation from "../../common/SlideNavigation";
 import MigrationFlowHeader from "./MigrationFlowHeader";
 import MigrationFlowControls from "./MigrationFlowControls";
 import MigrationFlowStats from "./MigrationFlowStats";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import type { WidgetSankeyChartData } from "../../../../interfaces/widgets";
 
 interface EnhancedSankeyDiagramProps {

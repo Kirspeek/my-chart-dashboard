@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ClockWidget from "../../components/widgets/clock/ClockWidget";
-import WeatherWidgetMobile from "../../components/weather/WeatherWidgetMobile";
+import WeatherWidgetMobile from "../../components/widgets/weather/WeatherWidgetMobile";
 import "../../styles/mobile.css";
 
 export default function MobileDemoPage() {

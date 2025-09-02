@@ -19,7 +19,7 @@ import {
   Award,
   Clock,
 } from "lucide-react";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 interface ContributionGraphProps {
   title?: string;

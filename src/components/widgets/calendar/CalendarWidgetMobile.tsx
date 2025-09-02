@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { CalendarWidgetProps } from "../../../../interfaces/widgets";
-import { useCalendarLogic } from "src/hooks/useCalendarLogic";
+import { useCalendarLogic } from "@/hooks/useCalendarLogic";
 import CalendarHeader from "./CalendarHeader";
 import Button3D from "../../common/3DButton";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function CalendarWidgetMobile({
   onDateSelect,

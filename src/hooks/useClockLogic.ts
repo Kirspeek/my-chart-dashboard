@@ -3,7 +3,7 @@ import type { ClockState, ClockActions } from "../../interfaces/widgets";
 
 export function useClockLogic(selectedZone: string): ClockState & ClockActions {
   const [mounted, setMounted] = useState(false);
-  const [tick, setTick] = useState(0); // Used to force re-render every second
+  const [tick, setTick] = useState(0);
   const [is24h, setIs24h] = useState(true);
   const [dateStr, setDateStr] = useState("");
 
@@ -13,10 +13,9 @@ export function useClockLogic(selectedZone: string): ClockState & ClockActions {
     return () => clearInterval(interval);
   }, []);
 
-  // 'tick' is intentionally included to force re-render every second
   const mainTime = useMemo(() => {
     return mounted ? getTimeInZone(selectedZone) : new Date(0);
-  }, [mounted, selectedZone]); // tick is used to force re-render, not as a dependency
+  }, [mounted, selectedZone]);
 
   useEffect(() => {
     if (mounted) {

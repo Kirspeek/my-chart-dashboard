@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { WeatherTextProps } from "../../../interfaces/widgets";
-import { getWeatherColors } from "../../utils/weatherUtils";
+import { WeatherTextProps } from "../../../../interfaces/widgets";
+import { getWeatherColors } from "../../../utils/weatherUtils";
 import { MapPin, Calendar, Thermometer } from "lucide-react";
-import "../../styles/weather.css";
+import "../../../styles/weather.css";
 
 export default function WeatherText({
   desc,

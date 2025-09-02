@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "recharts";
 import type { DeviceUsageData } from "../../../../interfaces/widgets";
-import { useDeviceUsageLogic } from "src/hooks/useDeviceUsageLogic";
+import { useDeviceUsageLogic } from "@/hooks/useDeviceUsageLogic";
 import { Monitor, Smartphone, Tablet, Laptop, Activity } from "lucide-react";
 import { Card, useMobileDetection } from "../../common";
 import { useTheme } from "../../../hooks/useTheme";

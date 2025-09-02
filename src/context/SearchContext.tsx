@@ -1,26 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useMemo } from "react";
-
-interface SearchResult {
-  type: "widget" | "content";
-  title: string;
-  subtitle?: string;
-  content?: string;
-  slideIndex?: number;
-  widgetType: string;
-}
-
-interface SearchContextType {
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-  searchResults: SearchResult[];
-  isSearching: boolean;
-  clearSearch: () => void;
-  showFilteredWidgets: boolean;
-  setShowFilteredWidgets: (show: boolean) => void;
-  filteredWidgetTypes: string[];
-}
+import type { SearchContextType, SearchResult } from "../../interfaces/context";
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 

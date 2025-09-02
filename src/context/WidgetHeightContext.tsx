@@ -5,17 +5,14 @@ import React, {
   useContext,
   useState,
   useEffect,
-  ReactNode,
   useMemo,
 } from "react";
-import { useWalletLogic } from "../hooks/wallet/useWalletLogic";
-import { WALLET_CONSTANTS } from "../constants/wallet";
-
-interface WidgetHeightContextType {
-  walletHeight: number;
-  targetHeight: number | string;
-  updateWalletHeight: (height: number) => void;
-}
+import { useWalletLogic } from "@/hooks/wallet/useWalletLogic";
+import { WALLET_CONSTANTS } from "@/constants/wallet";
+import type {
+  WidgetHeightContextType,
+  WidgetHeightProviderProps,
+} from "../../interfaces/context";
 
 const WidgetHeightContext = createContext<WidgetHeightContextType | undefined>(
   undefined
@@ -30,10 +27,6 @@ export const useWidgetHeight = () => {
   }
   return context;
 };
-
-interface WidgetHeightProviderProps {
-  children: ReactNode;
-}
 
 export const WidgetHeightProvider: React.FC<WidgetHeightProviderProps> = ({
   children,

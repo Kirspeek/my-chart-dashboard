@@ -13,7 +13,7 @@ import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import type { WidgetBubbleChartData } from "../../../../interfaces/widgets";
 import { RotateCcw, Maximize2, Minimize2, Zap } from "lucide-react";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 interface CustomBubbleChartProps {
   data: WidgetBubbleChartData[];

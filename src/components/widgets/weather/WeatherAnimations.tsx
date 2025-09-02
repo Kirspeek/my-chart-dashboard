@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import CloudAnimation from "../animations/CloudAnimation";
-import RainAnimation from "../animations/RainAnimation";
-import SunAnimation from "../animations/SunAnimation";
-import HotAnimation from "../animations/HotAnimation";
-import Lightning from "../animations/Lightning";
-import FogAnimation from "../animations/FogAnimation";
+import CloudAnimation from "../../animations/CloudAnimation";
+import RainAnimation from "../../animations/RainAnimation";
+import SunAnimation from "../../animations/SunAnimation";
+import HotAnimation from "../../animations/HotAnimation";
+import Lightning from "../../animations/Lightning";
+import FogAnimation from "../../animations/FogAnimation";
 
 interface WeatherAnimationsProps {
   weatherDesc: string;

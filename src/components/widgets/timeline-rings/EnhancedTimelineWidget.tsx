@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useTheme } from "src/hooks/useTheme";
-import { useGlobalTooltip } from "src/hooks/useGlobalTooltip";
+import { useTheme } from "@/hooks/useTheme";
+import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
 import WidgetBase from "../../common/WidgetBase";
 import { WidgetTitle } from "../../common";
 import SlideNavigation from "../../common/SlideNavigation";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { TimerWidgetProps } from "../../../../interfaces/components";
@@ -15,16 +15,15 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
+import type { TimerMode } from "../../../../interfaces/widgets";
+import { formatMmSs } from "@/utils/timerUtils";
 import { IconButton, useMobileDetection } from "../../common";
-
-interface TimerMode {
-  id: string;
-  name: string;
-  duration: number; // in seconds
-  icon: React.ComponentType<{ className?: string }>;
-  color: string;
-}
+import TimerModeButtons from "./components/TimerModeButtons";
+import TimerDisplay from "./components/TimerDisplay";
+import { TIMER_MODES } from "@/data";
+import DraggableProgressRing from "./components/DraggableProgressRing";
+import { useTimerLogic } from "@/hooks/useTimerLogic";
 
 export default function TimerWidget({
   className = "",
@@ -38,86 +37,56 @@ export default function TimerWidget({
 }) {
   const { colorsTheme } = useTheme();
   const timerColors = colorsTheme.widgets.timer;
-  const [isRunning, setIsRunning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
   const [selectedMode, setSelectedMode] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const svgRef = useRef<SVGSVGElement>(null);
+  const {
+    duration,
+    timeLeft,
+    isRunning,
+    dragging,
+    svgRef,
+    toggleTimer,
+    resetTimer: resetLogic,
+    setDuration,
+    onPointerDown,
+  } = useTimerLogic();
 
-  const timerModes: TimerMode[] = [
-    {
-      id: "pomodoro",
-      name: "Focus",
-      duration: 25 * 60,
-      icon: Target,
-      color: timerColors.modeColors.focus,
-    },
-    {
-      id: "short-break",
-      name: "Break",
-      duration: 5 * 60,
-      icon: Coffee,
-      color: timerColors.modeColors.break,
-    },
-    {
-      id: "long-break",
-      name: "Rest",
-      duration: 15 * 60,
-      icon: Clock,
-      color: timerColors.modeColors.rest,
-    },
-    {
-      id: "quick",
-      name: "Quick",
-      duration: 2 * 60,
-      icon: Zap,
-      color: timerColors.modeColors.quick,
-    },
-  ];
+  const timerModes: TimerMode[] = TIMER_MODES.map((m) => {
+    const icon =
+      m.id === "pomodoro"
+        ? Target
+        : m.id === "short-break"
+          ? Coffee
+          : m.id === "long-break"
+            ? Clock
+            : Zap;
+    const color =
+      m.id === "pomodoro"
+        ? timerColors.modeColors.focus
+        : m.id === "short-break"
+          ? timerColors.modeColors.break
+          : m.id === "long-break"
+            ? timerColors.modeColors.rest
+            : timerColors.modeColors.quick;
+    return {
+      id: m.id,
+      name: m.name,
+      duration: m.duration,
+      icon,
+      color,
+    };
+  });
 
   const currentTimer = timerModes[selectedMode];
-
-  // Initialize timer
   useEffect(() => {
-    if (!isRunning && timeLeft === 0) {
-      setTimeLeft(currentTimer.duration);
-    }
-  }, [selectedMode, currentTimer.duration, isRunning, timeLeft]);
+    setDuration(currentTimer.duration);
+  }, [currentTimer.duration, setDuration]);
 
-  // Timer countdown
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    setIsComplete(!isRunning && timeLeft === 0);
+  }, [isRunning, timeLeft]);
 
-    if (isRunning && timeLeft > 0 && !isDragging) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            setIsRunning(false);
-            setIsComplete(true);
-            setShowNotification(true);
-            // Play notification sound or show browser notification
-            if (
-              "Notification" in window &&
-              Notification.permission === "granted"
-            ) {
-              new Notification("Timer Complete!", {
-                body: `${currentTimer.name} session finished`,
-                icon: "/favicon.ico",
-              });
-            }
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => clearInterval(interval);
-  }, [isRunning, timeLeft, currentTimer.name, isDragging]);
-
-  // Auto-hide notification
   useEffect(() => {
     if (showNotification) {
       const timer = setTimeout(() => setShowNotification(false), 3000);
@@ -126,105 +95,45 @@ export default function TimerWidget({
   }, [showNotification]);
 
   const startTimer = useCallback(() => {
-    setIsRunning(true);
-    setIsComplete(false);
-  }, []);
+    if (
+      typeof window !== "undefined" &&
+      "Notification" in window &&
+      Notification.permission === "default"
+    ) {
+      try {
+        Notification.requestPermission();
+      } catch {}
+    }
+    if (timeLeft === 0) {
+      resetLogic();
+    }
+    toggleTimer();
+  }, [toggleTimer, resetLogic, timeLeft]);
 
   const pauseTimer = useCallback(() => {
-    setIsRunning(false);
-  }, []);
+    toggleTimer();
+  }, [toggleTimer]);
 
   const resetTimer = useCallback(() => {
-    setIsRunning(false);
-    setTimeLeft(currentTimer.duration);
+    resetLogic();
     setIsComplete(false);
-  }, [currentTimer.duration]);
+    setShowNotification(false);
+  }, [resetLogic]);
 
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
+  const formatTime = (seconds: number): string => formatMmSs(seconds);
 
   const getProgress = (): number => {
-    return ((currentTimer.duration - timeLeft) / currentTimer.duration) * 100;
+    return ((duration - timeLeft) / duration) * 100;
   };
 
-  // Calculate angle from mouse position
-  const getAngleFromMouse = (event: React.MouseEvent | MouseEvent): number => {
-    if (!svgRef.current) return 0;
-
-    const rect = svgRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-
-    const deltaX = mouseX - centerX;
-    const deltaY = mouseY - centerY;
-
-    let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-
-    // Convert to clockwise from top (0 degrees) and invert for correct direction
-    angle = 90 - angle;
-    if (angle < 0) angle += 360;
-
-    // Invert the angle so dragging clockwise increases time
-    angle = 360 - angle;
-
-    return angle;
-  };
-
-  // Handle drag start
-  const handleMouseDown = useCallback(
-    (event: React.MouseEvent) => {
-      setIsDragging(true);
-
-      const angle = getAngleFromMouse(event);
-      const progress = (angle / 360) * 100;
-      const newTimeLeft = Math.round(
-        (currentTimer.duration * (100 - progress)) / 100
-      );
-
-      setTimeLeft(Math.max(0, Math.min(currentTimer.duration, newTimeLeft)));
-    },
-    [currentTimer.duration]
-  );
-
-  // Handle drag move
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (!isDragging) return;
-
-      const angle = getAngleFromMouse(event);
-      const progress = (angle / 360) * 100;
-      const newTimeLeft = Math.round(
-        (currentTimer.duration * (100 - progress)) / 100
-      );
-
-      setTimeLeft(Math.max(0, Math.min(currentTimer.duration, newTimeLeft)));
-    },
-    [isDragging, currentTimer.duration]
-  );
-
-  // Handle drag end
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  // Add/remove global mouse event listeners
+  // show a brief toast when timer completes
   useEffect(() => {
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-      };
+    if (isComplete) {
+      setShowNotification(true);
+      const t = setTimeout(() => setShowNotification(false), 3000);
+      return () => clearTimeout(t);
     }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  }, [isComplete]);
 
   const isMobile = useMobileDetection();
 
@@ -248,37 +157,16 @@ export default function TimerWidget({
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}
     >
-      {/* First two mode buttons: Focus, Break */}
-      <div
-        className={`flex gap-1 justify-center ${isMobile ? "flex-wrap" : "flex-col"}`}
-      >
-        {timerModes.slice(0, 2).map((mode, index) => (
-          <button
-            key={mode.id}
-            onClick={() => {
-              setSelectedMode(index);
-              resetTimer();
-            }}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105 ${
-              selectedMode === index ? "scale-105" : ""
-            }`}
-            style={{
-              background:
-                selectedMode === index ? mode.color + "20" : "var(--button-bg)",
-              border: `1px solid ${selectedMode === index ? mode.color : "var(--button-border)"}`,
-              color:
-                selectedMode === index ? mode.color : "var(--secondary-text)",
-            }}
-          >
-            <mode.icon className="w-3 h-3" />
-            <span>{mode.name}</span>
-          </button>
-        ))}
-      </div>
+      <TimerModeButtons
+        modes={timerModes}
+        selectedMode={selectedMode}
+        count={2}
+        isMobile={isMobile}
+        onSelect={setSelectedMode}
+        onReset={resetTimer}
+      />
 
-      {/* Timer Display with Control Buttons on Sides */}
       <div className="relative flex items-center gap-2">
-        {/* Left Control Button */}
         <IconButton
           icon={<RotateCcw className={isMobile ? "w-5 h-5" : "w-3 h-3"} />}
           onClick={resetTimer}
@@ -286,74 +174,21 @@ export default function TimerWidget({
           variant="default"
         />
 
-        {/* Progress Ring - Draggable */}
-        <div
-          className={`relative flex items-center justify-center ${isMobile ? "w-48 h-48" : "w-32 h-32"}`}
+        <DraggableProgressRing
+          isMobile={isMobile}
+          svgRef={svgRef}
+          onMouseDown={onPointerDown}
+          isDragging={dragging}
+          strokeColor={currentTimer.color}
+          progress={getProgress()}
         >
-          <svg
-            ref={svgRef}
-            className="w-full h-full transform -rotate-90 cursor-pointer"
-            viewBox="0 0 100 100"
-            onMouseDown={handleMouseDown}
-            style={{
-              cursor: isDragging ? "grabbing" : "grab",
-            }}
-          >
-            {/* Background circle */}
-            <circle
-              cx="50"
-              cy="50"
-              r="45"
-              fill="none"
-              stroke="var(--button-border)"
-              strokeWidth="3"
-            />
-            {/* Progress circle */}
-            <circle
-              cx="50"
-              cy="50"
-              r="45"
-              fill="none"
-              stroke={currentTimer.color}
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray={`${2 * Math.PI * 45}`}
-              strokeDashoffset={`${2 * Math.PI * 45 * (1 - getProgress() / 100)}`}
-              style={{
-                transition: isDragging ? "none" : "stroke-dashoffset 0.3s ease",
-              }}
-            />
-            {/* Draggable handle at the end of progress */}
-            <circle
-              cx="50"
-              cy="50"
-              r="45"
-              fill="none"
-              stroke="transparent"
-              strokeWidth="8"
-              style={{ cursor: "grab" }}
-            />
-          </svg>
-
-          {/* Timer Text */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <div
-              className={`font-mono font-bold mb-0.5 ${isMobile ? "text-4xl" : "text-2xl"}`}
-              style={{
-                color: isComplete ? currentTimer.color : "var(--primary-text)",
-              }}
-            >
-              {formatTime(timeLeft)}
-            </div>
-            <div
-              className="text-sm font-medium"
-              style={{ color: currentTimer.color }}
-            >
-              {currentTimer.name}
-            </div>
-          </div>
-
-          {/* Completion Indicator */}
+          <TimerDisplay
+            isMobile={isMobile}
+            isComplete={isComplete}
+            color={currentTimer.color}
+            timeText={formatTime(timeLeft)}
+            name={currentTimer.name}
+          />
           {isComplete && (
             <div className="absolute -top-1 -right-1">
               <CheckCircle
@@ -362,9 +197,8 @@ export default function TimerWidget({
               />
             </div>
           )}
-        </div>
+        </DraggableProgressRing>
 
-        {/* Right Control Button */}
         <button
           onClick={isRunning ? pauseTimer : startTimer}
           className={`rounded-full transition-all duration-200 hover:scale-110 ${isMobile ? "p-4" : "p-2"}`}
@@ -384,39 +218,16 @@ export default function TimerWidget({
         </button>
       </div>
 
-      {/* Last two mode buttons: Rest, Quick */}
-      <div
-        className={`flex gap-1 justify-center ${isMobile ? "flex-wrap" : "flex-col"}`}
-      >
-        {timerModes.slice(2, 4).map((mode, index) => (
-          <button
-            key={mode.id}
-            onClick={() => {
-              setSelectedMode(index + 2);
-              resetTimer();
-            }}
-            className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105 ${
-              selectedMode === index + 2 ? "scale-105" : ""
-            }`}
-            style={{
-              background:
-                selectedMode === index + 2
-                  ? mode.color + "20"
-                  : "var(--button-bg)",
-              border: `1px solid ${selectedMode === index + 2 ? mode.color : "var(--button-border)"}`,
-              color:
-                selectedMode === index + 2
-                  ? mode.color
-                  : "var(--secondary-text)",
-            }}
-          >
-            <mode.icon className="w-3 h-3" />
-            <span>{mode.name}</span>
-          </button>
-        ))}
-      </div>
+      <TimerModeButtons
+        modes={timerModes}
+        selectedMode={selectedMode}
+        startIndex={2}
+        count={2}
+        isMobile={isMobile}
+        onSelect={setSelectedMode}
+        onReset={resetTimer}
+      />
 
-      {/* Status Message */}
       {showNotification && (
         <div
           className="absolute top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-lg text-sm font-medium animate-fade-in"
@@ -433,7 +244,6 @@ export default function TimerWidget({
         </div>
       )}
 
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

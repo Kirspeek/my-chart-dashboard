@@ -2,16 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import WidgetButton from "../../common/WidgetButton";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { Sun, Moon, Calendar } from "lucide-react";
-
-interface ClockDisplayProps {
-  mainTime: Date;
-  is24h: boolean;
-  dateStr: string;
-  pad: (n: number) => string;
-  setIs24h: (is24h: boolean) => void;
-}
+import type { ClockDisplayProps } from "../../../../interfaces/widgets";
 
 export default function ClockDisplay({
   mainTime,
@@ -33,7 +26,6 @@ export default function ClockDisplay({
   const displayHours = is24h ? hours : hours % 12 || 12;
   const isDayTime = hours >= 6 && hours < 18;
 
-  // Detect when seconds change and trigger animation
   useEffect(() => {
     if (prevSecondsRef.current !== seconds) {
       setSecondsChanged(true);
@@ -43,13 +35,11 @@ export default function ClockDisplay({
     }
   }, [seconds]);
 
-  // Auto-hide seconds after 3 seconds of inactivity
   useEffect(() => {
     const timer = setTimeout(() => setShowSeconds(false), 3000);
     return () => clearTimeout(timer);
   }, [seconds]);
 
-  // Show seconds on hover
   const handleMouseEnter = () => {
     setIsHovered(true);
     setShowSeconds(true);
@@ -114,7 +104,6 @@ export default function ClockDisplay({
         }
       `}</style>
 
-      {/* Time Display */}
       <div
         className="font-mono font-extrabold clock-display-mobile clock-main-size clock-time"
         style={{
@@ -144,7 +133,6 @@ export default function ClockDisplay({
         </span>
       </div>
 
-      {/* Date and Controls */}
       <div className="flex flex-col items-center gap-2 mt-2">
         <div
           className="date-display flex items-center gap-2 px-3 py-1 rounded-full"
@@ -166,7 +154,6 @@ export default function ClockDisplay({
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Sunrise/Sunset with icon */}
           <div
             className="flex items-center gap-1 px-2 py-1 rounded-full border transition-all duration-300 hover:scale-105"
             style={{
@@ -193,7 +180,6 @@ export default function ClockDisplay({
             </span>
           </div>
 
-          {/* Time Format Toggle */}
           <div className="flex items-center gap-1">
             <WidgetButton
               className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold widget-button hover:scale-105`}

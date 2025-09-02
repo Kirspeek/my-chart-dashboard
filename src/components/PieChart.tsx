@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import type { PieChartProps } from "../../interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function PieChart({ data, title }: PieChartProps) {
   const { colorsTheme } = useTheme();

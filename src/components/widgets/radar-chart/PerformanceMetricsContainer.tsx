@@ -24,8 +24,8 @@ import type {
   WidgetRadarChartData,
   PerformanceMetricsData,
 } from "../../../../interfaces/widgets";
-import { useChartLogic } from "src/hooks/useChartLogic";
-import { useTheme } from "src/hooks/useTheme";
+import { useChartLogic } from "@/hooks/useChartLogic";
+import { useTheme } from "@/hooks/useTheme";
 
 interface PerformanceMetricsContainerProps {
   data: WidgetRadarChartData[] | PerformanceMetricsData;

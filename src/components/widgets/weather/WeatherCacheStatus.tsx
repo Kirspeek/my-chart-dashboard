@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useWeatherPreload } from "../../hooks";
-import { WeatherCacheStatusProps } from "../../../interfaces/components";
+import { useWeatherPreload } from "@/hooks";
+import { WeatherCacheStatusProps } from "../../../../interfaces/components";
 
 export default function WeatherCacheStatus({
   cities,

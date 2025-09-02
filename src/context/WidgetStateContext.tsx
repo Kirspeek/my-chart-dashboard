@@ -12,18 +12,14 @@ import {
   CardSpendingData,
   WidgetState,
 } from "../../interfaces/wallet";
+import type {
+  WidgetStateContextType,
+  WidgetStateProviderProps,
+} from "../../interfaces/context";
 import {
   updateSpendingData,
   calculateAggregatedData,
 } from "../services/spendingDataService";
-
-interface WidgetStateContextType {
-  widgetState: WidgetState;
-  setCurrentCard: (cardId: string) => void;
-  refreshSpendingData: (cards: CardData[]) => void;
-  getCurrentCardData: () => CardSpendingData | null;
-  getAggregatedData: () => WidgetState["aggregatedData"];
-}
 
 const WidgetStateContext = createContext<WidgetStateContextType | undefined>(
   undefined
@@ -36,10 +32,6 @@ export const useWidgetState = () => {
   }
   return context;
 };
-
-interface WidgetStateProviderProps {
-  children: React.ReactNode;
-}
 
 export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
   children,

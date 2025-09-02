@@ -3,12 +3,8 @@
 import React, { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useTheme } from "../../../hooks/useTheme";
-
-const MAPBOX_TOKEN =
-  "pk.eyJ1Ijoia2lyc3BlZWVrIiwiYSI6ImNtZDV1ZTV3cjAya2gybHM5dnd5aXN1NXkifQ.Vf1XkeuyhzH0TfaclbFOBw";
-const MAP_STYLE = "mapbox://styles/mapbox/light-v11";
-const DEFAULT_CENTER: [number, number] = [0, 0];
+import { useTheme } from "@/hooks/useTheme";
+import { MAP_STYLE, DEFAULT_CENTER } from "@/data";
 
 interface MapContainerProps {
   internalLocation: [number, number] | null;
@@ -27,9 +23,8 @@ export default function MapContainer({
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markerRef = useRef<mapboxgl.Marker | null>(null);
 
-  // Initialize map
   useEffect(() => {
-    mapboxgl.accessToken = MAPBOX_TOKEN;
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY || "";
     if (!mapContainer.current) return;
 
     const map = new mapboxgl.Map({
@@ -53,10 +48,8 @@ export default function MapContainer({
       map.touchZoomRotate.enable();
       map.dragPan.enable();
 
-      // Disable scroll zoom (mouse wheel) to prevent conflicts
       map.scrollZoom.disable();
 
-      // Enable keyboard navigation for accessibility
       map.keyboard.enable();
     });
 
@@ -70,7 +63,6 @@ export default function MapContainer({
     };
   }, [internalLocation]);
 
-  // Update map center and marker when location changes
   useEffect(() => {
     if (!mapRef.current || !internalLocation) return;
 
@@ -106,9 +98,13 @@ export default function MapContainer({
     }
     if (onMarkerChange && internalLocation)
       onMarkerChange({ lat: internalLocation[1], lon: internalLocation[0] });
-  }, [internalLocation, onMarkerChange]);
+  }, [
+    internalLocation,
+    onMarkerChange,
+    mapColors.markerColors.fill,
+    mapColors.markerColors.stroke,
+  ]);
 
-  // Handle search results
   useEffect(() => {
     if (!mapRef.current || !searchResult) return;
 
@@ -144,7 +140,12 @@ export default function MapContainer({
     }
     if (onMarkerChange && searchResult)
       onMarkerChange({ lat: searchResult[1], lon: searchResult[0] });
-  }, [searchResult, onMarkerChange]);
+  }, [
+    searchResult,
+    onMarkerChange,
+    mapColors.markerColors.fill,
+    mapColors.markerColors.stroke,
+  ]);
 
   return (
     <div

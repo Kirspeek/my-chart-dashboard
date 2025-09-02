@@ -5,8 +5,8 @@ export { TimerWidget } from "./timer";
 export { ClockWidget } from "./clock";
 
 // Weather Widget
-export { default as WeatherWidget } from "../weather/WeatherWidget";
-export { default as WeatherWidgetMobile } from "../weather/WeatherWidgetMobile";
+export { default as WeatherWidget } from "./weather/WeatherWidget";
+export { default as WeatherWidgetMobile } from "./weather/WeatherWidgetMobile";
 
 // Map Widget
 export { MapWidget } from "./map";

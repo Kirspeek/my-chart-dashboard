@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import type { LineChartProps } from "../../interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
-import { useTheme } from "../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function LineChart({ data, title }: LineChartProps) {
   const { colorsTheme } = useTheme();

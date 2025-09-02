@@ -25,7 +25,7 @@ export {
 } from "./wallet";
 
 // Export constants
-export { timeZones } from "../constants/timeZones";
+export { timeZones } from "@/constants/timeZones";
 
 // Re-export common React hooks for convenience
 export { useState, useEffect, useCallback, useMemo, useRef } from "react";

@@ -1,1 +1,1 @@
-export { lightTheme, darkTheme } from "../constants/theme";
+export { lightTheme, darkTheme } from "@/constants/theme";

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import {
   TrendingUp,
   TrendingDown,
@@ -91,9 +91,19 @@ export default function MigrationFlowStats({
 
   const getTrendIcon = (value: number) => {
     if (value > 0)
-      return <TrendingUp className="w-4 h-4" style={{ color: sankeyChartColors.stats.trend.positive }} />;
+      return (
+        <TrendingUp
+          className="w-4 h-4"
+          style={{ color: sankeyChartColors.stats.trend.positive }}
+        />
+      );
     if (value < 0)
-      return <TrendingDown className="w-4 h-4" style={{ color: sankeyChartColors.stats.trend.negative }} />;
+      return (
+        <TrendingDown
+          className="w-4 h-4"
+          style={{ color: sankeyChartColors.stats.trend.negative }}
+        />
+      );
     return <Minus className="w-4 h-4" style={{ color: colors.secondary }} />;
   };
 
@@ -131,7 +141,10 @@ export default function MigrationFlowStats({
                 boxShadow: "0 2px 8px rgba(129, 140, 248, 0.2)",
               }}
             >
-              <Globe className="w-6 h-6" style={{ color: sankeyChartColors.stats.text }} />
+              <Globe
+                className="w-6 h-6"
+                style={{ color: sankeyChartColors.stats.text }}
+              />
             </div>
             <div>
               <div
@@ -175,7 +188,10 @@ export default function MigrationFlowStats({
                 boxShadow: "0 2px 8px rgba(52, 211, 153, 0.2)",
               }}
             >
-              <Users className="w-6 h-6" style={{ color: sankeyChartColors.stats.text }} />
+              <Users
+                className="w-6 h-6"
+                style={{ color: sankeyChartColors.stats.text }}
+              />
             </div>
             <div>
               <div
@@ -228,7 +244,10 @@ export default function MigrationFlowStats({
               boxShadow: "0 1px 4px rgba(139, 92, 246, 0.2)",
             }}
           >
-            <Activity className="w-4 h-4" style={{ color: sankeyChartColors.stats.text }} />
+            <Activity
+              className="w-4 h-4"
+              style={{ color: sankeyChartColors.stats.text }}
+            />
           </div>
           <span>Top Migration Flows</span>
         </div>

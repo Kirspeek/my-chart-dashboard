@@ -1,8 +1,8 @@
 import React from "react";
-import { ForecastDayProps } from "../../../interfaces/widgets";
-import Button3D from "../common/3DButton";
-import { getSelectedButtonBackground } from "../../utils/weatherUtils";
-import "../../styles/weather.css";
+import { ForecastDayProps } from "../../../../interfaces/widgets";
+import Button3D from "../../common/3DButton";
+import { getSelectedButtonBackground } from "../../../utils/weatherUtils";
+import "../../../styles/weather.css";
 
 export default function ForecastDayMobile({
   day,

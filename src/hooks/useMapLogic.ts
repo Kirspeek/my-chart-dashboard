@@ -1,10 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import type { MapState, MapActions } from "../../interfaces/widgets";
-
-const MAPBOX_TOKEN =
-  "pk.eyJ1Ijoia2lyc3BlZWVrIiwiYSI6ImNtZDV1ZTV3cjAya2gybHM5dnd5aXN1NXkifQ.Vf1XkeuyhzH0TfaclbFOBw";
-const DEFAULT_CENTER: [number, number] = [0, 0];
-const SEARCH_DEBOUNCE = 400;
+import { DEFAULT_CENTER, SEARCH_DEBOUNCE } from "@/data";
+import { mapboxGeocode } from "@/apis";
 
 export function useMapLogic(
   onMarkerChange?: (pos: { lat: number; lon: number }) => void,
@@ -23,7 +20,6 @@ export function useMapLogic(
   const searchTimeout = useRef<NodeJS.Timeout | null>(null);
   const lastSearched = useRef("");
 
-  // Get user location on mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -38,7 +34,6 @@ export function useMapLogic(
     }
   }, []);
 
-  // Update internalLocation if userLocation prop changes
   useEffect(() => {
     if (
       userLocation &&
@@ -50,7 +45,6 @@ export function useMapLogic(
     }
   }, [userLocation, internalLocation]);
 
-  // Search effect
   useEffect(() => {
     if (!search.trim()) {
       setSearchResult(null);
@@ -61,12 +55,7 @@ export function useMapLogic(
     searchTimeout.current = setTimeout(async () => {
       lastSearched.current = search;
       try {
-        const resp = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-            search
-          )}.json?access_token=${MAPBOX_TOKEN}&limit=1`
-        );
-        const data = await resp.json();
+        const data = await mapboxGeocode(search);
         if (
           data.features &&
           data.features.length > 0 &&
@@ -92,12 +81,7 @@ export function useMapLogic(
       if (!search.trim()) return;
       setLoading(true);
       try {
-        const resp = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-            search
-          )}.json?access_token=${MAPBOX_TOKEN}&limit=1`
-        );
-        const data = await resp.json();
+        const data = await mapboxGeocode(search);
         if (data.features && data.features.length > 0) {
           const [lng, lat] = data.features[0].center;
           setInternalLocation([lng, lat]);

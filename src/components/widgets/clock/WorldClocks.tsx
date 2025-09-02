@@ -2,19 +2,9 @@
 
 import React from "react";
 import Button3D from "../../common/3DButton";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { MapPin, Clock, Globe } from "lucide-react";
-
-interface WorldClocksProps {
-  timeZones: Array<{ zone: string; label: string; utc: string }>;
-  selectedZone: string;
-  setSelectedZone: (zone: string) => void;
-  mounted: boolean;
-  pad: (n: number) => string;
-  getTimeInZone: (zone: string) => Date;
-  isDay: (hours: number) => boolean;
-  isMobile?: boolean;
-}
+import type { WorldClocksProps } from "../../../../interfaces/widgets";
 
 export default function WorldClocks({
   timeZones,
@@ -29,7 +19,6 @@ export default function WorldClocks({
   const { colorsTheme } = useTheme();
   const clockColors = colorsTheme.widgets.clock;
 
-  // Check if viewport is at least 1440px wide
   const [isViewportAtLeast1440, setIsViewportAtLeast1440] =
     React.useState(false);
 
@@ -71,7 +60,6 @@ export default function WorldClocks({
         }
       `}</style>
 
-      {/* Header with Globe Icon */}
       <div className="flex items-center gap-2 mb-3 opacity-70">
         <Globe className="w-4 h-4" style={{ color: clockColors.accentColor }} />
         <span
@@ -88,7 +76,6 @@ export default function WorldClocks({
         }`}
       >
         {timeZones.map((tz) => {
-          // Only calculate time when mounted to prevent hydration mismatch
           const t = mounted ? getTimeInZone(tz.zone) : new Date(0);
           const h = t.getHours();
           const m = t.getMinutes();
@@ -114,7 +101,6 @@ export default function WorldClocks({
                       : { padding: "1rem 0.5rem", minWidth: 0, minHeight: 20 }
                 }
               >
-                {/* City Name with Location Icon */}
                 <div className="flex items-center gap-1 mb-1">
                   <MapPin
                     className="w-3 h-3 city-name"
@@ -133,7 +119,6 @@ export default function WorldClocks({
                   </span>
                 </div>
 
-                {/* UTC Offset */}
                 <span
                   className="text-xs font-mono mb-2 world-clock-utc-mobile secondary-text"
                   style={{
@@ -144,7 +129,6 @@ export default function WorldClocks({
                   {tz.utc}
                 </span>
 
-                {/* Time Display */}
                 <div className="flex items-center gap-1">
                   <Clock
                     className="w-3 h-3"
@@ -163,7 +147,6 @@ export default function WorldClocks({
                   </span>
                 </div>
 
-                {/* Day/Night Indicator */}
                 <div className="flex items-center gap-1 mt-1">
                   <span
                     className="text-xs font-mono secondary-text"

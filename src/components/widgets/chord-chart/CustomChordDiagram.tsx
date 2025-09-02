@@ -5,7 +5,7 @@ import * as d3 from "d3";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import type { WidgetChordChartData } from "../../../../interfaces/widgets";
 
 interface CustomChordDiagramProps {

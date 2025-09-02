@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import type { TimerState, TimerActions } from "../../interfaces/widgets";
+import { formatHms } from "@/utils/timerUtils";
+import { TIMER_LIMITS, TIMER_NOTIFICATION } from "@/data";
 
 export function useTimerLogic(): TimerState & TimerActions {
   const [duration, setDuration] = useState(25 * 60);
@@ -10,31 +12,22 @@ export function useTimerLogic(): TimerState & TimerActions {
   const [previewDuration, setPreviewDuration] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Timer constants
-  const minSeconds = 10;
-  const maxSeconds = 60 * 60;
+  const minSeconds = TIMER_LIMITS.minSeconds;
+  const maxSeconds = TIMER_LIMITS.maxSeconds;
 
-  // When duration changes (by drag), reset timer
   useEffect(() => {
     setTimeLeft(duration);
     setIsRunning(false);
     setIsPaused(false);
   }, [duration]);
 
-  // Format time as HH:MM:SS
-  const formatTime = (seconds: number): string => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h.toString().padStart(1, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  };
+  const formatTime = (seconds: number): string => formatHms(seconds);
 
-  // Convert mouse/touch position to timer value
   const getSecondsFromPointer = useCallback(
     (clientX: number, clientY: number) => {
       if (!svgRef.current) return timeLeft;
       const rect = svgRef.current.getBoundingClientRect();
-      const center = 45; // svgSize / 2
+      const center = 45;
       const x = clientX - rect.left - center;
       const y = clientY - rect.top - center;
       let theta = Math.atan2(y, x) + Math.PI / 2;
@@ -48,7 +41,6 @@ export function useTimerLogic(): TimerState & TimerActions {
     [timeLeft, maxSeconds, minSeconds]
   );
 
-  // Drag handlers
   const onPointerDown = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     setDragging(true);
@@ -103,7 +95,6 @@ export function useTimerLogic(): TimerState & TimerActions {
     }
   }, [dragging, onPointerMove, onPointerUp]);
 
-  // Sound on timer end
   const playEndSound = useCallback(() => {
     try {
       const AudioCtx =
@@ -124,7 +115,6 @@ export function useTimerLogic(): TimerState & TimerActions {
     } catch {}
   }, []);
 
-  // Timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (isRunning && !isPaused && timeLeft > 0) {
@@ -135,9 +125,9 @@ export function useTimerLogic(): TimerState & TimerActions {
             setIsPaused(false);
             playEndSound();
             if (typeof window !== "undefined" && "Notification" in window) {
-              new Notification("Timer Complete!", {
+              new Notification(TIMER_NOTIFICATION.title, {
                 body: "Your timer has finished!",
-                icon: "/favicon.ico",
+                icon: TIMER_NOTIFICATION.icon,
               });
             }
             return 0;
@@ -151,7 +141,6 @@ export function useTimerLogic(): TimerState & TimerActions {
     };
   }, [isRunning, isPaused, timeLeft, playEndSound]);
 
-  // Start/Pause timer
   const toggleTimer = useCallback(() => {
     if (!isRunning) {
       setIsRunning(true);
@@ -163,7 +152,6 @@ export function useTimerLogic(): TimerState & TimerActions {
     }
   }, [isRunning, isPaused]);
 
-  // Reset timer
   const resetTimer = useCallback(() => {
     setIsRunning(false);
     setIsPaused(false);
@@ -177,6 +165,7 @@ export function useTimerLogic(): TimerState & TimerActions {
     isPaused,
     dragging,
     previewDuration,
+    svgRef,
     toggleTimer,
     resetTimer,
     setDuration,

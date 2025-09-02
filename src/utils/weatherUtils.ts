@@ -1,17 +1,8 @@
-/* Weather Utility Functions */
-
-export interface WeatherColors {
-  mainColor: string;
-  secondaryColor: string;
-}
-
-export interface WeatherBackground {
-  background: string;
-}
-
-export interface WeatherButtonBackground {
-  background: string;
-}
+import type {
+  WeatherColors,
+  WeatherBackground,
+  WeatherButtonBackground,
+} from "../../interfaces/widgets";
 
 /**
  * Get weather text colors based on weather description

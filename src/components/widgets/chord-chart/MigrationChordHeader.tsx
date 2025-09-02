@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { Globe, TrendingUp, Users, ArrowRight } from "lucide-react";
 
 interface MigrationChordHeaderProps {

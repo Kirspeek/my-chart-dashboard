@@ -6,9 +6,8 @@ This directory contains all widget components that have been reorganized for bet
 
 ### Timer Widget (`timer/`)
 
-- **TimerWidget.tsx** - Main timer component (clean, focused on layout)
-- **TimerCircle.tsx** - SVG circle component for the timer display
-- **TimerControls.tsx** - Control buttons component
+- **TimerWidget.tsx** - Main timer component
+- **components/** - Timer subcomponents (display, mode buttons, progress ring)
 - **index.ts** - Exports for the timer module
 
 ### Clock Widget (`clock/`)

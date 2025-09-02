@@ -1,17 +1,19 @@
 "use client";
 
 import React from "react";
-import WeatherBackground from "./WeatherBackground";
-import WeatherText from "./WeatherText";
-import ForecastDay from "./ForecastDay";
-import { WeatherWidgetProps } from "../../../interfaces/widgets";
-import WidgetBase from "../common/WidgetBase";
+import WidgetBase from "../../common/WidgetBase";
+import SlideNavigation from "../../common/SlideNavigation";
+import { WeatherWidgetProps } from "../../../../interfaces/widgets";
 import { useWeatherLogic } from "@/hooks/useWeatherLogic";
+import WeatherBackgroundMobile from "./WeatherBackgroundMobile";
 import WeatherAnimations from "./WeatherAnimations";
+import WeatherText from "./WeatherText";
 import WeatherStatus from "./WeatherStatus";
-import type { ForecastDay as ForecastDayType } from "../../../interfaces/widgets";
+import ForecastDayMobile from "./ForecastDayMobile";
+import type { ForecastDay as ForecastDayType } from "../../../../interfaces/widgets";
 import { useTheme } from "@/hooks/useTheme";
-import "../../styles/weather.css";
+import "../../../styles/weather.css";
+import "../../../styles/mobile.css";
 
 function renderForecastBlock(
   forecast: ForecastDayType[],
@@ -45,9 +47,9 @@ function renderForecastBlock(
     );
   }
   return (
-    <div className="weather-forecast-desktop">
+    <div className="weather-forecast-mobile">
       {forecast.map((f, i) => (
-        <ForecastDay
+        <ForecastDayMobile
           key={f.day}
           day={f.day}
           icon={f.icon}
@@ -62,9 +64,14 @@ function renderForecastBlock(
   );
 }
 
-export default function WeatherWidget({
+export default function WeatherWidgetMobile({
   city = "Amsterdam",
-}: WeatherWidgetProps) {
+  currentSlide,
+  setCurrentSlide,
+}: WeatherWidgetProps & {
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+}) {
   const { colorsTheme } = useTheme();
   const weatherColors = colorsTheme.widgets.weather;
   const {
@@ -80,15 +87,18 @@ export default function WeatherWidget({
   } = useWeatherLogic(city);
 
   return (
-    <WidgetBase className="weather-widget-desktop" style={{ padding: 0 }}>
+    <WidgetBase
+      className="weather-widget-mobile"
+      style={{ padding: 0, position: "relative" }}
+    >
       {/* Left: Current weather */}
       <div
-        className="weather-left-panel-desktop"
+        className="weather-left-panel-mobile"
         style={{ overflow: isCloudy ? undefined : "hidden" }}
       >
-        <WeatherBackground desc={forecast[selectedDay]?.desc || ""}>
+        <WeatherBackgroundMobile desc={forecast[selectedDay]?.desc || ""}>
           <WeatherAnimations weatherDesc={forecast[selectedDay]?.desc || ""} />
-        </WeatherBackground>
+        </WeatherBackgroundMobile>
         {forecast[selectedDay] && dateString && (
           <WeatherText
             desc={forecast[selectedDay].desc}
@@ -102,7 +112,7 @@ export default function WeatherWidget({
         )}
       </div>
       {/* Right: Forecast */}
-      <div className="weather-right-panel-desktop">
+      <div className="weather-right-panel-mobile">
         {/* Always show the status label to avoid layout shift */}
         <WeatherStatus
           isCached={isCached}
@@ -118,6 +128,14 @@ export default function WeatherWidget({
           weatherColors
         )}
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && currentSlide !== 0 && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

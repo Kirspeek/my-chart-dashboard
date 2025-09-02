@@ -1,7 +1,7 @@
 import React from "react";
-import { WeatherBackgroundProps } from "../../../interfaces/widgets";
-import { getWeatherBackground } from "../../utils/weatherUtils";
-import "../../styles/weather.css";
+import { WeatherBackgroundProps } from "../../../../interfaces/widgets";
+import { getWeatherBackground } from "../../../utils/weatherUtils";
+import "../../../styles/weather.css";
 
 export default function WeatherBackground({
   desc,

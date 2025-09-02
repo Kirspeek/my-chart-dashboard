@@ -2,7 +2,7 @@
 
 import React from "react";
 import { WidgetTitle } from "../../common";
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 import { Globe, TrendingUp, Users, MapPin } from "lucide-react";
 
 interface MigrationFlowHeaderProps {
@@ -55,14 +55,18 @@ export default function MigrationFlowHeader({
           <div
             className="absolute top-0 left-0 w-16 h-16 rounded-full animate-pulse"
             style={{
-              backgroundColor: isDark ? sankeyChartColors.header.background.primary : sankeyChartColors.header.background.secondary,
+              backgroundColor: isDark
+                ? sankeyChartColors.header.background.primary
+                : sankeyChartColors.header.background.secondary,
               animationDelay: "0s",
             }}
           />
           <div
             className="absolute bottom-0 right-0 w-12 h-12 rounded-full animate-pulse"
             style={{
-              backgroundColor: isDark ? sankeyChartColors.header.background.secondary : sankeyChartColors.header.background.primary,
+              backgroundColor: isDark
+                ? sankeyChartColors.header.background.secondary
+                : sankeyChartColors.header.background.primary,
               animationDelay: "1s",
             }}
           />
@@ -79,7 +83,10 @@ export default function MigrationFlowHeader({
                   boxShadow: `0 2px 8px ${colors.accent.blue}40`,
                 }}
               >
-                <Globe className="w-5 h-5" style={{ color: sankeyChartColors.header.icon.primary }} />
+                <Globe
+                  className="w-5 h-5"
+                  style={{ color: sankeyChartColors.header.icon.primary }}
+                />
               </div>
               <div>
                 <span
@@ -113,7 +120,10 @@ export default function MigrationFlowHeader({
                   boxShadow: `0 2px 8px ${colors.accent.teal}40`,
                 }}
               >
-                <Users className="w-5 h-5" style={{ color: sankeyChartColors.header.icon.primary }} />
+                <Users
+                  className="w-5 h-5"
+                  style={{ color: sankeyChartColors.header.icon.primary }}
+                />
               </div>
               <div>
                 <span
@@ -150,7 +160,10 @@ export default function MigrationFlowHeader({
                   boxShadow: `0 1px 4px ${colors.accent.yellow}40`,
                 }}
               >
-                <MapPin className="w-4 h-4" style={{ color: sankeyChartColors.header.icon.secondary }} />
+                <MapPin
+                  className="w-4 h-4"
+                  style={{ color: sankeyChartColors.header.icon.secondary }}
+                />
               </div>
               <div>
                 <span
@@ -186,7 +199,10 @@ export default function MigrationFlowHeader({
                 boxShadow: `0 1px 4px ${colors.accent.red}40`,
               }}
             >
-              <TrendingUp className="w-4 h-4" style={{ color: sankeyChartColors.header.icon.primary }} />
+              <TrendingUp
+                className="w-4 h-4"
+                style={{ color: sankeyChartColors.header.icon.primary }}
+              />
             </div>
             <div>
               <span

@@ -12,7 +12,7 @@ This folder contains the centralized theme system for the project. The goal is t
 ### In Components
 
 ```typescript
-import { useTheme } from "src/hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 function MyComponent() {
   const { colorsTheme } = useTheme();

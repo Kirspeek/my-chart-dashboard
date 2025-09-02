@@ -3,8 +3,8 @@
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import { ClockWidgetProps } from "../../../../interfaces/widgets";
-import { useClockLogic } from "src/hooks/useClockLogic";
-import { timeZones } from "src/constants/timeZones";
+import { useClockLogic } from "@/hooks/useClockLogic";
+import { timeZones } from "@/constants/timeZones";
 import ClockDisplay from "./ClockDisplay";
 import WorldClocks from "./WorldClocks";
 import "../../../styles/mobile.css";
@@ -31,7 +31,6 @@ export default function ClockWidget({
     isDay,
   } = useClockLogic(selectedZone);
 
-  // Don't render anything until mounted to prevent hydration mismatch
   if (!mounted) {
     return (
       <WidgetBase

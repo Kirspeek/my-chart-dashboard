@@ -1,21 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
-
-interface TooltipData {
-  content: ReactNode;
-  x: number;
-  y: number;
-  title?: string;
-  subtitle?: string;
-  color?: string;
-}
-
-interface TooltipContextType {
-  showTooltip: (data: TooltipData) => void;
-  hideTooltip: () => void;
-  tooltip: TooltipData | null;
-}
+import React, { createContext, useContext, useState } from "react";
+import type {
+  TooltipContextType,
+  TooltipData,
+  TooltipProviderProps,
+} from "../../interfaces/context";
 
 const TooltipContext = createContext<TooltipContextType | undefined>(undefined);
 
@@ -25,10 +15,6 @@ export function useTooltip() {
     throw new Error("useTooltip must be used within a TooltipProvider");
   }
   return context;
-}
-
-interface TooltipProviderProps {
-  children: ReactNode;
 }
 
 export function TooltipProvider({ children }: TooltipProviderProps) {

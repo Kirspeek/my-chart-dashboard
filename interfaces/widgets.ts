@@ -35,6 +35,25 @@ export interface ClockWidgetProps extends CommonComponentProps {
   setCurrentSlide?: (slide: number) => void;
 }
 
+export interface ClockDisplayProps extends CommonComponentProps {
+  mainTime: Date;
+  is24h: boolean;
+  dateStr: string;
+  pad: (n: number) => string;
+  setIs24h: (is24h: boolean) => void;
+}
+
+export interface WorldClocksProps extends CommonComponentProps {
+  timeZones: Array<{ zone: string; label: string; utc: string }>;
+  selectedZone: string;
+  setSelectedZone: (zone: string) => void;
+  mounted: boolean;
+  pad: (n: number) => string;
+  getTimeInZone: (zone: string) => Date;
+  isDay: (hours: number) => boolean;
+  isMobile?: boolean;
+}
+
 // ============================================================================
 // TIMER WIDGET INTERFACES
 // ============================================================================
@@ -46,6 +65,7 @@ export interface TimerState {
   isPaused: boolean;
   dragging: boolean;
   previewDuration: number | null;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
 export interface TimerActions {
@@ -113,6 +133,19 @@ export interface WeatherTextProps extends CommonComponentProps {
   city: string;
   date: string;
   hot?: boolean;
+}
+
+export interface WeatherColors {
+  mainColor: string;
+  secondaryColor: string;
+}
+
+export interface WeatherBackground {
+  background: string;
+}
+
+export interface WeatherButtonBackground {
+  background: string;
 }
 
 export interface WeatherCacheStatusProps extends CommonComponentProps {
@@ -482,6 +515,34 @@ export interface ContributionGraphWidgetProps extends CommonComponentProps {
   title: string;
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;
+}
+
+// ============================================================================
+// TIMER WIDGET LOCAL PROPS
+// ============================================================================
+
+export interface TimerMode {
+  id: string;
+  name: string;
+  duration: number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+}
+
+export interface TimerControlsProps {
+  isRunning: boolean;
+  isPaused: boolean;
+  onToggle: () => void;
+  onReset: () => void;
+}
+
+export interface TimerCircleProps {
+  svgRef: React.RefObject<SVGSVGElement | null>;
+  currentTimeLeft: number;
+  currentDuration: number;
+  dragging: boolean;
+  onPointerDown: (e: React.MouseEvent | React.TouchEvent) => void;
+  formatTime: (seconds: number) => string;
 }
 
 export interface AggregatedSpendingWidgetProps extends CommonComponentProps {
