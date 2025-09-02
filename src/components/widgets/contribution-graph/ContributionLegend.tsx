@@ -29,7 +29,7 @@ export default function ContributionLegend({
           fontSize: isMobile ? "0.5rem" : "",
         }}
       >
-        Daily activity levels (updates every 5 seconds)
+        Daily activity levels
       </div>
       <div className="flex items-center gap-2">
         <span
