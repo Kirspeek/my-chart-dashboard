@@ -3,25 +3,20 @@
 import React, { useMemo, useState } from "react";
 import SpendingChart from "../wheel/SpendingChart";
 import { useWidgetState } from "../../../context/WidgetStateContext";
-import { CardSpendingData } from "@/interfaces/wallet";
 
-import { RefreshCw, Eye, BarChart3 } from "lucide-react";
+import { WheelMonthlyExpensesChartProps } from "@/interfaces/widgets";
+
+import { BarChart3 } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
 import { useWheelExpenseData } from "./useWheelExpenseData";
 import WheelCategorySelector from "./WheelCategorySelector";
 import WheelInsightsPanel from "./WheelInsightsPanel";
-
-interface MonthlyExpensesChartProps {
-  card: CardSpendingData;
-  onClick: () => void;
-}
-
-// generation moved to useWheelExpenseData
+import WheelHeaderButtons from "./WheelHeaderButtons";
 
 export default function MonthlyExpensesChart({
   card,
   onClick,
-}: MonthlyExpensesChartProps) {
+}: WheelMonthlyExpensesChartProps) {
   const { getCurrentCardData } = useWidgetState();
   const { accent } = useTheme();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -29,13 +24,11 @@ export default function MonthlyExpensesChart({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const currentCardData = getCurrentCardData();
 
-  // Generate both monthly and annual data from current card's spending data
   const { monthlyData, annualData } = useWheelExpenseData(
     card,
     currentCardData
   );
 
-  // Calculate insights
   const insights = useMemo(() => {
     const data = monthlyData;
     const total = data.reduce((sum, item) => sum + item.value, 0);
@@ -59,7 +52,6 @@ export default function MonthlyExpensesChart({
     };
   }, [monthlyData]);
 
-  // Refresh animation
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => setIsRefreshing(false), 1000);
@@ -67,7 +59,6 @@ export default function MonthlyExpensesChart({
 
   return (
     <div className="relative h-full flex flex-col">
-      {/* Chart Section - header and total are rendered inside SpendingChart via PayHeader */}
       <div className="flex-1 flex items-end relative">
         <div className="w-full h-full relative">
           <SpendingChart
@@ -78,54 +69,27 @@ export default function MonthlyExpensesChart({
             showCardNumber={true}
             cardNumber={currentCardData?.cardNumber || card.cardNumber}
             leftButtons={
-              <>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowInsights(!showInsights);
-                  }}
-                  className="p-1.5 rounded-lg transition-all duration-200 hover:scale-105"
-                  style={{
-                    backgroundColor: showInsights
-                      ? "var(--button-hover-bg)"
-                      : "var(--button-bg)",
-                    color: showInsights ? accent.blue : "var(--secondary-text)",
-                  }}
-                >
-                  <Eye className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRefresh();
-                  }}
-                  className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 ${
-                    isRefreshing ? "animate-spin" : ""
-                  }`}
-                  style={{
-                    backgroundColor: "var(--button-bg)",
-                    color: "var(--secondary-text)",
-                  }}
-                >
-                  <RefreshCw className="w-4 h-4" />
-                </button>
-              </>
+              <WheelHeaderButtons
+                showInsights={showInsights}
+                isRefreshing={isRefreshing}
+                onToggleInsights={() => setShowInsights(!showInsights)}
+                onRefresh={() => handleRefresh()}
+                accentColor={accent.blue}
+              />
             }
           />
 
-          {/* Category Selector - positioned lower near chart bottom */}
           <WheelCategorySelector
             data={monthlyData}
             selected={selectedCategory}
             onToggle={(name) =>
               setSelectedCategory(selectedCategory === name ? null : name)
             }
-            className="absolute top-24 left-2 flex flex-col space-y-1"
+            offsetTop={96}
           />
         </div>
       </div>
 
-      {/* Bottom Panels - Match FinancialBarChart structure */}
       {showInsights && (
         <WheelInsightsPanel
           avg={insights.avg}

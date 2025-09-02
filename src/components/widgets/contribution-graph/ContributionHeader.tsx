@@ -1,18 +1,7 @@
 import React from "react";
-import { WidgetTitle } from "../../../common";
-import { useTheme } from "../../../../hooks/useTheme";
-
-interface ContributionHeaderProps {
-  title: string;
-  totalYearSpending: number;
-  averageDailySpending: number;
-  colors: {
-    primary: string;
-    secondary: string;
-  };
-  isRealTime?: boolean;
-  setIsRealTime?: (value: boolean) => void;
-}
+import { WidgetTitle } from "../../common";
+import { useTheme } from "../../../hooks/useTheme";
+import { ContributionHeaderProps } from "@/interfaces/charts";
 
 export default function ContributionHeader({
   title,

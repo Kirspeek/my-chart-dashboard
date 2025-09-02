@@ -6,15 +6,9 @@ import SlideNavigation from "../../common/SlideNavigation";
 import FinancialBarChart from "./FinancialBarChart";
 import { useWalletLogic } from "../../../hooks/wallet/useWalletLogic";
 import { CardData } from "@/interfaces/wallet";
+import { ExpenseData } from "@/interfaces/widgets";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
 import { useWidgetState } from "../../../context/WidgetStateContext";
-
-interface ExpenseData {
-  name: string;
-  value: number;
-  color: string;
-  percentage: number;
-}
 
 const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
   if (cards.length === 0) {
@@ -26,7 +20,6 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
     ];
   }
 
-  // Aggregate spending across all cards by generating mock data for each card
   const categoryTotals: { [key: string]: number } = {
     Food: 0,
     Transport: 0,
@@ -34,9 +27,7 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
     Utilities: 0,
   };
 
-  // Generate mock data for each card and aggregate
   cards.forEach((card) => {
-    // Create a simple hash from card ID for consistent seeding
     let hash = 0;
     for (let i = 0; i < card.number.length; i++) {
       const char = card.number.charCodeAt(i);
@@ -46,31 +37,26 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
 
     let seed = Math.abs(hash);
 
-    // Simple seeded random number generator
     const seededRandom = (min: number, max: number): number => {
       const x = Math.sin(seed++) * 10000;
       const random = x - Math.floor(x);
       return Math.floor(random * (max - min + 1)) + min;
     };
 
-    // Generate random percentages that sum to 100
     const percentages = [
-      seededRandom(20, 40), // Food
-      seededRandom(15, 35), // Transport
-      seededRandom(10, 30), // Entertainment
-      seededRandom(10, 25), // Utilities
+      seededRandom(20, 40),
+      seededRandom(15, 35),
+      seededRandom(10, 30),
+      seededRandom(10, 25),
     ];
 
-    // Normalize to sum to 100
     const total = percentages.reduce((sum, val) => sum + val, 0);
     const normalizedPercentages = percentages.map((p) =>
       Math.round((p / total) * 100)
     );
 
-    // Generate total spending amount for this card
     const baseAmount = seededRandom(8000, 15000);
 
-    // Add to category totals
     categoryTotals.Food += Math.round(
       (baseAmount * normalizedPercentages[0]) / 100
     );
@@ -85,7 +71,6 @@ const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
     );
   });
 
-  // Calculate total and percentages
   const total = Object.values(categoryTotals).reduce(
     (sum, val) => sum + val,
     0
@@ -121,7 +106,6 @@ export default function AggregatedSpendingWidget({
   const { cards } = useWalletLogic();
   const { targetHeight } = useWidgetHeight();
 
-  // Detect mobile to disable margin-top
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
@@ -139,10 +123,8 @@ export default function AggregatedSpendingWidget({
 
   const { spendingData, annualSpendingData } = useMemo(() => {
     if (currentCardData) {
-      // Show data for current card
       const { monthlySpending, dailySpending } = currentCardData;
 
-      // Monthly data
       const monthlyTotal = monthlySpending.total;
       const monthlyCategories = [
         { name: "Food", color: "yellow" },
@@ -167,7 +149,6 @@ export default function AggregatedSpendingWidget({
         };
       });
 
-      // Annual data - aggregate from yearly daily spending
       const yearlyTotal = dailySpending.yearly.reduce(
         (sum, day) => sum + day.total,
         0
@@ -216,12 +197,11 @@ export default function AggregatedSpendingWidget({
     }
   }, [currentCardData, cards]);
 
-  // Calculate dynamic styling based on height
   const widgetStyle = useMemo(
     () => ({
       height: targetHeight,
       marginTop: isMobile ? 0 : "40px",
-      transition: "height 0.3s ease-in-out", // Smooth transition for height changes
+      transition: "height 0.3s ease-in-out",
     }),
     [targetHeight, isMobile]
   );
@@ -229,7 +209,7 @@ export default function AggregatedSpendingWidget({
   const contentStyle = useMemo(
     () => ({
       marginTop: isMobile ? 0 : "-40px",
-      transition: "all 0.3s ease-in-out", // Smooth transition for content adjustments
+      transition: "all 0.3s ease-in-out",
     }),
     [isMobile]
   );
@@ -255,7 +235,6 @@ export default function AggregatedSpendingWidget({
           />
         </div>
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

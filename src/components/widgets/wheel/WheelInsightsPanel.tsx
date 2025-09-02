@@ -1,11 +1,7 @@
 import React from "react";
 import { Target, Zap, ChevronRight, BarChart3 } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
-
-interface WheelInsightsPanelProps {
-  avg: number;
-  maxCategory: { name: string };
-}
+import { WheelInsightsPanelProps } from "@/interfaces/widgets";
 
 export default function WheelInsightsPanel({
   avg,

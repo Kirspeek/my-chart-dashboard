@@ -21,7 +21,6 @@ export default function SpendingChart({
   hideHeader = false,
   leftButtons,
 }: WheelChartProps & { hideHeader?: boolean; leftButtons?: React.ReactNode }) {
-  // Use organized logic hooks
   const { selectedPeriod, setSelectedPeriod, currentData, totalSpending } =
     useWheelChartLogic(data, annualData);
 
@@ -36,7 +35,6 @@ export default function SpendingChart({
     handleCanvasClick,
   } = useWheelInteractionLogic();
 
-  // Restore the rendering logic but don't use bottomSegment
   useWheelRenderLogic(currentData, rotationAngle, canvasRef);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
@@ -50,7 +48,6 @@ export default function SpendingChart({
         transition: "all 0.3s ease-in-out",
       }}
     >
-      {/* Card Number and Period Toggle */}
       {!hideHeader && (
         <PayHeader
           leftTitle={showCardNumber ? cardNumber || "**** ****" : "All Cards"}
@@ -60,10 +57,8 @@ export default function SpendingChart({
         />
       )}
 
-      {/* Mobile-only spacer before spending title */}
       {!hideHeader && isMobile && <div style={{ height: "0.75rem" }} />}
 
-      {/* Total Spending Display */}
       {!hideHeader && (
         <SpendingSection>
           <WheelSpendingDisplay
@@ -80,8 +75,6 @@ export default function SpendingChart({
           />
         </SpendingSection>
       )}
-
-      {/* 3D Donut Chart Canvas */}
       <WheelCanvas
         canvasRef={canvasRef}
         isDragging={isDragging}

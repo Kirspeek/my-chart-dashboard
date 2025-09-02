@@ -1,24 +1,28 @@
 import React from "react";
-import { ExpenseData } from "@/interfaces/widgets";
+import { WheelCategorySelectorProps } from "@/interfaces/widgets";
 import { useTheme } from "../../../hooks/useTheme";
-
-interface WheelCategorySelectorProps {
-  data: ExpenseData[];
-  selected: string | null;
-  onToggle: (name: string) => void;
-  className?: string;
-}
 
 export default function WheelCategorySelector({
   data,
   selected,
   onToggle,
-  className = "absolute bottom-8 left-2 flex flex-col space-y-1",
-}: WheelCategorySelectorProps) {
+  className,
+  offsetTop,
+}: WheelCategorySelectorProps & { offsetTop?: number }) {
   const { accent } = useTheme();
 
   return (
-    <div className={className}>
+    <div
+      className={
+        className ||
+        `absolute ${typeof offsetTop === "number" ? "" : "top-2"} left-2 flex flex-col space-y-1`
+      }
+      style={
+        typeof offsetTop === "number"
+          ? { top: offsetTop, left: 8, position: "absolute" }
+          : undefined
+      }
+    >
       {data.map((category) => (
         <button
           key={category.name}

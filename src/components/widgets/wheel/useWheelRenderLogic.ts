@@ -15,7 +15,6 @@ export const useWheelRenderLogic = (
   rotationAngle: number,
   canvasRef: React.RefObject<HTMLCanvasElement | null>
 ) => {
-  // Draw the 3D donut chart
   const draw3DDonutChart = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -32,7 +31,6 @@ export const useWheelRenderLogic = (
     const allFaces: Face3D[] = [];
 
     segments.forEach((segment) => {
-      // Bottom faces
       for (let i = 0; i < segment.points.length - 1; i++) {
         const p1 = segment.points[i];
         const p2 = segment.points[i + 1];
@@ -55,7 +53,6 @@ export const useWheelRenderLogic = (
       const facetedSides = generateFacetedSides(segment);
       allFaces.push(...facetedSides);
 
-      // Top faces
       for (let i = 0; i < segment.points.length - 1; i++) {
         const p1 = segment.points[i];
         const p2 = segment.points[i + 1];
@@ -76,7 +73,6 @@ export const useWheelRenderLogic = (
       }
     });
 
-    // Sort faces by Z-depth
     allFaces.sort((a, b) => {
       const aZ =
         a.points.reduce((sum: number, p: Point3D) => sum + p.z, 0) /
@@ -87,7 +83,6 @@ export const useWheelRenderLogic = (
       return aZ - bZ;
     });
 
-    // Draw all faces
     allFaces.forEach((face) => {
       const projectedPoints = face.points.map((p: Point3D) => project3D(p));
       const lighting = calculateLighting(face.points, face.type);
@@ -125,7 +120,6 @@ export const useWheelRenderLogic = (
     draw3DDonutChart();
   }, [draw3DDonutChart]);
 
-  // Get the segment at the bottom
   const bottomSegment = getBottomSegment(currentData, rotationAngle);
 
   return {

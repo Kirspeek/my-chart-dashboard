@@ -1,15 +1,6 @@
 import React from "react";
 import { ChartCanvas } from "../../common";
-
-interface WheelCanvasProps {
-  canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  isDragging: boolean;
-  onMouseDown: (e: React.MouseEvent<Element>) => void;
-  onMouseMove: (e: React.MouseEvent<Element>) => void;
-  onMouseUp: () => void;
-  onMouseLeave: () => void;
-  onClick?: (e: React.MouseEvent<Element>) => void;
-}
+import { WheelCanvasProps } from "@/interfaces/widgets";
 
 export default function WheelCanvas({
   canvasRef,

@@ -1,30 +1,35 @@
 import React from "react";
-import { AlertTriangle, RefreshCw } from "lucide-react";
-import { WavesHeaderButtonsProps } from "@/interfaces/widgets";
+import { Eye, RefreshCw } from "lucide-react";
 
-export default function WavesHeaderButtons({
-  showAlerts,
+export default function WheelHeaderButtons({
+  showInsights,
   isRefreshing,
-  onToggleAlerts,
+  onToggleInsights,
   onRefresh,
-  alertActiveColor,
-}: WavesHeaderButtonsProps) {
+  accentColor,
+}: {
+  showInsights: boolean;
+  isRefreshing: boolean;
+  onToggleInsights: (e: React.MouseEvent) => void;
+  onRefresh: (e: React.MouseEvent) => void;
+  accentColor: string;
+}) {
   return (
     <>
       <button
         onClick={(e) => {
           e.stopPropagation();
-          onToggleAlerts(e);
+          onToggleInsights(e);
         }}
         className="p-1.5 rounded-lg transition-all duration-200 hover:scale-105"
         style={{
-          backgroundColor: showAlerts
+          backgroundColor: showInsights
             ? "var(--button-hover-bg)"
             : "var(--button-bg)",
-          color: showAlerts ? alertActiveColor : "var(--secondary-text)",
+          color: showInsights ? accentColor : "var(--secondary-text)",
         }}
       >
-        <AlertTriangle className="w-4 h-4" />
+        <Eye className="w-4 h-4" />
       </button>
       <button
         onClick={(e) => {

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { ContributionData, ValueRange } from "@/interfaces";
-import { useTheme } from "../../../../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
+import { CONTRIBUTION_MONTH_BOUNDARIES } from "@/data/contributionGraph";
 
 export const useContributionDataLogic = (data: ContributionData[]) => {
   const { colorsTheme } = useTheme();
@@ -56,7 +57,6 @@ export const useContributionDataLogic = (data: ContributionData[]) => {
 
   const groupDataByWeeks = useMemo(() => {
     const weeks: (typeof data)[] = [];
-
     const dateMap = new Map();
     data.forEach((item) => {
       dateMap.set(item.date, item);
@@ -65,7 +65,6 @@ export const useContributionDataLogic = (data: ContributionData[]) => {
     const allDates: string[] = [];
     const startDate = new Date("2024-01-01");
     const endDate = new Date("2024-12-31");
-
     for (
       let d = new Date(startDate);
       d <= endDate;
@@ -75,67 +74,35 @@ export const useContributionDataLogic = (data: ContributionData[]) => {
     }
 
     let currentDate = new Date("2024-01-01");
-
     while (currentDate <= endDate) {
       const week: typeof data = [];
-
       for (let i = 0; i < 7 && currentDate <= endDate; i++) {
         const dateStr = currentDate.toISOString().split("T")[0];
         const dayData = dateMap.get(dateStr);
-
         if (dayData) {
           week.push(dayData);
         } else {
-          week.push({
-            date: dateStr,
-            value: 0,
-          });
+          week.push({ date: dateStr, value: 0 });
         }
-
         currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
       }
-
       weeks.push(week);
     }
-
     return weeks;
   }, [data]);
 
   const getMonthPositions = useMemo(() => {
     const positions: { month: string; x: number }[] = [];
-
     const cubeSize = 12;
     const cubeGap = 4;
     const totalWeekWidth = cubeSize + cubeGap;
-
     const dayLabelOffset = 24 + 4;
-
-    const monthBoundaries = [
-      { month: "Jan", startWeek: 0, endWeek: 4 },
-      { month: "Feb", startWeek: 5, endWeek: 8 },
-      { month: "Mar", startWeek: 9, endWeek: 13 },
-      { month: "Apr", startWeek: 14, endWeek: 17 },
-      { month: "May", startWeek: 18, endWeek: 22 },
-      { month: "Jun", startWeek: 23, endWeek: 26 },
-      { month: "Jul", startWeek: 27, endWeek: 31 },
-      { month: "Aug", startWeek: 32, endWeek: 35 },
-      { month: "Sep", startWeek: 36, endWeek: 39 },
-      { month: "Oct", startWeek: 40, endWeek: 44 },
-      { month: "Nov", startWeek: 45, endWeek: 48 },
-      { month: "Dec", startWeek: 49, endWeek: 52 },
-    ];
-
-    monthBoundaries.forEach(({ month, startWeek, endWeek }) => {
+    CONTRIBUTION_MONTH_BOUNDARIES.forEach(({ month, startWeek, endWeek }) => {
       const monthStartX = dayLabelOffset + startWeek * totalWeekWidth;
       const monthEndX = dayLabelOffset + endWeek * totalWeekWidth;
       const monthCenterX = monthStartX + (monthEndX - monthStartX) / 2;
-
-      positions.push({
-        month: month,
-        x: monthCenterX,
-      });
+      positions.push({ month, x: monthCenterX });
     });
-
     return positions;
   }, []);
 

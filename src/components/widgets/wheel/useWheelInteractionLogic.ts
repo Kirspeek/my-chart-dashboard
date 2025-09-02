@@ -8,7 +8,6 @@ export const useWheelInteractionLogic = () => {
   const [hasDragged, setHasDragged] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Mouse/Touch event handlers
   const handleMouseDown = (e: React.MouseEvent<Element>) => {
     e.preventDefault();
     setIsDragging(true);
@@ -27,7 +26,6 @@ export const useWheelInteractionLogic = () => {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    // Reset hasDragged after a short delay to allow click to fire
     setTimeout(() => {
       setHasDragged(false);
     }, 50);
@@ -35,7 +33,6 @@ export const useWheelInteractionLogic = () => {
 
   const handleMouseLeave = () => {
     setIsDragging(false);
-    // Reset hasDragged after a short delay to allow click to fire
     setTimeout(() => {
       setHasDragged(false);
     }, 50);
@@ -43,14 +40,11 @@ export const useWheelInteractionLogic = () => {
 
   const handleCanvasClick = useCallback(
     (e: React.MouseEvent<Element>, onClick?: () => void) => {
-      // If user has dragged, don't trigger click
       if (hasDragged) {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
-
-      // If user hasn't dragged, trigger the click
       if (onClick) {
         onClick();
       }
@@ -58,7 +52,6 @@ export const useWheelInteractionLogic = () => {
     [hasDragged]
   );
 
-  // Add passive: false to touch event listeners
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

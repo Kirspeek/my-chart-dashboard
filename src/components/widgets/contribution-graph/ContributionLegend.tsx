@@ -1,18 +1,10 @@
 import React from "react";
-import { ValueRange } from "@/interfaces/charts";
-
-interface ContributionLegendProps {
-  valueRanges: ValueRange[];
-  colors: {
-    secondary: string;
-  };
-}
+import { ContributionLegendProps } from "@/interfaces/charts";
 
 export default function ContributionLegend({
   valueRanges,
   colors,
 }: ContributionLegendProps) {
-  // Detect mobile for font size adjustments
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {

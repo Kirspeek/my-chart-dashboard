@@ -155,6 +155,43 @@ export interface ContributionGraphLogicProps {
   title?: string;
 }
 
+// Contribution widget component props
+export interface ContributionGridProps {
+  weeks: ContributionData[][];
+  monthPositions: { month: string; x: number }[];
+  getColorForValue: (value: number) => string;
+  colors: {
+    primary: string;
+    secondary: string;
+    muted: string;
+    cardBackground: string;
+    borderSecondary: string;
+    accent: { blue: string; yellow: string; red: string; teal: string };
+  };
+  isMobile?: boolean;
+  onDayClick?: (day: { date: string; value: number }) => void;
+  selectedDay?: { date: string; value: number } | null;
+}
+
+export interface ContributionHeaderProps {
+  title: string;
+  totalYearSpending: number;
+  averageDailySpending: number;
+  colors?: {
+    primary: string;
+    secondary: string;
+  };
+  isRealTime?: boolean;
+  setIsRealTime?: (value: boolean) => void;
+}
+
+export interface ContributionLegendProps {
+  valueRanges: ValueRange[];
+  colors: {
+    secondary: string;
+  };
+}
+
 // Timeline Chart
 export interface TimelineItem {
   year: string;

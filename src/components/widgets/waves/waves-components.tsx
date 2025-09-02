@@ -1,20 +1,7 @@
 import React from "react";
 import { ChartCanvas, Button } from "../../common";
 import { useTheme } from "../../../hooks/useTheme";
-
-interface WavesCanvasProps {
-  chartRef: React.RefObject<HTMLDivElement | null>;
-  isLoaded: boolean;
-  wavePaths: Array<{
-    id: string;
-    className: string;
-    path: string;
-    color: string;
-    animationDelay: string;
-    scaleY?: number;
-  }>;
-  onRefresh?: () => void;
-}
+import { WavesCanvasProps } from "@/interfaces/widgets";
 
 export function WavesCanvas({
   chartRef,
@@ -25,14 +12,12 @@ export function WavesCanvas({
   const { colorsTheme } = useTheme();
   const walletCardColors = colorsTheme.widgets.walletCard;
 
-  // Axis config to match SVG viewBox dimensions
   const chartWidth = 560;
-  const chartHeight = 260; // baseline at 260 in paths
-  const labelWidth = 56; // px reserved for Y-axis labels
+  const chartHeight = 260;
+  const labelWidth = 56;
   const yMax = 2000;
-  const yStep = 250; // smaller step → smaller gaps between labels
+  const yStep = 250;
 
-  // Detect mobile viewport
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
@@ -64,27 +49,26 @@ export function WavesCanvas({
           height: "100%",
           display: "flex",
           alignItems: "flex-end",
-          justifyContent: "center", // Center the chart horizontally
+          justifyContent: "center",
           backgroundImage: walletCardColors.waves.background,
           backgroundSize: "29px 29px",
           backgroundPosition: "-11px 11px",
         }}
       >
-        {/* Y-axis labels positioned on the left side with more left spacing and gap */}
         <div
           style={{
             position: "absolute",
-            left: "10px", // Moved further left (was 20px)
+            left: "10px",
             top: 0,
             height: "100%",
             width: `${labelWidth}px`,
             color: "var(--secondary-text)",
-            fontSize: isMobile ? "0.6em" : "0.75em", // smaller font on mobile
+            fontSize: isMobile ? "0.6em" : "0.75em",
             lineHeight: 1,
             pointerEvents: "none",
             textAlign: "right",
-            paddingRight: 24, // Increased padding to create more gap between numbers and waves
-            paddingBottom: 0, // Remove padding to align $0 with bottom of waves
+            paddingRight: 24,
+            paddingBottom: 0,
             boxSizing: "border-box",
           }}
         >
@@ -101,7 +85,7 @@ export function WavesCanvas({
                     position: "absolute",
                     right: 0,
                     top: `${topPercent}%`,
-                    transform: "translateY(-50%)", // All labels centered
+                    transform: "translateY(-50%)",
                   }}
                 >
                   {formatLabel(v)}
@@ -109,12 +93,10 @@ export function WavesCanvas({
               );
             })}
         </div>
-
-        {/* Refresh button positioned in top right */}
         <div
           style={{
             position: "absolute",
-            right: "20px", // Equal spacing from right edge
+            right: "20px",
             top: "-0.75em",
           }}
         >
@@ -122,15 +104,13 @@ export function WavesCanvas({
             ↻
           </Button>
         </div>
-
-        {/* SVG chart centered horizontally */}
         <svg
           viewBox={`0 0 ${chartWidth} ${chartHeight}`}
           preserveAspectRatio="xMidYMid meet"
           style={{
             width: `${chartWidth}px`,
             height: "100%",
-            maxWidth: "calc(100% - 120px)", // Account for labels on both sides
+            maxWidth: "calc(100% - 120px)",
           }}
         >
           <defs>

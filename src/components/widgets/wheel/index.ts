@@ -3,3 +3,8 @@ export { default as SpendingChart } from "./SpendingChart";
 export { useWheelChartLogic } from "./useWheelChartLogic";
 export { useWheelInteractionLogic } from "./useWheelInteractionLogic";
 export { useWheelRenderLogic } from "./useWheelRenderLogic";
+export { default as WheelCanvas } from "./WheelCanvas";
+export { default as WheelCategorySelector } from "./WheelCategorySelector";
+export { default as WheelInsightsPanel } from "./WheelInsightsPanel";
+export { default as WheelHeaderButtons } from "./WheelHeaderButtons";
+export { useWheelExpenseData } from "./useWheelExpenseData";

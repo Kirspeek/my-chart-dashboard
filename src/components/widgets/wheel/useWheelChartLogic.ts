@@ -9,7 +9,6 @@ export const useWheelChartLogic = (
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("Monthly");
   const { accent } = useTheme();
 
-  // Use the appropriate data based on selected period
   const currentData = useMemo(() => {
     const dataToUse =
       selectedPeriod === "Annual" && annualData ? annualData : data;

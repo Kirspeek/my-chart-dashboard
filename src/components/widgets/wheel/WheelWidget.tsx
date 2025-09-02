@@ -28,7 +28,6 @@ export default function WheelWidget({
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
 
-  // Calculate dynamic styling based on height
   const widgetStyle = useMemo(
     () => ({
       height: targetHeight,
@@ -85,7 +84,6 @@ export default function WheelWidget({
             Refresh
           </button>
         </div>
-        {/* Navigation buttons */}
         {currentSlide !== undefined && setCurrentSlide && (
           <SlideNavigation
             currentSlide={currentSlide}
@@ -108,7 +106,6 @@ export default function WheelWidget({
         className="w-full max-w-sm h-full flex flex-col"
         style={contentStyle}
       >
-        {/* Monthly Expenses Chart */}
         <div className="flex-1">
           {currentCard && (
             <WheelMonthlyExpensesChart
@@ -117,10 +114,7 @@ export default function WheelWidget({
             />
           )}
         </div>
-
-        {/* Progress Indicators removed */}
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

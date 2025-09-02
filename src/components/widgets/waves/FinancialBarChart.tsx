@@ -5,35 +5,18 @@ import { useTheme } from "../../../hooks/useTheme";
 import { PayHeader } from "../../common";
 import SpendingSection from "../../common/SpendingSection";
 import WavesChart from "./WavesChart";
-import { WaveData } from "./waves-logic";
-import {
-  AlertTriangle,
-  ChevronRight,
-  Activity,
-  BarChart3,
-  Target,
-} from "lucide-react";
+import { ChevronRight, Activity, BarChart3 } from "lucide-react";
 import WavesHeaderButtons from "./WavesHeaderButtons";
 import SpendingTrend from "../../common/SpendingTrend";
 import WavesWidgetSpendingTitle from "./WavesWidgetSpendingTitle";
-
-interface FinancialBarChartProps {
-  data: ExpenseData[];
-  annualData?: ExpenseData[];
-  title?: string;
-  onClick?: () => void;
-  showCardNumber?: boolean;
-  cardNumber?: string;
-}
+import WavesSelector from "./WavesSelector";
+import { WavesFinancialBarChartProps } from "@/interfaces/widgets";
+import {
+  buildWavesDataFromChart,
+  computeWavesInsights,
+} from "@/utils/wavesUtils";
 
 type TimePeriod = "Monthly" | "Annual";
-
-interface ExpenseData {
-  name: string;
-  value: number;
-  color: string;
-  percentage: number;
-}
 
 export default function FinancialBarChart({
   data,
@@ -41,14 +24,13 @@ export default function FinancialBarChart({
   onClick,
   showCardNumber = false,
   cardNumber,
-}: FinancialBarChartProps) {
+}: WavesFinancialBarChartProps) {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("Monthly");
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showAlerts, setShowAlerts] = useState(false);
   const [selectedWave, setSelectedWave] = useState<number | null>(null);
   const { accent } = useTheme();
 
-  // Detect mobile for spacing adjustments
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
@@ -61,7 +43,6 @@ export default function FinancialBarChart({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Use the appropriate data based on selected period
   const chartData = useMemo(() => {
     const dataToUse =
       selectedPeriod === "Annual" && annualData ? annualData : data;
@@ -74,98 +55,23 @@ export default function FinancialBarChart({
     }));
   }, [data, annualData, selectedPeriod, accent]);
 
-  // Convert expense data to waves chart format
-  const wavesChartData = useMemo((): WaveData[] => {
-    if (chartData.length === 0) return [];
-
-    // Create waves chart datasets based on expense data
-    return [
-      {
-        id: "dataset-1",
-        color: accent.teal,
-        // Peak biased to the right
-        path:
-          chartData[0]?.color === accent.red
-            ? // Taller single-crest red (rounded, centered)
-              "M0,260 C140,230 200,160 280,85 S420,230 560,260 L560,260 L0,260 Z"
-            : // Base variant (right-biased) — taller (smoothed right end)
-              "M0,260 C80,230 140,210 200,220 C260,230 340,160 420,130 C500,120 540,200 555,235 S560,260 560,260 L0,260 Z",
-      },
-      {
-        id: "dataset-2",
-        color: accent.teal,
-        // Peak biased to the left
-        path:
-          chartData[1]?.color === accent.red
-            ? // Taller single-crest red (rounded, centered)
-              "M0,260 C140,230 200,160 280,85 S420,230 560,260 L560,260 L0,260 Z"
-            : // Base variant (left-biased) — taller
-              "M0,260 C60,180 140,150 220,160 C300,175 360,220 420,200 C480,190 520,235 560,245 C545,255 552,258 560,260 L0,260 Z",
-      },
-      {
-        id: "dataset-3",
-        color: accent.teal,
-        // Peak near center-left
-        path:
-          chartData[2]?.color === accent.red
-            ? // Taller single-crest red (rounded, centered)
-              "M0,260 C140,230 200,160 280,85 S420,230 560,260 L560,260 L0,260 Z"
-            : // Base variant (center-left) — taller
-              "M0,260 C70,220 150,200 230,190 C310,180 370,205 440,185 C500,175 540,220 520,232 C556,276 564,265 550,280 L0,260 Z",
-      },
-    ];
-  }, [chartData, accent]);
+  const wavesChartData = useMemo(
+    () => buildWavesDataFromChart(chartData, accent),
+    [chartData, accent]
+  );
 
   const totalSpending = useMemo(() => {
     const total = chartData.reduce((sum, item) => sum + item.value, 0);
     return `$${total.toLocaleString()}`;
   }, [chartData]);
 
-  // Calculate spending insights
-  const insights = useMemo(() => {
-    const total = chartData.reduce((sum, item) => sum + item.value, 0);
-    const avg = total / chartData.length;
-    const maxCategory = chartData.reduce(
-      (max, item) => (item.value > max.value ? item : max),
-      chartData[0]
-    );
-    const minCategory = chartData.reduce(
-      (min, item) => (item.value < min.value ? item : min),
-      chartData[0]
-    );
-
-    // Generate random alerts
-    const alerts = [
-      {
-        type: "warning",
-        message: "Food spending 15% above average",
-        icon: AlertTriangle,
-      },
-      {
-        type: "info",
-        message: "Transport costs trending down",
-        icon: AlertTriangle,
-      },
-      { type: "success", message: "Utilities within budget", icon: Target },
-    ];
-
-    return {
-      total,
-      avg,
-      maxCategory,
-      minCategory,
-      trend: Math.random() > 0.5 ? "up" : "down",
-      trendPercentage: Math.floor(Math.random() * 20) + 1,
-      alerts,
-    };
-  }, [chartData]);
+  const insights = useMemo(() => computeWavesInsights(chartData), [chartData]);
 
   const handleCardClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onClick?.();
   };
 
-  // Refresh animation
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => setIsRefreshing(false), 1000);
@@ -192,7 +98,6 @@ export default function FinancialBarChart({
         setSelectedPeriod={setSelectedPeriod}
       />
 
-      {/* Enhanced Middle Section - Total Spending Display */}
       <SpendingSection>
         <WavesWidgetSpendingTitle
           title={
@@ -210,7 +115,6 @@ export default function FinancialBarChart({
         />
       </SpendingSection>
 
-      {/* Enhanced Bottom Section - Waves Chart with Wave Selector */}
       <div
         className="flex-1 flex items-end relative"
         style={{
@@ -224,28 +128,22 @@ export default function FinancialBarChart({
           title={`${selectedPeriod} Spending`}
         />
 
-        {/* Wave Selector Overlay */}
-        <div className="absolute top-2 left-2 flex flex-col space-y-1">
-          {wavesChartData.map((wave, index) => (
-            <button
-              key={wave.id}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedWave(selectedWave === index ? null : index);
-              }}
-              className={`w-3 h-3 rounded-full transition-all duration-200 hover:scale-125 ${
-                selectedWave === index ? "ring-2 ring-white" : ""
-              }`}
-              style={{
-                backgroundColor: wave.color,
-              }}
-              title={`Wave ${index + 1}`}
-            />
-          ))}
-        </div>
+        {wavesChartData.length > 0 && (
+          <WavesSelector
+            data={
+              wavesChartData as Array<{
+                id: string;
+                color: string;
+                path: string;
+                scaleY?: number;
+              }>
+            }
+            selectedIndex={selectedWave}
+            onToggle={(idx) => setSelectedWave(idx === -1 ? null : idx)}
+          />
+        )}
       </div>
 
-      {/* Spending Alerts Panel */}
       {showAlerts && (
         <div
           className="mt-4 p-3 rounded-lg"
@@ -286,7 +184,6 @@ export default function FinancialBarChart({
         </div>
       )}
 
-      {/* Wave Details Panel */}
       {selectedWave !== null && (
         <div
           className="mt-3 p-3 rounded-lg"

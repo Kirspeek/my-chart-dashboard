@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
-import { useTheme } from "../../../../hooks/useTheme";
-import { useWidgetState } from "../../../../context/WidgetStateContext";
+import { useTheme } from "@/hooks/useTheme";
+import { useWidgetState } from "@/context/WidgetStateContext";
 import {
   ContributionData,
   ContributionGraphLogicProps,
@@ -39,7 +39,6 @@ export const useContributionGraphLogic = ({
     const interval = setInterval(() => {
       setCubeData(generateRandomCubeData());
     }, 5000);
-
     return () => clearInterval(interval);
   }, []);
 

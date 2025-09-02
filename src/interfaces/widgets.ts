@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { CommonComponentProps, BaseProps, LoadingState } from "./base";
 import { UserData } from "./dashboard";
-import { CardData } from "./wallet";
+import { CardData, CardSpendingData } from "./wallet";
 
 // ============================================================================
 // CLOCK WIDGET INTERFACES
@@ -318,6 +318,90 @@ export interface SpendingProgressProps extends CommonComponentProps {
 }
 
 export type TimePeriod = "Monthly" | "Annual";
+
+// Wheel widget local component props
+export interface WheelMonthlyExpensesChartProps extends CommonComponentProps {
+  card: CardSpendingData;
+  onClick: () => void;
+}
+
+export interface WheelCategorySelectorProps {
+  data: ExpenseData[];
+  selected: string | null;
+  onToggle: (name: string) => void;
+  className?: string;
+}
+
+export interface WheelInsightsPanelProps {
+  avg: number;
+  maxCategory: { name: string };
+}
+
+export interface WheelCanvasProps {
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  isDragging: boolean;
+  onMouseDown: (e: React.MouseEvent<Element>) => void;
+  onMouseMove: (e: React.MouseEvent<Element>) => void;
+  onMouseUp: () => void;
+  onMouseLeave: () => void;
+  onClick?: (e: React.MouseEvent<Element>) => void;
+}
+
+// =========================================================================
+// WAVES WIDGET INTERFACES
+// =========================================================================
+
+export interface WavesChartProps extends CommonComponentProps {
+  data?: Array<{ id: string; color: string; path: string; scaleY?: number }>;
+  title?: string;
+  onRefresh?: () => void;
+}
+
+export interface WavesCanvasProps extends CommonComponentProps {
+  chartRef: React.RefObject<HTMLDivElement | null>;
+  isLoaded: boolean;
+  wavePaths: Array<{
+    id: string;
+    className: string;
+    path: string;
+    color: string;
+    animationDelay: string;
+    scaleY?: number;
+  }>;
+  onRefresh?: () => void;
+}
+
+export interface WavesHeaderButtonsProps {
+  showAlerts: boolean;
+  isRefreshing: boolean;
+  onToggleAlerts: (e: React.MouseEvent) => void;
+  onRefresh: (e: React.MouseEvent) => void;
+  alertActiveColor: string;
+}
+
+export interface WavesFinancialBarChartProps extends CommonComponentProps {
+  data: ExpenseData[];
+  annualData?: ExpenseData[];
+  title?: string;
+  onClick?: () => void;
+  showCardNumber?: boolean;
+  cardNumber?: string;
+}
+
+export interface WavesHeaderButtonsProps {
+  showAlerts: boolean;
+  isRefreshing: boolean;
+  onToggleAlerts: (e: React.MouseEvent) => void;
+  onRefresh: (e: React.MouseEvent) => void;
+  alertActiveColor: string;
+}
+
+export interface WavesExpenseData {
+  name: string;
+  value: number;
+  color: string;
+  percentage: number;
+}
 
 // ============================================================================
 // DATA WIDGET INTERFACES
