@@ -1,16 +1,9 @@
 "use client";
 
 import React from "react";
-
-interface MetricContentProps {
-  title: string;
-  value: string | number;
-  animatedValue?: number;
-  isHovered?: boolean;
-}
+import { MetricContentProps } from "@/interfaces/widgets";
 
 function splitNumber(value: string | number) {
-  // Extracts main and secondary (decimal/units) part
   const str = String(value);
   const match = str.match(/^(.*?)([.,][0-9]+|[A-Z%]+)?$/);
   if (!match) return { main: str, secondary: "" };

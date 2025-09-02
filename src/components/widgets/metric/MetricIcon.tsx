@@ -9,6 +9,7 @@ import {
   Target,
 } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
+import { MetricIconProps } from "@/interfaces/widgets";
 
 const iconMap = {
   TrendingUp,
@@ -17,12 +18,6 @@ const iconMap = {
   Users,
   Target,
 };
-
-interface MetricIconProps {
-  icon: string;
-  accentColor: string;
-  isHovered?: boolean;
-}
 
 export default function MetricIcon({
   icon,

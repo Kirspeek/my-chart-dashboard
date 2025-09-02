@@ -253,6 +253,25 @@ export interface MetricWidgetProps extends CommonComponentProps {
   setCurrentSlide?: (slide: number) => void;
 }
 
+export interface MetricContentProps {
+  title: string;
+  value: string | number;
+  animatedValue?: number;
+  isHovered?: boolean;
+}
+
+export interface MetricIconProps {
+  icon: string;
+  accentColor: string;
+  isHovered?: boolean;
+}
+
+export interface MetricTrendProps {
+  change: number;
+  accentColor: string;
+  isHovered?: boolean;
+}
+
 // ============================================================================
 // WHEEL WIDGET INTERFACES
 // ============================================================================

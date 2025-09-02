@@ -21,7 +21,6 @@ export default function MetricWidget({
   const [isHovered, setIsHovered] = useState(false);
   const [animatedValue, setAnimatedValue] = useState(0);
 
-  // Animated counter effect
   useEffect(() => {
     const strValue = String(displayValue);
     const numericValue = parseFloat(strValue.replace(/[^0-9.]/g, ""));
@@ -53,13 +52,11 @@ export default function MetricWidget({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background accent on hover */}
       <div
         className="absolute inset-0 rounded-[2.5rem] opacity-0 group-hover:opacity-5 transition-opacity duration-300"
         style={{ background: accentColor }}
       />
 
-      {/* Icon positioned in top-right */}
       <div className="flex justify-end">
         <MetricIcon
           icon={metric.icon}
@@ -68,7 +65,6 @@ export default function MetricWidget({
         />
       </div>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col justify-center">
         <MetricContent
           title={metric.title}
@@ -78,7 +74,6 @@ export default function MetricWidget({
         />
       </div>
 
-      {/* Trend indicator */}
       <MetricTrend
         change={metric.change}
         accentColor={accentColor}

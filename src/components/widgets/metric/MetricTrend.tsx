@@ -3,12 +3,7 @@
 import React from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
-
-interface MetricTrendProps {
-  change: number;
-  accentColor: string;
-  isHovered?: boolean;
-}
+import { MetricTrendProps } from "@/interfaces/widgets";
 
 export default function MetricTrend({
   change,
