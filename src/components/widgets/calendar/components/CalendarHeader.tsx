@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Button3D from "../../common/3DButton";
+import Button3D from "../../../common/3DButton";
 
 interface CalendarHeaderProps {
   currentDate: Date;
@@ -41,7 +41,6 @@ export default function CalendarHeader({
 
   return (
     <div className="flex items-center justify-between mb-2">
-      {/* Navigation */}
       <div className="flex items-center gap-1">
         <Button3D
           onClick={onPrevious}
@@ -78,14 +77,12 @@ export default function CalendarHeader({
         </Button3D>
       </div>
 
-      {/* Month/Year Display */}
       <div className="text-center">
         <h3 className="text-sm font-bold calendar-header">
           {formatDate(currentDate)}
         </h3>
       </div>
 
-      {/* View Mode Toggle */}
       <div className="flex items-center gap-1">
         {(["month", "week", "day"] as const).map((mode) => (
           <Button3D

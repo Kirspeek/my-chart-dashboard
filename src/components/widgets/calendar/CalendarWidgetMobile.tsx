@@ -5,7 +5,7 @@ import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { CalendarWidgetProps } from "../../../../interfaces/widgets";
 import { useCalendarLogic } from "@/hooks/useCalendarLogic";
-import CalendarHeader from "./CalendarHeader";
+import CalendarHeader from "./components/CalendarHeader";
 import Button3D from "../../common/3DButton";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -44,7 +44,6 @@ export default function CalendarWidgetMobile({
 
   const [newEventTitle, setNewEventTitle] = useState("");
 
-  // Set today as default selected date if no date is selected
   React.useEffect(() => {
     if (!selectedDate) {
       const today = new Date();
@@ -72,7 +71,7 @@ export default function CalendarWidgetMobile({
     });
 
     setNewEventTitle("");
-    toggleEventForm(); // Hide the form after adding event
+    toggleEventForm();
   };
 
   const formatDate = (date: Date) => {
@@ -124,10 +123,8 @@ export default function CalendarWidgetMobile({
       />
 
       <div className="flex flex-col flex-1 gap-6 min-h-0">
-        {/* Calendar Grid - Smaller circles */}
         <div className="flex-1 calendar-grid">
           <div className="w-full">
-            {/* Week day headers */}
             <div className="grid grid-cols-7 gap-1 mb-1">
               {weekDays.map((day) => (
                 <div
@@ -140,7 +137,6 @@ export default function CalendarWidgetMobile({
               ))}
             </div>
 
-            {/* Calendar grid - Smaller circles */}
             <div className="grid grid-cols-7 gap-1 calendar-date-circles">
               {days.map((date, index) => {
                 const isTodayDate = isToday(date);
@@ -192,11 +188,9 @@ export default function CalendarWidgetMobile({
           </div>
         </div>
 
-        {/* Selected Date and Events Section - Row layout */}
         <div className="flex-shrink-0 calendar-events-section pb-1">
           {selectedDateInfo && (
             <div className="p-2">
-              {/* Selected Date Display and Events in Row */}
               <div className="flex items-center justify-between mb-2">
                 <div className="text-left">
                   <div
@@ -219,7 +213,6 @@ export default function CalendarWidgetMobile({
                   </div>
                 </div>
 
-                {/* Events List - Inline with date */}
                 <div className="text-right">
                   <div
                     className="text-xs font-semibold"
@@ -249,7 +242,6 @@ export default function CalendarWidgetMobile({
                 </div>
               </div>
 
-              {/* Add Event Form - Fixed at bottom */}
               <div className="flex flex-col gap-2">
                 {showEventForm && (
                   <div className="space-y-2 mb-2">
@@ -307,7 +299,6 @@ export default function CalendarWidgetMobile({
                   </div>
                 )}
 
-                {/* Add Event Button - Always at bottom */}
                 <Button3D
                   onClick={toggleEventForm}
                   style={{
@@ -324,7 +315,6 @@ export default function CalendarWidgetMobile({
           )}
         </div>
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

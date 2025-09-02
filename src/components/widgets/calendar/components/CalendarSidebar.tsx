@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Button3D from "../../common/3DButton";
-import type { CalendarEvent } from "../../../../interfaces/widgets";
+import Button3D from "../../../common/3DButton";
+import type { CalendarEvent } from "../../../../../interfaces/widgets";
 import { useTheme } from "@/hooks/useTheme";
 
 interface CalendarSidebarProps {
@@ -116,7 +116,6 @@ export default function CalendarSidebar({
           </div>
         )}
 
-        {/* Events Section - Scrollable */}
         <div className="flex-1 min-h-0 mb-4">
           <div
             className="text-sm font-semibold mb-2 flex-shrink-0 calendar-events-label"
@@ -172,7 +171,6 @@ export default function CalendarSidebar({
           </div>
         </div>
 
-        {/* Add Event Section - Always at bottom */}
         <div className="flex-shrink-0">
           {showEventForm ? (
             <div className="space-y-2">

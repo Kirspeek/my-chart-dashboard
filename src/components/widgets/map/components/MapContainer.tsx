@@ -22,9 +22,18 @@ export default function MapContainer({
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markerRef = useRef<mapboxgl.Marker | null>(null);
+  const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_API_KEY || "";
 
   useEffect(() => {
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API_KEY || "";
+    if (!MAPBOX_ACCESS_TOKEN) {
+      if (process.env.NODE_ENV !== "production") {
+        console.warn(
+          "Mapbox token missing. Set NEXT_PUBLIC_MAPBOX_API_KEY in your environment to enable the map."
+        );
+      }
+    }
+    if (!MAPBOX_ACCESS_TOKEN) return;
+    mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
     if (!mapContainer.current) return;
 
     const map = new mapboxgl.Map({
@@ -61,7 +70,7 @@ export default function MapContainer({
       map.remove();
       styleEl.remove();
     };
-  }, [internalLocation]);
+  }, [internalLocation, MAPBOX_ACCESS_TOKEN]);
 
   useEffect(() => {
     if (!mapRef.current || !internalLocation) return;
@@ -148,19 +157,38 @@ export default function MapContainer({
   ]);
 
   return (
-    <div
-      ref={mapContainer}
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        borderRadius: "inherit",
-        overflow: "hidden",
-      }}
-    />
+    <>
+      <div
+        ref={mapContainer}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: "inherit",
+          overflow: "hidden",
+        }}
+      />
+      {!MAPBOX_ACCESS_TOKEN && (
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            left: 12,
+            zIndex: 20,
+            padding: "8px 10px",
+            borderRadius: 8,
+            fontSize: 12,
+            background: "rgba(0,0,0,0.6)",
+            color: "#fff",
+          }}
+        >
+          Map disabled: set NEXT_PUBLIC_MAPBOX_API_KEY in .env.local
+        </div>
+      )}
+    </>
   );
 }

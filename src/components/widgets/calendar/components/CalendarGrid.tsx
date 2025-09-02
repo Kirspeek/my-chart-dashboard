@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Button3D from "../../common/3DButton";
-import type { CalendarEvent } from "../../../../interfaces/widgets";
+import Button3D from "../../../common/3DButton";
+import type { CalendarEvent } from "../../../../../interfaces/widgets";
 import { useTheme } from "@/hooks/useTheme";
 
 interface CalendarGridProps {
@@ -42,7 +42,6 @@ export default function CalendarGrid({
   };
 
   if (viewMode === "day") {
-    // Day view - show single day with more details
     const day = safeDays[0];
     if (!day) return null;
 
@@ -85,7 +84,6 @@ export default function CalendarGrid({
   if (viewMode === "week") {
     return (
       <div className="w-full h-full flex flex-col">
-        {/* Week day headers */}
         <div className="grid grid-cols-7 gap-1 mb-1 flex-shrink-0">
           {safeWeekDays.map((day) => (
             <div
@@ -97,7 +95,6 @@ export default function CalendarGrid({
           ))}
         </div>
 
-        {/* Week grid */}
         <div className="grid grid-cols-7 gap-1 flex-1">
           {safeDays.slice(0, 7).map((day, index) => (
             <Button3D
@@ -139,10 +136,8 @@ export default function CalendarGrid({
     );
   }
 
-  // Month view (default)
   return (
     <div className="w-full h-full flex flex-col">
-      {/* Week day headers */}
       <div className="grid grid-cols-7 gap-1 mb-1 flex-shrink-0">
         {safeWeekDays.map((day) => (
           <div
@@ -154,7 +149,6 @@ export default function CalendarGrid({
         ))}
       </div>
 
-      {/* Month grid */}
       <div className="grid grid-cols-7 gap-1 flex-1">
         {safeDays.map((day, index) => (
           <Button3D
