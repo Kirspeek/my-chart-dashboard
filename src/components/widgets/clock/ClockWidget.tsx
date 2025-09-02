@@ -2,7 +2,7 @@
 
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
-import { ClockWidgetProps } from "../../../../interfaces/widgets";
+import { ClockWidgetProps } from "@/interfaces/widgets";
 import { useClockLogic } from "@/hooks/useClockLogic";
 import { timeZones } from "@/constants/timeZones";
 import ClockDisplay from "./ClockDisplay";

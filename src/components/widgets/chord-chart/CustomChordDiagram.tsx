@@ -6,7 +6,7 @@ import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "@/hooks/useTheme";
-import type { WidgetChordChartData } from "../../../../interfaces/widgets";
+import type { WidgetChordChartData } from "@/interfaces/widgets";
 
 interface CustomChordDiagramProps {
   data: WidgetChordChartData[];

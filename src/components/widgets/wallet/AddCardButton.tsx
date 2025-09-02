@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { AddCardButtonProps } from "../../../../interfaces/wallet";
-import { useTheme } from "../../../hooks/useTheme";
+import { AddCardButtonProps } from "@/interfaces/wallet";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function AddCardButton({
   onClick,

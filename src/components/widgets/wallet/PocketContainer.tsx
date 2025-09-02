@@ -1,5 +1,5 @@
 import React from "react";
-import { PocketContainerProps } from "../../../../interfaces/wallet";
+import { PocketContainerProps } from "@/interfaces/wallet";
 
 export default function PocketContainer({
   width,

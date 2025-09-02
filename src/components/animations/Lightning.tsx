@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { LightningProps } from "../../../interfaces/animations";
+import { LightningProps } from "@/interfaces/animations";
 import { useTheme } from "../../hooks/useTheme";
 
 const Lightning = ({

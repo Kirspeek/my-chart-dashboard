@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import CalendarGrid from "./components/CalendarGrid";
-import CalendarSidebar from "./components/CalendarSidebar";
-import type { CalendarEvent } from "../../../../interfaces/widgets";
+import CalendarGrid from "./CalendarGrid";
+import CalendarSidebar from "./CalendarSidebar";
+import type { CalendarEvent } from "@/interfaces/widgets";
 
 interface CalendarWidgetDesktopProps {
   viewMode: "month" | "week" | "day";

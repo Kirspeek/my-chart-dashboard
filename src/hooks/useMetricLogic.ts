@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTheme } from "./useTheme";
-import type { MetricData } from "../../interfaces/widgets";
+import type { MetricData } from "@/interfaces/widgets";
 
 export function useMetricLogic(metric: MetricData, index: number = 0) {
   const { accent } = useTheme();

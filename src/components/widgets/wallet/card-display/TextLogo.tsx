@@ -1,5 +1,5 @@
 import React from "react";
-import { TextLogoProps } from "../../../../../interfaces/wallet";
+import { TextLogoProps } from "@/interfaces/wallet";
 
 export default function TextLogo({ text, color }: TextLogoProps) {
   return (

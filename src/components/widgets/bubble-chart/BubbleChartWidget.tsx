@@ -2,7 +2,7 @@
 
 import React from "react";
 import CustomBubbleChart from "./CustomBubbleChart";
-import type { BubbleChartWidgetProps } from "../../../../interfaces/widgets";
+import type { BubbleChartWidgetProps } from "@/interfaces/widgets";
 
 export default function BubbleChartWidget({
   data,

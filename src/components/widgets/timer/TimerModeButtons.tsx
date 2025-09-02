@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { TimerMode } from "../../../../../interfaces/widgets";
+import type { TimerMode } from "@/interfaces/widgets";
 
 export default function TimerModeButtons({
   modes,
@@ -53,4 +53,3 @@ export default function TimerModeButtons({
     </div>
   );
 }
-

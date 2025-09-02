@@ -3,9 +3,9 @@
 import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
-import FinancialBarChart from "../wallet-card/FinancialBarChart";
+import FinancialBarChart from "./FinancialBarChart";
 import { useWalletLogic } from "../../../hooks/wallet/useWalletLogic";
-import { CardData } from "../../../../interfaces/wallet";
+import { CardData } from "@/interfaces/wallet";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
 import { useWidgetState } from "../../../context/WidgetStateContext";
 
@@ -16,7 +16,6 @@ interface ExpenseData {
   percentage: number;
 }
 
-// Generate aggregated expense data from all cards
 const generateAggregatedExpenseData = (cards: CardData[]): ExpenseData[] => {
   if (cards.length === 0) {
     return [

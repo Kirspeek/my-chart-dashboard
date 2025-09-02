@@ -1,5 +1,5 @@
 import React from "react";
-import { WeatherBackgroundProps } from "../../../../interfaces/widgets";
+import { WeatherBackgroundProps } from "@/interfaces/widgets";
 import { getWeatherBackground } from "../../../utils/weatherUtils";
 import "../../../styles/weather.css";
 

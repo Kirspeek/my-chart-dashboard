@@ -4,7 +4,7 @@ import { useWidgetState } from "../../../../context/WidgetStateContext";
 import {
   ContributionData,
   ContributionGraphLogicProps,
-} from "../../../../../interfaces/charts";
+} from "@/interfaces/charts";
 
 const generateRandomCubeData = (): ContributionData[] => {
   const data: ContributionData[] = [];

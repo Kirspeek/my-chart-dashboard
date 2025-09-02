@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { UserData } from "../../../../interfaces/dashboard";
+import type { UserData } from "@/interfaces/dashboard";
 import { useRecentUsersLogic, useTheme } from "../../../hooks";
 import {
   User,

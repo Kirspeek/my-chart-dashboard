@@ -1,4 +1,4 @@
-import { APIError } from "../../interfaces/api";
+import { APIError } from "@/interfaces/api";
 
 export const RequestUtils = {
   /**

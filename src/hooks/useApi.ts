@@ -3,7 +3,7 @@ import {
   UseApiOptions,
   UseApiReturn,
   CacheEntry,
-} from "../../interfaces/hooks";
+} from "@/interfaces/hooks";
 
 export function useApi<T>(
   apiFunction: (...args: unknown[]) => Promise<T>,

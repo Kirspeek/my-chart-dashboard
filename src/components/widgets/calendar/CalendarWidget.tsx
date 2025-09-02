@@ -2,9 +2,9 @@
 
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
-import { CalendarWidgetProps } from "../../../../interfaces/widgets";
+import { CalendarWidgetProps } from "@/interfaces/widgets";
 import { useCalendarLogic } from "@/hooks/useCalendarLogic";
-import CalendarHeader from "./components/CalendarHeader";
+import CalendarHeader from "./CalendarHeader";
 import CalendarWidgetDesktop from "./CalendarWidgetDesktop";
 
 export default function CalendarWidget({

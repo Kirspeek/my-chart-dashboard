@@ -2,35 +2,48 @@
 
 import React, { useMemo } from "react";
 import WidgetBase from "../../common/WidgetBase";
-import SpendingChart from "./SpendingChart";
+import SlideNavigation from "../../common/SlideNavigation";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
-import { generateStableExpenseData } from "../../../utils/wheelUtils";
+import WheelMonthlyExpensesChart from "./WheelMonthlyExpensesChart";
+import { useWidgetHeight } from "../../../context/WidgetHeightContext";
 import { useTheme } from "../../../hooks/useTheme";
 
-export default function WheelWidget() {
+export default function WheelWidget({
+  onOpenSidebar,
+  showSidebarButton = false,
+  currentSlide,
+  setCurrentSlide,
+}: {
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+}) {
   const { currentCard, handleCardClick, hasCards, currentCardData } =
     useWheelWidgetLogic();
+
+  const { targetHeight } = useWidgetHeight();
   const { colorsTheme } = useTheme();
-  const wheelColors = colorsTheme.widgets.wheel;
+  const walletCardColors = colorsTheme.widgets.walletCard;
+
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
+
+  // Calculate dynamic styling based on height
+  const widgetStyle = useMemo(
+    () => ({
+      height: targetHeight,
+      marginTop: isMobile ? undefined : "40px",
+      transition: "height 0.3s ease-in-out",
+    }),
+    [targetHeight, isMobile]
+  );
 
   const contentStyle = useMemo(
     () => ({
-      opacity: 1,
-      transform: "scale(1)",
+      marginTop: isMobile ? undefined : "-40px",
       transition: "all 0.3s ease-in-out",
     }),
-    []
-  );
-
-  const widgetStyle = useMemo(
-    () => ({
-      background: wheelColors.background.gradient,
-      borderRadius: "16px",
-      boxShadow: wheelColors.background.shadow,
-      border: `1px solid ${wheelColors.background.border}`,
-      backdropFilter: "blur(10px)",
-    }),
-    [wheelColors.background]
+    [isMobile]
   );
 
   if (!hasCards || !currentCardData) {
@@ -38,12 +51,14 @@ export default function WheelWidget() {
       <WidgetBase
         className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
         style={widgetStyle}
+        onOpenSidebar={onOpenSidebar}
+        showSidebarButton={showSidebarButton}
       >
         <div
           className="text-center"
           style={{
             color: "var(--secondary-text)",
-            marginTop: "-40px",
+            marginTop: isMobile ? undefined : "-40px",
           }}
         >
           <div
@@ -63,31 +78,31 @@ export default function WheelWidget() {
             className="px-4 py-2 rounded-lg hover:opacity-80 transition-opacity text-sm"
             style={{
               backgroundColor: "var(--accent-color)",
-              color: wheelColors.button.text,
+              color: walletCardColors.button.text,
               fontFamily: "var(--font-sans)",
             }}
           >
             Refresh
           </button>
         </div>
+        {/* Navigation buttons */}
+        {currentSlide !== undefined && setCurrentSlide && (
+          <SlideNavigation
+            currentSlide={currentSlide}
+            setCurrentSlide={setCurrentSlide}
+            totalSlides={16}
+          />
+        )}
       </WidgetBase>
     );
   }
-
-  const fallbackMonthly = generateStableExpenseData(
-    currentCard?.cardNumber || "**** ****",
-    currentCardData.monthlySpending
-  );
-
-  const fallbackAnnual = generateStableExpenseData(
-    currentCard?.cardNumber || "**** ****",
-    currentCardData.monthlySpending * 12
-  );
 
   return (
     <WidgetBase
       className="wheel-widget w-full h-full flex flex-col items-center justify-center p-6"
       style={widgetStyle}
+      onOpenSidebar={onOpenSidebar}
+      showSidebarButton={showSidebarButton}
     >
       <div
         className="w-full max-w-sm h-full flex flex-col"
@@ -95,17 +110,24 @@ export default function WheelWidget() {
       >
         {/* Monthly Expenses Chart */}
         <div className="flex-1">
-          <SpendingChart
-            data={fallbackMonthly}
-            annualData={fallbackAnnual}
-            onClick={handleCardClick}
-            showCardNumber={true}
-            cardNumber={currentCard?.cardNumber}
-          />
+          {currentCard && (
+            <WheelMonthlyExpensesChart
+              card={currentCard}
+              onClick={handleCardClick}
+            />
+          )}
         </div>
 
-        {/* Progress indicators removed */}
+        {/* Progress Indicators removed */}
       </div>
+      {/* Navigation buttons */}
+      {currentSlide !== undefined && setCurrentSlide && (
+        <SlideNavigation
+          currentSlide={currentSlide}
+          setCurrentSlide={setCurrentSlide}
+          totalSlides={17}
+        />
+      )}
     </WidgetBase>
   );
 }

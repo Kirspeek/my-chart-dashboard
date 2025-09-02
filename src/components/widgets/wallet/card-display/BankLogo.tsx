@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { BankLogoExtendedProps } from "../../../../../interfaces/wallet";
+import { BankLogoExtendedProps } from "@/interfaces/wallet";
 import TextLogo from "./TextLogo";
 
 export default function BankLogo({

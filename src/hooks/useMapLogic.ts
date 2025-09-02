@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import type { MapState, MapActions } from "../../interfaces/widgets";
+import type { MapState, MapActions } from "@/interfaces/widgets";
 import { DEFAULT_CENTER, SEARCH_DEBOUNCE } from "@/data";
 import { mapboxGeocode } from "@/apis";
 

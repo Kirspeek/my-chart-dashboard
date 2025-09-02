@@ -1,5 +1,5 @@
 import React from "react";
-import { MainContainerProps } from "../../../../interfaces/wallet";
+import { MainContainerProps } from "@/interfaces/wallet";
 
 export default function MainContainer({
   width,

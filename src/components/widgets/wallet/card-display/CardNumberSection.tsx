@@ -1,5 +1,5 @@
 import React from "react";
-import { CardNumberSectionProps } from "../../../../../interfaces/wallet";
+import { CardNumberSectionProps } from "@/interfaces/wallet";
 
 export default function CardNumberSection({
   isEditing,

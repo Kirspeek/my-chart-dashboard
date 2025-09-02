@@ -4,12 +4,12 @@ import React from "react";
 import WeatherBackground from "./WeatherBackground";
 import WeatherText from "./WeatherText";
 import ForecastDay from "./ForecastDay";
-import { WeatherWidgetProps } from "../../../../interfaces/widgets";
+import { WeatherWidgetProps } from "@/interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
 import { useWeatherLogic } from "@/hooks/useWeatherLogic";
 import WeatherAnimations from "./WeatherAnimations";
 import WeatherStatus from "./WeatherStatus";
-import type { ForecastDay as ForecastDayType } from "../../../../interfaces/widgets";
+import type { ForecastDay as ForecastDayType } from "@/interfaces/widgets";
 import { useTheme } from "@/hooks/useTheme";
 import "../../../styles/weather.css";
 

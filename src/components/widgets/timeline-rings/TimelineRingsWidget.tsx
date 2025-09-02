@@ -3,7 +3,7 @@ import { useTheme } from "@/hooks/useTheme";
 import WidgetBase from "../../common/WidgetBase";
 import { WidgetTitle } from "../../common";
 import SlideNavigation from "../../common/SlideNavigation";
-import type { TimelineItem } from "../../../../interfaces/charts";
+import type { TimelineItem } from "@/interfaces/charts";
 
 // Utility to lighten/darken a hex color
 function shadeColor(color: string, percent: number) {

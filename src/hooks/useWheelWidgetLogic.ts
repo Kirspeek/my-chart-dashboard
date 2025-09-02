@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useWidgetState } from "../context/WidgetStateContext";
-import { WalletCardData } from "../../interfaces/widgets";
+import { WalletCardData } from "@/interfaces/widgets";
 
 export const useWheelWidgetLogic = () => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import type { TimerState, TimerActions } from "../../interfaces/widgets";
+import type { TimerState, TimerActions } from "@/interfaces/widgets";
 import { formatHms } from "@/utils/timerUtils";
 import { TIMER_LIMITS, TIMER_NOTIFICATION } from "@/data";
 

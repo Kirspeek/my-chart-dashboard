@@ -1,5 +1,5 @@
 import React from "react";
-import { ExpenseData } from "../../../interfaces/widgets";
+import { ExpenseData } from "@/interfaces/widgets";
 import Button from "./Button";
 import { useTheme } from "../../hooks/useTheme";
 

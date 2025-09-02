@@ -19,15 +19,15 @@ import {
   BubbleChartWidget,
   TimelineRingsWidget,
   WalletWidget,
-  WalletCardWidget,
+  WheelWidget,
   ContributionGraphWidget,
   AggregatedSpendingWidget,
 } from "../widgets";
 import { WidgetHeightProvider } from "../../context/WidgetHeightContext";
 import { WidgetStateProvider } from "../../context/WidgetStateContext";
 import { X } from "lucide-react";
-import type { UserData } from "../../../interfaces/dashboard";
-import type { PerformanceMetricsData } from "../../../interfaces/widgets";
+import type { UserData } from "@/interfaces/dashboard";
+import type { PerformanceMetricsData } from "@/interfaces/widgets";
 
 interface DashboardData {
   metricCards?: Array<{
@@ -155,7 +155,7 @@ export default function FilteredWidgetsGrid({
           <div className="max-w-sm mx-auto">
             <WidgetHeightProvider key={`wallet-card-${index}`}>
               <WidgetStateProvider>
-                <WalletCardWidget />
+                <WheelWidget />
               </WidgetStateProvider>
             </WidgetHeightProvider>
           </div>

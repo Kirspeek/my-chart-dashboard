@@ -1,4 +1,4 @@
-import type { TimeZone } from "../../interfaces/widgets";
+import type { TimeZone } from "@/interfaces/widgets";
 
 export const timeZones: TimeZone[] = [
   { label: "New York", zone: "America/New_York", utc: "UTC-5" },

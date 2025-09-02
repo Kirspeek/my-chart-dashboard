@@ -29,7 +29,7 @@ import {
   LineChart,
   PieChart,
 } from "lucide-react";
-import type { WidgetLineChartData } from "../../../../interfaces/widgets";
+import type { WidgetLineChartData } from "@/interfaces/widgets";
 import { useChartLogic } from "@/hooks/useChartLogic";
 import { useTheme } from "@/hooks/useTheme";
 

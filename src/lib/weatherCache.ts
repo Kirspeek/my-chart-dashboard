@@ -1,6 +1,6 @@
 import { WeatherAPI, WeatherForecastResponse } from "./api";
-import { ForecastDay } from "../../interfaces/widgets";
-import { CachedWeatherData } from "../../interfaces/api";
+import { ForecastDay } from "@/interfaces/widgets";
+import { CachedWeatherData } from "@/interfaces/api";
 
 class WeatherCacheManager {
   private cache = new Map<string, CachedWeatherData>();

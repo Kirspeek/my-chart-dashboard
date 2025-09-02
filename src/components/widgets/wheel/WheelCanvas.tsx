@@ -1,5 +1,5 @@
 import React from "react";
-import { ChartCanvas } from "../../../common";
+import { ChartCanvas } from "../../common";
 
 interface WheelCanvasProps {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;

@@ -23,7 +23,7 @@ import {
 import type {
   WidgetRadarChartData,
   PerformanceMetricsData,
-} from "../../../../interfaces/widgets";
+} from "@/interfaces/widgets";
 import { useChartLogic } from "@/hooks/useChartLogic";
 import { useTheme } from "@/hooks/useTheme";
 

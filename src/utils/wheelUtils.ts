@@ -4,9 +4,8 @@ import {
   SegmentPoint,
   Segment3D,
   Face3D,
-} from "../../interfaces/widgets";
+} from "@/interfaces/widgets";
 
-// 3D Configuration constants
 export const WHEEL_CONFIG = {
   radius: 100,
   innerRadius: 50,
@@ -20,7 +19,6 @@ export const WHEEL_CONFIG = {
   diffuseLight: 0.7,
 } as const;
 
-// 3D transformation functions
 export const rotate3D = (
   point: Point3D,
   alpha: number,
@@ -56,7 +54,6 @@ export const project3D = (point: Point3D): { x: number; y: number } => {
   };
 };
 
-// Calculate angle from mouse/touch position
 export const getAngleFromPosition = (
   clientX: number,
   clientY: number,
@@ -73,7 +70,6 @@ export const getAngleFromPosition = (
   return Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
 };
 
-// Generate 3D donut segments
 export const generate3DSegments = (
   currentData: ExpenseData[],
   rotationAngle: number
@@ -135,7 +131,6 @@ export const generate3DSegments = (
   return segments;
 };
 
-// Generate faceted side walls
 export const generateFacetedSides = (segment: Segment3D): Face3D[] => {
   const faces: Face3D[] = [];
 

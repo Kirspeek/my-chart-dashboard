@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import WidgetButton from "../../common/WidgetButton";
 import { useTheme } from "@/hooks/useTheme";
 import { Sun, Moon, Calendar } from "lucide-react";
-import type { ClockDisplayProps } from "../../../../interfaces/widgets";
+import type { ClockDisplayProps } from "@/interfaces/widgets";
 
 export default function ClockDisplay({
   mainTime,

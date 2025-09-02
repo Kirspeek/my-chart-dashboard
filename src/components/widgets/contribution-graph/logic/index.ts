@@ -4,4 +4,4 @@ export type {
   ContributionData,
   ContributionGraphLogicProps,
   ValueRange,
-} from "../../../../../interfaces/charts";
+} from "@/interfaces/charts";

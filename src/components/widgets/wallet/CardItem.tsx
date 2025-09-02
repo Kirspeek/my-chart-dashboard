@@ -1,8 +1,8 @@
 import React from "react";
-import { CardItemProps } from "../../../../interfaces/wallet";
-import { WALLET_CONSTANTS } from "../../../constants";
+import { CardItemProps } from "@/interfaces/wallet";
+import { WALLET_CONSTANTS } from "@/constants";
 import CardDisplay from "./CardDisplay";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 const CARD_HEIGHT = WALLET_CONSTANTS.CARD_HEIGHT;
 const CARD_OFFSET = WALLET_CONSTANTS.CARD_OFFSET;

@@ -5,7 +5,7 @@ import type {
   TooltipContextType,
   TooltipData,
   TooltipProviderProps,
-} from "../../interfaces/context";
+} from "@/interfaces/context";
 
 const TooltipContext = createContext<TooltipContextType | undefined>(undefined);
 

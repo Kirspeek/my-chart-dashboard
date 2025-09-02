@@ -1,11 +1,11 @@
 import * as creditCardType from "credit-card-type";
-import { BankApiResponse, BankInfo } from "../../interfaces/wallet";
+import { BankApiResponse, BankInfo } from "@/interfaces/wallet";
 import {
   API_ENDPOINTS,
   API_HEADERS,
   BANK_CONSTANTS,
   HTTP_STATUS,
-} from "../../apis";
+} from "@/apis";
 
 const bankDataCache = new Map<string, BankInfo>();
 const rateLimitCache = new Map<string, number>();

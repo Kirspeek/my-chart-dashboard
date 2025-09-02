@@ -3,10 +3,10 @@
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
-import { MapWidgetProps } from "../../../../interfaces/widgets";
+import { MapWidgetProps } from "@/interfaces/widgets";
 import { useMapLogic } from "@/hooks/useMapLogic";
-import MapSearch from "./components/MapSearch";
-import MapContainer from "./components/MapContainer";
+import MapSearch from "./MapSearch";
+import MapContainer from "./MapContainer";
 
 export default function MapWidget({
   onMarkerChange,

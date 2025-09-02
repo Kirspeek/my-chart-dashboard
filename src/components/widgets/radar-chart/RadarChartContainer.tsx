@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import type { WidgetRadarChartData } from "../../../../interfaces/widgets";
+import type { WidgetRadarChartData } from "@/interfaces/widgets";
 import { useChartLogic } from "@/hooks/useChartLogic";
 import { useTheme } from "@/hooks/useTheme";
 

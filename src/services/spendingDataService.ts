@@ -1,4 +1,4 @@
-import { CardData, CardSpendingData } from "../../interfaces/wallet";
+import { CardData, CardSpendingData } from "@/interfaces/wallet";
 
 // Generate a consistent hash from card number for seeded random generation
 const generateHash = (str: string): number => {

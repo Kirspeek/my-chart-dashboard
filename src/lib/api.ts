@@ -1,4 +1,4 @@
-import { WeatherForecastResponse } from "../../interfaces/api";
+import { WeatherForecastResponse } from "@/interfaces/api";
 import { API_CONFIG } from "../config/api";
 import { RequestUtils } from "../utils/requestUtils";
 

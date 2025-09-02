@@ -2,7 +2,7 @@
 
 import React from "react";
 import EnhancedChordDiagram from "./EnhancedChordDiagram";
-import type { ChordChartWidgetProps } from "../../../../interfaces/widgets";
+import type { ChordChartWidgetProps } from "@/interfaces/widgets";
 import { useMobileDetection } from "../../common";
 
 export default function ChordChartWidget({

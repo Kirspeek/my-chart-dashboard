@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { useTheme } from "../../../../hooks/useTheme";
-import { ExpenseData, TimePeriod } from "../../../../../interfaces/widgets";
+import { useTheme } from "../../../hooks/useTheme";
+import { ExpenseData, TimePeriod } from "@/interfaces/widgets";
 
 export const useWheelChartLogic = (
   data: ExpenseData[],

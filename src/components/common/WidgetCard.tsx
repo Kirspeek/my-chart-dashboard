@@ -1,4 +1,4 @@
-import { WidgetCardProps } from "../../../interfaces/common";
+import { WidgetCardProps } from "@/interfaces/common";
 
 export default function WidgetCard({
   children,

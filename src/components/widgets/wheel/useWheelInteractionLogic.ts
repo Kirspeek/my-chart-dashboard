@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { getAngleFromPosition } from "../../../../utils/wheelUtils";
+import { getAngleFromPosition } from "../../../utils/wheelUtils";
 
 export const useWheelInteractionLogic = () => {
   const [rotationAngle, setRotationAngle] = useState(0);

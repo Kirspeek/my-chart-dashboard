@@ -264,7 +264,7 @@ export interface ExpenseData {
   percentage: number;
 }
 
-export interface SpendingChartProps extends CommonComponentProps {
+export interface WheelChartProps extends CommonComponentProps {
   data: ExpenseData[];
   annualData?: ExpenseData[];
   title?: string;

@@ -2,7 +2,7 @@ import type {
   WeatherColors,
   WeatherBackground,
   WeatherButtonBackground,
-} from "../../interfaces/widgets";
+} from "@/interfaces/widgets";
 
 /**
  * Get weather text colors based on weather description

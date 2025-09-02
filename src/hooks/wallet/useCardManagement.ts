@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { CardData } from "../../../interfaces/wallet";
+import { CardData } from "@/interfaces/wallet";
 import { EMPTY_CARD } from "../../data";
 
 export const useCardManagement = () => {

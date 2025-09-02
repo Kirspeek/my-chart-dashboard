@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
-import { CalendarWidgetProps } from "../../../../interfaces/widgets";
+import { CalendarWidgetProps } from "@/interfaces/widgets";
 import { useCalendarLogic } from "@/hooks/useCalendarLogic";
-import CalendarHeader from "./components/CalendarHeader";
+import CalendarHeader from "./CalendarHeader";
 import Button3D from "../../common/3DButton";
 import { useTheme } from "@/hooks/useTheme";
 

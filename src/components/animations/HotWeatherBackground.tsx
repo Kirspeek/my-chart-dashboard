@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {
   HotWeatherBackgroundProps,
   HotCloudSVGProps,
-} from "../../../interfaces/animations";
+} from "@/interfaces/animations";
 import { useTheme } from "../../hooks/useTheme";
 
 // Thin, wispy orange cloud SVG

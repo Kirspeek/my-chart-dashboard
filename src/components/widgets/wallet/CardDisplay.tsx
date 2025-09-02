@@ -1,6 +1,6 @@
 import React from "react";
-import { CardDisplayProps } from "../../../../interfaces/wallet";
-import { useCardDisplay } from "../../../hooks/wallet/useCardDisplay";
+import { CardDisplayProps } from "@/interfaces/wallet";
+import { useCardDisplay } from "@/hooks/wallet/useCardDisplay";
 import {
   BankLogo,
   ActionButtons,

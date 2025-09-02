@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { WalletContainerProps, CardData } from "../../../../interfaces/wallet";
-import { WALLET_CONSTANTS } from "../../../constants";
-import { useWidgetState } from "../../../context/WidgetStateContext";
+import { WalletContainerProps, CardData } from "@/interfaces/wallet";
+import { WALLET_CONSTANTS } from "@/constants";
+import { useWidgetState } from "@/context/WidgetStateContext";
 import MainContainer from "./MainContainer";
 import PocketContainer from "./PocketContainer";
 import CardItem from "./CardItem";
@@ -31,7 +31,6 @@ export default function WalletContainer({
 }: WalletContainerProps) {
   const { refreshSpendingData } = useWidgetState();
 
-  // Update spending data whenever cards change
   useEffect(() => {
     refreshSpendingData(cards);
   }, [cards, refreshSpendingData]);
@@ -44,7 +43,7 @@ export default function WalletContainer({
         height: dynamicHeight,
         margin: "0 auto",
         marginTop: WALLET_CONSTANTS.TOP_PADDING,
-        transition: "height 0.3s ease-in-out", // Smooth transition for height changes
+        transition: "height 0.3s ease-in-out",
       }}
     >
       <MainContainer width={WALLET_WIDTH} height={dynamicHeight} zIndex={1} />
@@ -57,7 +56,7 @@ export default function WalletContainer({
           zIndex: 2,
           paddingBottom: POCKET_HEIGHT,
           top: -40,
-          transition: "all 0.3s ease-in-out", // Smooth transition for content adjustments
+          transition: "all 0.3s ease-in-out",
         }}
       >
         {cards.map((card: CardData, i: number) => {

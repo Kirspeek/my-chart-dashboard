@@ -2,7 +2,7 @@
 
 import React from "react";
 import EnhancedSankeyDiagram from "./EnhancedSankeyDiagram";
-import type { SankeyChartWidgetProps } from "../../../../interfaces/widgets";
+import type { SankeyChartWidgetProps } from "@/interfaces/widgets";
 import { useMobileDetection } from "../../common";
 
 export default function SankeyChartWidget({

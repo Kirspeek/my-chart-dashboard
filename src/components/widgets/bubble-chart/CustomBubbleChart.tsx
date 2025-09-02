@@ -11,7 +11,7 @@ import * as THREE from "three";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
-import type { WidgetBubbleChartData } from "../../../../interfaces/widgets";
+import type { WidgetBubbleChartData } from "@/interfaces/widgets";
 import { RotateCcw, Maximize2, Minimize2, Zap } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 

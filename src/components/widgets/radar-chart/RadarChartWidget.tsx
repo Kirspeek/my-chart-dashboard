@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { RadarChartWidgetProps } from "../../../../interfaces/widgets";
+import { RadarChartWidgetProps } from "@/interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import PerformanceMetricsHeader from "./PerformanceMetricsHeader";

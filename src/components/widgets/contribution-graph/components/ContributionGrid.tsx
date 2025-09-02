@@ -1,5 +1,5 @@
 import React from "react";
-import { ContributionData } from "../../../../../interfaces";
+import { ContributionData } from "@/interfaces";
 
 interface ContributionGridProps {
   weeks: ContributionData[][];

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { RecentUsersWidgetProps } from "../../../../interfaces/widgets";
+import { RecentUsersWidgetProps } from "@/interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
 import RecentUsersHeader from "./RecentUsersHeader";
 import RecentUsersContainer from "./RecentUsersContainer";

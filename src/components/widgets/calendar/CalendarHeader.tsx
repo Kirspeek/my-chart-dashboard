@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Button3D from "../../../common/3DButton";
+import Button3D from "../../common/3DButton";
 
 interface CalendarHeaderProps {
   currentDate: Date;

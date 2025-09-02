@@ -12,7 +12,7 @@ import { WALLET_CONSTANTS } from "@/constants/wallet";
 import type {
   WidgetHeightContextType,
   WidgetHeightProviderProps,
-} from "../../interfaces/context";
+} from "@/interfaces/context";
 
 const WidgetHeightContext = createContext<WidgetHeightContextType | undefined>(
   undefined

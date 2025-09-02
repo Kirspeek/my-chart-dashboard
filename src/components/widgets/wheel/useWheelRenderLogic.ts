@@ -7,12 +7,8 @@ import {
   getBottomSegment,
   rotate3D,
   WHEEL_CONFIG,
-} from "../../../../utils/wheelUtils";
-import {
-  ExpenseData,
-  Point3D,
-  Face3D,
-} from "../../../../../interfaces/widgets";
+} from "../../../utils/wheelUtils";
+import { ExpenseData, Point3D, Face3D } from "@/interfaces/widgets";
 
 export const useWheelRenderLogic = (
   currentData: ExpenseData[],

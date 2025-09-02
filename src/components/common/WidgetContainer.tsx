@@ -1,5 +1,5 @@
 import React from "react";
-import { CommonComponentProps } from "../../../interfaces";
+import { CommonComponentProps } from "@/interfaces";
 
 interface WidgetContainerProps extends CommonComponentProps {
   children: React.ReactNode;

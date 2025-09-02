@@ -2,8 +2,8 @@
 
 import React from "react";
 import { Eraser } from "lucide-react";
-import { ClearWalletButtonProps } from "../../../../interfaces/wallet";
-import { useTheme } from "../../../hooks/useTheme";
+import { ClearWalletButtonProps } from "@/interfaces/wallet";
+import { useTheme } from "@/hooks/useTheme";
 
 export default function ClearWalletButton({ onClick }: ClearWalletButtonProps) {
   const { colorsTheme } = useTheme();

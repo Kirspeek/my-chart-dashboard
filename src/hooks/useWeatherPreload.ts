@@ -3,7 +3,7 @@ import { weatherCache } from "../lib/weatherCache";
 import {
   UseWeatherPreloadOptions,
   UseWeatherPreloadReturn,
-} from "../../interfaces/hooks";
+} from "@/interfaces/hooks";
 
 export function useWeatherPreload(
   cities: string[],

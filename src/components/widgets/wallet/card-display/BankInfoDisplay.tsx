@@ -1,5 +1,5 @@
 import React from "react";
-import { BankInfoDisplayProps } from "../../../../../interfaces/wallet";
+import { BankInfoDisplayProps } from "@/interfaces/wallet";
 
 export default function BankInfoDisplay({
   isEditing,

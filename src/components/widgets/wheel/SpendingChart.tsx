@@ -1,13 +1,16 @@
 "use client";
 
 import React from "react";
-import { SpendingChartProps } from "../../../../interfaces/widgets";
+import { WheelChartProps } from "@/interfaces/widgets";
 import {
   useWheelChartLogic,
   useWheelInteractionLogic,
   useWheelRenderLogic,
-} from "./logic";
-import { WheelHeader, WheelSpendingDisplay, WheelCanvas } from "./components";
+} from "./";
+import WheelSpendingDisplay from "./WheelSpendingDisplay";
+import SpendingSection from "../../common/SpendingSection";
+import WheelCanvas from "./WheelCanvas";
+import { PayHeader } from "../../common";
 
 export default function SpendingChart({
   data,
@@ -16,7 +19,8 @@ export default function SpendingChart({
   showCardNumber = false,
   cardNumber,
   hideHeader = false,
-}: SpendingChartProps & { hideHeader?: boolean }) {
+  leftButtons,
+}: WheelChartProps & { hideHeader?: boolean; leftButtons?: React.ReactNode }) {
   // Use organized logic hooks
   const { selectedPeriod, setSelectedPeriod, currentData, totalSpending } =
     useWheelChartLogic(data, annualData);
@@ -48,11 +52,11 @@ export default function SpendingChart({
     >
       {/* Card Number and Period Toggle */}
       {!hideHeader && (
-        <WheelHeader
-          showCardNumber={showCardNumber}
-          cardNumber={cardNumber}
+        <PayHeader
+          leftTitle={showCardNumber ? cardNumber || "**** ****" : "All Cards"}
+          leftButtons={leftButtons}
           selectedPeriod={selectedPeriod}
-          onPeriodChange={setSelectedPeriod}
+          setSelectedPeriod={setSelectedPeriod}
         />
       )}
 
@@ -61,14 +65,20 @@ export default function SpendingChart({
 
       {/* Total Spending Display */}
       {!hideHeader && (
-        <WheelSpendingDisplay
-          title={
-            selectedPeriod === "Monthly"
-              ? "Monthly Spending"
-              : "Annual Spending"
-          }
-          totalSpending={totalSpending}
-        />
+        <SpendingSection>
+          <WheelSpendingDisplay
+            title={
+              selectedPeriod === "Monthly"
+                ? "Monthly Spending"
+                : "Annual Spending"
+            }
+            totalSpending={totalSpending}
+            trend={{
+              direction: Math.random() > 0.5 ? "up" : "down",
+              percentage: Math.floor(Math.random() * 20) + 1,
+            }}
+          />
+        </SpendingSection>
       )}
 
       {/* 3D Donut Chart Canvas */}
@@ -79,7 +89,7 @@ export default function SpendingChart({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
-        onClick={(e) => handleCanvasClick(e, onClick)}
+        onClick={(e: React.MouseEvent) => handleCanvasClick(e, onClick)}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import React from "react";
 import Button3D from "../../common/3DButton";
 import { useTheme } from "@/hooks/useTheme";
 import { MapPin, Clock, Globe } from "lucide-react";
-import type { WorldClocksProps } from "../../../../interfaces/widgets";
+import type { WorldClocksProps } from "@/interfaces/widgets";
 
 export default function WorldClocks({
   timeZones,

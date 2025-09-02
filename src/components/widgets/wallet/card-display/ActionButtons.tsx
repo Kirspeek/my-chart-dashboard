@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Eye, EyeOff } from "lucide-react";
-import { ActionButtonsProps } from "../../../../../interfaces/wallet";
+import { ActionButtonsProps } from "@/interfaces/wallet";
 
 export default function ActionButtons({
   isEditing,

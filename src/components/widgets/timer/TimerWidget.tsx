@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
-import { TimerWidgetProps } from "../../../../interfaces/components";
+import { TimerWidgetProps } from "@/interfaces/components";
 import {
   Play,
   Pause,
@@ -16,13 +16,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import type { TimerMode } from "../../../../interfaces/widgets";
+import type { TimerMode } from "@/interfaces/widgets";
 import { formatMmSs } from "@/utils/timerUtils";
 import { IconButton, useMobileDetection } from "../../common";
-import TimerModeButtons from "./components/TimerModeButtons";
-import TimerDisplay from "./components/TimerDisplay";
+import TimerModeButtons from "./TimerModeButtons";
+import TimerDisplay from "./TimerDisplay";
 import { TIMER_MODES } from "@/data";
-import DraggableProgressRing from "./components/DraggableProgressRing";
+import DraggableProgressRing from "./DraggableProgressRing";
 import { useTimerLogic } from "@/hooks/useTimerLogic";
 
 export default function TimerWidget({

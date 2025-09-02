@@ -19,7 +19,7 @@ import {
   Award,
   Zap as Lightning,
 } from "lucide-react";
-import type { TimelineItem } from "../../../../interfaces/charts";
+import type { TimelineItem } from "@/interfaces/charts";
 
 // Utility to lighten/darken a hex color
 function shadeColor(

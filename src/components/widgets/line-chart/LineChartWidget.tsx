@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { LineChartWidgetProps } from "../../../../interfaces/widgets";
+import { LineChartWidgetProps } from "@/interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import LineChartHeader from "./LineChartHeader";

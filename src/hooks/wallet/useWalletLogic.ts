@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { CardData } from "../../../interfaces/wallet";
+import { CardData } from "@/interfaces/wallet";
 import { WALLET_CONSTANTS } from "../../constants";
 import { EMPTY_CARD } from "../../data";
 import { WalletUtils } from "../../utils";

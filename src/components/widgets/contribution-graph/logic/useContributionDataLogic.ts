@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ContributionData, ValueRange } from "../../../../../interfaces";
+import { ContributionData, ValueRange } from "@/interfaces";
 import { useTheme } from "../../../../hooks/useTheme";
 
 export const useContributionDataLogic = (data: ContributionData[]) => {

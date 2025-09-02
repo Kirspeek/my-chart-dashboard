@@ -11,11 +11,11 @@ import {
   CardData,
   CardSpendingData,
   WidgetState,
-} from "../../interfaces/wallet";
+} from "@/interfaces/wallet";
 import type {
   WidgetStateContextType,
   WidgetStateProviderProps,
-} from "../../interfaces/context";
+} from "@/interfaces/context";
 import {
   updateSpendingData,
   calculateAggregatedData,

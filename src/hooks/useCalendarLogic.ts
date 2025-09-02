@@ -3,7 +3,7 @@ import type {
   CalendarState,
   CalendarActions,
   CalendarEvent,
-} from "../../interfaces/widgets";
+} from "@/interfaces/widgets";
 
 export function useCalendarLogic(
   onDateSelect?: (date: Date) => void,

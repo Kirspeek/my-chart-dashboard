@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import type { PieChartProps } from "../../interfaces/charts";
+import type { PieChartProps } from "@/interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
 import { useTheme } from "@/hooks/useTheme";
 

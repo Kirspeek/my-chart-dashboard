@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
-import type { ClockState, ClockActions } from "../../interfaces/widgets";
+import type { ClockState, ClockActions } from "@/interfaces/widgets";
 
 export function useClockLogic(selectedZone: string): ClockState & ClockActions {
   const [mounted, setMounted] = useState(false);

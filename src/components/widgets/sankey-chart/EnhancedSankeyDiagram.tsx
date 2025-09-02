@@ -8,7 +8,7 @@ import MigrationFlowHeader from "./MigrationFlowHeader";
 import MigrationFlowControls from "./MigrationFlowControls";
 import MigrationFlowStats from "./MigrationFlowStats";
 import { useTheme } from "@/hooks/useTheme";
-import type { WidgetSankeyChartData } from "../../../../interfaces/widgets";
+import type { WidgetSankeyChartData } from "@/interfaces/widgets";
 
 interface EnhancedSankeyDiagramProps {
   data: WidgetSankeyChartData[];

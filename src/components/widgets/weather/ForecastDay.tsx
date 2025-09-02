@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ForecastDayProps } from "../../../../interfaces/widgets";
+import { ForecastDayProps } from "@/interfaces/widgets";
 import Button3D from "../../common/3DButton";
 import { getSelectedButtonBackground } from "../../../utils/weatherUtils";
 import { Calendar, Thermometer } from "lucide-react";

@@ -34,15 +34,12 @@ export { default as TimelineRingsWidget } from "./timeline-rings/TimelineRingsWi
 export { default as EnhancedTimelineWidget } from "./timeline-rings/EnhancedTimelineWidget";
 export { default as WalletWidget } from "./wallet/WalletWidget";
 
-// Wallet Card Widget
-export { default as WalletCardWidget } from "./wallet-card/WalletCardWidget";
-
 // Wheel Widget
-export { WheelWidget } from "./wheel";
+export { default as WheelWidget } from "./wheel/WheelWidget";
 
 // Contribution Graph Widget
 export { default as ContributionGraphWidget } from "./contribution-graph/ContributionGraphWidget";
-export { default as AggregatedSpendingWidget } from "./aggregated-spending/AggregatedSpendingWidget";
+export { default as AggregatedSpendingWidget } from "./waves/WavesWidget";
 
 // Work in Progress Widget
 export { WorkInProgressWidget } from "./work-in-progress";

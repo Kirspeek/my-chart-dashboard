@@ -16,7 +16,7 @@ import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
 import { ArrowRight, Users, TrendingUp } from "lucide-react";
 import MigrationChordControls from "./MigrationChordControls";
 import MigrationChordStats from "./MigrationChordStats";
-import type { WidgetChordChartData } from "../../../../interfaces/widgets";
+import type { WidgetChordChartData } from "@/interfaces/widgets";
 
 interface EnhancedChordDiagramProps {
   data: WidgetChordChartData[];

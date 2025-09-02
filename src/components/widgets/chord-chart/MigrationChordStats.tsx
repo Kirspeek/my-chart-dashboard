@@ -13,7 +13,7 @@ import {
   Star,
   Activity,
 } from "lucide-react";
-import type { WidgetChordChartData } from "../../../../interfaces/widgets";
+import type { WidgetChordChartData } from "@/interfaces/widgets";
 
 interface MigrationChordStatsProps {
   data: WidgetChordChartData[];

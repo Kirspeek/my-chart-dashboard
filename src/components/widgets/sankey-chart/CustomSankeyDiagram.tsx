@@ -6,7 +6,7 @@ import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "@/hooks/useTheme";
-import type { WidgetSankeyChartData } from "../../../../interfaces/widgets";
+import type { WidgetSankeyChartData } from "@/interfaces/widgets";
 
 interface CustomSankeyDiagramProps {
   data: WidgetSankeyChartData[];

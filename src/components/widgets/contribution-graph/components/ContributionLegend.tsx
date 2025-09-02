@@ -1,5 +1,5 @@
 import React from "react";
-import { ValueRange } from "../../../../../interfaces/charts";
+import { ValueRange } from "@/interfaces/charts";
 
 interface ContributionLegendProps {
   valueRanges: ValueRange[];

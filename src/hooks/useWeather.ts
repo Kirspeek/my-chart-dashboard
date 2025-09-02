@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { weatherCache } from "../lib/weatherCache";
-import { UseWeatherReturn } from "../../interfaces/hooks";
-import { ForecastDay } from "../../interfaces/widgets";
+import { UseWeatherReturn } from "@/interfaces/hooks";
+import { ForecastDay } from "@/interfaces/widgets";
 
 export default function useWeather(city: string): UseWeatherReturn {
   const [forecast, setForecast] = useState<ForecastDay[]>([]);

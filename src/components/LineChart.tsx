@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { LineChartProps } from "../../interfaces/charts";
+import type { LineChartProps } from "@/interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
 import { useTheme } from "@/hooks/useTheme";
 

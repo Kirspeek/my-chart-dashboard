@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { DeviceUsageWidgetProps } from "../../../../interfaces/widgets";
+import { DeviceUsageWidgetProps } from "@/interfaces/widgets";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import DeviceUsageHeader from "./DeviceUsageHeader";

@@ -3,14 +3,14 @@
 import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
-import { WeatherWidgetProps } from "../../../../interfaces/widgets";
+import { WeatherWidgetProps } from "@/interfaces/widgets";
 import { useWeatherLogic } from "@/hooks/useWeatherLogic";
 import WeatherBackgroundMobile from "./WeatherBackgroundMobile";
 import WeatherAnimations from "./WeatherAnimations";
 import WeatherText from "./WeatherText";
 import WeatherStatus from "./WeatherStatus";
 import ForecastDayMobile from "./ForecastDayMobile";
-import type { ForecastDay as ForecastDayType } from "../../../../interfaces/widgets";
+import type { ForecastDay as ForecastDayType } from "@/interfaces/widgets";
 import { useTheme } from "@/hooks/useTheme";
 import "../../../styles/weather.css";
 import "../../../styles/mobile.css";

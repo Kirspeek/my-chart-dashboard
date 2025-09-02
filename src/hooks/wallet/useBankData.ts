@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
-import { BankInfo } from "../../../interfaces/wallet";
+import { BankInfo } from "@/interfaces/wallet";
 import { WalletUtils } from "../../utils";
-import { BANK_CONSTANTS } from "../../../apis";
+import { BANK_CONSTANTS } from "@/apis";
 
 export const useBankData = () => {
   const [bankInfo, setBankInfo] = useState<BankInfo>({ bank: "", scheme: "" });

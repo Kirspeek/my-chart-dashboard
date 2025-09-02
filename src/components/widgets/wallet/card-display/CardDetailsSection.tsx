@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { CardDetailsSectionProps } from "../../../../../interfaces/wallet";
+import { CardDetailsSectionProps } from "@/interfaces/wallet";
 
 export default function CardDetailsSection({
   isEditing,

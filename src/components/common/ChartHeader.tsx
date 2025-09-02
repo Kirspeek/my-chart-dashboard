@@ -1,5 +1,5 @@
 import React from "react";
-import { TimePeriod } from "../../../interfaces/widgets";
+import { TimePeriod } from "@/interfaces/widgets";
 import PeriodSelector from "./PeriodSelector";
 import RefreshButton from "./RefreshButton";
 

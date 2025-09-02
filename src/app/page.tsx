@@ -22,7 +22,7 @@ import {
   BubbleChartWidget,
   EnhancedTimelineWidget,
   WalletWidget,
-  WalletCardWidget,
+  WheelWidget,
   ContributionGraphWidget,
   AggregatedSpendingWidget,
   WorkInProgressWidget,
@@ -30,8 +30,8 @@ import {
 import CalendarWidgetMobile from "@/components/widgets/calendar/CalendarWidgetMobile";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
-import type { UserData } from "../../interfaces/dashboard";
-import type { PerformanceMetricsData } from "../../interfaces/widgets";
+import type { UserData } from "@/interfaces/dashboard";
+import type { PerformanceMetricsData } from "@/interfaces/widgets";
 import { WidgetHeightProvider } from "../context/WidgetHeightContext";
 import { WidgetStateProvider } from "../context/WidgetStateContext";
 import { SearchProvider } from "../context/SearchContext";
@@ -334,7 +334,7 @@ export default function Home() {
                   <div className="mobile-slide">
                     <div className="flex flex-col h-full pt-4">
                       <div className="relative h-full">
-                        <WalletCardWidget
+                        <WheelWidget
                           onOpenSidebar={() => setSidebarOpen(true)}
                           showSidebarButton={true}
                           currentSlide={currentSlide}
@@ -610,7 +610,7 @@ export default function Home() {
                       <WalletWidget />
                     </div>
                     <div className="md:w-full">
-                      <WalletCardWidget />
+                      <WheelWidget />
                     </div>
                     <div className="md:w-full">
                       <AggregatedSpendingWidget />

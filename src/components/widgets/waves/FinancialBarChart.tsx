@@ -2,18 +2,20 @@
 
 import React, { useState, useMemo } from "react";
 import { useTheme } from "../../../hooks/useTheme";
+import { PayHeader } from "../../common";
+import SpendingSection from "../../common/SpendingSection";
 import WavesChart from "./WavesChart";
 import { WaveData } from "./waves-logic";
 import {
-  TrendingUp,
-  TrendingDown,
   AlertTriangle,
   ChevronRight,
-  RefreshCw,
   Activity,
   BarChart3,
   Target,
 } from "lucide-react";
+import WavesHeaderButtons from "./WavesHeaderButtons";
+import SpendingTrend from "../../common/SpendingTrend";
+import WavesWidgetSpendingTitle from "./WavesWidgetSpendingTitle";
 
 interface FinancialBarChartProps {
   data: ExpenseData[];
@@ -142,7 +144,7 @@ export default function FinancialBarChart({
       {
         type: "info",
         message: "Transport costs trending down",
-        icon: TrendingDown,
+        icon: AlertTriangle,
       },
       { type: "success", message: "Utilities within budget", icon: Target },
     ];
@@ -174,122 +176,39 @@ export default function FinancialBarChart({
       className="relative cursor-pointer transition-all duration-300 h-full flex flex-col"
       onClick={handleCardClick}
     >
-      {/* Enhanced Top Section - Card Number and Period Toggle */}
-      <div
-        className="flex items-center justify-between"
-        style={{
-          marginTop: isMobile ? "2rem" : undefined,
-          marginBottom: isMobile ? "1.5rem" : undefined,
-        }}
-      >
-        <div className="flex items-center space-x-3">
-          <div className="text-lg font-mono primary-text">
-            {showCardNumber ? cardNumber || "**** ****" : "All Cards"}
-          </div>
-          <div className="flex gap-1">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowAlerts(!showAlerts);
-              }}
-              className="p-1.5 rounded-lg transition-all duration-200 hover:scale-105"
-              style={{
-                backgroundColor: showAlerts
-                  ? "var(--button-hover-bg)"
-                  : "var(--button-bg)",
-                color: showAlerts ? accent.red : "var(--secondary-text)",
-              }}
-            >
-              <AlertTriangle className="w-4 h-4" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRefresh();
-              }}
-              className={`p-1.5 rounded-lg transition-all duration-200 hover:scale-105 ${
-                isRefreshing ? "animate-spin" : ""
-              }`}
-              style={{
-                backgroundColor: "var(--button-bg)",
-                color: "var(--secondary-text)",
-              }}
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        <div className="flex gap-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedPeriod("Monthly");
-            }}
-            className={`text-xs font-medium transition-colors px-2 py-1 rounded`}
-            style={{
-              backgroundColor:
-                selectedPeriod === "Monthly"
-                  ? "var(--button-hover-bg)"
-                  : "transparent",
-              color:
-                selectedPeriod === "Monthly"
-                  ? "var(--primary-text)"
-                  : "var(--secondary-text)",
-            }}
-          >
-            Monthly
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedPeriod("Annual");
-            }}
-            className={`text-xs font-medium transition-colors px-2 py-1 rounded`}
-            style={{
-              backgroundColor:
-                selectedPeriod === "Annual"
-                  ? "var(--button-hover-bg)"
-                  : "transparent",
-              color:
-                selectedPeriod === "Annual"
-                  ? "var(--primary-text)"
-                  : "var(--secondary-text)",
-            }}
-          >
-            Annual
-          </button>
-        </div>
-      </div>
+      <PayHeader
+        isMobile={isMobile}
+        leftTitle={showCardNumber ? cardNumber || "**** ****" : "All Cards"}
+        leftButtons={
+          <WavesHeaderButtons
+            showAlerts={showAlerts}
+            isRefreshing={isRefreshing}
+            onToggleAlerts={() => setShowAlerts(!showAlerts)}
+            onRefresh={() => handleRefresh()}
+            alertActiveColor={accent.red}
+          />
+        }
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+      />
 
       {/* Enhanced Middle Section - Total Spending Display */}
-      <div className="text-center mb-4">
-        <div className="text-sm secondary-text mb-1">
-          {selectedPeriod === "Monthly"
-            ? "Monthly Spending"
-            : "Annual Spending"}
-        </div>
-        <div className="text-2xl font-bold primary-text font-mono mb-2">
-          {totalSpending}
-        </div>
-
-        {/* Trend Indicator */}
-        <div className="flex items-center justify-center space-x-1 mb-3">
-          {insights.trend === "up" ? (
-            <TrendingUp className="w-4 h-4" style={{ color: accent.teal }} />
-          ) : (
-            <TrendingDown className="w-4 h-4" style={{ color: accent.red }} />
-          )}
-          <span
-            className="text-xs font-medium"
-            style={{
-              color: insights.trend === "up" ? accent.teal : accent.red,
-            }}
-          >
-            {insights.trendPercentage}% from last {selectedPeriod.toLowerCase()}
-          </span>
-        </div>
-      </div>
+      <SpendingSection>
+        <WavesWidgetSpendingTitle
+          title={
+            selectedPeriod === "Monthly"
+              ? "Monthly Spending"
+              : "Annual Spending"
+          }
+          total={totalSpending}
+        />
+        <SpendingTrend
+          direction={insights.trend as "up" | "down"}
+          percentage={insights.trendPercentage}
+          className="mb-3"
+          label={`from last ${selectedPeriod.toLowerCase()}`}
+        />
+      </SpendingSection>
 
       {/* Enhanced Bottom Section - Waves Chart with Wave Selector */}
       <div
