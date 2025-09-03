@@ -18,8 +18,6 @@ import {
 } from "recharts";
 import {
   TrendingUp,
-  TrendingDown,
-  Minus,
   DollarSign,
   BarChart3,
   Target,
@@ -27,14 +25,21 @@ import {
   Activity,
   PieChart,
   LineChart,
-  Sparkles,
-  Eye,
-  MousePointer,
 } from "lucide-react";
 import type { WidgetBarChartData } from "../../../../interfaces/widgets";
 import { useChartLogic } from "@/hooks/useChartLogic";
 import { useTheme } from "@/hooks/useTheme";
-import { Card, StatusBadge, useMobileDetection } from "../../common";
+import {
+  Card,
+  StatusBadge,
+  useMobileDetection,
+  AnalyticsHeader,
+  ToggleButtonGroup,
+  SelectionBanner,
+  MetricStatCard,
+  InsightsPanel,
+} from "../../common";
+import { getTrendIcon } from "@/utils/chartUtils";
 
 interface BarChartContainerProps {
   data: WidgetBarChartData[];
@@ -142,16 +147,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
     };
   });
 
-  const getTrendIcon = (trend: "up" | "down" | "stable") => {
-    switch (trend) {
-      case "up":
-        return <TrendingUp className="w-3 h-3 text-green-500" />;
-      case "down":
-        return <TrendingDown className="w-3 h-3 text-red-500" />;
-      default:
-        return <Minus className="w-3 h-3 text-gray-500" />;
-    }
-  };
+  // unified in chartUtils.getTrendIcon
 
   // Custom tooltip with insights
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
@@ -608,119 +604,36 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      {/* Enhanced Header with Analytics */}
-      <div
-        className="flex items-center justify-between mb-4 p-3 rounded-lg flex-shrink-0 relative overflow-hidden"
-        style={{
-          background: "var(--button-bg)",
-          border: "1px solid var(--button-border)",
-        }}
-      >
-        {/* Animated background effect */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-20 h-20 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 animate-pulse" />
-          <div
-            className="absolute bottom-0 right-0 w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-blue-500 animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
-        </div>
-
-        <div className="relative z-10">
-          <div
-            className="text-sm font-bold primary-text flex items-center"
-            style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-          >
-            <Sparkles
-              className="w-4 h-4 mr-2"
-              style={{ color: colors.accent.blue }}
-            />
-            Quarterly Performance
-          </div>
-          <div className="text-xs secondary-text">Revenue & Sales Analysis</div>
-        </div>
-        <div className="text-right relative z-10">
-          <div
-            className="text-lg font-bold"
-            style={{
-              color: colors.accent.teal,
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-            }}
-          >
-            ${(animatedValues.totalRevenue / 1000).toFixed(0)}k
-          </div>
-          <div className="text-xs secondary-text">Total Revenue</div>
-        </div>
-      </div>
+      <AnalyticsHeader
+        leftTitle="Quarterly Performance"
+        leftSubtitle="Revenue & Sales Analysis"
+        rightValue={`$${(animatedValues.totalRevenue / 1000).toFixed(0)}k`}
+        rightValueLabel="Total Revenue"
+      />
 
       {/* Interactive Quarter Selector */}
       {selectedQuarter && (
-        <div
-          className="mb-3 p-2 rounded-lg flex-shrink-0"
-          style={{
-            background: "var(--button-bg)",
-            border: "1px solid var(--button-border)",
-          }}
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <MousePointer
-                className="w-4 h-4 mr-2"
-                style={{ color: colors.accent.blue }}
-              />
-              <span className="text-sm font-bold primary-text">
-                Selected: {selectedQuarter}
-              </span>
-            </div>
-            <button
-              onClick={() => setSelectedQuarter(null)}
-              className="text-xs px-2 py-1 rounded-full"
-              style={{
-                background: colors.accent.red + "20",
-                color: colors.accent.red,
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
-              }}
-            >
-              Clear
-            </button>
-          </div>
-        </div>
+        <SelectionBanner
+          label="Selected"
+          value={selectedQuarter}
+          onClear={() => setSelectedQuarter(null)}
+        />
       )}
 
       {/* Chart Type Navigation */}
-      <div className="flex items-center justify-center space-x-1 mb-4 flex-shrink-0">
-        {[
+      <ToggleButtonGroup
+        options={[
           { key: "bars", icon: BarChart3, label: "Bars" },
           { key: "lines", icon: LineChart, label: "Lines" },
           { key: "area", icon: Activity, label: "Area" },
           { key: "composed", icon: PieChart, label: "Mixed" },
-        ].map(({ key, icon: Icon, label }) => (
-          <button
-            key={key}
-            onClick={() =>
-              setCurrentView(key as "bars" | "lines" | "area" | "composed")
-            }
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-lg text-base font-medium transition-all duration-200 hover:scale-105 font-mono font-bold ${
-              currentView === key ? "scale-105" : ""
-            }`}
-            style={{
-              background:
-                currentView === key
-                  ? colors.accent.blue + "20"
-                  : "var(--button-bg)",
-              border: `1px solid ${currentView === key ? colors.accent.blue : "var(--button-border)"}`,
-              color:
-                currentView === key ? colors.accent.blue : colors.secondary,
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-            }}
-          >
-            <Icon className="w-5 h-5" />
-            {!isMobile && <span>{label}</span>}
-          </button>
-        ))}
-      </div>
+        ]}
+        selectedKey={currentView}
+        onChange={(key) =>
+          setCurrentView(key as "bars" | "lines" | "area" | "composed")
+        }
+        size="md"
+      />
 
       {/* Chart */}
       <div className="flex-1 min-h-0 mb-4">{renderChart()}</div>
@@ -731,7 +644,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
           {
             icon: DollarSign,
             label: "Total Revenue",
-            value: animatedValues.totalRevenue,
+            value: `$${(animatedValues.totalRevenue / 1000).toFixed(0)}k`,
             growth: animatedValues.growth,
             color: chartColors.revenue,
             subtitle: "Annual Revenue",
@@ -740,7 +653,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
           {
             icon: Target,
             label: "Total Sales",
-            value: animatedValues.totalSales,
+            value: `$${(animatedValues.totalSales / 1000).toFixed(0)}k`,
             growth: 0,
             color: chartColors.sales,
             subtitle: "Annual Sales",
@@ -749,7 +662,7 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
           {
             icon: BarChart3,
             label: "Avg Revenue",
-            value: animatedValues.avgRevenue,
+            value: `$${(animatedValues.avgRevenue / 1000).toFixed(0)}k`,
             growth: 0,
             color: colors.accent.teal,
             subtitle: "Per Quarter",
@@ -758,147 +671,36 @@ export default function BarChartContainer({ data }: BarChartContainerProps) {
           {
             icon: Calendar,
             label: "Growth Rate",
-            value: animatedValues.growth.toFixed(1) + "%",
+            value: `${animatedValues.growth.toFixed(1)}%`,
             growth: animatedValues.growth,
             color: colors.accent.blue,
             subtitle: "Q1 to Q4",
             badge: "Trending",
           },
         ].map((item, index) => (
-          <Card
-            key={index}
-            variant="default"
-            size="sm"
-            hover
-            className="relative overflow-hidden min-h-[70px] group"
-          >
-            {/* Animated background accent */}
-            <div
-              className="absolute top-0 right-0 w-4 h-4 rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity duration-300"
-              style={{ background: item.color }}
-            />
-
-            {/* Badge - moved to top-left to avoid overlap */}
-            <div className="absolute top-1 left-1">
-              <StatusBadge
-                variant="default"
-                size="sm"
-                className="font-mono font-bold"
-                style={{
-                  background: item.color + "20",
-                  color: item.color,
-                  fontSize: "0.6rem",
-                }}
-              >
-                {item.badge}
-              </StatusBadge>
-            </div>
-
-            <div className="relative z-10 h-full flex flex-col justify-between pt-6">
-              <div className="flex items-center justify-between mb-1">
-                <item.icon className="w-3 h-3" style={{ color: item.color }} />
-                <div
-                  className={`text-xs px-1 py-0.5 rounded-full ${
-                    item.growth > 0
-                      ? "bg-green-100 text-green-800"
-                      : item.growth < 0
-                        ? "bg-red-100 text-red-800"
-                        : "bg-gray-100 text-gray-800"
-                  }`}
-                  style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-                >
-                  {item.growth > 0 ? "+" : ""}
-                  {item.growth.toFixed(1)}%
-                </div>
-              </div>
-
-              <div className="text-xs secondary-text">{item.subtitle}</div>
-              <div className="text-sm font-bold primary-text mb-1">
-                {typeof item.value === "number"
-                  ? `$${(item.value / 1000).toFixed(0)}k`
-                  : item.value}
-              </div>
-
-              <div className="flex items-center">
-                {getTrendIcon(
-                  item.growth > 0 ? "up" : item.growth < 0 ? "down" : "stable"
-                )}
-                <span
-                  className="text-xs ml-1"
-                  style={{
-                    color:
-                      item.growth > 0
-                        ? colors.accent.teal
-                        : item.growth < 0
-                          ? colors.accent.red
-                          : colors.secondary,
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                  }}
-                >
-                  {item.growth > 0
-                    ? "Growing"
-                    : item.growth < 0
-                      ? "Declining"
-                      : "Stable"}
-                </span>
-              </div>
-            </div>
-          </Card>
+          <MetricStatCard key={index} {...item} />
         ))}
       </div>
 
       {/* Insights Panel */}
-      <div
-        className="mt-3 p-3 rounded-lg flex-shrink-0"
-        style={{
-          background: "var(--button-bg)",
-          border: "1px solid var(--button-border)",
-        }}
+      <InsightsPanel
+        title="Key Insights"
+        show={showInsights}
+        onToggle={() => setShowInsights(!showInsights)}
       >
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center">
-            <Eye
-              className="w-4 h-4 mr-2"
-              style={{ color: colors.accent.blue }}
-            />
-            <span className="text-sm font-bold primary-text">Key Insights</span>
-          </div>
-          <button
-            onClick={() => setShowInsights(!showInsights)}
-            className="text-xs px-2 py-1 rounded-full transition-all duration-200"
-            style={{
-              background: showInsights
-                ? colors.accent.blue + "20"
-                : "var(--button-bg)",
-              color: showInsights ? colors.accent.blue : colors.secondary,
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-            }}
-          >
-            {showInsights ? "Hide" : "Show"}
-          </button>
+        <div className="text-xs secondary-text">
+          💡 <strong>Best Quarter:</strong> Q3 with $
+          {(Math.max(...data.map((d) => d.revenue)) / 1000).toFixed(0)}k revenue
         </div>
-
-        {showInsights && (
-          <div className="space-y-2">
-            <div className="text-xs secondary-text">
-              💡 <strong>Best Quarter:</strong> Q3 with $
-              {(Math.max(...data.map((d) => d.revenue)) / 1000).toFixed(0)}k
-              revenue
-            </div>
-            <div className="text-xs secondary-text">
-              📈 <strong>Growth Trend:</strong>{" "}
-              {analytics.growth > 0 ? "Positive" : "Negative"} year-over-year
-              growth
-            </div>
-            <div className="text-xs secondary-text">
-              🎯 <strong>Recommendation:</strong> Focus on Q3 strategies for Q4
-              optimization
-            </div>
-          </div>
-        )}
-      </div>
+        <div className="text-xs secondary-text">
+          📈 <strong>Growth Trend:</strong>{" "}
+          {analytics.growth > 0 ? "Positive" : "Negative"} year-over-year growth
+        </div>
+        <div className="text-xs secondary-text">
+          🎯 <strong>Recommendation:</strong> Focus on Q3 strategies for Q4
+          optimization
+        </div>
+      </InsightsPanel>
     </div>
   );
 }

@@ -106,6 +106,8 @@ export default function PerformanceMetricsHeader({
 
       {/* View Navigation */}
       <div className="flex items-center justify-center space-x-1">
+        {/* Reuse common ToggleButtonGroup for consistency */}
+        {/* Inline import avoided to keep header self-contained visually; we still replicate styling here to avoid deep header changes */}
         {viewButtons.map(({ key, icon: Icon, label }) => (
           <button
             key={key}

@@ -1,6 +1,5 @@
 import { CommonComponentProps, ChartDataPoint } from "./base";
 
-// Base chart interfaces
 export interface ChartData {
   name: string;
   value: number;
@@ -190,6 +189,57 @@ export interface ContributionLegendProps {
   colors: {
     secondary: string;
   };
+}
+
+// Line chart (Sales Performance) view props and types
+export interface LineChartMetricsSummary {
+  sales: number;
+  revenue: number;
+  profit: number;
+  salesGrowth: number;
+  revenueGrowth: number;
+  profitGrowth: number;
+}
+
+export interface LineChartAnimatedValues {
+  sales: number;
+  revenue: number;
+  profit: number;
+  growth: number;
+}
+
+export type LineChartTypeKey = "line" | "area" | "composed";
+
+export interface LineChartTooltipProps {
+  active?: boolean;
+  payload?: Array<{ dataKey: string; value: number }>;
+  label?: string;
+}
+
+import type { WidgetLineChartData } from "./widgets";
+
+export interface LineChartContainerProps extends BaseChartProps {
+  data: WidgetLineChartData[];
+}
+
+export interface LineChartChartViewProps {
+  data: WidgetLineChartData[];
+  metrics: LineChartMetricsSummary;
+  animatedValues: LineChartAnimatedValues;
+  currentChartType: LineChartTypeKey;
+  setCurrentChartType: (key: LineChartTypeKey) => void;
+  selectedMonth: string | null;
+  setSelectedMonth: (month: string | null) => void;
+  showInsights: boolean;
+  setShowInsights: (show: boolean) => void;
+}
+
+export interface LineChartMetricsViewProps {
+  data: WidgetLineChartData[];
+}
+
+export interface LineChartTrendsViewProps {
+  metrics: LineChartMetricsSummary;
 }
 
 // Timeline Chart

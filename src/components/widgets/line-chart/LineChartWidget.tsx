@@ -20,7 +20,6 @@ export default function LineChartWidget({
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;
 }) {
-  // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
@@ -49,7 +48,6 @@ export default function LineChartWidget({
       <div className="flex-1 min-h-0 flex flex-col">
         <LineChartContainer data={data} />
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}
