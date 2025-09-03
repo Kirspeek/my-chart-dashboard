@@ -92,3 +92,8 @@ export interface InsightsPanelProps {
 export interface LineChartHeaderProps {
   title: string;
 }
+
+// Bar chart header
+export interface BarChartHeaderProps {
+  title: string;
+}

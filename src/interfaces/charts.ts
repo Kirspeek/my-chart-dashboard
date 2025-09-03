@@ -242,6 +242,46 @@ export interface LineChartTrendsViewProps {
   metrics: LineChartMetricsSummary;
 }
 
+// Bar chart (Quarterly Overview) types and props
+export type BarChartTypeKey = "bars" | "lines" | "area" | "composed";
+
+export interface BarChartTooltipProps {
+  active?: boolean;
+  payload?: Array<{ dataKey: string; value: number }>;
+  label?: string;
+}
+
+export interface BarChartMetricsSummary {
+  totalRevenue: number;
+  totalSales: number;
+  avgRevenue: number;
+  avgSales: number;
+  growth: number;
+}
+
+import type { WidgetBarChartData } from "./widgets";
+
+export interface BarChartContainerProps extends BaseChartProps {
+  data: WidgetBarChartData[];
+}
+
+export interface BarChartChartViewProps {
+  data: WidgetBarChartData[];
+  metrics: BarChartMetricsSummary;
+  animatedValues: {
+    totalRevenue: number;
+    totalSales: number;
+    avgRevenue: number;
+    growth: number;
+  };
+  currentChartType: BarChartTypeKey;
+  setCurrentChartType: (key: BarChartTypeKey) => void;
+  selectedQuarter: string | null;
+  setSelectedQuarter: (q: string | null) => void;
+  showInsights: boolean;
+  setShowInsights: (show: boolean) => void;
+}
+
 // Timeline Chart
 export interface TimelineItem {
   year: string;

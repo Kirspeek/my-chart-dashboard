@@ -5,9 +5,9 @@ import type {
   LineChartContainerProps,
   LineChartTypeKey,
 } from "@/interfaces/charts";
-import LineChartChartView from "./LineChartChartView";
-import LineChartMetricsView from "./LineChartMetricsView";
-import LineChartTrendsView from "./LineChartTrendsView";
+import LineChartChartView from "@/components/widgets/line-chart/LineChartChartView";
+import LineChartMetricsView from "@/components/widgets/line-chart/LineChartMetricsView";
+import LineChartTrendsView from "@/components/widgets/line-chart/LineChartTrendsView";
 import { useLineChartMetrics } from "@/hooks/useLineChartLogic";
 
 export default function LineChartContainer({ data }: LineChartContainerProps) {

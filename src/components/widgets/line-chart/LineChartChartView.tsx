@@ -25,14 +25,14 @@ import {
 } from "lucide-react";
 import { useChartLogic } from "@/hooks/useChartLogic";
 import { useTheme } from "@/hooks/useTheme";
-import { useMobileDetection } from "../../common/useMobileDetection";
+import { useMobileDetection } from "@/components/common";
 import {
   AnalyticsHeader,
   ToggleButtonGroup,
   SelectionBanner,
   MetricStatCard,
   InsightsPanel,
-} from "../../common";
+} from "@/components/common";
 import type {
   LineChartChartViewProps,
   LineChartTooltipProps,

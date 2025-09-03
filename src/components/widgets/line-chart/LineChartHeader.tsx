@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { WidgetTitle } from "../../common";
+import { WidgetTitle } from "@/components/common";
 import type { LineChartHeaderProps } from "@/interfaces/components";
 
 export default function LineChartHeader({ title }: LineChartHeaderProps) {
