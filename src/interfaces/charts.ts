@@ -107,6 +107,99 @@ export interface BubbleChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
+// Bubble Chart (Global Tech Investment) widget props
+export interface CustomBubbleChartProps extends BaseChartProps {
+  data: BubbleChartData[];
+  title?: string;
+  subtitle?: string;
+  isMobile?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+}
+
+// Bubble Chart extracted components
+export interface BubbleChartStats {
+  total: number;
+  avgSize: number;
+  avgGrowth: number;
+  avgMarketCap: number;
+}
+
+export interface BubbleChartControlsProps {
+  categories: string[];
+  selectedCategory: string | null;
+  setSelectedCategory: (cat: string | null) => void;
+  animationSpeed: number;
+  setAnimationSpeed: (v: number) => void;
+  isZoomedOut: boolean;
+  setIsZoomedOut: (v: boolean) => void;
+  getCategoryHex: (category: string) => string;
+  buttonColors: {
+    background: string;
+    selectedBackground: string;
+    border: string;
+    selectedBorder: string;
+    text: string;
+  };
+}
+
+export interface BubbleMetricsPanelProps {
+  stats: BubbleChartStats;
+}
+
+export interface BubbleChartLegendProps {
+  categories: string[];
+  getCategoryHex: (category: string) => string;
+}
+
+// Bubble Scene and tooltip
+export interface BubblePoint3D {
+  x: number;
+  y: number;
+  z: number;
+  size: number;
+  category: string;
+  label?: string;
+}
+
+export type BubbleTooltipData = BubblePoint3D;
+
+export interface BubbleTooltipProps {
+  tooltip: { x: number; y: number; data: BubbleTooltipData } | null;
+  getCategoryHex: (category: string) => string;
+}
+
+export interface BubbleSceneCanvasProps {
+  data: BubblePoint3D[];
+  isZoomedOut: boolean;
+  showParticles: boolean;
+  animationSpeed: number;
+  onHover: (t: { x: number; y: number; data: BubblePoint3D } | null) => void;
+  getCategoryColor: (category: string) => string; // returns css color string
+}
+
+export interface BubbleSceneHandle {
+  resetRotation: () => void;
+}
+
+export interface BubbleHeaderActionsProps {
+  showParticles: boolean;
+  onToggleParticles: () => void;
+  onReset: () => void;
+  isFullscreen: boolean;
+  onToggleFullscreen: () => void;
+}
+
+// Internal enriched bubble item used before projection to scene data
+export interface ThreeDBubbleData extends BubbleChartData {
+  z: number;
+  velocity?: { x: number; y: number; z: number };
+  pulsePhase?: number;
+  selected?: boolean;
+}
+
 // Chord Chart
 export interface ChordChartData {
   from: string;

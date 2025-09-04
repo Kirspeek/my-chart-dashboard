@@ -18,12 +18,10 @@ export default function BubbleChartWidget({
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;
 }) {
-  // Detect mobile to apply full-screen sizing (only for phones, not tablets)
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
       if (typeof window !== "undefined") {
-        // Only apply mobile styling for phones (≤425px), tablets use desktop version
         setIsMobile(window.innerWidth <= 425);
       }
     };
