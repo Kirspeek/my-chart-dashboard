@@ -12,11 +12,7 @@ import {
   Activity,
 } from "lucide-react";
 
-interface MigrationFlowStatsProps {
-  data: Array<{ from: string; to: string; size: number }>;
-  selectedFlow: string | null;
-  isMobile?: boolean;
-}
+import type { MigrationFlowStatsProps } from "@/interfaces/charts";
 
 interface FlowStats {
   totalFlows: number;
@@ -37,7 +33,6 @@ export default function MigrationFlowStats({
   const { colors, colorsTheme } = useTheme();
   const sankeyChartColors = colorsTheme.widgets.sankeyChart;
 
-  // Calculate comprehensive statistics
   const stats: FlowStats = React.useMemo(() => {
     const totalFlows = data.length;
     const totalMigration = data.reduce((sum, flow) => sum + flow.size, 0);
@@ -53,14 +48,12 @@ export default function MigrationFlowStats({
 
     const topFlows = [...data].sort((a, b) => b.size - a.size).slice(0, 5);
 
-    // Calculate continent statistics
     const continentStats: Record<
       string,
       { outgoing: number; incoming: number; net: number }
     > = {};
 
     data.forEach((flow) => {
-      // Initialize if not exists
       if (!continentStats[flow.from]) {
         continentStats[flow.from] = { outgoing: 0, incoming: 0, net: 0 };
       }

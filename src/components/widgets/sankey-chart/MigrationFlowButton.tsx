@@ -3,21 +3,7 @@
 import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
-
-interface MigrationFlowButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  selected?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
-  disabled?: boolean;
-  variant?: "primary" | "secondary" | "accent" | "danger";
-  size?: "sm" | "md" | "lg";
-  icon?: React.ReactNode;
-  tooltip?: string;
-  tooltipTitle?: string;
-  tooltipSubtitle?: string;
-}
+import type { MigrationFlowButtonProps } from "@/interfaces/components";
 
 export default function MigrationFlowButton({
   children,

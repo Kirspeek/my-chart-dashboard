@@ -2,39 +2,21 @@
 
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
-import WidgetBase from "../../common/WidgetBase";
-import SlideNavigation from "../../common/SlideNavigation";
-import { WidgetTitle } from "../../common";
+import {
+  WidgetBase,
+  SlideNavigation,
+  WidgetTitle,
+  useMobileDetection,
+} from "@/components/common";
 import { useTheme } from "@/hooks/useTheme";
-import type { WidgetSankeyChartData } from "@/interfaces/widgets";
 
-interface CustomSankeyDiagramProps {
-  data: WidgetSankeyChartData[];
-  title: string;
-  subtitle?: string;
-  isMobile?: boolean;
-  currentSlide?: number;
-  setCurrentSlide?: (slide: number) => void;
-}
+import type {
+  CustomSankeyDiagramProps,
+  SankeyNode,
+  SankeyLink,
+} from "@/interfaces/charts";
 
-interface SankeyNode {
-  id: string;
-  name: string;
-  value: number;
-  x0?: number;
-  x1?: number;
-  y0?: number;
-  y1?: number;
-  column: number;
-}
-
-interface SankeyLink {
-  source: string | SankeyNode;
-  target: string | SankeyNode;
-  value: number;
-  width?: number;
-  flowKey?: string; // Added for tracking complete flow paths
-}
+// SankeyNode and SankeyLink are now imported from central interfaces
 
 export default function CustomSankeyDiagram({
   data,
@@ -61,37 +43,21 @@ export default function CustomSankeyDiagram({
     value: number;
   } | null>(null);
 
-  // Detect mobile to apply full-screen sizing
-  const [isMobile, setIsMobile] = React.useState(false);
-  React.useEffect(() => {
-    const check = () => {
-      if (typeof window !== "undefined") {
-        setIsMobile(window.innerWidth <= 425);
-      }
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const isMobile = useMobileDetection();
 
-  // Extract unique source and target nodes
   const sourceNodes = useMemo(() => new Set(data.map((d) => d.from)), [data]);
   const targetNodes = useMemo(() => new Set(data.map((d) => d.to)), [data]);
 
-  // Create nodes with column positioning
   const sankeyNodes: SankeyNode[] = useMemo(
     () => [
-      // Column 0: Source continents
       ...Array.from(sourceNodes).map((name) => ({
         id: name,
         name,
         value: 0,
         column: 0,
       })),
-      // Column 1: Intermediate categories (Major Flows, Minor Flows)
       { id: "Major Flows", name: "Major Flows", value: 0, column: 1 },
       { id: "Minor Flows", name: "Minor Flows", value: 0, column: 1 },
-      // Column 2: Target continents
       ...Array.from(targetNodes).map((name) => ({
         id: name,
         name,
@@ -102,16 +68,13 @@ export default function CustomSankeyDiagram({
     [sourceNodes, targetNodes]
   );
 
-  // Calculate node values
   useEffect(() => {
     sankeyNodes.forEach((node) => {
       if (node.column === 0) {
-        // Source nodes - sum outgoing flows
         node.value = data
           .filter((d) => d.from === node.name)
           .reduce((sum, d) => sum + d.size, 0);
       } else if (node.column === 1) {
-        // Intermediate nodes - categorize flows
         if (node.name === "Major Flows") {
           node.value = data
             .filter((d) => d.size > 1.0)
@@ -122,7 +85,6 @@ export default function CustomSankeyDiagram({
             .reduce((sum, d) => sum + d.size, 0);
         }
       } else {
-        // Target nodes - sum incoming flows
         node.value = data
           .filter((d) => d.to === node.name)
           .reduce((sum, d) => sum + d.size, 0);
@@ -131,7 +93,6 @@ export default function CustomSankeyDiagram({
   }, [data, sankeyNodes]);
 
   useEffect(() => {
-    // Get the actual container dimensions
     const container = ref.current?.parentElement;
     if (!container) return;
 
@@ -150,7 +111,7 @@ export default function CustomSankeyDiagram({
         .attr("viewBox", [0, 0, width, height].join(" "))
         .attr("preserveAspectRatio", "xMidYMid meet")
         .style("display", "block")
-        .style("margin", "0 auto"); // Center the SVG
+        .style("margin", "0 auto");
       svg.selectAll("*").remove();
 
       // Multi-column Sankey layout
@@ -238,7 +199,6 @@ export default function CustomSankeyDiagram({
         }
       });
 
-      // Color scale - needed for flow strings
       const colorScale = d3.scaleOrdinal([
         accent.blue,
         accent.yellow,
@@ -246,13 +206,11 @@ export default function CustomSankeyDiagram({
         accent.red,
       ]);
 
-      // Helper function to check if a link should be highlighted
       const shouldHighlight = (link: SankeyLink) => {
         if (!hoveredFlow) return false;
         return link.flowKey === hoveredFlow;
       };
 
-      // Draw links (curved paths) - enhanced styling
       svg
         .append("g")
         .selectAll("path")
@@ -296,7 +254,6 @@ export default function CustomSankeyDiagram({
           setTooltip(null);
         });
 
-      // Draw nodes with enhanced styling
       svg
         .append("g")
         .selectAll("rect")
@@ -312,7 +269,6 @@ export default function CustomSankeyDiagram({
         .attr("cursor", "pointer")
         .style("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.2))");
 
-      // Add node labels with enhanced styling
       svg
         .append("g")
         .selectAll("text")
@@ -331,7 +287,7 @@ export default function CustomSankeyDiagram({
         .style("text-shadow", "0 1px 2px rgba(255,255,255,0.8)");
     };
 
-    updateChart(); // Initial call
+    updateChart();
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -363,7 +319,7 @@ export default function CustomSankeyDiagram({
       <div
         className="w-full h-full flex flex-col"
         style={{
-          padding: isMobile ? "0 1rem 1rem 1rem" : "1.5rem", // Remove top padding for mobile
+          padding: isMobile ? "0 1rem 1rem 1rem" : "1.5rem",
         }}
       >
         <WidgetTitle
@@ -380,11 +336,11 @@ export default function CustomSankeyDiagram({
             height: isMobile ? "35vh" : "350px",
             maxWidth: "800px",
             maxHeight: "400px",
-            margin: "0 auto", // Center the container horizontally
+            margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            overflow: "hidden", // Ensure content doesn't overflow
+            overflow: "hidden",
           }}
         >
           <svg
@@ -441,7 +397,6 @@ export default function CustomSankeyDiagram({
           )}
         </div>
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

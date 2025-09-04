@@ -3,7 +3,7 @@
 import React from "react";
 import EnhancedSankeyDiagram from "./EnhancedSankeyDiagram";
 import type { SankeyChartWidgetProps } from "@/interfaces/widgets";
-import { useMobileDetection } from "../../common";
+import { useMobileDetection } from "@/components/common";
 
 export default function SankeyChartWidget({
   data,

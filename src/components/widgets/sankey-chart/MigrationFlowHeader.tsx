@@ -1,18 +1,10 @@
 "use client";
 
 import React from "react";
-import { WidgetTitle } from "../../common";
+import { WidgetTitle } from "@/components/common";
 import { useTheme } from "@/hooks/useTheme";
 import { Globe, TrendingUp, Users, MapPin } from "lucide-react";
-
-interface MigrationFlowHeaderProps {
-  title: string;
-  subtitle?: string;
-  isMobile?: boolean;
-  totalFlows?: number;
-  totalMigration?: number;
-  selectedFlow?: string | null;
-}
+import type { MigrationFlowHeaderProps } from "@/interfaces/charts";
 
 export default function MigrationFlowHeader({
   title,

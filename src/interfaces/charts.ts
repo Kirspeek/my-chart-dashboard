@@ -131,6 +131,69 @@ export interface SankeyChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
+// Sankey/Global Migration Flows types
+export type SankeyViewMode = "flow" | "stats" | "trends";
+export type SankeyAnimationSpeed = "slow" | "normal" | "fast";
+
+import type { WidgetSankeyChartData } from "./widgets";
+
+export interface EnhancedSankeyDiagramProps {
+  data: WidgetSankeyChartData[];
+  title: string;
+  subtitle?: string;
+  isMobile?: boolean;
+  selectedFlow: string | null;
+  setSelectedFlow: (flow: string | null) => void;
+  viewMode: SankeyViewMode;
+  setViewMode: (mode: SankeyViewMode) => void;
+  animationSpeed: SankeyAnimationSpeed;
+  setAnimationSpeed: (speed: SankeyAnimationSpeed) => void;
+  showDetails: boolean;
+  setShowDetails: (show: boolean) => void;
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+}
+
+export interface SankeyNode {
+  id: string;
+  name: string;
+  value: number;
+  x0?: number;
+  x1?: number;
+  y0?: number;
+  y1?: number;
+  column: number;
+}
+
+export interface SankeyLink {
+  source: string | SankeyNode;
+  target: string | SankeyNode;
+  value: number;
+  width?: number;
+  flowKey?: string;
+}
+
+export interface SankeyFlowCanvasProps {
+  data: WidgetSankeyChartData[];
+  isMobile: boolean;
+  selectedFlow: string | null;
+  setSelectedFlow: (flow: string | null) => void;
+  isPlaying: boolean;
+  animationFrame: number;
+}
+
+// Custom Sankey props (compact variant used by alternative diagram)
+export interface CustomSankeyDiagramProps {
+  data: WidgetSankeyChartData[];
+  title: string;
+  subtitle?: string;
+  isMobile?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+}
+
 // Contribution Graph
 export interface ContributionData {
   date: string;
@@ -189,6 +252,41 @@ export interface ContributionLegendProps {
   colors: {
     secondary: string;
   };
+}
+
+// Sankey headers/controls/stats component props
+export interface MigrationFlowHeaderProps {
+  title: string;
+  subtitle?: string;
+  isMobile?: boolean;
+  totalFlows?: number;
+  totalMigration?: number;
+  selectedFlow?: string | null;
+}
+
+export interface MigrationFlowControlsProps {
+  viewMode: SankeyViewMode;
+  setViewMode: (mode: SankeyViewMode) => void;
+  animationSpeed: SankeyAnimationSpeed;
+  setAnimationSpeed: (speed: SankeyAnimationSpeed) => void;
+  showDetails: boolean;
+  setShowDetails: (show: boolean) => void;
+  isPlaying: boolean;
+  setIsPlaying: (playing: boolean) => void;
+  onReset: () => void;
+  isMobile?: boolean;
+}
+
+export interface MigrationFlowStatsProps {
+  data: Array<{ from: string; to: string; size: number }>;
+  selectedFlow: string | null;
+  isMobile?: boolean;
+}
+
+export interface MigrationFlowTrendsProps {
+  data: Array<{ from: string; to: string; size: number }>;
+  isMobile?: boolean;
+  isPlaying?: boolean;
 }
 
 // Line chart (Sales Performance) view props and types

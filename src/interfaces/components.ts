@@ -107,3 +107,19 @@ export interface RecentUsersHeaderProps {
 export interface DeviceUsageHeaderProps {
   title: string;
 }
+
+// Migration flow button (Sankey & related controls)
+export interface MigrationFlowButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  selected?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  disabled?: boolean;
+  variant?: "primary" | "secondary" | "accent" | "danger";
+  size?: "sm" | "md" | "lg";
+  icon?: React.ReactNode;
+  tooltip?: string;
+  tooltipTitle?: string;
+  tooltipSubtitle?: string;
+}

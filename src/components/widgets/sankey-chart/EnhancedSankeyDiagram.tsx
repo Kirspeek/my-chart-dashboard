@@ -2,51 +2,19 @@
 
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import * as d3 from "d3";
-import WidgetBase from "../../common/WidgetBase";
-import SlideNavigation from "../../common/SlideNavigation";
+import { WidgetBase, SlideNavigation } from "@/components/common";
 import MigrationFlowHeader from "./MigrationFlowHeader";
 import MigrationFlowControls from "./MigrationFlowControls";
 import MigrationFlowStats from "./MigrationFlowStats";
+import MigrationFlowTrends from "./MigrationFlowTrends";
 import { useTheme } from "@/hooks/useTheme";
-import type { WidgetSankeyChartData } from "@/interfaces/widgets";
-
-interface EnhancedSankeyDiagramProps {
-  data: WidgetSankeyChartData[];
-  title: string;
-  subtitle?: string;
-  isMobile?: boolean;
-  selectedFlow: string | null;
-  setSelectedFlow: (flow: string | null) => void;
-  viewMode: "flow" | "stats" | "trends";
-  setViewMode: (mode: "flow" | "stats" | "trends") => void;
-  animationSpeed: "slow" | "normal" | "fast";
-  setAnimationSpeed: (speed: "slow" | "normal" | "fast") => void;
-  showDetails: boolean;
-  setShowDetails: (show: boolean) => void;
-  onOpenSidebar?: () => void;
-  showSidebarButton?: boolean;
-  currentSlide?: number;
-  setCurrentSlide?: (slide: number) => void;
-}
-
-interface SankeyNode {
-  id: string;
-  name: string;
-  value: number;
-  x0?: number;
-  x1?: number;
-  y0?: number;
-  y1?: number;
-  column: number;
-}
-
-interface SankeyLink {
-  source: string | SankeyNode;
-  target: string | SankeyNode;
-  value: number;
-  width?: number;
-  flowKey?: string;
-}
+import { useSankeyAnimation } from "@/hooks/useSankeyAnimation";
+import { computeFlowOpacity, assignFlowColors } from "@/utils/sankeyUtils";
+import type {
+  EnhancedSankeyDiagramProps,
+  SankeyNode,
+  SankeyLink,
+} from "@/interfaces/charts";
 
 export default function EnhancedSankeyDiagram({
   data,
@@ -78,13 +46,14 @@ export default function EnhancedSankeyDiagram({
     value: number;
   } | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [animationFrame, setAnimationFrame] = useState(0);
+  const { animationFrame, setAnimationFrame } = useSankeyAnimation(
+    isPlaying,
+    animationSpeed
+  );
 
-  // Calculate totals for header
   const totalFlows = data.length;
   const totalMigration = data.reduce((sum, flow) => sum + flow.size, 0);
 
-  // Extract nodes and create Sankey structure
   const sourceNodes = useMemo(() => new Set(data.map((d) => d.from)), [data]);
   const targetNodes = useMemo(() => new Set(data.map((d) => d.to)), [data]);
 
@@ -108,7 +77,6 @@ export default function EnhancedSankeyDiagram({
     [sourceNodes, targetNodes]
   );
 
-  // Calculate node values
   useEffect(() => {
     sankeyNodes.forEach((node) => {
       if (node.column === 0) {
@@ -133,17 +101,6 @@ export default function EnhancedSankeyDiagram({
     });
   }, [data, sankeyNodes]);
 
-  // Animation loop
-  useEffect(() => {
-    if (!isPlaying) return;
-    const speedMultiplier = { slow: 0.5, normal: 1, fast: 2 }[animationSpeed];
-    const interval = setInterval(() => {
-      setAnimationFrame((prev) => (prev + 1) % 360);
-    }, 50 / speedMultiplier);
-    return () => clearInterval(interval);
-  }, [isPlaying, animationSpeed]);
-
-  // Reset function
   const handleReset = () => {
     setSelectedFlow(null);
     setHoveredFlow(null);
@@ -151,7 +108,6 @@ export default function EnhancedSankeyDiagram({
     setAnimationFrame(0);
   };
 
-  // D3 Chart rendering
   useEffect(() => {
     const container = ref.current?.parentElement;
     if (!container || viewMode !== "flow") return;
@@ -178,7 +134,6 @@ export default function EnhancedSankeyDiagram({
         });
       svg.selectAll("*").remove();
 
-      // Add subtle background pattern
       const bgDefs = svg.append("defs");
       const pattern = bgDefs
         .append("pattern")
@@ -194,14 +149,12 @@ export default function EnhancedSankeyDiagram({
         .attr("r", "1")
         .attr("fill", isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)");
 
-      // Add background
       svg
         .append("rect")
         .attr("width", width)
         .attr("height", height)
         .attr("fill", sankeyChartColors.background.pattern);
 
-      // Layout nodes
       const nodeWidth = isMobile ? 1 : 2;
       const columnWidth =
         (width - margin.left - margin.right - nodeWidth * 3) / 2;
@@ -216,13 +169,11 @@ export default function EnhancedSankeyDiagram({
           node.x0 = x;
           node.x1 = x + nodeWidth;
           node.y0 = margin.top + i * nodeHeight;
-          // Increase height for side dividers (column 0 and 2)
           const heightMultiplier = node.column === 1 ? 0.6 : 1.5;
           node.y1 = node.y0 + nodeHeight * heightMultiplier;
         });
       });
 
-      // Create links
       const sankeyLinksData: SankeyLink[] = [];
       const flowPaths = new Map<
         string,
@@ -287,26 +238,28 @@ export default function EnhancedSankeyDiagram({
         }
       });
 
-      // Theme accent color palette with reduced opacity - ensure same flow has same color
-      const flowColorMap = new Map<string, string>();
       const flowColors = [
-        `${colors.accent.blue}60`, // Blue with 60% opacity
-        `${colors.accent.teal}60`, // Teal with 60% opacity
-        `${colors.accent.yellow}60`, // Yellow with 60% opacity
-        `${colors.accent.red}60`, // Red with 60% opacity
+        `${colors.accent.blue}60`,
+        `${colors.accent.teal}60`,
+        `${colors.accent.yellow}60`,
+        `${colors.accent.red}60`,
       ];
-
-      // Assign colors to flows consistently
-      data.forEach((link, index) => {
-        const flowKey = `${link.from}→${link.to}`;
-        if (!flowColorMap.has(flowKey)) {
-          flowColorMap.set(flowKey, flowColors[index % flowColors.length]);
-        }
-      });
+      const flowKeys = data.map((l) => `${l.from}→${l.to}`);
+      const flowColorMap = assignFlowColors(flowKeys, flowColors);
 
       const getFlowColor = (flowKey: string) => {
         return flowColorMap.get(flowKey) || `${colors.accent.blue}60`;
       };
+
+      const getFlowOpacity = (link: SankeyLink) =>
+        computeFlowOpacity({
+          isPlaying,
+          hoveredFlow,
+          selectedFlow,
+          currentFlowKey: link.flowKey,
+          flowIndex: sankeyLinksData.indexOf(link),
+          animationFrame,
+        });
 
       const shouldHighlight = (link: SankeyLink) => {
         if (selectedFlow) return link.flowKey === selectedFlow;
@@ -314,21 +267,8 @@ export default function EnhancedSankeyDiagram({
         return false;
       };
 
-      const getFlowOpacity = (link: SankeyLink) => {
-        if (shouldHighlight(link)) return 1.0;
-        if (hoveredFlow && hoveredFlow !== link.flowKey) return 0.4;
-        if (isPlaying) {
-          const flowIndex = sankeyLinksData.indexOf(link);
-          const phase = (animationFrame + flowIndex * 30) % 360;
-          return 0.5 + 0.2 * Math.sin((phase * Math.PI) / 180);
-        }
-        return 0.6;
-      };
-
-      // Create gradient definitions
       const defs = svg.append("defs");
 
-      // Flow gradients
       sankeyLinksData.forEach((link, i) => {
         const gradientId = `flowGradient${i}`;
         const gradient = defs
@@ -354,7 +294,6 @@ export default function EnhancedSankeyDiagram({
           .attr("stop-opacity", 0.8);
       });
 
-      // Draw links with enhanced styling
       svg
         .append("g")
         .selectAll("path")
@@ -437,7 +376,6 @@ export default function EnhancedSankeyDiagram({
           .attr("stop-opacity", 0.9);
       });
 
-      // Draw nodes with enhanced styling
       svg
         .append("g")
         .selectAll("rect")
@@ -466,7 +404,6 @@ export default function EnhancedSankeyDiagram({
             .style("stroke-width", "2");
         });
 
-      // Add labels with enhanced styling
       svg
         .append("g")
         .selectAll("text")
@@ -523,6 +460,13 @@ export default function EnhancedSankeyDiagram({
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}
     >
+      {isPlaying && (
+        <style>{`
+          @keyframes flow-dash { to { stroke-dashoffset: -28; } }
+          .sankey-flow-animate { stroke-dasharray: 12 10; animation: flow-dash 1.2s linear infinite; stroke-linecap: round; }
+          @media (prefers-reduced-motion: reduce) { .sankey-flow-animate { animation: none; } }
+        `}</style>
+      )}
       <div
         className="w-full h-full flex flex-col"
         style={{
@@ -639,37 +583,12 @@ export default function EnhancedSankeyDiagram({
           )}
 
           {viewMode === "trends" && (
-            <div
-              className="h-full flex items-center justify-center"
-              style={{
-                background: "var(--button-bg)",
-                border: "1px solid var(--button-border)",
-                borderRadius: "1rem",
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              <div className="text-center">
-                <div
-                  className="text-lg font-bold mb-2"
-                  style={{
-                    color: colors.primary,
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                  }}
-                >
-                  Trends Analysis
-                </div>
-                <div
-                  className="text-sm"
-                  style={{
-                    color: colors.secondary,
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 600,
-                  }}
-                >
-                  Coming soon...
-                </div>
-              </div>
+            <div className="h-full">
+              <MigrationFlowTrends
+                data={data}
+                isMobile={isMobile}
+                isPlaying={isPlaying}
+              />
             </div>
           )}
         </div>

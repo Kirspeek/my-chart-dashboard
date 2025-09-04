@@ -14,18 +14,7 @@ import {
 } from "lucide-react";
 import MigrationFlowButton from "./MigrationFlowButton";
 
-interface MigrationFlowControlsProps {
-  viewMode: "flow" | "stats" | "trends";
-  setViewMode: (mode: "flow" | "stats" | "trends") => void;
-  animationSpeed: "slow" | "normal" | "fast";
-  setAnimationSpeed: (speed: "slow" | "normal" | "fast") => void;
-  showDetails: boolean;
-  setShowDetails: (show: boolean) => void;
-  isPlaying: boolean;
-  setIsPlaying: (playing: boolean) => void;
-  onReset: () => void;
-  isMobile?: boolean;
-}
+import type { MigrationFlowControlsProps } from "@/interfaces/charts";
 
 export default function MigrationFlowControls({
   viewMode,
