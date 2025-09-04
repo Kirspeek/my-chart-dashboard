@@ -15,19 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import MigrationFlowButton from "../sankey-chart/MigrationFlowButton";
-
-interface MigrationChordControlsProps {
-  viewMode: "flow" | "stats" | "trends";
-  setViewMode: (mode: "flow" | "stats" | "trends") => void;
-  animationSpeed: "slow" | "normal" | "fast";
-  setAnimationSpeed: (speed: "slow" | "normal" | "fast") => void;
-  showDetails: boolean;
-  setShowDetails: (show: boolean) => void;
-  isPlaying: boolean;
-  setIsPlaying: (playing: boolean) => void;
-  onReset: () => void;
-  isMobile?: boolean;
-}
+import type { MigrationChordControlsProps } from "@/interfaces/charts";
 
 export default function MigrationChordControls({
   viewMode,
@@ -73,7 +61,6 @@ export default function MigrationChordControls({
 
   return (
     <div className="mb-4">
-      {/* View Mode Selector */}
       <div className="flex items-center justify-center space-x-1 mb-3">
         {viewModes.map((mode) => {
           const Icon = mode.icon;
@@ -96,11 +83,8 @@ export default function MigrationChordControls({
         })}
       </div>
 
-      {/* Control Panel */}
       <div className="flex items-center justify-between">
-        {/* Animation Controls */}
         <div className="flex items-center space-x-2">
-          {/* Play/Pause Button */}
           <button
             onClick={() => setIsPlaying(!isPlaying)}
             className="relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
@@ -153,7 +137,6 @@ export default function MigrationChordControls({
             })}
           </div>
 
-          {/* Reset Button */}
           <button
             onClick={onReset}
             className="relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"

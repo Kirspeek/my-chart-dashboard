@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from "react";
 import * as d3 from "d3";
-import WidgetBase from "../../common/WidgetBase";
+import { WidgetBase } from "@/components/common";
 import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "@/hooks/useTheme";
@@ -16,28 +16,9 @@ import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
 import { ArrowRight, Users, TrendingUp } from "lucide-react";
 import MigrationChordControls from "./MigrationChordControls";
 import MigrationChordStats from "./MigrationChordStats";
-import type { WidgetChordChartData } from "@/interfaces/widgets";
+import MigrationChordTrends from "./MigrationChordTrends";
 
-interface EnhancedChordDiagramProps {
-  data: WidgetChordChartData[];
-  title: string;
-  subtitle?: string;
-  isMobile?: boolean;
-  selectedFlow?: string | null;
-  setSelectedFlow?: (flow: string | null) => void;
-  viewMode?: "flow" | "stats" | "trends";
-  setViewMode?: (mode: "flow" | "stats" | "trends") => void;
-  animationSpeed?: "slow" | "normal" | "fast";
-  setAnimationSpeed?: (speed: "slow" | "normal" | "fast") => void;
-  showDetails?: boolean;
-  setShowDetails?: (show: boolean) => void;
-  onOpenSidebar?: () => void;
-  showSidebarButton?: boolean;
-  currentSlide?: number;
-  setCurrentSlide?: (slide: number) => void;
-  totalFlows?: number;
-  totalMigration?: number;
-}
+import type { EnhancedChordDiagramProps } from "@/interfaces/charts";
 
 const nodeOrder = ["Asia", "Europe", "Americas", "Africa", "Oceania"];
 
@@ -68,14 +49,13 @@ export default function EnhancedChordDiagram({
 
   const flowColorMap = useMemo(() => {
     const flowColors = [
-      `${colors.accent.blue}60`, // Blue with 60% opacity
-      `${colors.accent.teal}60`, // Teal with 60% opacity
-      `${colors.accent.yellow}60`, // Yellow with 60% opacity
-      `${colors.accent.red}60`, // Red with 60% opacity
+      `${colors.accent.blue}60`,
+      `${colors.accent.teal}60`,
+      `${colors.accent.yellow}60`,
+      `${colors.accent.red}60`,
     ];
 
     const map = new Map<string, string>();
-    // Assign colors to flows consistently
     data.forEach((link, index) => {
       const flowKey = `${link.from}→${link.to}`;
       if (!map.has(flowKey)) {
@@ -111,7 +91,6 @@ export default function EnhancedChordDiagram({
     if (i !== -1 && j !== -1) matrix[i][j] = size;
   });
 
-  // Animation loop
   useEffect(() => {
     if (!isPlaying) return;
     const speedMultiplier = { slow: 0.5, normal: 1, fast: 2 }[animationSpeed];
@@ -121,7 +100,6 @@ export default function EnhancedChordDiagram({
     return () => clearInterval(interval);
   }, [isPlaying, animationSpeed]);
 
-  // Reset function
   const handleReset = () => {
     setSelectedFlow?.(null);
     setHoveredRibbon(null);
@@ -130,7 +108,6 @@ export default function EnhancedChordDiagram({
   };
 
   useEffect(() => {
-    // Get the actual container dimensions
     const container = ref.current?.parentElement;
     if (!container || viewMode !== "flow") return;
 
@@ -160,7 +137,6 @@ export default function EnhancedChordDiagram({
         });
       svg.selectAll("*").remove();
 
-      // Add subtle background pattern
       const bgDefs = svg.append("defs");
       const pattern = bgDefs
         .append("pattern")
@@ -176,7 +152,6 @@ export default function EnhancedChordDiagram({
         .attr("r", "1")
         .attr("fill", isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)");
 
-      // Add background
       svg
         .append("rect")
         .attr("width", width)
@@ -194,7 +169,6 @@ export default function EnhancedChordDiagram({
         .ribbon<d3.Chord, d3.ChordSubgroup>()
         .radius(innerRadius);
 
-      // Draw groups (arcs) with enhanced styling
       svg
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`)
@@ -221,7 +195,6 @@ export default function EnhancedChordDiagram({
             .style("stroke-width", "1");
         });
 
-      // Draw ribbons (flows) with enhanced styling
       svg
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`)
@@ -256,7 +229,6 @@ export default function EnhancedChordDiagram({
           const sourceName = nodeOrder[d.source.index];
           const targetName = nodeOrder[d.target.index];
 
-          // Show global tooltip
           const tooltipHandlers = createTooltipHandlers(
             `${sourceName} - ${targetName}`
           );
@@ -274,7 +246,6 @@ export default function EnhancedChordDiagram({
           setSelectedFlow?.(flowKey);
         });
 
-      // Add labels with enhanced styling
       svg
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`)
@@ -307,7 +278,7 @@ export default function EnhancedChordDiagram({
         });
     };
 
-    updateChart(); // Initial call
+    updateChart();
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -326,6 +297,7 @@ export default function EnhancedChordDiagram({
     data,
     accent,
     colors,
+    chordChartColors.background.pattern,
     hoveredRibbon,
     isPlaying,
     animationFrame,
@@ -364,9 +336,7 @@ export default function EnhancedChordDiagram({
           size="md"
         />
 
-        {/* Compact Stats Cards */}
         <div className="grid grid-cols-2 gap-2 mb-3">
-          {/* Total Flows Card */}
           <div
             className="relative p-3 rounded-lg overflow-hidden"
             style={{
@@ -398,7 +368,6 @@ export default function EnhancedChordDiagram({
             </div>
           </div>
 
-          {/* Total Migration Card */}
           <div
             className="relative p-3 rounded-lg overflow-hidden"
             style={{
@@ -430,8 +399,6 @@ export default function EnhancedChordDiagram({
             </div>
           </div>
         </div>
-
-        {/* Selected Flow Display */}
         {selectedFlow && (
           <div
             className="p-2 rounded-lg border border-dashed mb-3"
@@ -507,18 +474,12 @@ export default function EnhancedChordDiagram({
           )}
 
           {viewMode === "trends" && (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <div className="text-lg font-bold mb-2">Migration Trends</div>
-                <div className="text-sm text-gray-500">
-                  Trend analysis coming soon...
-                </div>
-              </div>
+            <div className="h-full overflow-y-auto">
+              <MigrationChordTrends data={data} />
             </div>
           )}
         </div>
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

@@ -1,25 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
-import {
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  Globe,
-  Users,
-  ArrowRight,
-  Star,
-  Activity,
-} from "lucide-react";
-import type { WidgetChordChartData } from "@/interfaces/widgets";
-
-interface MigrationChordStatsProps {
-  data: WidgetChordChartData[];
-  selectedFlow?: string | null;
-  setSelectedFlow?: (flow: string | null) => void;
-}
+import { TrendingUp } from "lucide-react";
+import type { MigrationChordStatsProps } from "@/interfaces/charts";
 
 export default function MigrationChordStats({
   data,
@@ -29,244 +14,198 @@ export default function MigrationChordStats({
   const { colors } = useTheme();
   const { createTooltipHandlers } = useGlobalTooltip();
 
-  // Calculate statistics
-  const totalFlows = data.length;
-  const totalMigration = data.reduce((sum, flow) => sum + flow.size, 0);
-  const avgMigration = totalMigration / totalFlows;
-
-  // Get top flows
-  const topFlows = [...data].sort((a, b) => b.size - a.size).slice(0, 5);
-
-  // Calculate net flows by continent
-  const continentFlows = data.reduce(
-    (acc, flow) => {
-      acc[flow.from] = (acc[flow.from] || 0) - flow.size;
-      acc[flow.to] = (acc[flow.to] || 0) + flow.size;
-      return acc;
-    },
-    {} as Record<string, number>
+  const topFlows = useMemo(
+    () => [...data].sort((a, b) => b.size - a.size).slice(0, 5),
+    [data]
   );
 
-  const netFlows = Object.entries(continentFlows)
-    .map(([continent, net]) => ({ continent, net }))
-    .sort((a, b) => Math.abs(b.net) - Math.abs(a.net));
+  const { outgoingShare, incomingShare, netFlows } = useMemo(() => {
+    const continents = new Set<string>();
+    data.forEach((f) => {
+      continents.add(f.from);
+      continents.add(f.to);
+    });
+    const outgoing: Record<string, number> = {};
+    const incoming: Record<string, number> = {};
+    data.forEach((f) => {
+      outgoing[f.from] = (outgoing[f.from] || 0) + f.size;
+      incoming[f.to] = (incoming[f.to] || 0) + f.size;
+    });
+    const outTotal = Object.values(outgoing).reduce((a, b) => a + b, 0) || 1;
+    const inTotal = Object.values(incoming).reduce((a, b) => a + b, 0) || 1;
+    const outgoingShare = Array.from(continents).map((c) => ({
+      key: c,
+      value: (outgoing[c] || 0) / outTotal,
+    }));
+    const incomingShare = Array.from(continents).map((c) => ({
+      key: c,
+      value: (incoming[c] || 0) / inTotal,
+    }));
+    const net: Record<string, number> = {};
+    Array.from(continents).forEach((c) => {
+      net[c] = (incoming[c] || 0) - (outgoing[c] || 0);
+    });
+    const netFlows = Object.entries(net)
+      .map(([continent, net]) => ({ continent, net }))
+      .sort((a, b) => Math.abs(b.net) - Math.abs(a.net));
+    return { outgoingShare, incomingShare, netFlows };
+  }, [data]);
 
-  return (
-    <div className="space-y-6">
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Total Migration */}
-        <div
-          className="relative p-6 rounded-2xl overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, ${colors.accent.blue}15, ${colors.accent.blue}05)`,
-            border: `1px solid ${colors.accent.blue}25`,
-          }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div
-              className="p-3 rounded-xl"
-              style={{ backgroundColor: `${colors.accent.blue}20` }}
-            >
-              <Globe size={20} style={{ color: colors.accent.blue }} />
-            </div>
-            <div
-              className="w-3 h-3 rounded-full animate-pulse"
-              style={{ backgroundColor: colors.accent.blue }}
-            />
-          </div>
-          <h3
-            className="text-2xl font-bold mb-1"
-            style={{ color: colors.primary }}
-          >
-            {totalMigration.toFixed(1)}M
-          </h3>
-          <p
-            className="text-sm font-medium"
-            style={{ color: colors.secondary }}
-          >
-            Total Migration
-          </p>
-          {/* Decorative elements */}
-          <div
-            className="absolute -top-4 -right-4 w-16 h-16 rounded-full opacity-10"
-            style={{ backgroundColor: colors.accent.blue }}
-          />
-        </div>
+  const palette = [
+    colors.accent.blue,
+    colors.accent.teal,
+    colors.accent.yellow,
+    colors.accent.red,
+    "#8b5cf6",
+  ];
 
-        {/* Average Flow */}
-        <div
-          className="relative p-6 rounded-2xl overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, ${colors.accent.teal}15, ${colors.accent.teal}05)`,
-            border: `1px solid ${colors.accent.teal}25`,
-          }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div
-              className="p-3 rounded-xl"
-              style={{ backgroundColor: `${colors.accent.teal}20` }}
-            >
-              <Activity size={20} style={{ color: colors.accent.teal }} />
-            </div>
-            <div
-              className="w-3 h-3 rounded-full animate-pulse"
-              style={{ backgroundColor: colors.accent.teal }}
-            />
-          </div>
-          <h3
-            className="text-2xl font-bold mb-1"
-            style={{ color: colors.primary }}
-          >
-            {avgMigration.toFixed(1)}M
-          </h3>
-          <p
-            className="text-sm font-medium"
-            style={{ color: colors.secondary }}
-          >
-            Average Flow
-          </p>
-          {/* Decorative elements */}
-          <div
-            className="absolute -bottom-4 -left-4 w-12 h-12 rounded-full opacity-10"
-            style={{ backgroundColor: colors.accent.teal }}
-          />
-        </div>
-
-        {/* Total Flows */}
-        <div
-          className="relative p-6 rounded-2xl overflow-hidden"
-          style={{
-            background: `linear-gradient(135deg, ${colors.accent.yellow}15, ${colors.accent.yellow}05)`,
-            border: `1px solid ${colors.accent.yellow}25`,
-          }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div
-              className="p-3 rounded-xl"
-              style={{ backgroundColor: `${colors.accent.yellow}20` }}
-            >
-              <Users size={20} style={{ color: colors.accent.yellow }} />
-            </div>
-            <div
-              className="w-3 h-3 rounded-full animate-pulse"
-              style={{ backgroundColor: colors.accent.yellow }}
-            />
-          </div>
-          <h3
-            className="text-2xl font-bold mb-1"
-            style={{ color: colors.primary }}
-          >
-            {totalFlows}
-          </h3>
-          <p
-            className="text-sm font-medium"
-            style={{ color: colors.secondary }}
-          >
-            Total Flows
-          </p>
-          {/* Decorative elements */}
-          <div
-            className="absolute -top-2 -right-2 w-8 h-8 rounded-full opacity-10"
-            style={{ backgroundColor: colors.accent.yellow }}
-          />
-        </div>
-      </div>
-
-      {/* Top Migration Flows */}
+  const renderStackedBar = (items: { key: string; value: number }[]) => {
+    return (
       <div
-        className="p-6 rounded-2xl"
+        className="w-full h-3 rounded-full overflow-hidden border"
         style={{
-          background: `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
-          border: `1px solid ${colors.accent.blue}20`,
+          borderColor: `${colors.accent.blue}25`,
+          background: "var(--button-bg)",
         }}
       >
-        <div className="flex items-center space-x-2 mb-4">
-          <Star size={18} style={{ color: colors.accent.blue }} />
-          <h3 className="text-lg font-bold" style={{ color: colors.primary }}>
-            Top Migration Flows
-          </h3>
-        </div>
-        <div className="space-y-3">
-          {topFlows.map((flow, index) => {
-            const isSelected = selectedFlow === `${flow.from}→${flow.to}`;
-            const tooltipHandlers = createTooltipHandlers(
-              `${flow.from} → ${flow.to}: ${flow.size}M people`
-            );
-
+        <div className="flex h-full w-full">
+          {items.map((it, idx) => {
+            const width = `${Math.max(0, Math.min(100, it.value * 100))}%`;
             return (
-              <button
-                key={`${flow.from}-${flow.to}`}
-                onClick={() =>
-                  setSelectedFlow?.(
-                    isSelected ? null : `${flow.from}→${flow.to}`
-                  )
-                }
-                className={`w-full p-3 rounded-xl transition-all duration-200 ${
-                  isSelected
-                    ? "shadow-lg transform scale-102"
-                    : "hover:scale-101 hover:shadow-md"
-                }`}
+              <div
+                key={it.key}
+                className="h-full"
                 style={{
-                  background: isSelected
-                    ? `linear-gradient(135deg, ${colors.accent.blue}20, ${colors.accent.blue}10)`
-                    : `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
-                  border: `1px solid ${colors.accent.blue}30`,
+                  width,
+                  background: `linear-gradient(135deg, ${palette[idx % palette.length]}40, ${palette[idx % palette.length]}90)`,
                 }}
-                {...tooltipHandlers}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div
-                      className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                      style={{
-                        backgroundColor: `${colors.accent.blue}20`,
-                        color: colors.accent.blue,
-                      }}
-                    >
-                      {index + 1}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span
-                        className="font-medium"
-                        style={{ color: colors.primary }}
-                      >
-                        {flow.from}
-                      </span>
-                      <ArrowRight
-                        size={14}
-                        style={{ color: colors.secondary }}
-                      />
-                      <span
-                        className="font-medium"
-                        style={{ color: colors.primary }}
-                      >
-                        {flow.to}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <span
-                      className="text-lg font-bold"
-                      style={{ color: colors.accent.blue }}
-                    >
-                      {flow.size}M
-                    </span>
-                    {isSelected && (
-                      <div
-                        className="w-2 h-2 rounded-full animate-pulse"
-                        style={{ backgroundColor: colors.accent.blue }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </button>
+              />
             );
           })}
         </div>
       </div>
+    );
+  };
 
-      {/* Net Flow Analysis */}
+  const sparkFor = (seed: number) =>
+    Array.from({ length: 12 }, (_, i) => {
+      const s = Math.sin((i + seed) * 1.7) * 0.5 + 0.5;
+      return 0.6 + s * 0.8;
+    });
+
+  return (
+    <div className="space-y-6">
+      <div
+        className="p-6 rounded-2xl"
+        style={{
+          background: `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.teal}05)`,
+          border: `1px solid ${colors.accent.blue}20`,
+        }}
+      >
+        <div className="mb-3">
+          <div className="text-sm font-bold" style={{ color: colors.primary }}>
+            Mix Breakdown
+          </div>
+        </div>
+        <div className="space-y-3">
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <div
+                className="text-xs font-medium"
+                style={{ color: colors.secondary }}
+              >
+                Outgoing · by source
+              </div>
+            </div>
+            {renderStackedBar(outgoingShare)}
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <div
+                className="text-xs font-medium"
+                style={{ color: colors.secondary }}
+              >
+                Incoming · by destination
+              </div>
+            </div>
+            {renderStackedBar(incomingShare)}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-3">
+        {topFlows.slice(0, 4).map((flow, index) => {
+          const series = sparkFor(index + 1);
+          const max = Math.max(...series);
+          const min = Math.min(...series);
+          const W = 160;
+          const H = 42;
+          const step = W / (series.length - 1);
+          const path = series
+            .map(
+              (v, i) =>
+                `${i === 0 ? "M" : "L"} ${i * step} ${H - 6 - ((v - min) / (max - min || 1)) * (H - 10)}`
+            )
+            .join(" ");
+          const isSelected = selectedFlow === `${flow.from}→${flow.to}`;
+          const handlers = createTooltipHandlers(`${flow.from} → ${flow.to}`);
+          return (
+            <button
+              key={`${flow.from}-${flow.to}`}
+              className="p-3 rounded-xl text-left transition-all duration-200 hover:shadow-md overflow-hidden"
+              style={{
+                background: `linear-gradient(135deg, ${palette[index % palette.length]}15, ${palette[index % palette.length]}08)`,
+                border: `1px solid ${palette[index % palette.length]}25`,
+              }}
+              onClick={() =>
+                setSelectedFlow?.(isSelected ? null : `${flow.from}→${flow.to}`)
+              }
+              {...handlers}
+            >
+              <div className="relative mb-1 flex items-start justify-between gap-2">
+                <div style={{ maxWidth: "72%" }}>
+                  <div
+                    className="text-[10px] font-bold truncate"
+                    style={{ color: colors.primary }}
+                  >
+                    {flow.from}
+                  </div>
+                  <div
+                    className="text-[10px] font-bold truncate"
+                    style={{ color: colors.secondary }}
+                  >
+                    → {flow.to}
+                  </div>
+                </div>
+                <div
+                  className="text-[10px] font-bold px-1.5 py-0.5 rounded-md whitespace-nowrap"
+                  style={{
+                    color: palette[index % palette.length],
+                    background: `${palette[index % palette.length]}14`,
+                    border: `1px solid ${palette[index % palette.length]}30`,
+                  }}
+                >
+                  {flow.size}M
+                </div>
+              </div>
+              <svg
+                width="100%"
+                height="42"
+                viewBox={`0 0 ${W} ${H}`}
+                style={{ display: "block" }}
+              >
+                <path
+                  d={path}
+                  fill="none"
+                  stroke={palette[index % palette.length]}
+                  strokeWidth={2}
+                />
+              </svg>
+            </button>
+          );
+        })}
+      </div>
+
       <div
         className="p-6 rounded-2xl"
         style={{
@@ -277,72 +216,33 @@ export default function MigrationChordStats({
         <div className="flex items-center space-x-2 mb-4">
           <TrendingUp size={18} style={{ color: colors.accent.red }} />
           <h3 className="text-lg font-bold" style={{ color: colors.primary }}>
-            Net Flow Analysis
+            Net Flow Leaders
           </h3>
         </div>
         <div className="space-y-3">
           {netFlows.map(({ continent, net }) => {
-            const isPositive = net > 0;
-            const isNegative = net < 0;
-            const isNeutral = net === 0;
-
+            const positive = net > 0;
+            const negative = net < 0;
+            const tone = positive
+              ? colors.accent.teal
+              : negative
+                ? colors.accent.red
+                : colors.accent.yellow;
             return (
               <div
                 key={continent}
                 className="flex items-center justify-between p-3 rounded-xl"
                 style={{
-                  background: `linear-gradient(135deg, ${
-                    isPositive
-                      ? colors.accent.teal
-                      : isNegative
-                        ? colors.accent.red
-                        : colors.accent.yellow
-                  }10, ${
-                    isPositive
-                      ? colors.accent.teal
-                      : isNegative
-                        ? colors.accent.red
-                        : colors.accent.yellow
-                  }05)`,
-                  border: `1px solid ${
-                    isPositive
-                      ? colors.accent.teal
-                      : isNegative
-                        ? colors.accent.red
-                        : colors.accent.yellow
-                  }25`,
+                  background: `linear-gradient(135deg, ${tone}10, ${tone}05)`,
+                  border: `1px solid ${tone}25`,
                 }}
               >
                 <span className="font-medium" style={{ color: colors.primary }}>
                   {continent}
                 </span>
                 <div className="flex items-center space-x-2">
-                  {isPositive && (
-                    <TrendingUp
-                      size={16}
-                      style={{ color: colors.accent.teal }}
-                    />
-                  )}
-                  {isNegative && (
-                    <TrendingDown
-                      size={16}
-                      style={{ color: colors.accent.red }}
-                    />
-                  )}
-                  {isNeutral && (
-                    <Minus size={16} style={{ color: colors.accent.yellow }} />
-                  )}
-                  <span
-                    className="font-bold"
-                    style={{
-                      color: isPositive
-                        ? colors.accent.teal
-                        : isNegative
-                          ? colors.accent.red
-                          : colors.accent.yellow,
-                    }}
-                  >
-                    {isPositive ? "+" : ""}
+                  <span className="font-bold" style={{ color: tone }}>
+                    {positive ? "+" : ""}
                     {net.toFixed(1)}M
                   </span>
                 </div>
@@ -350,22 +250,6 @@ export default function MigrationChordStats({
             );
           })}
         </div>
-      </div>
-
-      {/* Interactive Legend */}
-      <div
-        className="p-4 rounded-xl"
-        style={{
-          background: `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
-          border: `1px solid ${colors.accent.blue}25`,
-        }}
-      >
-        <p
-          className="text-sm font-medium text-center"
-          style={{ color: colors.secondary }}
-        >
-          💡 Click on any flow above to highlight it in the visualization
-        </p>
       </div>
     </div>
   );

@@ -29,9 +29,6 @@ export default function ChordChartWidget({
   >("normal");
   const [showDetails, setShowDetails] = React.useState(false);
 
-
-
-  // Calculate totals for header
   const totalFlows = data.length;
   const totalMigration = data.reduce((sum, flow) => sum + flow.size, 0);
 

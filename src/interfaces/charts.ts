@@ -119,6 +119,64 @@ export interface ChordChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
+// Enhanced Chord Diagram props (Global Migrations)
+export interface EnhancedChordDiagramProps {
+  data: ChordChartData[];
+  title: string;
+  subtitle?: string;
+  isMobile?: boolean;
+  selectedFlow?: string | null;
+  setSelectedFlow?: (flow: string | null) => void;
+  viewMode?: "flow" | "stats" | "trends";
+  setViewMode?: (mode: "flow" | "stats" | "trends") => void;
+  animationSpeed?: "slow" | "normal" | "fast";
+  setAnimationSpeed?: (speed: "slow" | "normal" | "fast") => void;
+  showDetails?: boolean;
+  setShowDetails?: (show: boolean) => void;
+  onOpenSidebar?: () => void;
+  showSidebarButton?: boolean;
+  currentSlide?: number;
+  setCurrentSlide?: (slide: number) => void;
+  totalFlows?: number;
+  totalMigration?: number;
+}
+
+export interface MigrationChordControlsProps {
+  viewMode: "flow" | "stats" | "trends";
+  setViewMode: (mode: "flow" | "stats" | "trends") => void;
+  animationSpeed: "slow" | "normal" | "fast";
+  setAnimationSpeed: (speed: "slow" | "normal" | "fast") => void;
+  showDetails: boolean;
+  setShowDetails: (show: boolean) => void;
+  isPlaying: boolean;
+  setIsPlaying: (playing: boolean) => void;
+  onReset: () => void;
+  isMobile?: boolean;
+}
+
+export interface ChordFlowCanvasProps {
+  container: SVGSVGElement | null;
+  isMobile: boolean;
+  animationSpeed: "slow" | "normal" | "fast";
+  isPlaying: boolean;
+  hoveredRibbon: number | null;
+  setHoveredRibbon: (i: number | null) => void;
+  setSelectedFlow?: (flow: string | null) => void;
+  getFlowColor: (flowKey: string) => string;
+  matrix: number[][];
+  colors: {
+    isDark: boolean;
+    pattern: string;
+  };
+}
+
+import type { WidgetChordChartData } from "./widgets";
+export interface MigrationChordStatsProps {
+  data: WidgetChordChartData[];
+  selectedFlow?: string | null;
+  setSelectedFlow?: (flow: string | null) => void;
+}
+
 // Sankey Chart
 export interface SankeyChartData {
   from: string;

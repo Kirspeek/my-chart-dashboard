@@ -6,16 +6,7 @@ import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { WidgetTitle } from "../../common";
 import { useTheme } from "@/hooks/useTheme";
-import type { WidgetChordChartData } from "@/interfaces/widgets";
-
-interface CustomChordDiagramProps {
-  data: WidgetChordChartData[];
-  title: string;
-  subtitle?: string;
-  isMobile?: boolean;
-  currentSlide?: number;
-  setCurrentSlide?: (slide: number) => void;
-}
+import type { EnhancedChordDiagramProps as CustomChordDiagramProps } from "@/interfaces/charts";
 
 const nodeOrder = ["Asia", "Europe", "Americas", "Africa", "Oceania"];
 
@@ -50,7 +41,6 @@ export default function CustomChordDiagram({
     color: string;
   } | null>(null);
 
-  // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {
@@ -63,7 +53,6 @@ export default function CustomChordDiagram({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Build a denser matrix if data is sparse
   const n = nodeOrder.length;
   const matrix = Array.from({ length: n }, () => Array(n).fill(0));
   data.forEach(({ from, to, size }) => {
@@ -73,7 +62,6 @@ export default function CustomChordDiagram({
   });
 
   useEffect(() => {
-    // Get the actual container dimensions
     const container = ref.current?.parentElement;
     if (!container) return;
 
@@ -111,7 +99,6 @@ export default function CustomChordDiagram({
         .ribbon<d3.Chord, d3.ChordSubgroup>()
         .radius(innerRadius);
 
-      // Draw groups (arcs)
       svg
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`)
@@ -124,7 +111,6 @@ export default function CustomChordDiagram({
         .attr("stroke-width", 1.5)
         .attr("cursor", "pointer");
 
-      // Draw ribbons (flows)
       svg
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`)
@@ -164,7 +150,6 @@ export default function CustomChordDiagram({
           setTooltip(null);
         });
 
-      // Add labels
       svg
         .append("g")
         .attr("transform", `translate(${width / 2},${height / 2})`)
@@ -190,7 +175,6 @@ export default function CustomChordDiagram({
             .style("text-shadow", "0 1px 2px rgba(255,255,255,0.8)");
         });
 
-      // Add filter for enhanced shadows
       svg
         .append("defs")
         .append("filter")
@@ -202,7 +186,7 @@ export default function CustomChordDiagram({
         .attr("flood-color", "rgba(0,0,0,0.3)");
     };
 
-    updateChart(); // Initial call
+    updateChart();
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -251,11 +235,11 @@ export default function CustomChordDiagram({
             height: isMobile ? "35vh" : "350px",
             maxWidth: "400px",
             maxHeight: "400px",
-            margin: "0 auto", // Center the container horizontally
+            margin: "0 auto",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            overflow: "hidden", // Ensure content doesn't overflow
+            overflow: "hidden",
           }}
         >
           <svg
@@ -312,7 +296,6 @@ export default function CustomChordDiagram({
           )}
         </div>
       </div>
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

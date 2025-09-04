@@ -25,7 +25,6 @@ export default function MigrationChordHeader({
 
   return (
     <div className="mb-4">
-      {/* Main Title Section */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-3">
           <div
@@ -64,7 +63,6 @@ export default function MigrationChordHeader({
           </div>
         </div>
 
-        {/* Animated Status Indicator */}
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1">
             <div
@@ -81,9 +79,7 @@ export default function MigrationChordHeader({
         </div>
       </div>
 
-      {/* Compact Stats Cards */}
       <div className="grid grid-cols-2 gap-2 mb-3">
-        {/* Total Flows Card */}
         <div
           className="relative p-3 rounded-lg overflow-hidden"
           style={{
@@ -115,7 +111,6 @@ export default function MigrationChordHeader({
           </div>
         </div>
 
-        {/* Total Migration Card */}
         <div
           className="relative p-3 rounded-lg overflow-hidden"
           style={{
@@ -148,7 +143,6 @@ export default function MigrationChordHeader({
         </div>
       </div>
 
-      {/* Selected Flow Display */}
       {selectedFlow && (
         <div
           className="p-2 rounded-lg border border-dashed"
