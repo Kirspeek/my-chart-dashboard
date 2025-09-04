@@ -17,8 +17,11 @@ export function useDeviceUsageLogic() {
     [colors]
   );
 
-  const formatTooltip = useMemo(() => {
-    return (value: number, name: string) => [`${value}%`, name];
+  const formatTooltip = useMemo<
+    (value: number, name: string) => [string, string]
+  >(() => {
+    return (value: number, name: string) =>
+      [`${value}%`, name] as [string, string];
   }, []);
 
   const getChartColors = useMemo(() => {

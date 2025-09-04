@@ -42,7 +42,6 @@ export default function RecentUsersContainer({
 
   return (
     <div className="overflow-x-auto flex-1 relative group scrollbar-hide">
-      {/* Background pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
         <div
           className="absolute top-2 left-2 w-1 h-1 rounded-full"

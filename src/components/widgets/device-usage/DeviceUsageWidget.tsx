@@ -2,8 +2,7 @@
 
 import React from "react";
 import { DeviceUsageWidgetProps } from "@/interfaces/widgets";
-import WidgetBase from "../../common/WidgetBase";
-import SlideNavigation from "../../common/SlideNavigation";
+import { WidgetBase, SlideNavigation } from "@/components/common";
 import DeviceUsageHeader from "./DeviceUsageHeader";
 import DeviceUsageContainer from "./DeviceUsageContainer";
 
@@ -20,7 +19,6 @@ export default function DeviceUsageWidget({
   currentSlide?: number;
   setCurrentSlide?: (slide: number) => void;
 }) {
-  // Detect mobile to apply full-screen sizing
   const [isMobile, setIsMobile] = React.useState(false);
   React.useEffect(() => {
     const check = () => {

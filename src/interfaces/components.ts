@@ -102,3 +102,8 @@ export interface BarChartHeaderProps {
 export interface RecentUsersHeaderProps {
   title: string;
 }
+
+// Device usage header
+export interface DeviceUsageHeaderProps {
+  title: string;
+}

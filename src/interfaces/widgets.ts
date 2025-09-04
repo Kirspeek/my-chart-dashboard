@@ -439,6 +439,10 @@ export interface DeviceUsageWidgetProps extends CommonComponentProps {
   setCurrentSlide?: (slide: number) => void;
 }
 
+export interface DeviceUsageContainerProps {
+  data: DeviceUsageData[];
+}
+
 export interface RecentUsersWidgetProps extends CommonComponentProps {
   data: UserData[];
   title: string;
