@@ -444,6 +444,10 @@ export interface RecentUsersWidgetProps extends CommonComponentProps {
   title: string;
 }
 
+export interface RecentUsersContainerProps {
+  data: UserData[];
+}
+
 // ============================================================================
 // CHART WIDGET INTERFACES
 // ============================================================================

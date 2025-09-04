@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { RadarChartWidgetProps } from "@/interfaces/widgets";
-import WidgetBase from "../../common/WidgetBase";
-import SlideNavigation from "../../common/SlideNavigation";
+import { WidgetBase, SlideNavigation } from "@/components/common";
 import PerformanceMetricsHeader from "./PerformanceMetricsHeader";
-import PerformanceMetricsContainer from "./PerformanceMetricsContainer";
+import PerformanceMetricsView from "@/components/widgets/radar-chart/PerformanceMetricsView";
 
 export default function RadarChartWidget({
   data,
@@ -37,7 +36,6 @@ export default function RadarChartWidget({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Auto-rotate views for demonstration
   useEffect(() => {
     if (isRealTime) {
       const interval = setInterval(() => {
@@ -46,7 +44,7 @@ export default function RadarChartWidget({
           const currentIndex = views.indexOf(prev);
           return views[(currentIndex + 1) % views.length];
         });
-      }, 20000); // Change view every 20 seconds
+      }, 20000);
       return () => clearInterval(interval);
     }
   }, [isRealTime]);
@@ -70,12 +68,11 @@ export default function RadarChartWidget({
         isRealTime={isRealTime}
         setIsRealTime={setIsRealTime}
       />
-      <PerformanceMetricsContainer
+      <PerformanceMetricsView
         data={data}
         currentView={currentView}
         isRealTime={isRealTime}
       />
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

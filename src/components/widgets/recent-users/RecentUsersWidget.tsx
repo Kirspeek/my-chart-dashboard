@@ -2,7 +2,7 @@
 
 import React from "react";
 import { RecentUsersWidgetProps } from "@/interfaces/widgets";
-import WidgetBase from "../../common/WidgetBase";
+import { WidgetBase } from "@/components/common";
 import RecentUsersHeader from "./RecentUsersHeader";
 import RecentUsersContainer from "./RecentUsersContainer";
 

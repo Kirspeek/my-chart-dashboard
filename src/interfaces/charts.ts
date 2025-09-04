@@ -282,6 +282,16 @@ export interface BarChartChartViewProps {
   setShowInsights: (show: boolean) => void;
 }
 
+// Performance Metrics (Radar) widget
+export type PerformanceViewKey = "radar" | "timeline" | "alerts" | "capacity";
+import type { WidgetRadarChartData, PerformanceMetricsData } from "./widgets";
+
+export interface PerformanceMetricsViewProps {
+  data: WidgetRadarChartData[] | PerformanceMetricsData;
+  currentView: PerformanceViewKey;
+  isRealTime: boolean;
+}
+
 // Timeline Chart
 export interface TimelineItem {
   year: string;

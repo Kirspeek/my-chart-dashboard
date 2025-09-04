@@ -11,7 +11,7 @@ import {
   Activity,
   Zap,
 } from "lucide-react";
-import { useTheme } from "../../../hooks/useTheme";
+import { useTheme } from "@/hooks/useTheme";
 
 interface PerformanceMetricsHeaderProps {
   title: string;
@@ -51,7 +51,6 @@ export default function PerformanceMetricsHeader({
 
   return (
     <div className="flex flex-col space-y-3 mb-4">
-      {/* Main Title */}
       <div className="flex items-center justify-between">
         <h3
           className="text-lg font-bold primary-text"
@@ -63,7 +62,6 @@ export default function PerformanceMetricsHeader({
           {title}
         </h3>
 
-        {/* Real-time indicator */}
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1">
             <Activity
@@ -104,10 +102,7 @@ export default function PerformanceMetricsHeader({
         </div>
       </div>
 
-      {/* View Navigation */}
       <div className="flex items-center justify-center space-x-1">
-        {/* Reuse common ToggleButtonGroup for consistency */}
-        {/* Inline import avoided to keep header self-contained visually; we still replicate styling here to avoid deep header changes */}
         {viewButtons.map(({ key, icon: Icon, label }) => (
           <button
             key={key}
@@ -133,7 +128,6 @@ export default function PerformanceMetricsHeader({
         ))}
       </div>
 
-      {/* Performance Score Indicator */}
       <div className="flex items-center justify-center space-x-2">
         <Zap className="w-4 h-4" style={{ color: colors.accent.yellow }} />
         <span

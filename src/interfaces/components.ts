@@ -97,3 +97,8 @@ export interface LineChartHeaderProps {
 export interface BarChartHeaderProps {
   title: string;
 }
+
+// Recent users header
+export interface RecentUsersHeaderProps {
+  title: string;
+}
