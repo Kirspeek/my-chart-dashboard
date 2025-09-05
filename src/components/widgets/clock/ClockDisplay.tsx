@@ -138,7 +138,7 @@ export default function ClockDisplay({
           className="date-display flex items-center gap-2 px-3 py-1 rounded-full"
           style={{
             background: isHovered ? clockColors.hoverBackground : "transparent",
-            border: `1px solid ${isHovered ? clockColors.accentColor : "transparent"}`,
+            border: `2px solid ${isHovered ? clockColors.accentColor : "transparent"}`,
           }}
         >
           <Calendar
@@ -146,8 +146,14 @@ export default function ClockDisplay({
             style={{ color: clockColors.accentColor }}
           />
           <span
-            className="text-base font-mono clock-date-mobile clock-date"
-            style={{ fontWeight: 700 }}
+            className="text-sm font-mono clock-date-mobile clock-date"
+            style={{
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              color: isHovered
+                ? clockColors.accentColor
+                : "var(--secondary-text)",
+            }}
           >
             {dateStr}
           </span>
@@ -158,6 +164,7 @@ export default function ClockDisplay({
             className="flex items-center gap-1 px-2 py-1 rounded-full border transition-all duration-300 hover:scale-105"
             style={{
               borderColor: clockColors.accentColor,
+              borderWidth: 2,
               color: clockColors.accentColor,
               background: isHovered
                 ? clockColors.hoverBackground
@@ -182,11 +189,12 @@ export default function ClockDisplay({
 
           <div className="flex items-center gap-1">
             <WidgetButton
-              className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold widget-button hover:scale-105`}
+              className={`clock-button-mobile text-xs font-mono px-3 py-1 rounded-full border transition font-bold widget-button hover:scale-105`}
               style={{
-                fontFamily: "var(--font-mono)",
                 fontWeight: 700,
                 fontSize: "0.625rem",
+                letterSpacing: "0.04em",
+                borderWidth: 2,
                 borderColor: is24h
                   ? clockColors.inactiveBorder
                   : clockColors.accentColor,
@@ -194,7 +202,7 @@ export default function ClockDisplay({
                   ? clockColors.inactiveText
                   : clockColors.accentColor,
                 backgroundColor: is24h
-                  ? "transparent"
+                  ? "var(--button-bg)"
                   : clockColors.activeBackground,
               }}
               onClick={() => setIs24h(false)}
@@ -202,11 +210,12 @@ export default function ClockDisplay({
               12h
             </WidgetButton>
             <WidgetButton
-              className={`clock-button-mobile text-xs font-mono px-2 py-1 rounded-full border transition font-bold widget-button hover:scale-105`}
+              className={`clock-button-mobile text-xs font-mono px-3 py-1 rounded-full border transition font-bold widget-button hover:scale-105`}
               style={{
-                fontFamily: "var(--font-mono)",
                 fontWeight: 700,
                 fontSize: "0.625rem",
+                letterSpacing: "0.04em",
+                borderWidth: 2,
                 borderColor: is24h
                   ? clockColors.accentColor
                   : clockColors.inactiveBorder,
@@ -215,7 +224,7 @@ export default function ClockDisplay({
                   : clockColors.inactiveText,
                 backgroundColor: is24h
                   ? clockColors.activeBackground
-                  : "transparent",
+                  : "var(--button-bg)",
               }}
               onClick={() => setIs24h(true)}
             >

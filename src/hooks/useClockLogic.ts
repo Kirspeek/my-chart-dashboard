@@ -15,7 +15,7 @@ export function useClockLogic(selectedZone: string): ClockState & ClockActions {
 
   const mainTime = useMemo(() => {
     return mounted ? getTimeInZone(selectedZone) : new Date(0);
-  }, [mounted, selectedZone]);
+  }, [mounted, selectedZone, tick]);
 
   useEffect(() => {
     if (mounted) {
