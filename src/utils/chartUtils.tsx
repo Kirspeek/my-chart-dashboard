@@ -11,5 +11,3 @@ export function getTrendIcon(trend: "up" | "down" | "stable") {
       return <Minus className="w-3 h-3 text-gray-500" />;
   }
 }
-
-

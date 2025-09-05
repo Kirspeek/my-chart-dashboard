@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import type { BarChartProps } from "../../interfaces/charts";
+import type { BarChartProps } from "@/interfaces/charts";
 import WidgetBase from "./common/WidgetBase";
 import { useTheme } from "@/hooks/useTheme";
 

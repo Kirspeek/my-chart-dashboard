@@ -28,8 +28,12 @@ export interface TimelineRingItemProps {
   setSelectedMilestone: (i: number | null) => void;
   animatedProgress: number;
   animatedLineProgress: number;
-  timelineRingsColors: any;
-  colors: any;
+  timelineRingsColors: {
+    fill: string;
+    gradient: { stop1: string; stop2: string; stop3: string };
+    background?: string;
+  };
+  colors: Record<string, string>;
 }
 
 export interface TimelineStatsViewProps {

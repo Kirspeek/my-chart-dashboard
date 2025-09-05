@@ -1,5 +1,5 @@
 import React from "react";
-import { SpendingProgressProps } from "../../../interfaces/widgets";
+import type { SpendingProgressProps } from "@/interfaces/widgets";
 import { useTheme } from "../../hooks/useTheme";
 
 export default function SpendingProgress({
@@ -18,7 +18,9 @@ export default function SpendingProgress({
             width: "8px",
             height: "8px",
             backgroundColor:
-              i === selectedIndex ? spendingProgressColors.active : spendingProgressColors.inactive,
+              i === selectedIndex
+                ? spendingProgressColors.active
+                : spendingProgressColors.inactive,
           }}
         />
       ))}

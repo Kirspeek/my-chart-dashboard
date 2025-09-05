@@ -193,9 +193,14 @@ export default function RadarView({
           />
           <Tooltip
             contentStyle={tooltipStyle}
-            formatter={(value, name, props) => {
-              const currentValue = (props as any).payload.current as number;
-              const previousValue = (props as any).payload.previous as number;
+            formatter={(_value, _name, item) => {
+              const payload = (
+                item as { payload?: { current?: number; previous?: number } }
+              ).payload;
+              const currentValue =
+                typeof payload?.current === "number" ? payload.current : 0;
+              const previousValue =
+                typeof payload?.previous === "number" ? payload.previous : 0;
               const change = currentValue - previousValue;
               const changePercent =
                 previousValue > 0 ? (change / previousValue) * 100 : 0;

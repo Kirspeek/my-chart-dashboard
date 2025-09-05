@@ -21,8 +21,7 @@ function MigrationFlowTrends({
   isMobile,
   isPlaying,
 }: MigrationFlowTrendsProps) {
-  const { colors, colorsTheme, isDark } = useTheme();
-  const sankeyChartColors = colorsTheme.widgets.sankeyChart;
+  const { colors, isDark } = useTheme();
   const { months, lines, stacked } = useMigrationTrends(data);
 
   const palette = useMemo(
@@ -31,7 +30,7 @@ function MigrationFlowTrends({
       colors.accent.teal,
       colors.accent.yellow,
       colors.accent.red,
-      colors.accent.purple ?? "#8b5cf6",
+      "#8b5cf6",
     ],
     [colors.accent]
   );
@@ -63,7 +62,6 @@ function MigrationFlowTrends({
           <AreaChart
             data={stacked}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-            pure
           >
             <defs>
               {lines.map((l) => (
@@ -107,7 +105,7 @@ function MigrationFlowTrends({
             <CartesianGrid
               vertical
               horizontal={false}
-              stroke={sankeyChartColors.grid}
+              stroke={colors.borderSecondary}
               strokeDasharray="3 3"
             />
             <XAxis
@@ -190,7 +188,6 @@ function MigrationFlowTrends({
               <LineChart
                 data={months.map((m, i) => ({ m, v: l.values[i] }))}
                 margin={{ top: 4, right: 6, left: 6, bottom: 0 }}
-                pure
               >
                 <XAxis dataKey="m" hide />
                 <YAxis hide />
