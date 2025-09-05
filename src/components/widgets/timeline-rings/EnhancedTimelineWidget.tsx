@@ -3,95 +3,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { useGlobalTooltip } from "@/hooks/useGlobalTooltip";
-import WidgetBase from "../../common/WidgetBase";
-import { WidgetTitle } from "../../common";
-import SlideNavigation from "../../common/SlideNavigation";
-import MigrationFlowButton from "../sankey-chart/MigrationFlowButton";
-import {
-  Clock,
-  Play,
-  Pause,
-  RotateCcw,
-  Zap,
-  Settings,
-  TrendingUp,
-  Target,
-  Award,
-  Zap as Lightning,
-} from "lucide-react";
+import WidgetBase from "@/components/common/WidgetBase";
+import { WidgetTitle } from "@/components/common";
+import SlideNavigation from "@/components/common/SlideNavigation";
+import TimelineHeaderStats from "@/components/widgets/timeline-rings/TimelineHeaderStats";
+import TimelineControls from "@/components/widgets/timeline-rings/TimelineControls";
+import TimelineStatsView from "@/components/widgets/timeline-rings/TimelineStatsView";
+import TimelineAchievementsView from "@/components/widgets/timeline-rings/TimelineAchievementsView";
 import type { TimelineItem } from "@/interfaces/charts";
-
-// Utility to lighten/darken a hex color
-function shadeColor(
-  color: string,
-  percent: number,
-  fallbackColor: string = "#666666"
-) {
-  // Add validation to ensure color is a valid hex string
-  if (!color || typeof color !== "string" || !color.startsWith("#")) {
-    return fallbackColor; // Fallback color
-  }
-
-  let R = parseInt(color.substring(1, 3), 16);
-  let G = parseInt(color.substring(3, 5), 16);
-  let B = parseInt(color.substring(5, 7), 16);
-
-  // Check if parsing was successful
-  if (isNaN(R) || isNaN(G) || isNaN(B)) {
-    return fallbackColor; // Fallback color
-  }
-
-  R = Math.min(255, Math.max(0, R + (255 - R) * percent));
-  G = Math.min(255, Math.max(0, G + (255 - G) * percent));
-  B = Math.min(255, Math.max(0, B + (255 - B) * percent));
-  return (
-    "#" +
-    R.toString(16).padStart(2, "0") +
-    G.toString(16).padStart(2, "0") +
-    B.toString(16).padStart(2, "0")
-  );
-}
-
-// SVG arc helper for a half-circle
-function describeArc(
-  x: number,
-  y: number,
-  radius: number,
-  startAngle: number,
-  endAngle: number
-) {
-  const start = polarToCartesian(x, y, radius, endAngle);
-  const end = polarToCartesian(x, y, radius, startAngle);
-  const arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
-  return [
-    "M",
-    start.x,
-    start.y,
-    "A",
-    radius,
-    radius,
-    0,
-    arcSweep,
-    0,
-    end.x,
-    end.y,
-  ].join(" ");
-}
-
-function polarToCartesian(cx: number, cy: number, r: number, angle: number) {
-  const rad = ((angle - 90) * Math.PI) / 180.0;
-  return {
-    x: cx + r * Math.cos(rad),
-    y: cy + r * Math.sin(rad),
-  };
-}
-
-interface EnhancedTimelineWidgetProps {
-  onOpenSidebar?: () => void;
-  showSidebarButton?: boolean;
-  currentSlide?: number;
-  setCurrentSlide?: (slide: number) => void;
-}
+import { describeArc, shadeColor } from "@/utils/timelineUtils";
+import type { EnhancedTimelineWidgetProps } from "@/interfaces/timeline";
 
 export default function EnhancedTimelineWidget({
   onOpenSidebar,
@@ -101,7 +22,7 @@ export default function EnhancedTimelineWidget({
 }: EnhancedTimelineWidgetProps) {
   const { colors, colorsTheme } = useTheme();
   const timelineRingsColors = colorsTheme.widgets.timelineRings;
-  const { createTooltipHandlers } = useGlobalTooltip();
+  useGlobalTooltip();
 
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [selectedMilestone, setSelectedMilestone] = useState<number | null>(
@@ -123,8 +44,6 @@ export default function EnhancedTimelineWidget({
   const [hasAnimated, setHasAnimated] = useState(false);
 
   const widgetRef = useRef<HTMLDivElement>(null);
-
-  // Detect mobile to apply responsive sizing
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
 
@@ -141,7 +60,6 @@ export default function EnhancedTimelineWidget({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Load timeline data
   useEffect(() => {
     import("../../../data/json/timelineData.json").then((mod) => {
       const arr = (mod.default ?? mod) as TimelineItem[];
@@ -152,7 +70,6 @@ export default function EnhancedTimelineWidget({
     });
   }, []);
 
-  // Intersection Observer to trigger animation
   useEffect(() => {
     const ref = widgetRef.current;
     if (!ref) return;
@@ -178,7 +95,6 @@ export default function EnhancedTimelineWidget({
     };
   }, [timelineData]);
 
-  // Animation loop
   useEffect(() => {
     if (!isPlaying) return;
     const speedMultiplier = { slow: 0.5, normal: 1, fast: 2 }[animationSpeed];
@@ -194,14 +110,12 @@ export default function EnhancedTimelineWidget({
     return () => clearInterval(interval);
   }, [isPlaying, animationSpeed, timelineData]);
 
-  // Sequential animation logic
   useEffect(() => {
     if (!hasAnimated || timelineData.length === 0) return;
     let cancelled = false;
 
     async function animateAll() {
       for (let idx = 0; idx < timelineData.length; idx++) {
-        // Animate ring
         await new Promise<void>((resolve) => {
           const target = timelineData[idx].progress ?? 0.9;
           let current = 0;
@@ -223,7 +137,6 @@ export default function EnhancedTimelineWidget({
           step();
         });
 
-        // Animate line
         await new Promise<void>((resolve) => {
           let lineCurrent = 0;
           function lineStep() {
@@ -251,7 +164,6 @@ export default function EnhancedTimelineWidget({
     };
   }, [hasAnimated, timelineData]);
 
-  // Reset function
   const handleReset = () => {
     setSelectedMilestone(null);
     setHoveredIdx(null);
@@ -260,7 +172,6 @@ export default function EnhancedTimelineWidget({
     setHasAnimated(false);
   };
 
-  // Calculate statistics
   const totalMilestones = timelineData.length;
   const completedMilestones = timelineData.filter(
     (item, idx) => (animatedProgress[idx] ?? 0) >= (item.progress ?? 0.9)
@@ -271,7 +182,6 @@ export default function EnhancedTimelineWidget({
       0
     ) / timelineData.length;
 
-  // Get theme colors for milestones - using original color mapping
   const getMilestoneColor = (idx: number) => {
     const colorKeys = ["yellow", "red", "blue", "teal", "purple"] as const;
     const colorMap = {
@@ -279,40 +189,13 @@ export default function EnhancedTimelineWidget({
       red: colors.accent.red,
       blue: colors.accent.blue,
       teal: colors.accent.teal,
-      purple: timelineRingsColors.purple, // fallback for purple, not in theme
+      purple: timelineRingsColors.purple,
     };
     return (
       colorMap[colorKeys[idx % colorKeys.length]] ||
       timelineRingsColors.fallback
     );
   };
-
-  const viewModes = [
-    {
-      key: "timeline",
-      label: "Timeline",
-      icon: Clock,
-      tooltip: "Interactive timeline view",
-    },
-    {
-      key: "stats",
-      label: "Stats",
-      icon: TrendingUp,
-      tooltip: "Progress statistics",
-    },
-    {
-      key: "achievements",
-      label: "Achievements",
-      icon: Award,
-      tooltip: "Milestone achievements",
-    },
-  ] as const;
-
-  const speedOptions = [
-    { value: "slow", label: "Slow", icon: Clock },
-    { value: "normal", label: "Normal", icon: Zap },
-    { value: "fast", label: "Fast", icon: Lightning },
-  ];
 
   if (timelineData.length === 0) return null;
 
@@ -336,272 +219,25 @@ export default function EnhancedTimelineWidget({
             size="md"
           />
 
-          {/* Enhanced Header with Stats */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            {/* Total Milestones */}
-            <div
-              className="relative p-3 rounded-lg overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${colors.accent.blue}15, ${colors.accent.blue}05)`,
-                border: `1px solid ${colors.accent.blue}25`,
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p
-                    className="text-xs font-medium mb-1 opacity-70"
-                    style={{ color: colors.secondary }}
-                  >
-                    Total Milestones
-                  </p>
-                  <p
-                    className="text-sm font-bold"
-                    style={{ color: colors.primary }}
-                  >
-                    {totalMilestones}
-                  </p>
-                </div>
-                <div
-                  className="p-1.5 rounded-md"
-                  style={{ backgroundColor: `${colors.accent.blue}20` }}
-                >
-                  <Target size={12} style={{ color: colors.accent.blue }} />
-                </div>
-              </div>
-            </div>
+          <TimelineHeaderStats
+            totalMilestones={totalMilestones}
+            completedMilestones={completedMilestones}
+            averageProgress={averageProgress}
+          />
 
-            {/* Completed Milestones */}
-            <div
-              className="relative p-3 rounded-lg overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${colors.accent.teal}15, ${colors.accent.teal}05)`,
-                border: `1px solid ${colors.accent.teal}25`,
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p
-                    className="text-xs font-medium mb-1 opacity-70"
-                    style={{ color: colors.secondary }}
-                  >
-                    Completed
-                  </p>
-                  <p
-                    className="text-sm font-bold"
-                    style={{ color: colors.primary }}
-                  >
-                    {completedMilestones}
-                  </p>
-                </div>
-                <div
-                  className="p-1.5 rounded-md"
-                  style={{ backgroundColor: `${colors.accent.teal}20` }}
-                >
-                  <Award size={12} style={{ color: colors.accent.teal }} />
-                </div>
-              </div>
-            </div>
+          <TimelineControls
+            viewMode={viewMode}
+            setViewMode={(m) => setViewMode(m)}
+            isMobile={isMobile}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            animationSpeed={animationSpeed}
+            setAnimationSpeed={(s) => setAnimationSpeed(s)}
+            onReset={handleReset}
+            showDetails={showDetails}
+            setShowDetails={setShowDetails}
+          />
 
-            {/* Average Progress */}
-            <div
-              className="relative p-3 rounded-lg overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${colors.accent.yellow}15, ${colors.accent.yellow}05)`,
-                border: `1px solid ${colors.accent.yellow}25`,
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p
-                    className="text-xs font-medium mb-1 opacity-70"
-                    style={{ color: colors.secondary }}
-                  >
-                    Progress
-                  </p>
-                  <p
-                    className="text-sm font-bold"
-                    style={{ color: colors.primary }}
-                  >
-                    {Math.round(averageProgress * 100)}%
-                  </p>
-                </div>
-                <div
-                  className="p-1.5 rounded-md"
-                  style={{ backgroundColor: `${colors.accent.yellow}20` }}
-                >
-                  <TrendingUp
-                    size={12}
-                    style={{ color: colors.accent.yellow }}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Controls */}
-          <div className="mb-4">
-            {/* View Mode Selector */}
-            <div className="flex items-center justify-center space-x-1 mb-3">
-              {viewModes.map((mode) => {
-                const Icon = mode.icon;
-                const isActive = viewMode === mode.key;
-
-                return (
-                  <MigrationFlowButton
-                    key={mode.key}
-                    onClick={() => setViewMode(mode.key)}
-                    selected={isActive}
-                    variant={isActive ? "primary" : "secondary"}
-                    size={isMobile ? "sm" : "md"}
-                    icon={<Icon className="w-3 h-3" />}
-                    tooltip={mode.tooltip}
-                    tooltipTitle={mode.label}
-                  >
-                    {!isMobile && mode.label}
-                  </MigrationFlowButton>
-                );
-              })}
-            </div>
-
-            {/* Control Panel */}
-            <div className="flex items-center justify-between">
-              {/* Animation Controls */}
-              <div className="flex items-center space-x-2">
-                {/* Play/Pause Button */}
-                <button
-                  onClick={() => setIsPlaying(!isPlaying)}
-                  className="relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{
-                    background: `linear-gradient(135deg, ${colors.accent.teal}20, ${colors.accent.teal}10)`,
-                    border: `1px solid ${colors.accent.teal}30`,
-                  }}
-                  {...createTooltipHandlers(
-                    isPlaying ? "Pause animation" : "Play animation"
-                  )}
-                >
-                  {isPlaying ? (
-                    <Pause size={18} style={{ color: colors.accent.teal }} />
-                  ) : (
-                    <Play size={18} style={{ color: colors.accent.teal }} />
-                  )}
-                </button>
-
-                {/* Speed Selector */}
-                <div className="flex items-center space-x-1">
-                  {speedOptions.map((speed) => {
-                    const Icon = speed.icon;
-                    const isActive = animationSpeed === speed.value;
-
-                    return (
-                      <button
-                        key={speed.value}
-                        onClick={() =>
-                          setAnimationSpeed(
-                            speed.value as "slow" | "normal" | "fast"
-                          )
-                        }
-                        className={`p-2 rounded-lg transition-all duration-200 ${
-                          isActive ? "scale-110" : "hover:scale-105"
-                        }`}
-                        style={{
-                          background: isActive
-                            ? `linear-gradient(135deg, ${colors.accent.yellow}20, ${colors.accent.yellow}10)`
-                            : `linear-gradient(135deg, ${colors.accent.yellow}10, ${colors.accent.yellow}05)`,
-                          border: `1px solid ${colors.accent.yellow}30`,
-                        }}
-                        {...createTooltipHandlers(`${speed.label} speed`)}
-                      >
-                        <Icon
-                          size={14}
-                          style={{
-                            color: isActive
-                              ? colors.accent.yellow
-                              : colors.secondary,
-                          }}
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Reset Button */}
-                <button
-                  onClick={handleReset}
-                  className="relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                  style={{
-                    background: `linear-gradient(135deg, ${colors.accent.red}20, ${colors.accent.red}10)`,
-                    border: `1px solid ${colors.accent.red}30`,
-                  }}
-                  {...createTooltipHandlers("Reset to default")}
-                >
-                  <RotateCcw size={18} style={{ color: colors.accent.red }} />
-                </button>
-              </div>
-
-              {/* Details Toggle */}
-              <button
-                onClick={() => setShowDetails(!showDetails)}
-                className={`relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg ${
-                  showDetails ? "shadow-lg" : ""
-                }`}
-                style={{
-                  background: showDetails
-                    ? `linear-gradient(135deg, ${colors.accent.blue}20, ${colors.accent.blue}10)`
-                    : `linear-gradient(135deg, ${colors.accent.blue}10, ${colors.accent.blue}05)`,
-                  border: `1px solid ${colors.accent.blue}30`,
-                }}
-                {...createTooltipHandlers(
-                  showDetails ? "Hide details" : "Show details"
-                )}
-              >
-                <Settings
-                  size={18}
-                  style={{
-                    color: showDetails ? colors.accent.blue : colors.secondary,
-                  }}
-                />
-                {showDetails && (
-                  <div
-                    className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-pulse"
-                    style={{ backgroundColor: colors.accent.blue }}
-                  />
-                )}
-              </button>
-            </div>
-
-            {/* Status Bar */}
-            <div className="mt-3 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div
-                  className="w-2 h-2 rounded-full animate-pulse"
-                  style={{ backgroundColor: colors.accent.teal }}
-                />
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: colors.secondary }}
-                >
-                  {isPlaying ? "Animating" : "Paused"}
-                </span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <span
-                  className="text-xs font-medium"
-                  style={{ color: colors.secondary }}
-                >
-                  Speed:
-                </span>
-                <span
-                  className="text-xs font-bold"
-                  style={{ color: colors.accent.yellow }}
-                >
-                  {animationSpeed.charAt(0).toUpperCase() +
-                    animationSpeed.slice(1)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Content */}
           <div className="flex-1 min-h-0 mt-4">
             {viewMode === "timeline" && (
               <div className="flex flex-row items-end justify-center gap-12 w-full max-w-7xl">
@@ -619,7 +255,6 @@ export default function EnhancedTimelineWidget({
                       className="flex flex-col items-center relative"
                       style={{ width: isTablet ? "140px" : "224px" }}
                     >
-                      {/* Text block above for even rings */}
                       {isEven && (
                         <>
                           <div
@@ -677,7 +312,6 @@ export default function EnhancedTimelineWidget({
                         </>
                       )}
 
-                      {/* Ring SVG */}
                       <svg
                         width={isTablet ? 90 : 120}
                         height={isTablet ? 90 : 120}
@@ -690,7 +324,6 @@ export default function EnhancedTimelineWidget({
                         }
                       >
                         <defs>
-                          {/* Light shadow filter - no dark shadows */}
                           <filter
                             id={`arc-shadow-${idx}`}
                             x="-20%"
@@ -707,7 +340,6 @@ export default function EnhancedTimelineWidget({
                             />
                           </filter>
 
-                          {/* Simple solid color for arc - no gradient */}
                           <linearGradient
                             id={`arc-gradient-${idx}`}
                             x1="0"
@@ -719,7 +351,6 @@ export default function EnhancedTimelineWidget({
                             <stop offset="100%" stopColor={color} />
                           </linearGradient>
 
-                          {/* Enhanced center gradient - white with transparency */}
                           <radialGradient
                             id={`center-gradient-${idx}`}
                             cx="50%"
@@ -749,7 +380,6 @@ export default function EnhancedTimelineWidget({
                           </radialGradient>
                         </defs>
 
-                        {/* Simple colored arc - solid color */}
                         <path
                           d={describeArc(
                             isTablet ? 45 : 60,
@@ -777,7 +407,6 @@ export default function EnhancedTimelineWidget({
                           onMouseEnter={() => setHoveredIdx(idx)}
                         />
 
-                        {/* Enhanced faded arc */}
                         <path
                           d={describeArc(
                             isTablet ? 45 : 60,
@@ -793,12 +422,11 @@ export default function EnhancedTimelineWidget({
                           strokeLinecap="round"
                         />
 
-                        {/* Enhanced center circle with gradient */}
                         <circle
                           cx={isTablet ? 45 : 60}
                           cy={isTablet ? 45 : 60}
                           r={isTablet ? 26 : 36}
-                          fill={`url(#center-gradient-${idx})`}
+                          fill="transparent"
                           stroke={selectedMilestone === idx ? color : "none"}
                           strokeWidth={selectedMilestone === idx ? 4 : 0}
                           style={{
@@ -806,7 +434,6 @@ export default function EnhancedTimelineWidget({
                           }}
                         />
 
-                        {/* Enhanced year text */}
                         <text
                           x={isTablet ? 45 : 60}
                           y={isTablet ? 52 : 70}
@@ -825,7 +452,6 @@ export default function EnhancedTimelineWidget({
                         </text>
                       </svg>
 
-                      {/* Hover tooltip */}
                       {hoveredIdx === idx && (
                         <div
                           style={{
@@ -854,7 +480,6 @@ export default function EnhancedTimelineWidget({
                         </div>
                       )}
 
-                      {/* Text block below for odd rings */}
                       {!isEven && (
                         <>
                           <svg
@@ -921,34 +546,25 @@ export default function EnhancedTimelineWidget({
             )}
 
             {viewMode === "stats" && (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="text-lg font-bold mb-2">
-                    Timeline Statistics
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    Detailed statistics coming soon...
-                  </div>
-                </div>
+              <div className="h-full w-full">
+                <TimelineStatsView
+                  data={timelineData}
+                  progressByIndex={animatedProgress}
+                />
               </div>
             )}
 
             {viewMode === "achievements" && (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="text-lg font-bold mb-2">
-                    Milestone Achievements
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    Achievement system coming soon...
-                  </div>
-                </div>
+              <div className="h-full w-full">
+                <TimelineAchievementsView
+                  data={timelineData}
+                  progressByIndex={animatedProgress}
+                />
               </div>
             )}
           </div>
         </div>
 
-        {/* Navigation buttons */}
         {currentSlide !== undefined && setCurrentSlide && (
           <SlideNavigation
             currentSlide={currentSlide}

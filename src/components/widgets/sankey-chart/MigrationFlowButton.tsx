@@ -37,16 +37,10 @@ export default function MigrationFlowButton({
         };
       case "secondary":
         return {
-          bg: isDark
-            ? "rgba(255, 255, 255, 0.06)"
-            : "rgba(255, 255, 255, 0.08)",
-          hover: isDark
-            ? "rgba(255, 255, 255, 0.12)"
-            : "rgba(255, 255, 255, 0.15)",
-          active: isDark
-            ? "rgba(255, 255, 255, 0.2)"
-            : "rgba(255, 255, 255, 0.25)",
-          text: colors.primary,
+          bg: isDark ? "rgba(255, 255, 255, 0.12)" : "rgba(0, 0, 0, 0.04)",
+          hover: isDark ? "rgba(255, 255, 255, 0.18)" : "rgba(0, 0, 0, 0.06)",
+          active: isDark ? "rgba(255, 255, 255, 0.24)" : "rgba(0, 0, 0, 0.08)",
+          text: isDark ? "var(--secondary-text)" : colors.secondary,
         };
       case "accent":
         return {
@@ -116,8 +110,8 @@ export default function MigrationFlowButton({
     cursor: disabled ? "not-allowed" : "pointer",
     transition: "all 0.2s ease",
     border: isDark
-      ? "1px solid rgba(255, 255, 255, 0.1)"
-      : "1px solid rgba(255, 255, 255, 0.08)",
+      ? "1px solid rgba(255, 255, 255, 0.18)"
+      : "1px solid rgba(0, 0, 0, 0.08)",
     outline: "none",
     position: "relative",
     fontFamily: "var(--font-mono)",
