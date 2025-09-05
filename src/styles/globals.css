@@ -1,9 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;700&display=swap");
 @import "tailwindcss";
 
 :root {
-  --font-sans: "Inter", "Geist Sans", Arial, Helvetica, sans-serif;
-  --font-mono: "Space Mono", "Geist Mono", Menlo, Monaco, monospace;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
+  --font-mono: "Space Mono", Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   --background: #ededed;
   --background-rgb: 237, 237, 237;
   --primary-text: #232323;

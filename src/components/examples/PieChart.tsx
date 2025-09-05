@@ -10,7 +10,7 @@ import {
   Legend,
 } from "recharts";
 import type { PieChartProps } from "@/interfaces/charts";
-import WidgetBase from "./common/WidgetBase";
+import WidgetBase from "@/components/common/WidgetBase";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function PieChart({ data, title }: PieChartProps) {

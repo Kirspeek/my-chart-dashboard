@@ -12,7 +12,7 @@ import {
   Legend,
 } from "recharts";
 import type { BarChartProps } from "@/interfaces/charts";
-import WidgetBase from "./common/WidgetBase";
+import WidgetBase from "@/components/common/WidgetBase";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function BarChart({ data, title }: BarChartProps) {

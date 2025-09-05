@@ -3,7 +3,7 @@
 import React from "react";
 import type { DataTableProps } from "@/interfaces/common";
 import type { UserData } from "@/interfaces/dashboard";
-import WidgetBase from "./common/WidgetBase";
+import WidgetBase from "@/components/common/WidgetBase";
 
 export default function DataTable({ data, title }: DataTableProps<UserData>) {
   return (
