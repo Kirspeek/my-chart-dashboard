@@ -63,15 +63,16 @@ export default function ClockDisplay({
           }
         }
         .clock-colon {
-          animation: blink 1s infinite;
+          display: inline-block;
+          color: var(--muted-text);
+          animation: colonPulse 1s ease-in-out infinite;
         }
-        @keyframes blink {
+        @keyframes colonPulse {
           0%,
-          50% {
-            opacity: 1;
-          }
-          51%,
           100% {
+            opacity: 0.45;
+          }
+          50% {
             opacity: 1;
           }
         }

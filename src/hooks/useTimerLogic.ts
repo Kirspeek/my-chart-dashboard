@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
+import type React from "react";
 import type { TimerState, TimerActions } from "@/interfaces/widgets";
 import { formatHms } from "@/utils/timerUtils";
 import { TIMER_LIMITS, TIMER_NOTIFICATION } from "@/data";
@@ -17,8 +18,6 @@ export function useTimerLogic(): TimerState & TimerActions {
 
   useEffect(() => {
     setTimeLeft(duration);
-    setIsRunning(false);
-    setIsPaused(false);
   }, [duration]);
 
   const formatTime = (seconds: number): string => formatHms(seconds);
@@ -27,9 +26,10 @@ export function useTimerLogic(): TimerState & TimerActions {
     (clientX: number, clientY: number) => {
       if (!svgRef.current) return timeLeft;
       const rect = svgRef.current.getBoundingClientRect();
-      const center = 45;
-      const x = clientX - rect.left - center;
-      const y = clientY - rect.top - center;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const x = clientX - centerX;
+      const y = clientY - centerY;
       let theta = Math.atan2(y, x) + Math.PI / 2;
       if (theta < 0) theta += 2 * Math.PI;
       const percent = theta / (2 * Math.PI);
@@ -47,6 +47,33 @@ export function useTimerLogic(): TimerState & TimerActions {
     if (isRunning) {
       setIsRunning(false);
       setIsPaused(false);
+    }
+
+    let clientX: number | undefined;
+    let clientY: number | undefined;
+
+    const isTouchEvent = (
+      ev: React.MouseEvent | React.TouchEvent
+    ): ev is React.TouchEvent => {
+      return (
+        "nativeEvent" in ev &&
+        (ev as React.TouchEvent).nativeEvent &&
+        "changedTouches" in (ev as React.TouchEvent).nativeEvent
+      );
+    };
+
+    if (isTouchEvent(e) && e.nativeEvent.changedTouches.length > 0) {
+      const t = e.nativeEvent.changedTouches[0];
+      clientX = t.clientX;
+      clientY = t.clientY;
+    } else {
+      const m = e as React.MouseEvent;
+      clientX = m.clientX;
+      clientY = m.clientY;
+    }
+    if (clientX !== undefined && clientY !== undefined) {
+      const seconds = getSecondsFromPointer(clientX, clientY);
+      setPreviewDuration(seconds);
     }
     document.body.style.userSelect = "none";
   };
@@ -71,9 +98,11 @@ export function useTimerLogic(): TimerState & TimerActions {
   );
 
   const onPointerUp = useCallback(() => {
-    if (previewDuration) {
+    if (previewDuration !== null) {
       setDuration(previewDuration);
       setTimeLeft(previewDuration);
+      setIsRunning(true);
+      setIsPaused(false);
     }
     setPreviewDuration(null);
     setDragging(false);

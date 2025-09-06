@@ -21,7 +21,7 @@ import { formatMmSs } from "@/utils/timerUtils";
 import { IconButton, useMobileDetection } from "../../common";
 import TimerModeButtons from "./TimerModeButtons";
 import TimerDisplay from "./TimerDisplay";
-import { TIMER_MODES } from "@/data";
+import { TIMER_MODES, TIMER_LIMITS } from "@/data";
 import DraggableProgressRing from "./DraggableProgressRing";
 import { useTimerLogic } from "@/hooks/useTimerLogic";
 
@@ -41,7 +41,6 @@ export default function TimerWidget({
   const [isComplete, setIsComplete] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const {
-    duration,
     timeLeft,
     isRunning,
     dragging,
@@ -50,6 +49,7 @@ export default function TimerWidget({
     resetTimer: resetLogic,
     setDuration,
     onPointerDown,
+    previewDuration,
   } = useTimerLogic();
 
   const timerModes: TimerMode[] = TIMER_MODES.map((m) => {
@@ -115,18 +115,20 @@ export default function TimerWidget({
   }, [toggleTimer]);
 
   const resetTimer = useCallback(() => {
+    setDuration(currentTimer.duration);
     resetLogic();
     setIsComplete(false);
     setShowNotification(false);
-  }, [resetLogic]);
+  }, [resetLogic, setDuration, currentTimer.duration]);
 
   const formatTime = (seconds: number): string => formatMmSs(seconds);
 
   const getProgress = (): number => {
-    return ((duration - timeLeft) / duration) * 100;
+    const secondsToShow = previewDuration ?? timeLeft;
+    const progress = (secondsToShow / TIMER_LIMITS.maxSeconds) * 100;
+    return Math.max(0, Math.min(100, progress));
   };
 
-  // show a brief toast when timer completes
   useEffect(() => {
     if (isComplete) {
       setShowNotification(true);

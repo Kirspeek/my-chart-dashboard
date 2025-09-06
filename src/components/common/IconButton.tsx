@@ -31,8 +31,9 @@ export default function IconButton({
   };
 
   const variantClasses = {
-    default: "bg-gray-100 hover:bg-gray-200 text-gray-700",
-    ghost: "hover:bg-gray-100 text-gray-600",
+    default:
+      "bg-[var(--button-bg)] hover:bg-[var(--button-hover-bg)] text-[var(--primary-text)] border border-[var(--button-border)]",
+    ghost: "hover:bg-[var(--button-hover-bg)] text-[var(--primary-text)]",
     primary: "bg-blue-600 hover:bg-blue-700 text-white",
   };
 

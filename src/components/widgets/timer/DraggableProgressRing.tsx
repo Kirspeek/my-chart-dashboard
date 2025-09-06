@@ -41,7 +41,7 @@ export default function DraggableProgressRing({
           r={radius}
           fill="none"
           stroke="var(--button-border)"
-          strokeWidth="3"
+          strokeWidth="5"
         />
         <circle
           cx="50"
@@ -49,7 +49,7 @@ export default function DraggableProgressRing({
           r={radius}
           fill="none"
           stroke={strokeColor}
-          strokeWidth="3"
+          strokeWidth="5"
           strokeLinecap="round"
           strokeDasharray={`${circumference}`}
           strokeDashoffset={`${dashOffset}`}
@@ -63,7 +63,7 @@ export default function DraggableProgressRing({
           r={radius}
           fill="none"
           stroke="transparent"
-          strokeWidth="8"
+          strokeWidth="12"
         />
       </svg>
 

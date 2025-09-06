@@ -727,7 +727,7 @@ export const lightColorsTheme: ColorsTheme = {
       thermometer: {
         fill: "#fff",
         stroke: "#444",
-        mercury: "#444",
+        mercury: "#ea4300",
         glow: "#ff5722",
       },
       sunGradient: {
@@ -743,7 +743,7 @@ export const lightColorsTheme: ColorsTheme = {
       thermometer: {
         fill: "#fff",
         stroke: "#444",
-        mercury: "#444",
+        mercury: "#ea4300",
         glow: "#ff5722",
       },
       sunGradient: {
@@ -767,7 +767,8 @@ export const lightColorsTheme: ColorsTheme = {
         dark: "0.15",
       },
       shadow: {
-        light: "0 8px 14px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)",
+        light:
+          "0 8px 14px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)",
         dark: "0 8px 14px rgba(0,0,0,0.12), 0 2px 5px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.15)",
       },
     },
@@ -1173,14 +1174,14 @@ export const darkColorsTheme: ColorsTheme = {
         dark: "0.15",
       },
       shadow: {
-        light: "0 8px 14px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)",
+        light:
+          "0 8px 14px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)",
         dark: "0 8px 14px rgba(0,0,0,0.12), 0 2px 5px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.15)",
       },
     },
   },
 };
 
-// Helper function to get colors based on theme
 export function getColorsTheme(isDark: boolean): ColorsTheme {
   return isDark ? darkColorsTheme : lightColorsTheme;
 }
