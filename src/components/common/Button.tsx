@@ -1,13 +1,6 @@
 import React from "react";
 import { useTheme } from "../../hooks/useTheme";
-
-interface ButtonProps {
-  onClick?: () => void;
-  className?: string;
-  style?: React.CSSProperties;
-  children?: React.ReactNode;
-  title?: string;
-}
+import type { ButtonProps } from "@/interfaces/button";
 
 export default function Button({
   onClick,
@@ -18,7 +11,7 @@ export default function Button({
 }: ButtonProps) {
   const { isDark, colors } = useTheme();
 
-  const baseBg = colors.cardBackground; // translucent by theme
+  const baseBg = colors.cardBackground;
   const hoverBg = isDark ? "rgba(255,255,255,0.14)" : "rgba(35,35,35,0.10)";
   const activeBg = isDark ? "rgba(255,255,255,0.2)" : "rgba(35,35,35,0.14)";
   const textColor = colors.primary;
@@ -35,7 +28,8 @@ export default function Button({
     height: 36,
     padding: "0 10px",
     border: "0",
-    background: `${animatedGradient}, ${baseBg}`,
+    backgroundImage: animatedGradient,
+    backgroundColor: baseBg,
     backgroundSize: "200% 200%",
     color: textColor,
     borderRadius: 10,
@@ -50,26 +44,26 @@ export default function Button({
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.background = `${animatedGradient}, ${hoverBg}`;
+    e.currentTarget.style.backgroundColor = hoverBg;
     e.currentTarget.style.boxShadow =
       "0 10px 18px rgba(0,0,0,0.08), 0 3px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.25)";
     e.currentTarget.style.transform = "translateY(-1px)";
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.background = `${animatedGradient}, ${baseBg}`;
+    e.currentTarget.style.backgroundColor = baseBg;
     e.currentTarget.style.boxShadow =
       "0 8px 14px rgba(0,0,0,0.06), 0 2px 5px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.2)";
     e.currentTarget.style.transform = "translateY(0)";
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.background = `${animatedGradient}, ${activeBg}`;
+    e.currentTarget.style.backgroundColor = activeBg;
     e.currentTarget.style.transform = "translateY(0)";
   };
 
   const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.currentTarget.style.background = `${animatedGradient}, ${hoverBg}`;
+    e.currentTarget.style.backgroundColor = hoverBg;
   };
 
   return (

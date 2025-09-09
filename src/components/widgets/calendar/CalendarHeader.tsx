@@ -20,7 +20,6 @@ export default function CalendarHeader({
   onNext,
   onToday,
   onViewModeChange,
-  onSetYear,
 }: CalendarHeaderProps) {
   const monthNames = [
     "January",

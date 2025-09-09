@@ -17,11 +17,12 @@ export default function MapContainer({
   searchResult,
   onMarkerChange,
 }: MapContainerProps) {
-  const { colorsTheme } = useTheme();
+  const { colorsTheme, isDark } = useTheme();
   const mapColors = colorsTheme.widgets.map;
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markerRef = useRef<mapboxgl.Marker | null>(null);
+  const lastAppliedStyleRef = useRef<string | null>(null);
   const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_API_KEY || "";
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function MapContainer({
 
     const map = new mapboxgl.Map({
       container: mapContainer.current,
-      style: MAP_STYLE,
+      style: isDark ? "mapbox://styles/mapbox/dark-v11" : MAP_STYLE,
       center: internalLocation || DEFAULT_CENTER,
       zoom: 13,
       attributionControl: false,
@@ -47,6 +48,9 @@ export default function MapContainer({
       cooperativeGestures: false,
     });
     mapRef.current = map;
+    lastAppliedStyleRef.current = isDark
+      ? "mapbox://styles/mapbox/dark-v11"
+      : MAP_STYLE;
 
     // Configure touch interactions after map is loaded
     map.on("load", () => {
@@ -70,7 +74,41 @@ export default function MapContainer({
       map.remove();
       styleEl.remove();
     };
-  }, [internalLocation, MAPBOX_ACCESS_TOKEN]);
+  }, [MAPBOX_ACCESS_TOKEN]);
+
+  // Switch map style instantly when theme changes without recreating the map
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const map = mapRef.current;
+    const nextStyle = isDark ? "mapbox://styles/mapbox/dark-v11" : MAP_STYLE; // light
+
+    if (lastAppliedStyleRef.current === nextStyle) return;
+    lastAppliedStyleRef.current = nextStyle;
+
+    // Preserve current camera state to avoid any visual jump
+    const currentCenter = map.getCenter();
+    const currentZoom = map.getZoom();
+    const currentBearing = map.getBearing();
+    const currentPitch = map.getPitch();
+
+    // Apply style immediately; disable diffing to avoid sprite/glyph diff overhead
+    // @ts-expect-error Mapbox types may not expose the options param in some versions
+    map.setStyle(nextStyle, { diff: false });
+
+    map.once("styledata", () => {
+      // Restore camera instantly without animation
+      map.jumpTo({
+        center: currentCenter,
+        zoom: currentZoom,
+        bearing: currentBearing,
+        pitch: currentPitch,
+      });
+
+      if (internalLocation) {
+        map.setCenter(internalLocation);
+      }
+    });
+  }, [isDark, internalLocation]);
 
   useEffect(() => {
     if (!mapRef.current || !internalLocation) return;
