@@ -573,11 +573,12 @@ export default function LineChartChartView({
           <div className="flex items-center justify-between">
             <span className="text-xs secondary-text">Best Month:</span>
             <span className="text-xs font-bold primary-text">
-              {
-                data.reduce((max, item) =>
-                  item.revenue > max.revenue ? item : max
-                ).month
-              }
+              {data.length
+                ? data.reduce(
+                    (max, item) => (item.revenue > max.revenue ? item : max),
+                    data[0]
+                  ).month
+                : "—"}
             </span>
           </div>
           <div className="flex items-center justify-between">

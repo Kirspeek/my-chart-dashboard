@@ -1,23 +1,26 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { CardData } from "@/interfaces/wallet";
 import { EMPTY_CARD } from "../../data";
 
 export const useCardManagement = () => {
-  const [cards, setCards] = useState<CardData[]>(() => {
-    const saved = localStorage.getItem("wallet_cards");
+  const [cards, setCards] = useState<CardData[]>(() =>
+    Array(5)
+      .fill(null)
+      .map(() => ({ ...EMPTY_CARD }))
+  );
+
+  useEffect(() => {
+    const saved =
+      typeof window !== "undefined"
+        ? localStorage.getItem("wallet_cards")
+        : null;
     if (saved) {
       try {
-        return JSON.parse(saved) as CardData[];
-      } catch {
-        return Array(5)
-          .fill(null)
-          .map(() => ({ ...EMPTY_CARD }));
-      }
+        const parsed = JSON.parse(saved) as CardData[];
+        setCards(parsed);
+      } catch {}
     }
-    return Array(5)
-      .fill(null)
-      .map(() => ({ ...EMPTY_CARD }));
-  });
+  }, []);
 
   const nextEmptyIndex = useMemo(() => {
     return cards.findIndex(
@@ -99,7 +102,9 @@ export const useCardManagement = () => {
       .fill(null)
       .map(() => ({ ...EMPTY_CARD }));
     setCards(emptyCards);
-    localStorage.removeItem("wallet_cards");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("wallet_cards");
+    }
   };
 
   const removeCard = (index: number) => {

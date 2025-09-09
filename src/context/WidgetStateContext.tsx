@@ -7,11 +7,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import {
-  CardData,
-  CardSpendingData,
-  WidgetState,
-} from "@/interfaces/wallet";
+import { CardData, CardSpendingData, WidgetState } from "@/interfaces/wallet";
 import type {
   WidgetStateContextType,
   WidgetStateProviderProps,
@@ -47,10 +43,12 @@ export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
     },
   });
 
-  // Load initial spending data from localStorage
   useEffect(() => {
     const loadSpendingData = () => {
-      const existingData = localStorage.getItem("card_spending_data");
+      const existingData =
+        typeof window !== "undefined"
+          ? localStorage.getItem("card_spending_data")
+          : null;
       if (existingData) {
         try {
           const spendingData: CardSpendingData[] = JSON.parse(existingData);
@@ -67,9 +65,7 @@ export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
               aggregatedData,
             });
           }
-        } catch {
-          // Error loading spending data
-        }
+        } catch {}
       }
     };
 
@@ -81,11 +77,8 @@ export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
     const aggregatedData = calculateAggregatedData(spendingData);
 
     setWidgetState((prev) => {
-      // Preserve the current card selection if it still exists
       let currentCardId = prev.currentCardId;
       let currentCardNumber = prev.currentCardNumber;
-
-      // Only reset to first active card if no card is currently selected or if the selected card is no longer active
       if (
         !currentCardId ||
         !spendingData.find(
@@ -94,12 +87,10 @@ export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
       ) {
         const firstActiveCard = spendingData.find((card) => card.isActive);
         if (firstActiveCard) {
-          // Auto-selecting first active card
           currentCardId = firstActiveCard.cardId;
           currentCardNumber = firstActiveCard.cardNumber;
         }
       } else {
-        // Preserving current card selection
       }
 
       return {
@@ -112,24 +103,23 @@ export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
     });
   }, []);
 
-  // Listen for changes to wallet cards
   useEffect(() => {
     const handleStorageChange = () => {
-      const walletCards = localStorage.getItem("wallet_cards");
+      const walletCards =
+        typeof window !== "undefined"
+          ? localStorage.getItem("wallet_cards")
+          : null;
       if (walletCards) {
         try {
           const cards: CardData[] = JSON.parse(walletCards);
           refreshSpendingData(cards);
-        } catch {
-          // Error parsing wallet cards
-        }
+        } catch {}
       }
     };
 
     window.addEventListener("storage", handleStorageChange);
 
-    // Check less frequently to avoid interfering with user selections
-    const interval = setInterval(handleStorageChange, 5000); // Changed from 1000ms to 5000ms
+    const interval = setInterval(handleStorageChange, 5000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -141,7 +131,6 @@ export const WidgetStateProvider: React.FC<WidgetStateProviderProps> = ({
     setWidgetState((prev) => {
       const selectedCard = prev.cards.find((card) => card.cardId === cardId);
       if (selectedCard) {
-        // User selected card
         return {
           ...prev,
           currentCardId: cardId,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Space_Mono } from "next/font/google";
 import "../styles/globals.css";
 import { TooltipProvider } from "../context/TooltipContext";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -30,12 +31,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "(function(){try{var t=localStorage.getItem('theme');if(!t||t==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){document.documentElement.classList.add('dark');}})();",
-          }}
-        />
+        <Script id="init-theme" strategy="beforeInteractive">
+          {
+            "(function(){try{var t=localStorage.getItem('theme');if(!t||t==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){document.documentElement.classList.add('dark');}})();"
+          }
+        </Script>
       </head>
       <body className={`${inter.variable} ${spaceMono.variable} antialiased`}>
         <TooltipProvider>{children}</TooltipProvider>

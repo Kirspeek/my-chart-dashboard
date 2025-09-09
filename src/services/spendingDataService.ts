@@ -1,6 +1,5 @@
 import { CardData, CardSpendingData } from "@/interfaces/wallet";
 
-// Generate a consistent hash from card number for seeded random generation
 const generateHash = (str: string): number => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -11,28 +10,23 @@ const generateHash = (str: string): number => {
   return Math.abs(hash);
 };
 
-// Seeded random number generator
 const seededRandom = (seed: number, min: number, max: number): number => {
   const x = Math.sin(seed) * 10000;
   const random = x - Math.floor(x);
   return Math.floor(random * (max - min + 1)) + min;
 };
 
-// Generate monthly spending data for a card
 const generateMonthlySpending = (cardNumber: string) => {
   const hash = generateHash(cardNumber);
   let seed = hash;
 
-  // Generate base monthly spending amount
   const baseMonthlySpending = seededRandom(seed++, 8000, 15000);
 
-  // Generate category percentages that sum to 100
   const foodPercent = seededRandom(seed++, 25, 40);
   const transportPercent = seededRandom(seed++, 20, 35);
   const entertainmentPercent = seededRandom(seed++, 15, 30);
   const utilitiesPercent = seededRandom(seed++, 10, 25);
 
-  // Normalize percentages to sum to 100
   const totalPercent =
     foodPercent + transportPercent + entertainmentPercent + utilitiesPercent;
   const normalizedFood = Math.round((foodPercent / totalPercent) * 100);
@@ -59,14 +53,13 @@ const generateMonthlySpending = (cardNumber: string) => {
   };
 };
 
-// Generate daily spending data for a month
 const generateDailySpendingMonthly = (
   cardNumber: string,
   year: number,
   month: number
 ) => {
   const hash = generateHash(cardNumber);
-  let seed = hash + month; // Vary seed by month for different patterns
+  let seed = hash + month;
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const monthlyData = generateMonthlySpending(cardNumber);
@@ -79,21 +72,18 @@ const generateDailySpendingMonthly = (
     const dayOfWeek = date.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
-    // Apply day-of-week variations
     let dailyMultiplier = 1;
     if (isWeekend) {
-      dailyMultiplier = seededRandom(seed++, 12, 18) / 10; // 1.2-1.8x on weekends
+      dailyMultiplier = seededRandom(seed++, 12, 18) / 10;
     } else {
-      dailyMultiplier = seededRandom(seed++, 8, 12) / 10; // 0.8-1.2x on weekdays
+      dailyMultiplier = seededRandom(seed++, 8, 12) / 10;
     }
 
-    // Apply random variation
-    const variation = seededRandom(seed++, 7, 13) / 10; // ±30% variation
+    const variation = seededRandom(seed++, 7, 13) / 10;
     const totalDailySpending = Math.round(
       dailyAverage * dailyMultiplier * variation
     );
 
-    // Distribute across categories based on monthly percentages
     const foodPercent = (monthlyData.categories.food / monthlyData.total) * 100;
     const transportPercent =
       (monthlyData.categories.transport / monthlyData.total) * 100;
@@ -119,16 +109,14 @@ const generateDailySpendingMonthly = (
   return dailyData;
 };
 
-// Generate daily spending data for a year
 const generateDailySpendingYearly = (cardNumber: string, year: number) => {
   const yearlyData = [];
   const hash = generateHash(cardNumber);
   let seed = hash;
 
-  // Generate base monthly spending for the year
   const monthlySpending = generateMonthlySpending(cardNumber);
   const yearlyTotal = monthlySpending.total * 12;
-  const dailyAverage = yearlyTotal / 366; // 2024 is a leap year
+  const dailyAverage = yearlyTotal / 366;
 
   for (let month = 0; month < 12; month++) {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -142,61 +130,49 @@ const generateDailySpendingYearly = (cardNumber: string, year: number) => {
       // Apply day-of-week variations
       let dailyMultiplier = 1;
       if (isWeekend) {
-        dailyMultiplier = seededRandom(seed++, 12, 18) / 10; // 1.2-1.8x on weekends
+        dailyMultiplier = seededRandom(seed++, 12, 18) / 10;
       } else {
-        dailyMultiplier = seededRandom(seed++, 8, 12) / 10; // 0.8-1.2x on weekdays
+        dailyMultiplier = seededRandom(seed++, 8, 12) / 10;
       }
 
-      // Apply monthly variations
       if (month === 11) {
-        // December - holiday season
-        dailyMultiplier *= seededRandom(seed++, 15, 25) / 10; // 1.5-2.5x
+        dailyMultiplier *= seededRandom(seed++, 15, 25) / 10;
       } else if (month === 6) {
-        // July - summer
-        dailyMultiplier *= seededRandom(seed++, 12, 18) / 10; // 1.2-1.8x
+        dailyMultiplier *= seededRandom(seed++, 12, 18) / 10;
       } else if (month === 2) {
-        // March - spring
-        dailyMultiplier *= seededRandom(seed++, 10, 15) / 10; // 1.0-1.5x
+        dailyMultiplier *= seededRandom(seed++, 10, 15) / 10;
       }
 
-      // Add random variations (±30% for more realistic spread)
-      const variation = seededRandom(seed++, 7, 13) / 10; // 0.7 to 1.3
+      const variation = seededRandom(seed++, 7, 13) / 10;
       let totalDailySpending = Math.round(
         dailyAverage * dailyMultiplier * variation
       );
 
-      // Ensure minimum spending for every day (no zero days)
-      const minSpending = Math.round(dailyAverage * 0.3); // At least 30% of average
+      const minSpending = Math.round(dailyAverage * 0.3);
       if (totalDailySpending < minSpending) {
         totalDailySpending = minSpending;
       }
 
-      // Add some special event days with higher spending
       if (date.getDate() === 25 && month === 11) {
-        // Christmas - very high spending
-        const christmasMultiplier = seededRandom(seed++, 25, 35) / 10; // 2.5-3.5x
+        const christmasMultiplier = seededRandom(seed++, 25, 35) / 10;
         totalDailySpending = Math.round(
           totalDailySpending * christmasMultiplier
         );
       } else if (date.getDate() === 1 && month === 0) {
-        // New Year - very high spending
-        const newYearMultiplier = seededRandom(seed++, 25, 35) / 10; // 2.5-3.5x
+        const newYearMultiplier = seededRandom(seed++, 25, 35) / 10;
         totalDailySpending = Math.round(totalDailySpending * newYearMultiplier);
       } else if (date.getDate() === 14 && month === 1) {
-        // Valentine's Day - high spending
-        const valentineMultiplier = seededRandom(seed++, 18, 25) / 10; // 1.8-2.5x
+        const valentineMultiplier = seededRandom(seed++, 18, 25) / 10;
         totalDailySpending = Math.round(
           totalDailySpending * valentineMultiplier
         );
       } else if (date.getDate() === 31 && month === 9) {
-        // Halloween - moderate spending
-        const halloweenMultiplier = seededRandom(seed++, 15, 22) / 10; // 1.5-2.2x
+        const halloweenMultiplier = seededRandom(seed++, 15, 22) / 10;
         totalDailySpending = Math.round(
           totalDailySpending * halloweenMultiplier
         );
       }
 
-      // Distribute across categories based on monthly percentages
       const foodPercent =
         (monthlySpending.categories.food / monthlySpending.total) * 100;
       const transportPercent =
@@ -225,10 +201,8 @@ const generateDailySpendingYearly = (cardNumber: string, year: number) => {
   return yearlyData;
 };
 
-// Generate spending data for a new card
 export const generateCardSpendingData = (card: CardData): CardSpendingData => {
   const cardId = `card_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  // Use the original card number for data generation, but store formatted version for display
   const originalCardNumber = card.number;
   const cardNumber =
     card.number.length >= 4 ? `**** ${card.number.slice(-4)}` : card.number;
@@ -258,17 +232,17 @@ export const generateCardSpendingData = (card: CardData): CardSpendingData => {
   };
 };
 
-// Update spending data when cards change
 export const updateSpendingData = (cards: CardData[]): CardSpendingData[] => {
-  const existingData = localStorage.getItem("card_spending_data");
+  const existingData =
+    typeof window !== "undefined"
+      ? localStorage.getItem("card_spending_data")
+      : null;
   let existingSpendingData: CardSpendingData[] = [];
 
   if (existingData) {
     try {
       existingSpendingData = JSON.parse(existingData);
-    } catch {
-      // Error parsing existing spending data
-    }
+    } catch {}
   }
 
   const updatedSpendingData: CardSpendingData[] = [];
@@ -280,39 +254,32 @@ export const updateSpendingData = (cards: CardData[]): CardSpendingData[] => {
     const formattedCardNumber =
       card.number.length >= 4 ? `**** ${card.number.slice(-4)}` : card.number;
 
-    // Check if spending data already exists for this card by matching original numbers
     const existingCardData = existingSpendingData.find((data) => {
-      // Try to match by formatted card number first
       if (data.cardNumber === formattedCardNumber) {
         return true;
       }
-      // Fallback: try to match by extracting original number from formatted
       const existingOriginal = data.cardNumber.replace("**** ", "");
       return existingOriginal === originalCardNumber;
     });
 
     if (existingCardData) {
-      // Keep existing data but ensure it's active and has correct formatted number
       updatedSpendingData.push({
         ...existingCardData,
-        cardNumber: formattedCardNumber, // Ensure consistent formatting
+        cardNumber: formattedCardNumber,
         isActive: true,
       });
     } else {
-      // Generate new spending data
       const newSpendingData = generateCardSpendingData(card);
       updatedSpendingData.push(newSpendingData);
     }
   });
 
-  // Mark cards that are no longer in the wallet as inactive
   existingSpendingData.forEach((existingData) => {
     const isStillInWallet = cards.some((card) => {
       const originalCardNumber = card.number;
       const formattedCardNumber =
         card.number.length >= 4 ? `**** ${card.number.slice(-4)}` : card.number;
 
-      // Check if this card is still in the wallet
       return (
         existingData.cardNumber === formattedCardNumber ||
         existingData.cardNumber.replace("**** ", "") === originalCardNumber
@@ -327,16 +294,16 @@ export const updateSpendingData = (cards: CardData[]): CardSpendingData[] => {
     }
   });
 
-  // Save to localStorage
-  localStorage.setItem(
-    "card_spending_data",
-    JSON.stringify(updatedSpendingData)
-  );
+  if (typeof window !== "undefined") {
+    localStorage.setItem(
+      "card_spending_data",
+      JSON.stringify(updatedSpendingData)
+    );
+  }
 
   return updatedSpendingData;
 };
 
-// Get current active card
 export const getCurrentActiveCard = (
   spendingData: CardSpendingData[]
 ): CardSpendingData | null => {
@@ -344,7 +311,6 @@ export const getCurrentActiveCard = (
   return activeCards.length > 0 ? activeCards[0] : null;
 };
 
-// Calculate aggregated data across all active cards
 export const calculateAggregatedData = (spendingData: CardSpendingData[]) => {
   const activeCards = spendingData.filter((data) => data.isActive);
 
@@ -362,7 +328,6 @@ export const calculateAggregatedData = (spendingData: CardSpendingData[]) => {
   );
   const monthlySpending = totalSpending;
 
-  // Aggregate daily spending for the current month
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 

@@ -66,7 +66,9 @@ export const useWalletLogic = () => {
   }, [editing, setFetchingBankData]);
 
   useEffect(() => {
-    localStorage.setItem("wallet_cards", JSON.stringify(cards));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("wallet_cards", JSON.stringify(cards));
+    }
   }, [cards]);
 
   const handleInput = useCallback(
@@ -144,9 +146,7 @@ export const useWalletLogic = () => {
             if (bankData) {
               finalBankInfo = bankData;
             }
-          } catch {
-            // Continue with existing bank info
-          }
+          } catch {}
         }
 
         const cardData: CardData = {
