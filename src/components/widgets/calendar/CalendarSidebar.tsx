@@ -22,22 +22,20 @@ export default function CalendarSidebar({
   showEventForm,
   onToggleEventForm,
 }: CalendarSidebarProps) {
-  const [newEventTitle, setNewEventTitle] = useState("");
-  const [newEventDescription, setNewEventDescription] = useState("");
+  const [newEventText, setNewEventText] = useState("");
   const { colorsTheme } = useTheme();
   const calendarColors = colorsTheme.widgets.calendar;
 
   const handleAddClick = () => {
-    if (!selectedDate || !newEventTitle.trim()) return;
+    if (!selectedDate || !newEventText.trim()) return;
 
     onAddEvent({
-      title: newEventTitle.trim(),
-      description: newEventDescription.trim() || undefined,
+      title: newEventText.trim(),
+      description: undefined,
       date: selectedDate,
     });
 
-    setNewEventTitle("");
-    setNewEventDescription("");
+    setNewEventText("");
   };
 
   const formatDate = (date: Date) => {
@@ -176,48 +174,29 @@ export default function CalendarSidebar({
             <div className="space-y-2">
               <input
                 type="text"
-                placeholder="Event title"
-                value={newEventTitle}
-                onChange={(e) => setNewEventTitle(e.target.value)}
-                className="w-full px-2 py-1 text-xs rounded focus:outline-none backdrop-blur-sm"
+                placeholder="add event"
+                value={newEventText}
+                onChange={(e) => setNewEventText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleAddClick();
+                }}
+                className="w-full px-3 py-2 text-sm rounded-full focus:outline-none backdrop-blur-sm"
                 style={{
-                  border: `1px solid ${calendarColors.borderColors.input}`,
+                  border: `2px solid ${calendarColors.borderColors.input}`,
                   backgroundColor: calendarColors.backgroundColors.input,
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                  boxShadow: "0 2px 6px 0 rgba(0, 0, 0, 0.06)",
                   color: calendarColors.textColors.primary,
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor =
+                  e.currentTarget.style.borderColor =
                     calendarColors.borderColors.focus;
-                  e.target.style.boxShadow = `0 0 0 1px ${calendarColors.borderColors.focus}`;
+                  e.currentTarget.style.boxShadow = `0 0 0 2px ${calendarColors.borderColors.focus}`;
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor =
+                  e.currentTarget.style.borderColor =
                     calendarColors.borderColors.input;
-                  e.target.style.boxShadow = "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
-                }}
-              />
-              <input
-                type="text"
-                placeholder="Description (optional)"
-                value={newEventDescription}
-                onChange={(e) => setNewEventDescription(e.target.value)}
-                className="w-full px-2 py-1 text-xs rounded focus:outline-none backdrop-blur-sm"
-                style={{
-                  border: `1px solid ${calendarColors.borderColors.input}`,
-                  backgroundColor: calendarColors.backgroundColors.input,
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                  color: calendarColors.textColors.primary,
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor =
-                    calendarColors.borderColors.focus;
-                  e.target.style.boxShadow = `0 0 0 1px ${calendarColors.borderColors.focus}`;
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor =
-                    calendarColors.borderColors.input;
-                  e.target.style.boxShadow = "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
+                  e.currentTarget.style.boxShadow =
+                    "0 2px 6px 0 rgba(0, 0, 0, 0.06)";
                 }}
               />
               <div className="flex gap-1">

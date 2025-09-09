@@ -11,7 +11,9 @@ export function useCalendarLogic(
 ): CalendarState & CalendarActions {
   const [currentDate, setCurrentDate] = useState(initialDate || new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [viewMode, setViewMode] = useState<"month" | "week" | "day">("month");
+  const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "year">(
+    "month"
+  );
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [showEventForm, setShowEventForm] = useState(false);
 
@@ -161,6 +163,7 @@ export function useCalendarLogic(
 
   const handleDateSelect = useCallback(
     (date: Date) => {
+      setCurrentDate(date);
       setSelectedDate(date);
       if (onDateSelect) {
         onDateSelect(date);
@@ -168,6 +171,20 @@ export function useCalendarLogic(
     },
     [onDateSelect]
   );
+
+  const setYear = useCallback((year: number) => {
+    setCurrentDate((prev) => {
+      const d = new Date(prev);
+      d.setFullYear(year);
+      return d;
+    });
+    setSelectedDate((prev) => {
+      const base = prev ?? new Date();
+      const d = new Date(base);
+      d.setFullYear(year);
+      return d;
+    });
+  }, []);
 
   return {
     currentDate,
@@ -177,6 +194,7 @@ export function useCalendarLogic(
     showEventForm,
     setSelectedDate: handleDateSelect,
     setViewMode,
+    setYear,
     goToPrevious,
     goToNext,
     goToToday,

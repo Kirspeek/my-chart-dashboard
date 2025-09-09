@@ -1,6 +1,6 @@
 export const lightTheme = {
   colors: {
-    primary: "#232323",
+    primary: "#222222",
     secondary: "#888",
     muted: "#b0b0a8",
     cardBackground: "rgba(35, 35, 35, 0.07)",

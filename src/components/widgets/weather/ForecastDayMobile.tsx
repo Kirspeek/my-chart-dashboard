@@ -25,15 +25,30 @@ export default function ForecastDayMobile({
       customBackground={weatherBackground}
       className="forecast-day-mobile"
     >
-      <span className="forecast-day-name-mobile">{day}</span>
-      <span className="forecast-day-icon-mobile">{icon}</span>
+      <span
+        className="forecast-day-name-mobile"
+        style={{ color: selected ? "inherit" : "var(--secondary-text)" }}
+      >
+        {day}
+      </span>
+      <span
+        className="forecast-day-icon-mobile"
+        style={{ color: selected ? "inherit" : "var(--secondary-text)" }}
+      >
+        {icon}
+      </span>
       <span
         className="forecast-day-temp-mobile"
         style={{ color: "var(--weather-text-muted)" }}
       >
         {min}°
       </span>
-      <span className="forecast-day-temp-mobile">{max}°</span>
+      <span
+        className="forecast-day-temp-mobile"
+        style={{ color: selected ? "inherit" : "var(--secondary-text)" }}
+      >
+        {max}°
+      </span>
       {children}
     </Button3D>
   );

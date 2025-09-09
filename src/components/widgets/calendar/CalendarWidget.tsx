@@ -19,6 +19,7 @@ export default function CalendarWidget({
     showEventForm,
     setSelectedDate,
     setViewMode,
+    setYear,
     goToPrevious,
     goToNext,
     goToToday,
@@ -58,9 +59,11 @@ export default function CalendarWidget({
         onNext={goToNext}
         onToday={goToToday}
         onViewModeChange={setViewMode}
+        onSetYear={setYear}
       />
 
       <CalendarWidgetDesktop
+        currentDate={currentDate}
         viewMode={viewMode}
         days={days}
         weekDays={weekDays}

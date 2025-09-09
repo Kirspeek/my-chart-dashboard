@@ -371,7 +371,7 @@ export interface ColorsTheme {
 
 export const lightColorsTheme: ColorsTheme = {
   // Base colors
-  primary: "#232323",
+  primary: "#f2f0ef",
   secondary: "#888",
   muted: "#b0b0a8",
   cardBackground: "rgba(35, 35, 35, 0.07)",
@@ -461,7 +461,7 @@ export const lightColorsTheme: ColorsTheme = {
       },
       borderColors: {
         input: "#e5e7eb", // gray-200
-        focus: "#3b82f6", // blue-500
+        focus: "var(--accent-color)",
       },
     },
     wallet: {
@@ -604,7 +604,7 @@ export const lightColorsTheme: ColorsTheme = {
         pattern: "var(--accent-color)",
       },
       table: {
-        headerText: "var(--primary-text)",
+        headerText: "var(--secondary-text)",
         rowHover: "var(--button-hover-bg)",
         accentDot: "var(--accent-color)",
         roleIcon: "var(--accent-color)",
@@ -612,7 +612,7 @@ export const lightColorsTheme: ColorsTheme = {
         clockIcon: "var(--accent-color)",
       },
       text: {
-        primary: "var(--primary-text)",
+        primary: "var(--secondary-text)",
         secondary: "var(--secondary-text)",
         hover: "var(--accent-color)",
       },
@@ -756,11 +756,11 @@ export const lightColorsTheme: ColorsTheme = {
       defaultHue: 50,
     },
     spendingProgress: {
-      active: "#232323",
+      active: "#222222",
       inactive: "rgba(35, 35, 35, 0.2)",
     },
     bottomSegmentInfo: {
-      darkText: "#232323",
+      darkText: "#222222",
       lightText: "#ffffff",
       borderOpacity: {
         light: "0.08",
@@ -868,7 +868,7 @@ export const darkColorsTheme: ColorsTheme = {
       },
       borderColors: {
         input: "#4b5563", // gray-600
-        focus: "#60a5fa", // blue-400
+        focus: "var(--accent-color)",
       },
     },
     wallet: {
@@ -1011,7 +1011,7 @@ export const darkColorsTheme: ColorsTheme = {
         pattern: "var(--accent-color)",
       },
       table: {
-        headerText: "var(--primary-text)",
+        headerText: "var(--secondary-text)",
         rowHover: "var(--button-hover-bg)",
         accentDot: "var(--accent-color)",
         roleIcon: "var(--accent-color)",
@@ -1019,7 +1019,7 @@ export const darkColorsTheme: ColorsTheme = {
         clockIcon: "var(--accent-color)",
       },
       text: {
-        primary: "var(--primary-text)",
+        primary: "var(--secondary-text)",
         secondary: "var(--secondary-text)",
         hover: "var(--accent-color)",
       },
@@ -1163,11 +1163,11 @@ export const darkColorsTheme: ColorsTheme = {
       defaultHue: 50,
     },
     spendingProgress: {
-      active: "#232323",
+      active: "#222222",
       inactive: "rgba(35, 35, 35, 0.2)",
     },
     bottomSegmentInfo: {
-      darkText: "#232323",
+      darkText: "#222222",
       lightText: "#ffffff",
       borderOpacity: {
         light: "0.08",

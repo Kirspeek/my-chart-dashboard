@@ -19,7 +19,7 @@ export default function TimerDisplay({
     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
       <div
         className={`font-mono font-bold mb-0.5 ${isMobile ? "text-4xl" : "text-2xl"}`}
-        style={{ color: isComplete ? color : "var(--primary-text)" }}
+        style={{ color: isComplete ? color : "#454545" }}
       >
         {timeText}
       </div>
@@ -29,4 +29,3 @@ export default function TimerDisplay({
     </div>
   );
 }
-

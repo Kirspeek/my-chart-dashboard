@@ -127,7 +127,7 @@ export default function ClockDisplay({
           style={{
             opacity: showSeconds ? 1 : 1,
             transition: "opacity 0.3s ease",
-            color: "var(--weather-text-secondary)",
+            color: "var(--muted-text)",
           }}
         >
           {pad(seconds)}

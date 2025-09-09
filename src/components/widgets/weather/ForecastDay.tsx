@@ -61,11 +61,15 @@ export default function ForecastDay({
             <Calendar
               className="w-3 h-3"
               style={{
+                color: selected ? "#fff" : "var(--secondary-text)",
                 opacity: isHovered ? 1 : 0.7,
                 transition: "opacity 0.3s ease",
               }}
             />
-            <span className="forecast-day-name-desktop forecast-day-name">
+            <span
+              className="forecast-day-name-desktop forecast-day-name"
+              style={{ color: selected ? "inherit" : "var(--secondary-text)" }}
+            >
               {day}
             </span>
           </div>
@@ -84,6 +88,7 @@ export default function ForecastDay({
             <Thermometer
               className="w-3 h-3"
               style={{
+                color: selected ? "#fff" : "var(--secondary-text)",
                 opacity: isHovered ? 1 : 0.7,
                 transition: "opacity 0.3s ease",
               }}
@@ -101,6 +106,7 @@ export default function ForecastDay({
             <span
               className="forecast-day-temp-desktop forecast-day-temp"
               style={{
+                color: selected ? "inherit" : "var(--secondary-text)",
                 transform: isHovered ? "scale(1.05)" : "scale(1)",
                 transition: "transform 0.3s ease",
               }}

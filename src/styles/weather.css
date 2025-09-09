@@ -6,7 +6,7 @@
 
 :root {
   /* Weather Text Colors */
-  --weather-text-primary: #232323;
+  --weather-text-primary: #222222;
   --weather-text-secondary: #b0b0a8;
   --weather-text-hot: #fff;
   --weather-text-clear: #ea7a00;
@@ -14,7 +14,7 @@
   --weather-text-teal: #425b59;
   --weather-text-gray: #888;
   --weather-text-thunderstorm: #fffbe7;
-  --weather-text-selected: #232323;
+  --weather-text-selected: #222222;
   --weather-text-muted: #888;
 
   /* Weather Background Gradients */

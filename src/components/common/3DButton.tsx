@@ -100,7 +100,7 @@ export default function Button3D({
   const normalStyle: React.CSSProperties = {
     ...baseStyle,
     background: getBackground("normal"),
-    color: selected ? "#fff" : "var(--primary-text)",
+    color: selected ? "#fff" : "var(--secondary-text)",
     boxShadow: getBoxShadow("normal"),
     transform: getTransform("normal"),
   };
@@ -108,7 +108,7 @@ export default function Button3D({
   const hoverStyle: React.CSSProperties = {
     ...baseStyle,
     background: getBackground("hover"),
-    color: selected ? "#fff" : "var(--primary-text)",
+    color: selected ? "#fff" : "var(--secondary-text)",
     boxShadow: getBoxShadow("hover"),
     transform: getTransform("hover"),
   };
@@ -116,7 +116,7 @@ export default function Button3D({
   const activeStyle: React.CSSProperties = {
     ...baseStyle,
     background: getBackground("active"),
-    color: selected ? "#fff" : "var(--primary-text)",
+    color: selected ? "#fff" : "var(--secondary-text)",
     boxShadow: getBoxShadow("active"),
     transform: getTransform("active"),
   };

@@ -8,7 +8,7 @@
     "Courier New", monospace;
   --background: #ededed;
   --background-rgb: 237, 237, 237;
-  --primary-text: #232323;
+  --primary-text: #454545;
   --secondary-text: #b0b0a8;
   --muted-text: #888;
   --accent-color: #ea7a00;
@@ -23,14 +23,14 @@
 .dark {
   --background: #1a1a1a;
   --background-rgb: 26, 26, 26;
-  --primary-text: #ffffff;
-  --secondary-text: #e0e0e0;
+  --primary-text: #efdcdc;
+  --secondary-text: #a0a0a0;
   --muted-text: #a0a0a0;
   --accent-color: #ff8c42;
-  --button-bg: rgba(255, 255, 255, 0.08);
-  --button-hover-bg: rgba(255, 255, 255, 0.15);
-  --button-active-bg: rgba(255, 255, 255, 0.25);
-  --button-border: rgba(255, 255, 255, 0.2);
+  --button-bg: rgba(255, 255, 255, 0.05);
+  --button-hover-bg: rgba(255, 255, 255, 0.1);
+  --button-active-bg: rgba(255, 255, 255, 0.16);
+  --button-border: rgba(255, 255, 255, 0.12);
   --widget-bg: rgba(26, 26, 26, 0.65);
   --widget-border: rgba(255, 255, 255, 0.08);
 }

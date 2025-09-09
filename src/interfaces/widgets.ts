@@ -199,14 +199,15 @@ export interface CalendarEvent {
 export interface CalendarState {
   currentDate: Date;
   selectedDate: Date | null;
-  viewMode: "month" | "week" | "day";
+  viewMode: "month" | "week" | "day" | "year";
   events: CalendarEvent[];
   showEventForm: boolean;
 }
 
 export interface CalendarActions {
   setSelectedDate: (date: Date) => void;
-  setViewMode: (mode: "month" | "week" | "day") => void;
+  setViewMode: (mode: "month" | "week" | "day" | "year") => void;
+  setYear: (year: number) => void;
   goToPrevious: () => void;
   goToNext: () => void;
   goToToday: () => void;

@@ -6,7 +6,8 @@ import CalendarSidebar from "./CalendarSidebar";
 import type { CalendarEvent } from "@/interfaces/widgets";
 
 interface CalendarWidgetDesktopProps {
-  viewMode: "month" | "week" | "day";
+  currentDate: Date;
+  viewMode: "month" | "week" | "day" | "year";
   days: Date[];
   weekDays: string[];
   events: CalendarEvent[];
@@ -25,6 +26,7 @@ export default function CalendarWidgetDesktop(
   props: CalendarWidgetDesktopProps
 ) {
   const {
+    currentDate,
     viewMode,
     days,
     weekDays,
@@ -44,6 +46,7 @@ export default function CalendarWidgetDesktop(
     <div className="flex flex-row flex-1 gap-4 min-h-0">
       <div className="flex-1 min-w-0">
         <CalendarGrid
+          currentDate={currentDate}
           days={days}
           weekDays={weekDays}
           events={events}

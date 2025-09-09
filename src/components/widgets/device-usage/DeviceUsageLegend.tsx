@@ -3,7 +3,6 @@
 import React from "react";
 import { Monitor, Smartphone, Tablet, Laptop } from "lucide-react";
 import type { DeviceUsageData } from "@/interfaces/widgets";
-import { Card } from "@/components/common";
 
 export default function DeviceUsageLegend({
   data,
@@ -28,17 +27,21 @@ export default function DeviceUsageLegend({
   return (
     <>
       {data.map((item, index) => (
-        <Card
+        <button
           key={index}
-          variant="default"
-          size="sm"
-          hover
-          className="flex items-center space-x-3 p-2"
-          style={{ animationDelay: `${index * 150}ms` }}
+          className="flex items-center space-x-3 p-2 rounded-lg text-left transition-all duration-200 hover:scale-105"
+          style={{
+            background: "var(--button-bg)",
+            border: "1px solid var(--button-border)",
+            color: "var(--secondary-text)",
+            animationDelay: `${index * 150}ms`,
+            fontFamily: "var(--font-mono)",
+            fontWeight: 700,
+          }}
         >
           <div className="flex items-center space-x-2">
             <div
-              className="w-4 h-4 rounded-full transition-transform duration-300 group-hover:scale-110 shadow-sm"
+              className="w-4 h-4 rounded-full transition-transform duration-300 shadow-sm"
               style={{
                 background: `linear-gradient(135deg, ${
                   chartColors[index % chartColors.length]
@@ -48,32 +51,22 @@ export default function DeviceUsageLegend({
                 }40`,
               }}
             />
-            <div className="text-[var(--accent-color)] opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-              {getDeviceIcon(item.name)}
-            </div>
+            <div className="opacity-80">{getDeviceIcon(item.name)}</div>
           </div>
           <div className="flex flex-col">
             <span
-              className="text-sm font-medium primary-text group-hover:text-[var(--accent-color)] transition-colors duration-300"
+              className="text-sm primary-text"
               style={{
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
                 fontSize: isMobile ? "0.6rem" : undefined,
               }}
             >
               {item.name}
             </span>
-            <span
-              className="text-xs secondary-text"
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontWeight: 700,
-              }}
-            >
+            <span className="text-xs secondary-text">
               {Math.round((item.value / total) * 100)}%
             </span>
           </div>
-        </Card>
+        </button>
       ))}
     </>
   );

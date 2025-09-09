@@ -112,7 +112,7 @@ export default function WorldClocks({
                   <span
                     className="text-base font-bold mono world-clock-city-mobile primary-text city-name"
                     style={{
-                      color: isLocal ? "#fff" : "var(--primary-text)",
+                      color: isLocal ? "#fff" : "var(--secondary-text)",
                     }}
                   >
                     {tz.label}
@@ -138,9 +138,9 @@ export default function WorldClocks({
                     }}
                   />
                   <span
-                    className="text-lg font-bold mono wc-time-desktop primary-text time-display"
+                    className="text-lg font-bold mono wc-time-desktop  time-display"
                     style={{
-                      color: isLocal ? "#fff" : "var(--primary-text)",
+                      color: isLocal ? "#fff" : "var(--secondary-text)",
                     }}
                   >
                     {pad(h)}:{pad(m)}
