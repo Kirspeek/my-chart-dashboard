@@ -62,6 +62,23 @@ export default function ClockDisplay({
             font-size: clamp(3.5rem, 5.5vw, 6rem);
           }
         }
+        /* Make controls more compact on screens narrower than 1440px */
+        @media (max-width: 1440px) {
+          .clock-controls {
+            gap: 0.5rem;
+          }
+          .clock-button-mobile {
+            padding: 0.125rem 0.4rem !important;
+            font-size: 0.55rem !important;
+            border-width: 1.5px !important;
+          }
+          .clock-sunrise-mobile {
+            font-size: 0.55rem !important;
+          }
+          .clock-date-mobile {
+            font-size: 0.75rem !important;
+          }
+        }
         .clock-colon {
           display: inline-block;
           color: var(--muted-text);
@@ -160,7 +177,7 @@ export default function ClockDisplay({
           </span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 clock-controls">
           <div
             className="flex items-center gap-1 px-2 py-1 rounded-full border transition-all duration-300 hover:scale-105"
             style={{

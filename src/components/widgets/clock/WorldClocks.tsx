@@ -36,7 +36,13 @@ export default function WorldClocks({
       <style jsx>{`
         @media (min-width: 1024px) and (max-width: 1440px) {
           .wc-time-desktop {
-            font-size: 1.75rem !important;
+            font-size: 1.4rem !important;
+          }
+          .world-clock-city-mobile {
+            font-size: 0.9rem !important;
+          }
+          .world-clock-utc-mobile {
+            font-size: 0.65rem !important;
           }
         }
         .world-clock-card {
@@ -98,7 +104,11 @@ export default function WorldClocks({
                           minWidth: 150,
                           minHeight: 90,
                         }
-                      : { padding: "1rem 0.5rem", minWidth: 0, minHeight: 20 }
+                      : {
+                          padding: "0.75rem 0.85rem",
+                          minWidth: 140,
+                          minHeight: 72,
+                        }
                 }
               >
                 <div className="flex items-center gap-1 mb-1">

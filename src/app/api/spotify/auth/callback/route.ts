@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSpotifyEnv, writeAuthCookies } from "@/lib/spotifyAuth";
+import { getSpotifyEnv } from "@/lib/spotifyAuth";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

@@ -50,8 +50,8 @@ export function randomString(len = 64) {
   return res;
 }
 
-export function readAuthCookies() {
-  const store = cookies();
+export async function readAuthCookies() {
+  const store = await cookies();
   const accessToken = store.get("sp_access_token")?.value || null;
   const refreshToken = store.get("sp_refresh_token")?.value || null;
   const expiresAtStr = store.get("sp_expires_at")?.value || null;
@@ -59,7 +59,7 @@ export function readAuthCookies() {
   return { accessToken, refreshToken, expiresAt };
 }
 
-export function writeAuthCookies({
+export async function writeAuthCookies({
   accessToken,
   refreshToken,
   expiresAt,
@@ -68,7 +68,7 @@ export function writeAuthCookies({
   refreshToken?: string | null;
   expiresAt: number;
 }) {
-  const store = cookies();
+  const store = await cookies();
   const isProd = process.env.NODE_ENV === "production";
   store.set("sp_access_token", accessToken, {
     httpOnly: true,
