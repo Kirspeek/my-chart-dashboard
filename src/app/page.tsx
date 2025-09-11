@@ -577,14 +577,15 @@ export default function Home() {
                     </div>
                     {/* Column 2: Weather + Timer with proper height distribution */}
                     <div className="h-full flex flex-col">
-                      <div className="flex-none h-96 lg:h-96">
+                      <div className="flex-none h-72 2xl:h-96">
                         {isMobile ? (
                           <WeatherWidgetMobile city={selectedCity} />
                         ) : (
                           <WeatherWidget city={selectedCity} />
                         )}
                       </div>
-                      <div className="h-2 lg:h-2"></div> {/* Fixed gap */}
+                      <div className="h-2"></div>{" "}
+                      {/* Smaller gap between weather and timer */}
                       <div className="flex-1 min-h-0">
                         <TimerWidget className="h-full" />
                       </div>

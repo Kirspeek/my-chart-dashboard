@@ -341,7 +341,7 @@ export type TimePeriod = "Monthly" | "Annual";
 
 // Wheel widget local component props
 export interface WheelMonthlyExpensesChartProps extends CommonComponentProps {
-  card: CardSpendingData;
+  card: CardSpendingData | null;
   onClick: () => void;
 }
 

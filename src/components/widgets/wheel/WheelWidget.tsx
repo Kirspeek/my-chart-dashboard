@@ -6,7 +6,6 @@ import SlideNavigation from "../../common/SlideNavigation";
 import { useWheelWidgetLogic } from "../../../hooks/useWheelWidgetLogic";
 import WheelMonthlyExpensesChart from "./WheelMonthlyExpensesChart";
 import { useWidgetHeight } from "../../../context/WidgetHeightContext";
-import { useTheme } from "../../../hooks/useTheme";
 
 export default function WheelWidget({
   onOpenSidebar,
@@ -23,8 +22,6 @@ export default function WheelWidget({
     useWheelWidgetLogic();
 
   const { targetHeight } = useWidgetHeight();
-  const { colorsTheme } = useTheme();
-  const walletCardColors = colorsTheme.widgets.walletCard;
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 425;
 
@@ -45,6 +42,7 @@ export default function WheelWidget({
     [isMobile]
   );
 
+  // Always show waves animation, even when no cards are available
   if (!hasCards || !currentCardData) {
     return (
       <WidgetBase
@@ -54,41 +52,21 @@ export default function WheelWidget({
         showSidebarButton={showSidebarButton}
       >
         <div
-          className="text-center"
-          style={{
-            color: "var(--secondary-text)",
-            marginTop: isMobile ? undefined : "-40px",
-          }}
+          className="w-full max-w-sm h-full flex flex-col"
+          style={contentStyle}
         >
-          <div
-            className="text-lg font-semibold mb-2"
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            No Cards Available
+          <div className="flex-1">
+            <WheelMonthlyExpensesChart
+              card={null}
+              onClick={handleCardClick}
+            />
           </div>
-          <div
-            className="text-sm mb-4"
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            Add cards to your wallet to see them here
-          </div>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 rounded-lg hover:opacity-80 transition-opacity text-sm"
-            style={{
-              backgroundColor: "var(--accent-color)",
-              color: walletCardColors.button.text,
-              fontFamily: "var(--font-sans)",
-            }}
-          >
-            Refresh
-          </button>
         </div>
         {currentSlide !== undefined && setCurrentSlide && (
           <SlideNavigation
             currentSlide={currentSlide}
             setCurrentSlide={setCurrentSlide}
-            totalSlides={16}
+            totalSlides={17}
           />
         )}
       </WidgetBase>

@@ -97,10 +97,11 @@ export default function WidgetsPage() {
                       </div>
                       {/* Right: Weather above Timer (same as dashboard) */}
                       <div className="h-full flex flex-col">
-                        <div className="flex-none h-96 lg:h-96">
+                        <div className="flex-none h-72 2xl:h-96">
                           <WeatherWidget city="London" />
                         </div>
-                        <div className="h-2 lg:h-2"></div>
+                        <div className="h-2"></div>{" "}
+                        {/* Smaller gap between weather and timer */}
                         <div className="flex-1 min-h-0">
                           <TimerWidget className="h-full" />
                         </div>

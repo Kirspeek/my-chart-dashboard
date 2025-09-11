@@ -62,7 +62,7 @@ const generateStableExpenseData = (
 };
 
 export const useWheelExpenseData = (
-  card: CardSpendingData,
+  card: CardSpendingData | null,
   currentCardData: {
     monthlySpending: { total: number; categories: Record<string, number> };
     dailySpending: {
@@ -139,13 +139,13 @@ export const useWheelExpenseData = (
     }
 
     const monthlyData = generateStableExpenseData(
-      card.cardNumber || "default",
+      card?.cardNumber || "default",
       "Monthly"
     );
     const annualData = generateStableExpenseData(
-      card.cardNumber || "default",
+      card?.cardNumber || "default",
       "Annual"
     );
     return { monthlyData, annualData };
-  }, [card.cardNumber, currentCardData]);
+  }, [card?.cardNumber, currentCardData]);
 };

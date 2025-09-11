@@ -67,7 +67,7 @@ export default function MonthlyExpensesChart({
             title="Monthly Spending"
             onClick={onClick}
             showCardNumber={true}
-            cardNumber={currentCardData?.cardNumber || card.cardNumber}
+            cardNumber={currentCardData?.cardNumber || card?.cardNumber}
             leftButtons={
               <WheelHeaderButtons
                 showInsights={showInsights}
