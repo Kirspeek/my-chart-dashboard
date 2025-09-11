@@ -3,28 +3,16 @@
 import React, { useMemo, useState } from "react";
 import WidgetBase from "@/components/common/WidgetBase";
 import InlineMusicPlayer from "./parts/InlineMusicPlayer";
-import SearchTabs, { MainTab } from "./parts/SearchTabs";
-import SearchResults, {
+import { API_ENDPOINTS } from "@/apis/constants";
+import SearchTabs from "./parts/SearchTabs";
+import SearchResults from "./parts/SearchResults";
+import {
+  MainTab,
   SearchItem as SearchItemPart,
-} from "./parts/SearchResults";
+  TrackItem,
+  MusicWidgetProps,
+} from "@/interfaces/music";
 import Playlist from "./parts/Playlist";
-
-interface TrackItem {
-  id: string;
-  title: string;
-  artist: string;
-  cover: string; // URL to artwork
-  previewUrl?: string; // optional preview
-  artistId?: string;
-}
-
-interface MusicWidgetProps {
-  title?: string;
-  tracks?: TrackItem[];
-  spotifyTrackUrl?: string; // e.g., https://open.spotify.com/embed/track/{id}
-}
-
-// Simple player component with overlay prev/next buttons
 
 export default function MusicWidget({
   tracks,
@@ -37,7 +25,6 @@ export default function MusicWidget({
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [currentArtistId, setCurrentArtistId] = useState<string | null>(null);
 
-  // Load liked track ids from localStorage on mount
   React.useEffect(() => {
     try {
       const raw = localStorage.getItem("music_liked_track_ids");
@@ -49,8 +36,6 @@ export default function MusicWidget({
       }
     } catch {}
   }, []);
-
-  // Persist liked track ids whenever they change
   React.useEffect(() => {
     try {
       localStorage.setItem(
@@ -60,7 +45,6 @@ export default function MusicWidget({
     } catch {}
   }, [likedIds]);
 
-  // Search types and state
   type SearchResultType = "tracks" | "albums" | "artists" | "playlists";
   interface SearchItem {
     id: string;
@@ -85,9 +69,7 @@ export default function MusicWidget({
     const q = search.trim();
     if (!q) return;
     try {
-      const resp = await fetch(
-        `/api/spotify/search?q=${encodeURIComponent(q)}`
-      );
+      const resp = await fetch(API_ENDPOINTS.SPOTIFY.SEARCH(q));
       const json = await resp.json();
       const mapped = {
         tracks: (json.tracks || []).map(
@@ -150,7 +132,6 @@ export default function MusicWidget({
     } catch {}
   }, [search]);
 
-  // Compute embed height
   const embedHeight = useMemo(() => {
     try {
       if (isSearchMode) return 140;
@@ -161,7 +142,6 @@ export default function MusicWidget({
     }
   }, [embedUrl, isSearchMode]);
 
-  // Initialize from provided tracks or derive artist from embedUrl
   React.useEffect(() => {
     (async () => {
       if (tracks && tracks.length) {
@@ -173,7 +153,7 @@ export default function MusicWidget({
         const match = embedUrl.match(/embed\/track\/([^/?#]+)/);
         const trackId = match ? match[1] : null;
         if (!trackId) return;
-        const res = await fetch(`/api/spotify/track?id=${trackId}`, {
+        const res = await fetch(API_ENDPOINTS.SPOTIFY.TRACK(trackId), {
           cache: "no-store",
         });
         const json = await res.json();
@@ -186,17 +166,18 @@ export default function MusicWidget({
     })();
   }, [tracks, embedUrl]);
 
-  // Keep playlist in sync with current artist: when current or currentArtistId changes,
-  // fetch that artist's top tracks and replace playlist.
   React.useEffect(() => {
     const artistId = currentArtistId;
     if (!artistId) return;
     let cancelled = false;
     (async () => {
       try {
-        const resp = await fetch(`/api/spotify/artist?id=${artistId}`, {
-          cache: "no-store",
-        });
+        const resp = await fetch(
+          API_ENDPOINTS.SPOTIFY.ARTIST_TOP_TRACKS(artistId),
+          {
+            cache: "no-store",
+          }
+        );
         const json = await resp.json();
         if (!cancelled && Array.isArray(json.tracks) && json.tracks.length) {
           setPlaylist(json.tracks);
@@ -208,7 +189,6 @@ export default function MusicWidget({
     };
   }, [currentArtistId]);
 
-  // When current changes and it carries artistId, reflect it
   React.useEffect(() => {
     if (current?.artistId) setCurrentArtistId(current.artistId);
   }, [current?.artistId]);
@@ -223,7 +203,6 @@ export default function MusicWidget({
           position: "relative",
         }}
       >
-        {/* Search */}
         <div className="flex items-center gap-3">
           <input
             aria-label="Search music"
@@ -254,7 +233,6 @@ export default function MusicWidget({
           </button>
         </div>
 
-        {/* Results */}
         <div
           className={
             "flex flex-col gap-4" + (isSearchMode ? " scrollbar-hide" : "")
@@ -305,7 +283,7 @@ export default function MusicWidget({
                       onChoose={(item) => {
                         if (item.kind === "tracks") {
                           setEmbedUrl(
-                            `https://open.spotify.com/embed/track/${item.id}`
+                            API_ENDPOINTS.SPOTIFY_EMBED.track(item.id)
                           );
                           const asTrack: TrackItem = {
                             id: item.id,
@@ -324,11 +302,11 @@ export default function MusicWidget({
                           if (item.artistId) setCurrentArtistId(item.artistId);
                         } else if (item.kind === "albums") {
                           setEmbedUrl(
-                            `https://open.spotify.com/embed/album/${item.id}`
+                            API_ENDPOINTS.SPOTIFY_EMBED.album(item.id)
                           );
                         } else if (item.kind === "artists") {
                           setEmbedUrl(
-                            `https://open.spotify.com/embed/artist/${item.id}`
+                            API_ENDPOINTS.SPOTIFY_EMBED.artist(item.id)
                           );
                           setCurrentArtistId(item.id);
                         }
@@ -339,8 +317,6 @@ export default function MusicWidget({
               })()}
             </div>
           ) : null}
-
-          {/* Player */}
           {isSearchMode ? (
             <div
               style={{
@@ -369,9 +345,7 @@ export default function MusicWidget({
                   const prev =
                     idx > 0 ? playlist[idx - 1] : playlist[playlist.length - 1];
                   setCurrent(prev);
-                  setEmbedUrl(
-                    `https://open.spotify.com/embed/track/${prev.id}`
-                  );
+                  setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(prev.id));
                 }}
                 onNext={() => {
                   if (!playlist.length || !current) return;
@@ -379,9 +353,7 @@ export default function MusicWidget({
                   const next =
                     idx < playlist.length - 1 ? playlist[idx + 1] : playlist[0];
                   setCurrent(next);
-                  setEmbedUrl(
-                    `https://open.spotify.com/embed/track/${next.id}`
-                  );
+                  setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(next.id));
                 }}
                 onShuffle={() => {
                   if (!playlist.length || !current) return;
@@ -395,9 +367,7 @@ export default function MusicWidget({
                   }
                   const track = playlist[idx];
                   setCurrent(track);
-                  setEmbedUrl(
-                    `https://open.spotify.com/embed/track/${track.id}`
-                  );
+                  setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(track.id));
                 }}
                 onRepeat={() => setRepeatOne((v) => !v)}
                 repeatActive={repeatOne}
@@ -424,7 +394,7 @@ export default function MusicWidget({
                 const prev =
                   idx > 0 ? playlist[idx - 1] : playlist[playlist.length - 1];
                 setCurrent(prev);
-                setEmbedUrl(`https://open.spotify.com/embed/track/${prev.id}`);
+                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(prev.id));
               }}
               onNext={() => {
                 if (!playlist.length || !current) return;
@@ -432,7 +402,7 @@ export default function MusicWidget({
                 const next =
                   idx < playlist.length - 1 ? playlist[idx + 1] : playlist[0];
                 setCurrent(next);
-                setEmbedUrl(`https://open.spotify.com/embed/track/${next.id}`);
+                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(next.id));
               }}
               onShuffle={() => {
                 if (!playlist.length || !current) return;
@@ -446,7 +416,7 @@ export default function MusicWidget({
                 }
                 const track = playlist[idx];
                 setCurrent(track);
-                setEmbedUrl(`https://open.spotify.com/embed/track/${track.id}`);
+                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(track.id));
               }}
               onRepeat={() => setRepeatOne((v) => !v)}
               repeatActive={repeatOne}
@@ -471,7 +441,7 @@ export default function MusicWidget({
               currentId={current?.id ?? null}
               onSelect={(t) => {
                 setCurrent(t);
-                setEmbedUrl(`https://open.spotify.com/embed/track/${t.id}`);
+                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(t.id));
               }}
             />
           </>

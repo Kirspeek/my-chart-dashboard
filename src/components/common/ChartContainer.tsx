@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useMobileDetection } from "./useMobileDetection";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 
 interface ChartContainerProps {
   children: React.ReactNode;

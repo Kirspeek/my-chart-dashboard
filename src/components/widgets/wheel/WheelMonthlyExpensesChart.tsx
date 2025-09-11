@@ -8,7 +8,7 @@ import { WheelMonthlyExpensesChartProps } from "@/interfaces/widgets";
 
 import { BarChart3 } from "lucide-react";
 import { useTheme } from "../../../hooks/useTheme";
-import { useWheelExpenseData } from "./useWheelExpenseData";
+import { useWheelExpenseData } from "@/hooks/wheel/useWheelExpenseData";
 import WheelCategorySelector from "./WheelCategorySelector";
 import WheelInsightsPanel from "./WheelInsightsPanel";
 import WheelHeaderButtons from "./WheelHeaderButtons";

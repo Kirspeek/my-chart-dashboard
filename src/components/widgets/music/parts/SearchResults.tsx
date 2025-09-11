@@ -2,21 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-
-export type SearchItem = {
-  id: string;
-  title: string;
-  subtitle?: string;
-  cover: string;
-  kind: "tracks" | "albums" | "artists" | "playlists";
-  artistId?: string;
-};
-
-type Props = {
-  items: SearchItem[];
-  label: string;
-  onChoose: (item: SearchItem) => void;
-};
+import { SearchResultsProps as Props } from "@/interfaces/music";
 
 export default function SearchResults({ items, label, onChoose }: Props) {
   if (!items.length) return null;

@@ -3,7 +3,7 @@
 import React from "react";
 import WidgetBase from "./WidgetBase";
 import SlideNavigation from "./SlideNavigation";
-import { useMobileDetection } from "./useMobileDetection";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 
 interface WidgetWrapperProps {
   children: React.ReactNode;

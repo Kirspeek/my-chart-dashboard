@@ -56,7 +56,7 @@ export const useWheelInteractionLogic = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const options = { passive: false };
+    const options = { passive: false } as const;
 
     const handleTouchStartPassive = (e: TouchEvent) => {
       e.preventDefault();

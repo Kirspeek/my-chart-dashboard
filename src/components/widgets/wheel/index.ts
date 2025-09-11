@@ -1,10 +1,10 @@
 export { default as WheelWidget } from "./WheelWidget";
 export { default as SpendingChart } from "./SpendingChart";
-export { useWheelChartLogic } from "./useWheelChartLogic";
-export { useWheelInteractionLogic } from "./useWheelInteractionLogic";
-export { useWheelRenderLogic } from "./useWheelRenderLogic";
+export { useWheelChartLogic } from "@/hooks/wheel/useWheelChartLogic";
+export { useWheelInteractionLogic } from "@/hooks/wheel/useWheelInteractionLogic";
+export { useWheelRenderLogic } from "@/hooks/wheel/useWheelRenderLogic";
 export { default as WheelCanvas } from "./WheelCanvas";
 export { default as WheelCategorySelector } from "./WheelCategorySelector";
 export { default as WheelInsightsPanel } from "./WheelInsightsPanel";
 export { default as WheelHeaderButtons } from "./WheelHeaderButtons";
-export { useWheelExpenseData } from "./useWheelExpenseData";
+export { useWheelExpenseData } from "@/hooks/wheel/useWheelExpenseData";

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { PlayerProps } from "@/interfaces/music";
 import {
   SkipBack,
   SkipForward,
@@ -9,20 +10,6 @@ import {
   Shuffle,
   Maximize2,
 } from "lucide-react";
-
-export type PlayerProps = {
-  embedUrl: string;
-  embedHeight: number;
-  onPrev?: () => void;
-  onNext?: () => void;
-  onSave?: () => void;
-  onShuffle?: () => void;
-  onRepeat?: () => void;
-  repeatActive?: boolean;
-  likedActive?: boolean;
-  isSearchMode?: boolean;
-  onExpand?: () => void;
-};
 
 export default function InlineMusicPlayer({
   embedUrl,

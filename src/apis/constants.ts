@@ -6,6 +6,9 @@ export const API_BASE_URLS = {
   BANK_BIN: "https://api.apilayer.com/bincheck",
   LOGO_CLEARBIT: "https://logo.clearbit.com",
   ICONS_CDN: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons",
+  SPOTIFY_WEB_API: "https://api.spotify.com/v1",
+  SPOTIFY_EMBED: "https://open.spotify.com/embed",
+  SPOTIFY_SDK: "https://sdk.scdn.co/spotify-player.js",
 } as const;
 
 // API Keys
@@ -40,6 +43,64 @@ export const API_ENDPOINTS = {
   MAPBOX: {
     GEOCODING: (query: string) =>
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json`,
+  },
+
+  // Spotify internal API (music)
+  SPOTIFY: {
+    SEARCH: (q: string) => `/api/spotify/search?q=${encodeURIComponent(q)}`,
+    TRACK: (id: string) => `/api/spotify/track?id=${encodeURIComponent(id)}`,
+    ARTIST_TOP_TRACKS: (id: string) =>
+      `/api/spotify/artist?id=${encodeURIComponent(id)}`,
+    AUTH: {
+      REFRESH: "/api/spotify/auth/refresh",
+    },
+    PLAYER: {
+      TRANSFER: "/api/spotify/transfer",
+      PLAY: (deviceId: string) =>
+        `/api/spotify/play?deviceId=${encodeURIComponent(deviceId)}`,
+      PAUSE: (deviceId?: string) =>
+        `/api/spotify/pause${deviceId ? `?deviceId=${encodeURIComponent(deviceId)}` : ""}`,
+    },
+    SAVE: "/api/spotify/save",
+  },
+
+  // Spotify external endpoints (Web API)
+  SPOTIFY_EXTERNAL: {
+    me: {
+      player: {
+        base: () => `${API_BASE_URLS.SPOTIFY_WEB_API}/me/player`,
+        play: (deviceId: string) =>
+          `${API_BASE_URLS.SPOTIFY_WEB_API}/me/player/play?device_id=${encodeURIComponent(deviceId)}`,
+        pause: (deviceId?: string) =>
+          `${API_BASE_URLS.SPOTIFY_WEB_API}/me/player/pause${deviceId ? `?device_id=${encodeURIComponent(deviceId)}` : ""}`,
+        transfer: () => `${API_BASE_URLS.SPOTIFY_WEB_API}/me/player`,
+      },
+      library: {
+        saveTrack: (trackId: string) =>
+          `${API_BASE_URLS.SPOTIFY_WEB_API}/me/tracks?ids=${encodeURIComponent(trackId)}`,
+      },
+    },
+    tracks: (id: string) =>
+      `${API_BASE_URLS.SPOTIFY_WEB_API}/tracks/${encodeURIComponent(id)}`,
+    artists: {
+      topTracks: (id: string, market = "US") =>
+        `${API_BASE_URLS.SPOTIFY_WEB_API}/artists/${encodeURIComponent(id)}/top-tracks?market=${encodeURIComponent(market)}`,
+    },
+    albums: (id: string) =>
+      `${API_BASE_URLS.SPOTIFY_WEB_API}/albums/${encodeURIComponent(id)}`,
+    search: (q: string) =>
+      `${API_BASE_URLS.SPOTIFY_WEB_API}/search?type=track,album,artist,playlist&limit=6&q=${encodeURIComponent(q)}`,
+  },
+
+  // Spotify embed and SDK
+  SPOTIFY_EMBED: {
+    track: (id: string) =>
+      `${API_BASE_URLS.SPOTIFY_EMBED}/track/${encodeURIComponent(id)}`,
+    album: (id: string) =>
+      `${API_BASE_URLS.SPOTIFY_EMBED}/album/${encodeURIComponent(id)}`,
+    artist: (id: string) =>
+      `${API_BASE_URLS.SPOTIFY_EMBED}/artist/${encodeURIComponent(id)}`,
+    sdkSrc: () => API_BASE_URLS.SPOTIFY_SDK,
   },
 } as const;
 

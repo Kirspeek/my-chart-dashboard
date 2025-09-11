@@ -23,7 +23,7 @@ export { default as StatusBadge } from "./StatusBadge";
 export { default as ProgressBar } from "./ProgressBar";
 export { default as IconButton } from "./IconButton";
 export { default as Divider } from "./Divider";
-export { useMobileDetection } from "./useMobileDetection";
+export { useMobileDetection } from "@/hooks/useMobileDetection";
 export { default as PayHeader } from "./PayHeader";
 export { default as ToggleButtonGroup } from "./toggle/ToggleButtonGroup";
 export { default as AnalyticsHeader } from "./toggle/AnalyticsHeader";

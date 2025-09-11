@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-
-export type MainTab = "tracks" | "albums" | "artists";
-
-type Props = {
-  activeTab: MainTab;
-  onChange: (tab: MainTab) => void;
-};
+import { MainTab, SearchTabsProps as Props } from "@/interfaces/music";
 
 export default function SearchTabs({ activeTab, onChange }: Props) {
   const tabs: MainTab[] = ["tracks", "albums", "artists"];

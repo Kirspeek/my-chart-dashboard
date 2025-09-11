@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchSpotifyToken } from "@/lib/spotify";
+import { API_ENDPOINTS } from "@/apis/constants";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -10,7 +11,7 @@ export async function GET(req: NextRequest) {
   try {
     const token = await fetchSpotifyToken();
     const resp = await fetch(
-      `https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`,
+      API_ENDPOINTS.SPOTIFY_EXTERNAL.artists.topTracks(id, "US"),
       {
         headers: { Authorization: `Bearer ${token.accessToken}` },
         cache: "no-store",

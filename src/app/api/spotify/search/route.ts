@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { fetchSpotifyToken } from "@/lib/spotify";
+import { API_ENDPOINTS } from "@/apis/constants";
 
 async function getToken(): Promise<string | null> {
   try {
@@ -35,8 +36,7 @@ export async function GET(request: Request) {
     );
 
   try {
-    const api = `https://api.spotify.com/v1/search?type=track,album,artist,playlist&limit=6&q=${encodeURIComponent(q)}`;
-    const res = await fetch(api, {
+    const res = await fetch(API_ENDPOINTS.SPOTIFY_EXTERNAL.search(q), {
       headers: { Authorization: `Bearer ${token}` },
       cache: "no-store",
     });

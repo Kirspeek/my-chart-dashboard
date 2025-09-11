@@ -3,7 +3,7 @@
 import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 import type { ToggleButtonGroupProps } from "@/interfaces/components";
-import { useMobileDetection } from "../useMobileDetection";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 
 export default function ToggleButtonGroup({
   options,
