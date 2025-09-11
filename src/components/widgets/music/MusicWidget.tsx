@@ -1,197 +1,57 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import WidgetBase from "@/components/common/WidgetBase";
 import InlineMusicPlayer from "./parts/InlineMusicPlayer";
 import { API_ENDPOINTS } from "@/apis/constants";
 import SearchTabs from "./parts/SearchTabs";
 import SearchResults from "./parts/SearchResults";
 import {
-  MainTab,
   SearchItem as SearchItemPart,
   TrackItem,
   MusicWidgetProps,
 } from "@/interfaces/music";
 import Playlist from "./parts/Playlist";
+import { useLikedTracks } from "@/hooks/music/useLikedTracks";
+import { useSpotifySearch } from "@/hooks/music/useSpotifySearch";
+import { useTrackFromEmbed } from "@/hooks/music/useTrackFromEmbed";
+import { useArtistTopTracks } from "@/hooks/music/useArtistTopTracks";
+import { useEmbedHeight } from "@/hooks/music/useEmbedHeight";
 
 export default function MusicWidget({
   tracks,
   spotifyTrackUrl = "https://open.spotify.com/embed/track/6Qb7YsAqH4wWFUMbGsCpap",
 }: MusicWidgetProps) {
-  const [playlist, setPlaylist] = useState<TrackItem[]>([]);
-  const [current, setCurrent] = useState<TrackItem | null>(null);
   const [embedUrl, setEmbedUrl] = useState<string>(spotifyTrackUrl);
   const [repeatOne, setRepeatOne] = useState<boolean>(false);
-  const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
-  const [currentArtistId, setCurrentArtistId] = useState<string | null>(null);
+
+  const { toggleLike, isLiked } = useLikedTracks();
+  const {
+    search,
+    setSearch,
+    results,
+    activeTab,
+    setActiveTab,
+    isSearchMode,
+    setIsSearchMode,
+    doSearch,
+  } = useSpotifySearch();
+  const {
+    current,
+    setCurrent,
+    playlist,
+    setPlaylist,
+    currentArtistId,
+    setCurrentArtistId,
+  } = useTrackFromEmbed(embedUrl, tracks);
+  const topTracks = useArtistTopTracks(currentArtistId);
+  const embedHeight = useEmbedHeight(embedUrl, isSearchMode);
 
   React.useEffect(() => {
-    try {
-      const raw = localStorage.getItem("music_liked_track_ids");
-      if (raw) {
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr)) {
-          setLikedIds(new Set(arr as string[]));
-        }
-      }
-    } catch {}
-  }, []);
-  React.useEffect(() => {
-    try {
-      localStorage.setItem(
-        "music_liked_track_ids",
-        JSON.stringify(Array.from(likedIds))
-      );
-    } catch {}
-  }, [likedIds]);
-
-  type SearchResultType = "tracks" | "albums" | "artists" | "playlists";
-  interface SearchItem {
-    id: string;
-    title: string;
-    subtitle?: string;
-    cover: string;
-    kind: SearchResultType;
-    artistId?: string;
-  }
-
-  const [search, setSearch] = useState<string>("");
-  const [results, setResults] = useState<{
-    tracks: SearchItem[];
-    albums: SearchItem[];
-    artists: SearchItem[];
-    playlists: SearchItem[];
-  }>({ tracks: [], albums: [], artists: [], playlists: [] });
-  const [activeTab, setActiveTab] = useState<MainTab>("tracks");
-  const [isSearchMode, setIsSearchMode] = useState<boolean>(false);
-
-  const doSearch = React.useCallback(async () => {
-    const q = search.trim();
-    if (!q) return;
-    try {
-      const resp = await fetch(API_ENDPOINTS.SPOTIFY.SEARCH(q));
-      const json = await resp.json();
-      const mapped = {
-        tracks: (json.tracks || []).map(
-          (t: {
-            id: string;
-            title: string;
-            artist: string;
-            cover: string;
-            artistId?: string;
-          }) => ({
-            id: t.id,
-            title: t.title,
-            subtitle: t.artist,
-            cover: t.cover,
-            kind: "tracks" as const,
-            artistId: t.artistId,
-          })
-        ),
-        albums: (json.albums || []).map(
-          (a: {
-            id: string;
-            title: string;
-            artist: string;
-            cover: string;
-          }) => ({
-            id: a.id,
-            title: a.title,
-            subtitle: a.artist,
-            cover: a.cover,
-            kind: "albums" as const,
-          })
-        ),
-        artists: (json.artists || []).map(
-          (ar: { id: string; name: string; cover: string }) => ({
-            id: ar.id,
-            title: ar.name,
-            subtitle: "Artist",
-            cover: ar.cover,
-            kind: "artists" as const,
-          })
-        ),
-        playlists: (json.playlists || []).map(
-          (p: { id: string; title: string; owner: string; cover: string }) => ({
-            id: p.id,
-            title: p.title,
-            subtitle: p.owner,
-            cover: p.cover,
-            kind: "playlists" as const,
-          })
-        ),
-      } as {
-        tracks: SearchItem[];
-        albums: SearchItem[];
-        artists: SearchItem[];
-        playlists: SearchItem[];
-      };
-      setResults(mapped);
-      setActiveTab("tracks");
-      setIsSearchMode(true);
-    } catch {}
-  }, [search]);
-
-  const embedHeight = useMemo(() => {
-    try {
-      if (isSearchMode) return 140;
-      if (embedUrl.includes("/track/")) return 280;
-      return 430;
-    } catch {
-      return isSearchMode ? 140 : 280;
+    if (Array.isArray(topTracks) && topTracks.length) {
+      setPlaylist(topTracks);
     }
-  }, [embedUrl, isSearchMode]);
-
-  React.useEffect(() => {
-    (async () => {
-      if (tracks && tracks.length) {
-        setPlaylist(tracks);
-        setCurrent(tracks[0]);
-        return;
-      }
-      try {
-        const match = embedUrl.match(/embed\/track\/([^/?#]+)/);
-        const trackId = match ? match[1] : null;
-        if (!trackId) return;
-        const res = await fetch(API_ENDPOINTS.SPOTIFY.TRACK(trackId), {
-          cache: "no-store",
-        });
-        const json = await res.json();
-        if (json?.track) {
-          const t = json.track as TrackItem;
-          setCurrent(t);
-          if (t.artistId) setCurrentArtistId(t.artistId);
-        }
-      } catch {}
-    })();
-  }, [tracks, embedUrl]);
-
-  React.useEffect(() => {
-    const artistId = currentArtistId;
-    if (!artistId) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const resp = await fetch(
-          API_ENDPOINTS.SPOTIFY.ARTIST_TOP_TRACKS(artistId),
-          {
-            cache: "no-store",
-          }
-        );
-        const json = await resp.json();
-        if (!cancelled && Array.isArray(json.tracks) && json.tracks.length) {
-          setPlaylist(json.tracks);
-        }
-      } catch {}
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [currentArtistId]);
-
-  React.useEffect(() => {
-    if (current?.artistId) setCurrentArtistId(current.artistId);
-  }, [current?.artistId]);
+  }, [topTracks, setPlaylist]);
 
   return (
     <WidgetBase className="w-full h-full" style={{ height: 720 }}>
@@ -263,7 +123,7 @@ export default function MusicWidget({
             results.playlists.length) ? (
             <div className="flex flex-col gap-4">
               {(() => {
-                const items = results[activeTab] as SearchItem[];
+                const items = results[activeTab] as SearchItemPart[];
                 if (!items.length) return null;
                 const label =
                   activeTab === "tracks"
@@ -371,16 +231,8 @@ export default function MusicWidget({
                 }}
                 onRepeat={() => setRepeatOne((v) => !v)}
                 repeatActive={repeatOne}
-                onSave={() => {
-                  if (!current?.id) return;
-                  setLikedIds((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(current.id)) next.delete(current.id);
-                    else next.add(current.id);
-                    return next;
-                  });
-                }}
-                likedActive={current ? likedIds.has(current.id) : false}
+                onSave={() => toggleLike(current?.id)}
+                likedActive={isLiked(current?.id)}
               />
             </div>
           ) : (
@@ -420,16 +272,8 @@ export default function MusicWidget({
               }}
               onRepeat={() => setRepeatOne((v) => !v)}
               repeatActive={repeatOne}
-              onSave={() => {
-                if (!current?.id) return;
-                setLikedIds((prev) => {
-                  const next = new Set(prev);
-                  if (next.has(current.id)) next.delete(current.id);
-                  else next.add(current.id);
-                  return next;
-                });
-              }}
-              likedActive={current ? likedIds.has(current.id) : false}
+              onSave={() => toggleLike(current?.id)}
+              likedActive={isLiked(current?.id)}
             />
           )}
         </div>
