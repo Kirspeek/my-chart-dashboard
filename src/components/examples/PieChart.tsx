@@ -29,9 +29,14 @@ export default function PieChart({ data, title }: PieChartProps) {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) =>
-              `${name} ${((percent || 0) * 100).toFixed(0)}%`
-            }
+            label={(labelProps: { name?: string; percent?: number }) => {
+              const percent =
+                labelProps && typeof labelProps.percent === "number"
+                  ? labelProps.percent
+                  : 0;
+              const name = labelProps?.name ?? "";
+              return `${name} ${(percent * 100).toFixed(0)}%`;
+            }}
             outerRadius={80}
             fill={pieChartColors.fill}
             dataKey="value"

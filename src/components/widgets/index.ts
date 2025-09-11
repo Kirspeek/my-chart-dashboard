@@ -41,5 +41,8 @@ export { default as WheelWidget } from "./wheel/WheelWidget";
 export { default as ContributionGraphWidget } from "./contribution-graph/ContributionGraphWidget";
 export { default as AggregatedSpendingWidget } from "./waves/WavesWidget";
 
+// Music
+export { default as MusicWidget } from "./music/MusicWidget";
+
 // Work in Progress Widget
 export { WorkInProgressWidget } from "./work-in-progress";

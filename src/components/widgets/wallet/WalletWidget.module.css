@@ -51,8 +51,7 @@
 .heading,
 .subheading,
 .number {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, Helvetica,
-    sans-serif;
+  font-family: var(--font-sans);
   color: white;
 }
 
@@ -69,6 +68,6 @@
 
 .number {
   margin: 25% calc(9% + 0.2rem) 0;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 2.2rem;
 }

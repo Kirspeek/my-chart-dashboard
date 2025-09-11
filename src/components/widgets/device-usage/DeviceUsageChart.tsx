@@ -50,26 +50,31 @@ export default function DeviceUsageChart({
           cx="50%"
           cy="50%"
           labelLine={false}
-          label={({
-            name,
-            percent,
-            cx,
-            cy,
-            midAngle,
-            innerRadius,
-            outerRadius,
-          }) => {
+          label={(props) => {
+            const p = props as {
+              name?: string;
+              percent?: number;
+              cx?: number;
+              cy?: number;
+              midAngle?: number;
+              innerRadius?: number;
+              outerRadius?: number;
+            };
             const RADIAN = Math.PI / 180;
-            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-            const angle = midAngle || 0;
-            const x = cx + radius * Math.cos(-angle * RADIAN);
-            const y = cy + radius * Math.sin(-angle * RADIAN);
+            const innerR = p.innerRadius ?? 0;
+            const outerR = p.outerRadius ?? 0;
+            const radius = innerR + (outerR - innerR) * 0.5;
+            const angle = p.midAngle ?? 0;
+            const cxVal = p.cx ?? 0;
+            const cyVal = p.cy ?? 0;
+            const x = cxVal + radius * Math.cos(-angle * RADIAN);
+            const y = cyVal + radius * Math.sin(-angle * RADIAN);
             return (
               <text
                 x={x}
                 y={y}
                 fill="var(--primary-text)"
-                textAnchor={x > cx ? "start" : "end"}
+                textAnchor={x > cxVal ? "start" : "end"}
                 dominantBaseline="central"
                 style={{
                   fontSize: isMobile ? "0.6rem" : "0.75rem",
@@ -79,7 +84,7 @@ export default function DeviceUsageChart({
                   opacity: 0.9,
                 }}
               >
-                {`${name} ${Math.round((percent || 0) * 100)}%`}
+                {`${p.name ?? ""} ${Math.round((p.percent ?? 0) * 100)}%`}
               </text>
             );
           }}

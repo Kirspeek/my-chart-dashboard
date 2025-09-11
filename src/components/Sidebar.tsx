@@ -22,6 +22,7 @@ const navigation = [
   { name: "Reports", href: "/reports", icon: TrendingUp },
   { name: "Charts", href: "/charts", icon: PieChart },
   { name: "3D models", href: "/models", icon: Box },
+  { name: "Music", href: "/music", icon: Box },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 

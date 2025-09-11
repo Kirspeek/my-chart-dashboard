@@ -29,7 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${inter.variable} ${spaceMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <Script id="init-theme" strategy="beforeInteractive">
           {
@@ -37,7 +41,7 @@ export default function RootLayout({
           }
         </Script>
       </head>
-      <body className={`${inter.variable} ${spaceMono.variable} antialiased`}>
+      <body className={`antialiased`}>
         <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>
