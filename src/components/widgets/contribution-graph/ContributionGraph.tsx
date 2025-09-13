@@ -122,6 +122,7 @@ export default function ContributionGraph({ title }: ContributionGraphProps) {
             weeks={weeks}
             analytics={{
               maxValue: analytics.maxValue,
+              totalDays: analytics.totalDays,
               avgValue: analytics.avgValue,
               activeDays: analytics.activeDays,
               trend: (analytics.trend === "up" ? "up" : "down") as

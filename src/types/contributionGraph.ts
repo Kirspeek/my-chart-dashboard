@@ -1,30 +1,32 @@
-export type ContributionChartColors = {
+export interface AnalyticsViewAnalytics {
+  maxValue: number;
+  totalDays: number;
+  activeDays: number;
+  trend: "up" | "down";
+  trendPercentage: number;
+  avgValue: number;
+}
+
+export interface ContributionChartColors {
   primary: string;
   secondary: string;
   muted: string;
   cardBackground: string;
   borderSecondary: string;
   accent: {
-    blue: string;
-    yellow: string;
     red: string;
+    yellow: string;
     teal: string;
+    blue: string;
+    green?: string;
   };
-};
+}
 
-export type AnalyticsViewAnalytics = {
+export interface TrendsViewAnalytics {
   maxValue: number;
-  avgValue: number;
   totalDays: number;
   activeDays: number;
   trend: "up" | "down";
   trendPercentage: number;
-};
-
-export type TrendsViewAnalytics = {
-  maxValue: number;
   avgValue: number;
-  activeDays: number;
-  trend: "up" | "down";
-  trendPercentage: number;
-};
+}

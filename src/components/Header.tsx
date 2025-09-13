@@ -58,7 +58,7 @@ export default function Header() {
 
   return (
     <header
-      className="glass-panel shadow-sm"
+      className="glass-panel shadow-sm relative z-30"
       style={{ borderBottom: "2px solid rgba(0,0,0,0.06)" }}
     >
       <div className="px-4 sm:px-6 lg:px-8">
@@ -128,11 +128,12 @@ export default function Header() {
               />
             </button>
 
-            {/* User menu */}
+            {/* Contact info */}
             <div className="flex items-center space-x-3">
               <div className="flex flex-col items-end">
-                <span
-                  className="secondary-text"
+                <a
+                  href="mailto:cherepenko.iryna@gmail.com"
+                  className="secondary-text hover:text-blue-400 transition-colors"
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontWeight: 900,
@@ -140,19 +141,38 @@ export default function Header() {
                     letterSpacing: "0.01em",
                   }}
                 >
-                  Admin User
-                </span>
-                <span
-                  className="secondary-text"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    letterSpacing: "0.01em",
-                  }}
-                >
-                  admin@example.com
-                </span>
+                  cherepenko.iryna@gmail.com
+                </a>
+                <div className="flex items-center space-x-3">
+                  <a
+                    href="https://www.linkedin.com/in/irynacherepenko/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="secondary-text hover:text-blue-400 transition-colors"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: 700,
+                      fontSize: "0.95rem",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    LinkedIn
+                  </a>
+                  <a
+                    href="https://github.com/Kirspeek"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="secondary-text hover:text-blue-400 transition-colors"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: 700,
+                      fontSize: "0.95rem",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    GitHub
+                  </a>
+                </div>
               </div>
               <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
                 <User

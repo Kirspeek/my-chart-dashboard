@@ -98,9 +98,7 @@ export default function PerformanceMetricsContainer({
   };
 
   const renderRadarView = () => {
-    
     const comparisonData = currentMetrics.map((metric) => {
-      
       let currentValue;
       switch (metric.subject) {
         case "CPU Utilization":
@@ -427,7 +425,6 @@ export default function PerformanceMetricsContainer({
   };
 
   const renderTimelineView = () => {
-    
     const generateEvent = (index: number, baseTime: Date) => {
       const eventTypes = [
         "performance",
@@ -446,7 +443,7 @@ export default function PerformanceMetricsContainer({
       const status = statuses[Math.floor(Math.random() * statuses.length)];
       const impact = impacts[Math.floor(Math.random() * impacts.length)];
 
-      const timeOffset = index * 15; 
+      const timeOffset = index * 15;
       const eventTime = new Date(baseTime.getTime() - timeOffset * 60000);
 
       const eventTitles = {
@@ -566,7 +563,6 @@ export default function PerformanceMetricsContainer({
   };
 
   const renderAlertsView = () => {
-    
     const generateAlert = (index: number) => {
       const alertTypes = [
         {
@@ -652,7 +648,7 @@ export default function PerformanceMetricsContainer({
       ];
 
       const alert = alertTypes[index % alertTypes.length];
-      const timeOffset = index * 30; 
+      const timeOffset = index * 30;
       const alertTime = new Date(Date.now() - timeOffset * 60000);
 
       return {
@@ -931,9 +927,9 @@ export default function PerformanceMetricsContainer({
               </div>
 
               <div className="mt-3 flex flex-wrap gap-1">
-                {alert.tags.map((tag) => (
+                {alert.tags?.map((tag, tagIndex) => (
                   <span
-                    key={tag}
+                    key={`${alert.id}-${tag}-${tagIndex}`}
                     className="px-2 py-1 text-xs rounded"
                     style={{
                       background: "var(--accent-color)20",
@@ -952,7 +948,6 @@ export default function PerformanceMetricsContainer({
   };
 
   const renderCapacityView = () => {
-    
     const generateCapacityData = () => {
       const resources = [
         {
@@ -1301,7 +1296,7 @@ export default function PerformanceMetricsContainer({
             <div className="space-y-3">
               {recommendations.map((rec, index) => (
                 <motion.div
-                  key={index}
+                  key={rec.title}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
