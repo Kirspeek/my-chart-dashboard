@@ -11,25 +11,27 @@ export default function TimelineAchievementsView({
   const achievements = useMemo(() => {
     const total = data.length;
     const avg =
-      total === 0
+      total === 0 || !progressByIndex
         ? 0
-        : progressByIndex.reduce((a, b) => a + (b ?? 0), 0) / total;
+        : (progressByIndex?.reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0) /
+          total;
     const completed = data.filter(
-      (_, i) => (progressByIndex[i] ?? 0) >= (data[i].progress ?? 0.9)
+      (_, i) => (progressByIndex?.[i] ?? 0) >= (data[i]?.progress ?? 0.9)
     ).length;
 
     const fastest = data
       .map((d, i) => ({
         key: i,
         speed:
-          (d.progress ?? 0.9) / Math.max(0.01, progressByIndex[i] ?? 0.0001),
+          (d.progress ?? 0.9) / Math.max(0.01, progressByIndex?.[i] ?? 0.0001),
       }))
       .sort((a, b) => a.speed - b.speed)[0];
 
     const topCategory = (() => {
       const sum: Record<string, number> = {};
       data.forEach((d, i) => {
-        sum[d.color] = (sum[d.color] ?? 0) + (progressByIndex[i] ?? 0);
+        const color = d.color ?? "unknown";
+        sum[color] = (sum[color] ?? 0) + (progressByIndex?.[i] ?? 0);
       });
       return (
         Object.entries(sum).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "unknown"

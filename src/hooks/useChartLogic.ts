@@ -6,9 +6,9 @@ export function useChartLogic() {
 
   const chartColors = useMemo(
     () => ({
-      sales: accent.blue,
-      revenue: accent.teal,
-      profit: accent.yellow,
+      sales: accent.blue + "80",
+      revenue: accent.teal + "80",
+      profit: accent.yellow + "80",
     }),
     [accent]
   );
@@ -26,13 +26,13 @@ export function useChartLogic() {
 
   const tooltipStyle = useMemo(
     () => ({
-      backgroundColor: "rgba(255, 255, 255, 0.95)",
-      border: "2px solid rgba(35, 35, 35, 0.1)",
-      borderRadius: "1rem",
-      boxShadow: "0 8px 32px rgba(35, 35, 35, 0.1)",
+      backgroundColor: "rgba(30, 30, 30, 0.9)",
+      border: "1px solid rgba(255, 255, 255, 0.1)",
+      borderRadius: "0.75rem",
+      boxShadow: "0 4px 16px rgba(0, 0, 0, 0.2)",
       backdropFilter: "blur(8px)",
       fontFamily: "var(--font-mono)",
-      fontWeight: 700,
+      fontWeight: 500,
     }),
     []
   );
@@ -40,9 +40,9 @@ export function useChartLogic() {
   const axisStyle = useMemo(
     () => ({
       stroke: "var(--secondary-text)",
-      fontSize: 12,
+      fontSize: 11,
       fontFamily: "var(--font-mono)",
-      fontWeight: 700,
+      fontWeight: 500,
     }),
     []
   );
@@ -50,7 +50,8 @@ export function useChartLogic() {
   const gridStyle = useMemo(
     () => ({
       stroke: "var(--button-border)",
-      strokeDasharray: "3 3",
+      strokeDasharray: "2 4",
+      strokeOpacity: 0.3,
     }),
     []
   );

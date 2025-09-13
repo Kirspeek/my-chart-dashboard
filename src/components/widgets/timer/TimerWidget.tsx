@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
-import { TimerWidgetProps } from "@/interfaces/components";
+import { TimerWidgetProps } from "@/interfaces/widgets";
 import {
   Play,
   Pause,

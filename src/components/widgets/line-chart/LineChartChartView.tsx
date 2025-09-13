@@ -214,14 +214,14 @@ export default function LineChartChartView({
                 dot={{
                   r: 5,
                   fill: chartColors.sales,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.2)",
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.sales,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.3)",
                 }}
               />
               <Line
@@ -233,14 +233,14 @@ export default function LineChartChartView({
                 dot={{
                   r: 5,
                   fill: chartColors.revenue,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.2)",
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.revenue,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.3)",
                 }}
               />
               <Line
@@ -252,14 +252,14 @@ export default function LineChartChartView({
                 dot={{
                   r: 5,
                   fill: chartColors.profit,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.2)",
                 }}
                 activeDot={{
                   r: 7,
                   fill: chartColors.profit,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.3)",
                 }}
               />
             </RechartsLineChart>
@@ -404,8 +404,8 @@ export default function LineChartChartView({
                 dot={{
                   r: 4,
                   fill: chartColors.sales,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.2)",
                 }}
               />
               <Line
@@ -417,8 +417,8 @@ export default function LineChartChartView({
                 dot={{
                   r: 4,
                   fill: chartColors.profit,
-                  strokeWidth: 2,
-                  stroke: lineChartColors.chart.dotStroke,
+                  strokeWidth: 1,
+                  stroke: "rgba(255, 255, 255, 0.2)",
                 }}
               />
             </ComposedChart>
@@ -445,7 +445,7 @@ export default function LineChartChartView({
           { key: "composed", icon: PieChart, label: "Mixed" },
         ]}
         selectedKey={currentChartType}
-        onChange={(key) => setCurrentChartType(key as LineChartTypeKey)}
+        onChange={(key: string) => setCurrentChartType(key as LineChartTypeKey)}
       />
 
       <div className="flex-1 min-h-0 mb-3">{renderChart()}</div>

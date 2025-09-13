@@ -75,8 +75,9 @@ export default function TimelineControls({
               variant={isActive ? "primary" : "secondary"}
               size={isMobile ? "sm" : "md"}
               icon={<Icon className="w-3 h-3" />}
-              tooltip={mode.tooltip}
+              tooltip={true}
               tooltipTitle={mode.label}
+              tooltipSubtitle={mode.tooltip}
             >
               {!isMobile && mode.label}
             </MigrationFlowButton>

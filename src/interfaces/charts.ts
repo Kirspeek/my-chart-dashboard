@@ -14,7 +14,6 @@ export interface BaseChartProps extends CommonComponentProps {
   width?: number;
 }
 
-// Line Chart
 export interface LineChartProps extends BaseChartProps {
   data: Array<{
     month: string;
@@ -26,7 +25,6 @@ export interface LineChartProps extends BaseChartProps {
   showLegend?: boolean;
 }
 
-// Bar Chart
 export interface BarChartData {
   name: string;
   sales: number;
@@ -39,7 +37,6 @@ export interface BarChartProps extends BaseChartProps {
   stacked?: boolean;
 }
 
-// Pie Chart
 export interface PieChartData {
   name: string;
   value: number;
@@ -52,7 +49,6 @@ export interface PieChartProps extends BaseChartProps {
   showPercentages?: boolean;
 }
 
-// Area Chart
 export interface AreaChartData {
   name: string;
   value: number;
@@ -65,7 +61,6 @@ export interface AreaChartProps extends BaseChartProps {
   showGrid?: boolean;
 }
 
-// Radar Chart
 export interface RadarChartData {
   subject: string;
   value: number;
@@ -78,7 +73,6 @@ export interface RadarChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
-// Scatter Chart
 export interface ScatterChartData {
   x: number;
   y: number;
@@ -92,7 +86,6 @@ export interface ScatterChartProps extends BaseChartProps {
   showTrendLine?: boolean;
 }
 
-// Bubble Chart
 export interface BubbleChartData {
   x: number;
   y: number;
@@ -107,7 +100,6 @@ export interface BubbleChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
-// Bubble Chart (Global Tech Investment) widget props
 export interface CustomBubbleChartProps extends BaseChartProps {
   data: BubbleChartData[];
   title?: string;
@@ -119,7 +111,6 @@ export interface CustomBubbleChartProps extends BaseChartProps {
   showSidebarButton?: boolean;
 }
 
-// Bubble Chart extracted components
 export interface BubbleChartStats {
   total: number;
   avgSize: number;
@@ -135,6 +126,7 @@ export interface BubbleChartControlsProps {
   setAnimationSpeed: (v: number) => void;
   isZoomedOut: boolean;
   setIsZoomedOut: (v: boolean) => void;
+  isSmallScreen?: boolean;
   getCategoryHex: (category: string) => string;
   buttonColors: {
     background: string;
@@ -154,7 +146,6 @@ export interface BubbleChartLegendProps {
   getCategoryHex: (category: string) => string;
 }
 
-// Bubble Scene and tooltip
 export interface BubblePoint3D {
   x: number;
   y: number;
@@ -192,7 +183,6 @@ export interface BubbleHeaderActionsProps {
   onToggleFullscreen: () => void;
 }
 
-// Internal enriched bubble item used before projection to scene data
 export interface ThreeDBubbleData extends BubbleChartData {
   z: number;
   velocity?: { x: number; y: number; z: number };
@@ -200,7 +190,6 @@ export interface ThreeDBubbleData extends BubbleChartData {
   selected?: boolean;
 }
 
-// Chord Chart
 export interface ChordChartData {
   from: string;
   to: string;
@@ -212,7 +201,6 @@ export interface ChordChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
-// Enhanced Chord Diagram props (Global Migrations)
 export interface EnhancedChordDiagramProps {
   data: ChordChartData[];
   title: string;
@@ -270,7 +258,6 @@ export interface MigrationChordStatsProps {
   setSelectedFlow?: (flow: string | null) => void;
 }
 
-// Sankey Chart
 export interface SankeyChartData {
   from: string;
   to: string;
@@ -282,7 +269,6 @@ export interface SankeyChartProps extends BaseChartProps {
   showLabels?: boolean;
 }
 
-// Sankey/Global Migration Flows types
 export type SankeyViewMode = "flow" | "stats" | "trends";
 export type SankeyAnimationSpeed = "slow" | "normal" | "fast";
 
@@ -335,7 +321,6 @@ export interface SankeyFlowCanvasProps {
   animationFrame: number;
 }
 
-// Custom Sankey props (compact variant used by alternative diagram)
 export interface CustomSankeyDiagramProps {
   data: WidgetSankeyChartData[];
   title: string;
@@ -345,7 +330,6 @@ export interface CustomSankeyDiagramProps {
   setCurrentSlide?: (slide: number) => void;
 }
 
-// Contribution Graph
 export interface ContributionData {
   date: string;
   value: number;
@@ -368,7 +352,6 @@ export interface ContributionGraphLogicProps {
   title?: string;
 }
 
-// Contribution widget component props
 export interface ContributionGridProps {
   weeks: ContributionData[][];
   monthPositions: { month: string; x: number }[];
@@ -405,7 +388,6 @@ export interface ContributionLegendProps {
   };
 }
 
-// Sankey headers/controls/stats component props
 export interface MigrationFlowHeaderProps {
   title: string;
   subtitle?: string;
@@ -440,7 +422,6 @@ export interface MigrationFlowTrendsProps {
   isPlaying?: boolean;
 }
 
-// Line chart (Sales Performance) view props and types
 export interface LineChartMetricsSummary {
   sales: number;
   revenue: number;
@@ -491,7 +472,6 @@ export interface LineChartTrendsViewProps {
   metrics: LineChartMetricsSummary;
 }
 
-// Bar chart (Quarterly Overview) types and props
 export type BarChartTypeKey = "bars" | "lines" | "area" | "composed";
 
 export interface BarChartTooltipProps {
@@ -531,7 +511,6 @@ export interface BarChartChartViewProps {
   setShowInsights: (show: boolean) => void;
 }
 
-// Performance Metrics (Radar) widget
 export type PerformanceViewKey = "radar" | "timeline" | "alerts" | "capacity";
 import type { WidgetRadarChartData, PerformanceMetricsData } from "./widgets";
 
@@ -541,7 +520,6 @@ export interface PerformanceMetricsViewProps {
   isRealTime: boolean;
 }
 
-// Timeline Chart
 export interface TimelineItem {
   year: string;
   color: "yellow" | "red" | "blue" | "teal" | "purple";
@@ -555,7 +533,6 @@ export interface TimelineChartProps extends BaseChartProps {
   orientation?: "horizontal" | "vertical";
 }
 
-// Chart state and actions
 export interface ChartState {
   data: ChartDataPoint[];
   title: string;
@@ -570,7 +547,6 @@ export interface ChartActions {
   setTitle: (title: string) => void;
 }
 
-// Chart canvas props
 export interface ChartCanvasProps extends CommonComponentProps {
   width: number;
   height: number;

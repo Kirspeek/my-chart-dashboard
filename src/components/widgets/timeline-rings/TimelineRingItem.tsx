@@ -23,7 +23,7 @@ export default function TimelineRingItem({
   return (
     <div
       className="flex flex-col items-center relative"
-      style={{ width: isTablet ? "140px" : "224px" }}
+      style={{ width: isTablet ? "120px" : "180px" }}
     >
       {isEven && (
         <>
@@ -32,12 +32,13 @@ export default function TimelineRingItem({
             style={{
               color,
               fontFamily: "var(--font-mono)",
-              fontWeight: 800,
-              fontSize: isTablet ? "16px" : "24px",
-              letterSpacing: 1.5,
-              marginBottom: isTablet ? "6px" : "10px",
-              textShadow: `0 2px 4px ${color}30, 0 1px 2px ${shadeColor(color, 0.6)}40`,
-              lineHeight: 1.2,
+              fontWeight: 700,
+              fontSize: isTablet ? "10px" : "14px",
+              letterSpacing: 0.8,
+              marginBottom: isTablet ? "4px" : "6px",
+              textShadow: `0 1px 2px ${color}20, 0 1px 1px ${shadeColor(color, 0.4)}30`,
+              lineHeight: 1.1,
+              textAlign: "center",
             }}
           >
             {item.title}
@@ -47,13 +48,14 @@ export default function TimelineRingItem({
             style={{
               color: shadeColor(color, 0.3),
               fontFamily: "var(--font-mono)",
-              fontWeight: 600,
-              lineHeight: 1.5,
-              fontSize: isTablet ? "11px" : "17px",
-              marginBottom: isTablet ? "6px" : "10px",
-              opacity: 0.9,
-              letterSpacing: 0.5,
-              textShadow: `0 1px 2px ${color}15`,
+              fontWeight: 500,
+              lineHeight: 1.3,
+              fontSize: isTablet ? "8px" : "11px",
+              marginBottom: isTablet ? "4px" : "6px",
+              opacity: 0.8,
+              letterSpacing: 0.3,
+              textShadow: `0 1px 1px ${color}10`,
+              textAlign: "center",
             }}
           >
             {item.desc}
@@ -69,10 +71,10 @@ export default function TimelineRingItem({
               x2={1}
               y2={
                 (isTablet ? 28 : 38) -
-                (isTablet ? 28 : 38) * animatedLineProgress
+                (isTablet ? 28 : 38) * (animatedLineProgress ?? 0)
               }
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={0.5}
               style={{ transition: "y2 0.18s" }}
             />
           </svg>
@@ -117,15 +119,15 @@ export default function TimelineRingItem({
         </defs>
         <path
           d={describeArc(
-            isTablet ? 45 : 60,
-            isTablet ? 45 : 60,
-            isTablet ? 36 : 48,
+            isTablet ? 40 : 50,
+            isTablet ? 40 : 50,
+            isTablet ? 30 : 40,
             arcStart,
             arcEnd
           )}
           fill="none"
           stroke={color}
-          strokeWidth={isTablet ? 12 : 16}
+          strokeWidth={isTablet ? 0.5 : 1}
           opacity={hoveredIdx === null ? 1 : hoveredIdx === idx ? 1 : 0.4}
           strokeLinecap="round"
           style={{
@@ -137,34 +139,34 @@ export default function TimelineRingItem({
         />
         <path
           d={describeArc(
-            isTablet ? 45 : 60,
-            isTablet ? 45 : 60,
-            isTablet ? 36 : 48,
+            isTablet ? 40 : 50,
+            isTablet ? 40 : 50,
+            isTablet ? 30 : 40,
             gapStart,
             gapEnd
           )}
           fill="none"
           stroke={color}
-          strokeWidth={isTablet ? 12 : 16}
+          strokeWidth={isTablet ? 0.5 : 1}
           opacity={0.15}
           strokeLinecap="round"
         />
         <circle
-          cx={isTablet ? 45 : 60}
-          cy={isTablet ? 45 : 60}
-          r={isTablet ? 26 : 36}
+          cx={isTablet ? 40 : 50}
+          cy={isTablet ? 40 : 50}
+          r={isTablet ? 22 : 30}
           fill="transparent"
           stroke={selectedMilestone === idx ? color : "none"}
-          strokeWidth={selectedMilestone === idx ? 4 : 0}
+          strokeWidth={selectedMilestone === idx ? 0.1 : 0}
           style={{ transition: "stroke-width 0.2s, r 0.2s" }}
         />
         <text
-          x={isTablet ? 45 : 60}
-          y={isTablet ? 52 : 70}
+          x={isTablet ? 40 : 50}
+          y={isTablet ? 46 : 56}
           textAnchor="middle"
           fontFamily="var(--font-mono)"
           fontWeight="800"
-          fontSize={isTablet ? "1.1rem" : "1.4rem"}
+          fontSize={isTablet ? "0.8rem" : "1rem"}
           fill={color}
           style={{
             letterSpacing: 3,
@@ -217,9 +219,9 @@ export default function TimelineRingItem({
               x1={1}
               y1={0}
               x2={1}
-              y2={(isTablet ? 28 : 38) * animatedLineProgress}
+              y2={(isTablet ? 28 : 38) * (animatedLineProgress ?? 0)}
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={0.5}
               style={{ transition: "y2 0.18s" }}
             />
           </svg>

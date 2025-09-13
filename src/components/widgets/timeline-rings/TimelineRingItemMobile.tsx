@@ -22,7 +22,7 @@ export default function TimelineRingItemMobile({
   return (
     <div
       className="flex flex-col items-center relative"
-      style={{ width: "80px" }}
+      style={{ width: "70px" }}
     >
       {layout === "top" && (
         <>
@@ -31,11 +31,12 @@ export default function TimelineRingItemMobile({
             style={{
               color,
               fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-              fontSize: "6px",
-              letterSpacing: 0.5,
+              fontWeight: 600,
+              fontSize: "5px",
+              letterSpacing: 0.3,
               marginBottom: "1px",
-              lineHeight: 1.2,
+              lineHeight: 1.1,
+              textAlign: "center",
             }}
           >
             {item.title}
@@ -45,10 +46,11 @@ export default function TimelineRingItemMobile({
             style={{
               color: secondaryColor,
               fontFamily: "var(--font-mono)",
-              fontWeight: 500,
-              lineHeight: 1.2,
-              fontSize: "4px",
+              fontWeight: 400,
+              lineHeight: 1.1,
+              fontSize: "3px",
               marginBottom: "1px",
+              textAlign: "center",
             }}
           >
             {item.desc}
@@ -64,7 +66,7 @@ export default function TimelineRingItemMobile({
               x2={1}
               y2={12 - 12 * (animatedLineProgress ?? 0)}
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={0.5}
               style={{ transition: "y2 0.18s" }}
             />
           </svg>
@@ -128,10 +130,10 @@ export default function TimelineRingItemMobile({
           </radialGradient>
         </defs>
         <path
-          d={describeArc(25, 25, 20, arcStart, arcEnd)}
+          d={describeArc(25, 25, 18, arcStart, arcEnd)}
           fill="none"
           stroke={color}
-          strokeWidth={6}
+          strokeWidth={0.2}
           opacity={hoveredIdx === null ? 1 : hoveredIdx === idx ? 1 : 0.5}
           strokeLinecap="round"
           style={{ cursor: "pointer", transition: "opacity 0.18s" }}
@@ -139,17 +141,17 @@ export default function TimelineRingItemMobile({
           onMouseEnter={() => setHoveredIdx(idx)}
         />
         <path
-          d={describeArc(25, 25, 20, gapStart, gapEnd)}
+          d={describeArc(25, 25, 18, gapStart, gapEnd)}
           fill="none"
           stroke={color}
-          strokeWidth={6}
+          strokeWidth={0.2}
           opacity={0.18}
           strokeLinecap="round"
         />
         <circle
           cx={25}
           cy={25}
-          r={15}
+          r={13}
           fill={timelineRingsColors.fill}
           stroke="none"
         />
@@ -159,7 +161,7 @@ export default function TimelineRingItemMobile({
           textAnchor="middle"
           fontFamily="var(--font-mono)"
           fontWeight="bold"
-          fontSize={"0.5rem"}
+          fontSize={"0.4rem"}
           fill={color}
           style={{ letterSpacing: 2 }}
         >
@@ -180,7 +182,7 @@ export default function TimelineRingItemMobile({
               x2={1}
               y2={12 * (animatedLineProgress ?? 0)}
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={0.5}
               style={{ transition: "y2 0.18s" }}
             />
           </svg>
@@ -190,10 +192,11 @@ export default function TimelineRingItemMobile({
               style={{
                 color,
                 fontFamily: "var(--font-mono)",
-                fontSize: "6px",
-                letterSpacing: 0.5,
+                fontSize: "5px",
+                letterSpacing: 0.3,
                 marginBottom: "1px",
-                lineHeight: 1.2,
+                lineHeight: 1.1,
+                textAlign: "center",
               }}
             >
               {item.title}
@@ -203,10 +206,11 @@ export default function TimelineRingItemMobile({
               style={{
                 color: secondaryColor,
                 fontFamily: "var(--font-mono)",
-                fontWeight: 500,
-                lineHeight: 1.2,
-                marginTop: "2px",
-                fontSize: "4px",
+                fontWeight: 400,
+                lineHeight: 1.1,
+                marginTop: "1px",
+                fontSize: "3px",
+                textAlign: "center",
               }}
             >
               {item.desc}

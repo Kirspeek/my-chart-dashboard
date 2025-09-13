@@ -11,6 +11,7 @@ export default function BubbleChartControls({
   setAnimationSpeed,
   isZoomedOut,
   setIsZoomedOut,
+  isSmallScreen = false,
   getCategoryHex,
 }: BubbleChartControlsProps) {
   return (
@@ -83,18 +84,20 @@ export default function BubbleChartControls({
           </span>
         </div>
 
-        <button
-          onClick={() => setIsZoomedOut(!isZoomedOut)}
-          className={`px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200`}
-          style={{
-            backgroundColor: "transparent",
-            border: `1px solid var(--border-secondary)`,
-            color:
-              "color-mix(in srgb, var(--primary-text) 70%, var(--secondary-text))",
-          }}
-        >
-          {isZoomedOut ? "Zoom In" : "Zoom Out"}
-        </button>
+        {!isSmallScreen && (
+          <button
+            onClick={() => setIsZoomedOut(!isZoomedOut)}
+            className={`px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200`}
+            style={{
+              backgroundColor: "transparent",
+              border: `1px solid var(--border-secondary)`,
+              color:
+                "color-mix(in srgb, var(--primary-text) 70%, var(--secondary-text))",
+            }}
+          >
+            {isZoomedOut ? "Zoom In" : "Zoom Out"}
+          </button>
+        )}
       </div>
     </div>
   );

@@ -51,8 +51,8 @@ export default function DataTable({ data, title }: DataTableProps<UserData>) {
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                       user.status === "active"
-                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                        : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                        ? "bg-green-100 text-green-800 dark:bg-gray-800/20 dark:border dark:border-gray-600/15 dark:text-gray-400"
+                        : "bg-red-100 text-red-800 dark:bg-gray-800/20 dark:border dark:border-gray-600/15 dark:text-gray-500"
                     }`}
                   >
                     {user.status}

@@ -1,4 +1,3 @@
-// Music-related shared interfaces and types
 
 export type SearchResultType = "tracks" | "albums" | "artists" | "playlists";
 
@@ -40,6 +39,7 @@ export interface MusicWidgetProps {
   title?: string;
   tracks?: TrackItem[];
   spotifyTrackUrl?: string;
+  compact?: boolean;
 }
 
 export interface SearchResultsProps {
@@ -51,4 +51,11 @@ export interface SearchResultsProps {
 export interface SearchTabsProps {
   activeTab: MainTab;
   onChange: (tab: MainTab) => void;
+}
+
+export interface PlaylistProps {
+  tracks: TrackItem[];
+  currentId?: string | null;
+  onSelect: (track: TrackItem) => void;
+  compact?: boolean;
 }

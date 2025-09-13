@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useRef, useState, useMemo, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
 import { WidgetBase, SlideNavigation, WidgetTitle } from "@/components/common";
 import type { CustomBubbleChartProps } from "@/interfaces/charts";
 import BubbleChartControls from "./BubbleChartControls";
@@ -41,6 +47,25 @@ export default function CustomBubbleChart(props: CustomBubbleChartProps) {
   const [showParticles, setShowParticles] = useState(true);
   const [animationSpeed, setAnimationSpeed] = useState(1);
   const [isZoomedOut, setIsZoomedOut] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (typeof window !== "undefined") {
+        const isSmall = window.innerWidth < 1440;
+        setIsSmallScreen(isSmall);
+        if (isSmall) {
+          setIsZoomedOut(true);
+        } else {
+          setIsZoomedOut(false);
+        }
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const threeDData: ThreeDBubbleData[] = useMemo(() => {
     const enhancedData: ThreeDBubbleData[] = [];
@@ -197,6 +222,7 @@ export default function CustomBubbleChart(props: CustomBubbleChartProps) {
           setAnimationSpeed={setAnimationSpeed}
           isZoomedOut={isZoomedOut}
           setIsZoomedOut={setIsZoomedOut}
+          isSmallScreen={isSmallScreen}
           getCategoryHex={(c) => getBubbleColor(c).replace(/^#/, "")}
           buttonColors={bubbleChartColors.button}
         />
@@ -239,7 +265,6 @@ export default function CustomBubbleChart(props: CustomBubbleChartProps) {
         />
       </div>
 
-      {/* Navigation buttons */}
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

@@ -59,7 +59,6 @@ export default function MigrationFlowControls({
 
   return (
     <div className="w-full mt-4">
-      {/* View Mode Selector */}
       <div className="flex items-center justify-center space-x-1 mb-3">
         {viewModes.map((mode) => {
           const Icon = mode.icon;
@@ -73,8 +72,9 @@ export default function MigrationFlowControls({
               variant={isActive ? "primary" : "secondary"}
               size={isMobile ? "sm" : "md"}
               icon={<Icon className="w-3 h-3" />}
-              tooltip={mode.tooltip}
+              tooltip={true}
               tooltipTitle={mode.label}
+              tooltipSubtitle={mode.tooltip}
             >
               {!isMobile && mode.label}
             </MigrationFlowButton>
@@ -82,7 +82,6 @@ export default function MigrationFlowControls({
         })}
       </div>
 
-      {/* Control Panel */}
       <div
         className="flex items-center justify-between p-3 rounded-xl"
         style={{
@@ -111,8 +110,9 @@ export default function MigrationFlowControls({
                 <Play className="w-4 h-4" />
               )
             }
-            tooltip={isPlaying ? "Pause animation" : "Play animation"}
+            tooltip={true}
             tooltipTitle={isPlaying ? "Pause" : "Play"}
+            tooltipSubtitle={isPlaying ? "Pause animation" : "Play animation"}
           >
             {isPlaying ? "Pause" : "Play"}
           </MigrationFlowButton>
@@ -122,8 +122,9 @@ export default function MigrationFlowControls({
             variant="secondary"
             size="sm"
             icon={<RotateCcw className="w-4 h-4" />}
-            tooltip="Reset view and selections"
+            tooltip={true}
             tooltipTitle="Reset"
+            tooltipSubtitle="Reset view and selections"
           >
             Reset
           </MigrationFlowButton>
@@ -139,8 +140,9 @@ export default function MigrationFlowControls({
                 <Eye className="w-4 h-4" />
               )
             }
-            tooltip={showDetails ? "Hide details" : "Show details"}
+            tooltip={true}
             tooltipTitle={showDetails ? "Hide Details" : "Show Details"}
+            tooltipSubtitle={showDetails ? "Hide details" : "Show details"}
           >
             {showDetails ? "Hide" : "Show"}
           </MigrationFlowButton>
@@ -168,8 +170,9 @@ export default function MigrationFlowControls({
                   onClick={() => setAnimationSpeed(speed.key)}
                   variant={isActive ? "primary" : "secondary"}
                   size="sm"
-                  tooltip={speed.tooltip}
+                  tooltip={true}
                   tooltipTitle={speed.label}
+                  tooltipSubtitle={speed.tooltip}
                 >
                   {speed.label}
                 </MigrationFlowButton>

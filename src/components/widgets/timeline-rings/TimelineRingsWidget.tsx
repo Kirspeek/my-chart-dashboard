@@ -145,12 +145,12 @@ export default function TimelineRingsWidget({
         <div
           className="flex flex-row items-end justify-center gap-12 w-full max-w-7xl mt-16"
           style={{
-            minHeight: isMobile ? 150 : isTablet ? 280 : 340,
+            minHeight: isMobile ? 120 : isTablet ? 200 : 200,
             position: "relative",
-            gap: isMobile ? "1px" : isTablet ? "16px" : "48px",
+            gap: isMobile ? "8px" : isTablet ? "24px" : "32px",
             flexDirection: isMobile ? "column" : "row",
             alignItems: isMobile ? "center" : "center",
-            marginTop: isMobile ? "1rem" : "4rem",
+            marginTop: isMobile ? "0.5rem" : isTablet ? "2rem" : "3rem",
           }}
         >
           {isMobile ? (
@@ -178,7 +178,6 @@ export default function TimelineRingsWidget({
             />
           )}
         </div>
-        {/* Navigation buttons */}
         {currentSlide !== undefined && setCurrentSlide && (
           <SlideNavigation
             currentSlide={currentSlide}

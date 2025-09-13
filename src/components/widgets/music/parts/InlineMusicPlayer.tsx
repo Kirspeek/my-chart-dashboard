@@ -13,7 +13,6 @@ import {
 
 export default function InlineMusicPlayer({
   embedUrl,
-  embedHeight,
   onPrev,
   onNext,
   onSave,
@@ -25,9 +24,9 @@ export default function InlineMusicPlayer({
   onExpand,
 }: PlayerProps) {
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative", height: "180px", width: "100%" }}>
       <iframe
-        style={{ border: 0, width: "100%", height: embedHeight }}
+        style={{ border: 0, width: "100%", height: "100%" }}
         src={embedUrl}
         loading="lazy"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -46,7 +45,7 @@ export default function InlineMusicPlayer({
             : {
                 position: "absolute",
                 top: 15,
-                left: 185,
+                right: 45,
                 display: "flex",
                 gap: 8,
                 zIndex: 2,

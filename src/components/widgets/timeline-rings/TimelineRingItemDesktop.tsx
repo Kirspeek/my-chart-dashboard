@@ -23,7 +23,7 @@ export default function TimelineRingItemDesktop({
   return (
     <div
       className="flex flex-col items-center relative"
-      style={{ width: isTablet ? "140px" : "224px" }}
+      style={{ width: isTablet ? "120px" : "180px" }}
     >
       {isEven && (
         <>
@@ -32,10 +32,11 @@ export default function TimelineRingItemDesktop({
             style={{
               color,
               fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-              fontSize: isTablet ? "14px" : "22px",
-              letterSpacing: 1,
-              marginBottom: isTablet ? "4px" : "8px",
+              fontWeight: 600,
+              fontSize: isTablet ? "10px" : "14px",
+              letterSpacing: 0.6,
+              marginBottom: isTablet ? "3px" : "5px",
+              textAlign: "center",
             }}
           >
             {item.title}
@@ -45,10 +46,11 @@ export default function TimelineRingItemDesktop({
             style={{
               color: secondaryColor,
               fontFamily: "var(--font-mono)",
-              fontWeight: 500,
-              lineHeight: 1.4,
-              fontSize: isTablet ? "10px" : "16px",
-              marginBottom: isTablet ? "4px" : "8px",
+              fontWeight: 400,
+              lineHeight: 1.2,
+              fontSize: isTablet ? "8px" : "11px",
+              marginBottom: isTablet ? "3px" : "5px",
+              textAlign: "center",
             }}
           >
             {item.desc}
@@ -67,7 +69,7 @@ export default function TimelineRingItemDesktop({
                 (isTablet ? 28 : 38) * (animatedLineProgress ?? 0)
               }
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={0.5}
               style={{ transition: "y2 0.18s" }}
             />
           </svg>
@@ -132,15 +134,15 @@ export default function TimelineRingItemDesktop({
         </defs>
         <path
           d={describeArc(
-            isTablet ? 45 : 60,
-            isTablet ? 45 : 60,
-            isTablet ? 36 : 48,
+            isTablet ? 40 : 50,
+            isTablet ? 40 : 50,
+            isTablet ? 30 : 40,
             arcStart,
             arcEnd
           )}
           fill="none"
           stroke={color}
-          strokeWidth={isTablet ? 10 : 14}
+          strokeWidth={isTablet ? 0.3 : 0.5}
           opacity={hoveredIdx === null ? 1 : hoveredIdx === idx ? 1 : 0.5}
           strokeLinecap="round"
           style={{ cursor: "pointer", transition: "opacity 0.18s" }}
@@ -149,32 +151,32 @@ export default function TimelineRingItemDesktop({
         />
         <path
           d={describeArc(
-            isTablet ? 45 : 60,
-            isTablet ? 45 : 60,
-            isTablet ? 36 : 48,
+            isTablet ? 40 : 50,
+            isTablet ? 40 : 50,
+            isTablet ? 30 : 40,
             gapStart,
             gapEnd
           )}
           fill="none"
           stroke={color}
-          strokeWidth={isTablet ? 10 : 14}
+          strokeWidth={isTablet ? 0.3 : 0.5}
           opacity={0.18}
           strokeLinecap="round"
         />
         <circle
-          cx={isTablet ? 45 : 60}
-          cy={isTablet ? 45 : 60}
-          r={isTablet ? 28 : 38}
+          cx={isTablet ? 40 : 50}
+          cy={isTablet ? 40 : 50}
+          r={isTablet ? 24 : 32}
           fill={timelineRingsColors.fill}
           stroke="none"
         />
         <text
-          x={isTablet ? 45 : 60}
-          y={isTablet ? 52 : 70}
+          x={isTablet ? 40 : 50}
+          y={isTablet ? 46 : 56}
           textAnchor="middle"
           fontFamily="var(--font-mono)"
           fontWeight="bold"
-          fontSize={isTablet ? "1rem" : "1.3rem"}
+          fontSize={isTablet ? "0.7rem" : "0.9rem"}
           fill={secondaryColor}
           style={{ letterSpacing: 2 }}
         >
@@ -224,7 +226,7 @@ export default function TimelineRingItemDesktop({
               x2={1}
               y2={(isTablet ? 28 : 38) * (animatedLineProgress ?? 0)}
               stroke={color}
-              strokeWidth={2}
+              strokeWidth={0.5}
               style={{ transition: "y2 0.18s" }}
             />
           </svg>

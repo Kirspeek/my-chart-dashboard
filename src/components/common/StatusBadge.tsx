@@ -1,14 +1,7 @@
 "use client";
 
 import React from "react";
-
-interface StatusBadgeProps {
-  children: React.ReactNode;
-  variant?: "success" | "warning" | "error" | "info" | "default";
-  size?: "sm" | "md" | "lg";
-  className?: string;
-  style?: React.CSSProperties;
-}
+import type { StatusBadgeProps } from "@/interfaces";
 
 export default function StatusBadge({
   children,
@@ -22,12 +15,12 @@ export default function StatusBadge({
 
   const variantClasses = {
     success:
-      "bg-green-100 text-green-800 dark:bg-green-500/12 dark:border dark:border-green-400/20 dark:text-green-300",
+      "bg-green-100 text-green-800 dark:!bg-transparent dark:!border dark:!border-transparent dark:!text-gray-600",
     warning:
-      "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/12 dark:border dark:border-yellow-400/20 dark:text-yellow-300",
+      "bg-yellow-100 text-yellow-800 dark:!bg-transparent dark:!border dark:!border-transparent dark:!text-gray-600",
     error:
-      "bg-red-100 text-red-800 dark:bg-red-500/12 dark:border dark:border-red-400/20 dark:text-red-300",
-    info: "bg-blue-100 text-blue-800 dark:bg-blue-500/12 dark:border dark:border-blue-400/20 dark:text-blue-300",
+      "bg-red-100 text-red-800 dark:!bg-transparent dark:!border dark:!border-transparent dark:!text-gray-700",
+    info: "bg-blue-100 text-blue-800 dark:!bg-transparent dark:!border dark:!border-transparent dark:!text-gray-600",
     default:
       "bg-gray-100 text-gray-800 dark:bg-[var(--button-bg)] dark:border dark:border-[var(--button-border)] dark:text-[var(--secondary-text)]",
   };

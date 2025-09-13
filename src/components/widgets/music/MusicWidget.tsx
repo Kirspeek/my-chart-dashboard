@@ -20,7 +20,8 @@ import { useEmbedHeight } from "@/hooks/music/useEmbedHeight";
 
 export default function MusicWidget({
   tracks,
-  spotifyTrackUrl = "https://open.spotify.com/embed/track/6Qb7YsAqH4wWFUMbGsCpap",
+  spotifyTrackUrl = "https://open.spotify.com/embed/track/1jDJFeK9x3OZboIAHsY9k2",
+  compact = false,
 }: MusicWidgetProps) {
   const [embedUrl, setEmbedUrl] = useState<string>(spotifyTrackUrl);
   const [repeatOne, setRepeatOne] = useState<boolean>(false);
@@ -54,25 +55,30 @@ export default function MusicWidget({
   }, [topTracks, setPlaylist]);
 
   return (
-    <WidgetBase className="w-full h-full" style={{ height: 720 }}>
+    <WidgetBase
+      className="w-full h-full"
+      style={{ height: compact ? 280 : 600 }}
+    >
       <div
-        className="rounded-2xl p-4 md:p-6 flex flex-col gap-4 h-full overflow-hidden"
+        className={`${compact ? "p-2 md:p-3" : "p-4 md:p-6"} flex flex-col ${compact ? "gap-3" : "gap-4"} h-full overflow-hidden`}
         style={{
           background: "var(--widget-bg)",
           border: "2px solid var(--card-border)",
           position: "relative",
+          borderRadius: "20px",
         }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <input
             aria-label="Search music"
             placeholder="Search albums or tracks"
-            className="flex-1 rounded-lg px-3 py-2 text-sm"
+            className="flex-1 px-2 py-1.5 text-xs"
             style={{
               background: "var(--input-bg, var(--button-bg))",
               border: "1px solid var(--button-border)",
               color: "var(--primary-text)",
               outline: "none",
+              borderRadius: "10px",
             }}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -81,11 +87,12 @@ export default function MusicWidget({
             }}
           />
           <button
-            className="px-3 py-2 rounded-lg text-sm"
+            className="px-2 py-1.5 text-xs"
             style={{
               background: "var(--button-bg)",
               border: "1px solid var(--button-border)",
               color: "var(--secondary-text)",
+              borderRadius: "10px",
             }}
             onClick={doSearch}
           >
@@ -95,7 +102,11 @@ export default function MusicWidget({
 
         <div
           className={
-            "flex flex-col gap-4" + (isSearchMode ? " scrollbar-hide" : "")
+            isSearchMode
+              ? "flex flex-col gap-2 scrollbar-hide"
+              : compact
+                ? "flex flex-row gap-2 items-start"
+                : "flex flex-col"
           }
           style={
             isSearchMode
@@ -103,9 +114,18 @@ export default function MusicWidget({
                   flex: 1,
                   minHeight: 0,
                   overflowY: "auto",
-                  paddingBottom: embedHeight + 24,
+                  paddingBottom: embedHeight + 2,
                 }
-              : undefined
+              : compact
+                ? {
+                    flex: 1,
+                    minHeight: 0,
+                    alignItems: "stretch",
+                  }
+                : {
+                    flex: 1,
+                    minHeight: 0,
+                  }
           }
         >
           {isSearchMode &&
@@ -235,61 +255,138 @@ export default function MusicWidget({
                 likedActive={isLiked(current?.id)}
               />
             </div>
+          ) : compact ? (
+            <>
+              <div
+                className="flex-1"
+                style={{
+                  width: "50%",
+                  height: "180px",
+                }}
+              >
+                <InlineMusicPlayer
+                  embedUrl={embedUrl}
+                  embedHeight={180}
+                  isSearchMode={isSearchMode}
+                  onPrev={() => {
+                    if (!playlist.length || !current) return;
+                    const idx = playlist.findIndex((t) => t.id === current.id);
+                    const prev =
+                      idx > 0
+                        ? playlist[idx - 1]
+                        : playlist[playlist.length - 1];
+                    setCurrent(prev);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(prev.id));
+                  }}
+                  onNext={() => {
+                    if (!playlist.length || !current) return;
+                    const idx = playlist.findIndex((t) => t.id === current.id);
+                    const next =
+                      idx < playlist.length - 1
+                        ? playlist[idx + 1]
+                        : playlist[0];
+                    setCurrent(next);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(next.id));
+                  }}
+                  onShuffle={() => {
+                    if (!playlist.length || !current) return;
+                    if (playlist.length === 1) return;
+                    const currentIndex = playlist.findIndex(
+                      (t) => t.id === current.id
+                    );
+                    let idx = Math.floor(Math.random() * playlist.length);
+                    if (idx === currentIndex) {
+                      idx = (idx + 1) % playlist.length;
+                    }
+                    const track = playlist[idx];
+                    setCurrent(track);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(track.id));
+                  }}
+                  onRepeat={() => setRepeatOne((v) => !v)}
+                  repeatActive={repeatOne}
+                  onSave={() => toggleLike(current?.id)}
+                  likedActive={isLiked(current?.id)}
+                />
+              </div>
+              <div
+                className="flex-1"
+                style={{
+                  width: "50%",
+                  height: "150px",
+                }}
+              >
+                <Playlist
+                  tracks={playlist}
+                  currentId={current?.id ?? null}
+                  onSelect={(t) => {
+                    setCurrent(t);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(t.id));
+                  }}
+                  compact={true}
+                />
+              </div>
+            </>
           ) : (
-            <InlineMusicPlayer
-              embedUrl={embedUrl}
-              embedHeight={embedHeight}
-              isSearchMode={isSearchMode}
-              onPrev={() => {
-                if (!playlist.length || !current) return;
-                const idx = playlist.findIndex((t) => t.id === current.id);
-                const prev =
-                  idx > 0 ? playlist[idx - 1] : playlist[playlist.length - 1];
-                setCurrent(prev);
-                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(prev.id));
-              }}
-              onNext={() => {
-                if (!playlist.length || !current) return;
-                const idx = playlist.findIndex((t) => t.id === current.id);
-                const next =
-                  idx < playlist.length - 1 ? playlist[idx + 1] : playlist[0];
-                setCurrent(next);
-                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(next.id));
-              }}
-              onShuffle={() => {
-                if (!playlist.length || !current) return;
-                if (playlist.length === 1) return;
-                const currentIndex = playlist.findIndex(
-                  (t) => t.id === current.id
-                );
-                let idx = Math.floor(Math.random() * playlist.length);
-                if (idx === currentIndex) {
-                  idx = (idx + 1) % playlist.length;
-                }
-                const track = playlist[idx];
-                setCurrent(track);
-                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(track.id));
-              }}
-              onRepeat={() => setRepeatOne((v) => !v)}
-              repeatActive={repeatOne}
-              onSave={() => toggleLike(current?.id)}
-              likedActive={isLiked(current?.id)}
-            />
+            <>
+              <div className="flex-1 overflow-hidden">
+                <InlineMusicPlayer
+                  embedUrl={embedUrl}
+                  embedHeight={Math.min(embedHeight, 600)}
+                  isSearchMode={isSearchMode}
+                  onPrev={() => {
+                    if (!playlist.length || !current) return;
+                    const idx = playlist.findIndex((t) => t.id === current.id);
+                    const prev =
+                      idx > 0
+                        ? playlist[idx - 1]
+                        : playlist[playlist.length - 1];
+                    setCurrent(prev);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(prev.id));
+                  }}
+                  onNext={() => {
+                    if (!playlist.length || !current) return;
+                    const idx = playlist.findIndex((t) => t.id === current.id);
+                    const next =
+                      idx < playlist.length - 1
+                        ? playlist[idx + 1]
+                        : playlist[0];
+                    setCurrent(next);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(next.id));
+                  }}
+                  onShuffle={() => {
+                    if (!playlist.length || !current) return;
+                    if (playlist.length === 1) return;
+                    const currentIndex = playlist.findIndex(
+                      (t) => t.id === current.id
+                    );
+                    let idx = Math.floor(Math.random() * playlist.length);
+                    if (idx === currentIndex) {
+                      idx = (idx + 1) % playlist.length;
+                    }
+                    const track = playlist[idx];
+                    setCurrent(track);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(track.id));
+                  }}
+                  onRepeat={() => setRepeatOne((v) => !v)}
+                  repeatActive={repeatOne}
+                  onSave={() => toggleLike(current?.id)}
+                  likedActive={isLiked(current?.id)}
+                />
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <Playlist
+                  tracks={playlist}
+                  currentId={current?.id ?? null}
+                  onSelect={(t) => {
+                    setCurrent(t);
+                    setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(t.id));
+                  }}
+                  compact={false}
+                />
+              </div>
+            </>
           )}
         </div>
-
-        {!isSearchMode && (
-          <>
-            <Playlist
-              tracks={playlist}
-              currentId={current?.id ?? null}
-              onSelect={(t) => {
-                setCurrent(t);
-                setEmbedUrl(API_ENDPOINTS.SPOTIFY_EMBED.track(t.id));
-              }}
-            />
-          </>
-        )}
       </div>
     </WidgetBase>
   );

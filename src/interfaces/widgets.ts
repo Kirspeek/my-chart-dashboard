@@ -148,10 +148,6 @@ export interface WeatherButtonBackground {
   background: string;
 }
 
-export interface WeatherCacheStatusProps extends CommonComponentProps {
-  cities: string[];
-}
-
 // ============================================================================
 // MAP WIDGET INTERFACES
 // ============================================================================

@@ -41,7 +41,7 @@
 }
 
 .card {
-  background: linear-gradient(to right bottom, pink, papayawhip);
+  background: linear-gradient(to right bottom, #4a2a2a, #4a4a2a);
 }
 
 .card-shadow {

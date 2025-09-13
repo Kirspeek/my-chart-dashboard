@@ -11,16 +11,16 @@ export default function TimelineStatsView({
   const stats = useMemo(() => {
     const total = data.length;
     const avg =
-      total === 0
+      total === 0 || !progressByIndex
         ? 0
-        : progressByIndex.reduce((a, b) => a + (b ?? 0), 0) / total;
+        : (progressByIndex?.reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0) / total;
     const completed = data.filter(
-      (_, i) => (progressByIndex[i] ?? 0) >= (data[i].progress ?? 0.9)
+      (_, i) => (progressByIndex?.[i] ?? 0) >= (data[i]?.progress ?? 0.9)
     ).length;
     const byColor: Record<string, number> = {};
     data.forEach((d, i) => {
-      const c = d.color;
-      byColor[c] = (byColor[c] ?? 0) + (progressByIndex[i] ?? 0);
+      const c = d.color ?? "unknown";
+      byColor[c] = (byColor[c] ?? 0) + (progressByIndex?.[i] ?? 0);
     });
     const colorEntries = Object.entries(byColor).sort((a, b) => b[1] - a[1]);
     return { total, avg, completed, colorEntries };

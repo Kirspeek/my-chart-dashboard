@@ -1,6 +1,6 @@
 "use client";
 
-import { WidgetBaseProps } from "@/interfaces/components";
+import { WidgetBaseProps } from "@/interfaces/base";
 import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 

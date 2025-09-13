@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button3DProps } from "@/interfaces/components";
+import { Button3DProps } from "@/interfaces/widgets";
 import { useTheme } from "@/hooks/useTheme";
 
 export default function Button3D({

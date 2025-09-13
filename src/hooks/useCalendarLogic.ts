@@ -12,7 +12,7 @@ export function useCalendarLogic(
   const [currentDate, setCurrentDate] = useState(initialDate || new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "year">(
-    "month"
+    "week"
   );
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [showEventForm, setShowEventForm] = useState(false);
@@ -54,12 +54,10 @@ export function useCalendarLogic(
   const getDaysInMonth = useCallback(
     (date: Date): Date[] => {
       if (viewMode === "day") {
-        // For day view, just return the selected day
         return [date];
       }
 
       if (viewMode === "week") {
-        // For week view, return the 7 days of the current week
         const days: Date[] = [];
         const startOfWeek = new Date(date);
         const dayOfWeek = date.getDay();
@@ -73,36 +71,30 @@ export function useCalendarLogic(
         return days;
       }
 
-      // Month view (default) - STRICTLY 5 weeks only
       const year = date.getFullYear();
       const month = date.getMonth();
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
       const daysInMonth = lastDay.getDate();
 
-      // Get the day of week for the first day (0 = Sunday, 1 = Monday, etc.)
       const firstDayOfWeek = firstDay.getDay();
 
       const days: Date[] = [];
 
-      // Add days from previous month to fill the first week
       for (let i = firstDayOfWeek - 1; i >= 0; i--) {
         const prevMonthDay = new Date(year, month, -i);
         days.push(prevMonthDay);
       }
 
-      // Add days from current month
       for (let day = 1; day <= daysInMonth; day++) {
         days.push(new Date(year, month, day));
       }
 
-      // Add days from next month to fill exactly 5 weeks (35 days total) - NO MORE
       const remainingDays = 35 - days.length; // 5 rows * 7 days = 35
       for (let day = 1; day <= remainingDays; day++) {
         days.push(new Date(year, month + 1, day));
       }
 
-      // Ensure we never return more than 35 days
       return days.slice(0, 35);
     },
     [viewMode]

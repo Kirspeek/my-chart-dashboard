@@ -1,63 +1,41 @@
-import { ReactNode, HTMLAttributes } from "react";
+import React from "react";
 
-export interface WidgetBaseProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+export interface StatusBadgeProps {
+  children: React.ReactNode;
+  variant?: "success" | "warning" | "error" | "info" | "default";
+  size?: "sm" | "md" | "lg";
   className?: string;
   style?: React.CSSProperties;
 }
 
-export interface Button3DProps {
-  children: ReactNode;
-  onClick?: () => void;
-  selected?: boolean;
+export interface InsightsPanelProps {
+  title: string;
+  show: boolean;
+  onToggle: () => void;
   className?: string;
-  style?: React.CSSProperties;
-  disabled?: boolean;
-  customBackground?: string;
-  customAccentColor?: string;
+  children: React.ReactNode;
 }
 
-export interface TimerWidgetProps {
-  className?: string;
-  currentSlide?: number;
-  setCurrentSlide?: (slide: number) => void;
-}
-
-// Weather Cache Status Interfaces
-export interface WeatherCacheStatusProps {
-  cities: string[];
-  className?: string;
-}
-
-export interface MapComponentProps {
-  center: [number, number];
-  zoom: number;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-// Common component props for shared chart UI pieces
-export interface ToggleButtonOption {
-  key: string;
-  // Using any icon component type with className prop
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+export interface MetricStatCardProps {
+  icon: React.ComponentType<{
+    className?: string;
+    style?: React.CSSProperties;
+  }>;
   label: string;
-}
-
-export interface ToggleButtonGroupProps {
-  options: ToggleButtonOption[];
-  selectedKey: string;
-  onChange: (key: string) => void;
-  size?: "sm" | "md";
+  subtitle?: string;
+  value: string;
+  growth?: number;
+  color: string;
+  badge?: string;
+  progress?: number;
   className?: string;
-  hideLabelsOnMobile?: boolean;
 }
 
 export interface AnalyticsHeaderProps {
   leftTitle: string;
   leftSubtitle?: string;
-  rightValueLabel?: string;
   rightValue: string;
+  rightValueLabel?: string;
   className?: string;
 }
 
@@ -68,47 +46,35 @@ export interface SelectionBannerProps {
   className?: string;
 }
 
-export interface MetricStatCardProps {
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  label: string;
-  subtitle?: string;
-  value: string | number;
-  growth?: number; // percentage, can be negative
-  color: string; // accent color for the card/icon
-  badge?: string;
-  progress?: number; // 0-100
+export interface ToggleButtonGroupProps {
+  options: Array<{
+    key: string;
+    icon: React.ComponentType<{ className?: string }>;
+    label: string;
+  }>;
+  selectedKey: string;
+  onChange: (key: string) => void;
+  size?: "sm" | "md";
   className?: string;
+  hideLabelsOnMobile?: boolean;
 }
 
-export interface InsightsPanelProps {
-  title: string;
-  show: boolean;
-  onToggle: () => void;
-  className?: string;
-  children?: React.ReactNode;
-}
-
-// Line chart header
-export interface LineChartHeaderProps {
-  title: string;
-}
-
-// Bar chart header
 export interface BarChartHeaderProps {
   title: string;
 }
 
-// Recent users header
-export interface RecentUsersHeaderProps {
-  title: string;
-}
-
-// Device usage header
 export interface DeviceUsageHeaderProps {
   title: string;
 }
 
-// Migration flow button (Sankey & related controls)
+export interface LineChartHeaderProps {
+  title: string;
+}
+
+export interface RecentUsersHeaderProps {
+  title: string;
+}
+
 export interface MigrationFlowButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
@@ -119,7 +85,12 @@ export interface MigrationFlowButtonProps {
   variant?: "primary" | "secondary" | "accent" | "danger";
   size?: "sm" | "md" | "lg";
   icon?: React.ReactNode;
-  tooltip?: string;
+  tooltip?: boolean;
   tooltipTitle?: string;
   tooltipSubtitle?: string;
+}
+
+export interface WeatherCacheStatusProps {
+  cities: string[];
+  className?: string;
 }

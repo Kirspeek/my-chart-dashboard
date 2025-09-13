@@ -4,15 +4,7 @@ import React from "react";
 import type { RecentUsersContainerProps } from "@/interfaces/widgets";
 import { useRecentUsersLogic } from "@/hooks/useRecentUsersLogic";
 import { useTheme } from "@/hooks/useTheme";
-import {
-  User,
-  Mail,
-  Shield,
-  Clock,
-  TrendingUp,
-  TrendingDown,
-} from "lucide-react";
-import { StatusBadge } from "@/components/common";
+import { User, Mail, Shield, Clock } from "lucide-react";
 
 export default function RecentUsersContainer({
   data,
@@ -20,14 +12,6 @@ export default function RecentUsersContainer({
   const { formatDate, getTextColor } = useRecentUsersLogic();
   const { colorsTheme } = useTheme();
   const recentUsersColors = colorsTheme.widgets.recentUsers;
-
-  const getStatusIcon = (status: string) => {
-    return status === "active" ? (
-      <TrendingUp className="w-3 h-3" />
-    ) : (
-      <TrendingDown className="w-3 h-3" />
-    );
-  };
 
   const getRoleIcon = (role: string) => {
     switch (role.toLowerCase()) {
@@ -111,7 +95,7 @@ export default function RecentUsersContainer({
                 }}
               >
                 <div className="flex items-center space-x-2">
-                  <TrendingUp className="w-3 h-3" />
+                  <div className="w-3 h-3 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
                   <span>STATUS</span>
                 </div>
               </th>
@@ -203,14 +187,41 @@ export default function RecentUsersContainer({
                   </div>
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap">
-                  <StatusBadge
-                    variant={user.status === "active" ? "success" : "error"}
-                    size="md"
-                    className="font-mono font-bold"
-                  >
-                    {getStatusIcon(user.status)}
-                    <span>{user.status}</span>
-                  </StatusBadge>
+                  <div className="flex items-center space-x-2">
+                    <div
+                      className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/30"
+                      style={{
+                        backgroundColor:
+                          user.status === "active"
+                            ? "rgba(34, 197, 94, 0.6)"
+                            : "rgba(239, 68, 68, 0.6)",
+                        boxShadow:
+                          user.status === "active"
+                            ? "0 1px 3px rgba(34, 197, 94, 0.2)"
+                            : "0 1px 3px rgba(239, 68, 68, 0.2)",
+                      }}
+                    ></div>
+                    <span
+                      className="text-xs font-medium px-2 py-1 rounded-md transition-all duration-200 bg-emerald-50 text-emerald-700"
+                      style={{
+                        backgroundColor:
+                          user.status === "active"
+                            ? "rgba(34, 197, 94, 0.08)"
+                            : "rgba(239, 68, 68, 0.08)",
+                        color:
+                          user.status === "active"
+                            ? "rgba(34, 197, 94, 0.8)"
+                            : "rgba(239, 68, 68, 0.8)",
+                        border:
+                          user.status === "active"
+                            ? "1px solid rgba(34, 197, 94, 0.15)"
+                            : "1px solid rgba(239, 68, 68, 0.15)",
+                        backdropFilter: "blur(4px)",
+                      }}
+                    >
+                      {user.status}
+                    </span>
+                  </div>
                 </td>
                 <td
                   className="px-4 py-2 whitespace-nowrap text-sm rounded-r-lg transition-colors duration-300"
@@ -244,12 +255,33 @@ export default function RecentUsersContainer({
       <div className="mt-4 pt-4 border-t border-[var(--button-border)] opacity-60 w-full">
         <div className="flex justify-between items-center text-xs secondary-text">
           <span>Total Users: {data.length}</span>
-          <span>
-            Active: {data.filter((user) => user.status === "active").length}
-          </span>
-          <span>
-            Inactive: {data.filter((user) => user.status === "inactive").length}
-          </span>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1">
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: "rgba(34, 197, 94, 0.6)",
+                  boxShadow: "0 1px 3px rgba(34, 197, 94, 0.2)",
+                }}
+              ></div>
+              <span>
+                Active: {data.filter((user) => user.status === "active").length}
+              </span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: "rgba(239, 68, 68, 0.6)",
+                  boxShadow: "0 1px 3px rgba(239, 68, 68, 0.2)",
+                }}
+              ></div>
+              <span>
+                Inactive:{" "}
+                {data.filter((user) => user.status === "inactive").length}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

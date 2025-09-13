@@ -18,7 +18,6 @@ export interface ColorsTheme {
     green?: string;
   };
 
-  // Widget-specific colors
   widgets: {
     clock: {
       accentColor: string;
@@ -370,20 +369,17 @@ export interface ColorsTheme {
 }
 
 export const lightColorsTheme: ColorsTheme = {
-  // Base colors
   primary: "#f2f0ef",
   secondary: "#888",
   muted: "#b0b0a8",
   cardBackground: "rgba(35, 35, 35, 0.07)",
   borderSecondary: "#e0e0e0",
 
-  // Text colors
   primaryText: "var(--primary-text)",
   secondaryText: "var(--secondary-text)",
   mutedText: "var(--muted-text)",
   weatherTextSecondary: "var(--weather-text-secondary)",
 
-  // Accent colors
   accent: {
     red: "#ea4300",
     yellow: "#ffdd6d",
@@ -391,12 +387,11 @@ export const lightColorsTheme: ColorsTheme = {
     blue: "#7bc2e8",
   },
 
-  // Widget-specific colors
   widgets: {
     clock: {
-      accentColor: "#ea4300", // accent.red
-      hoverBackground: "#ea430010", // accent.red with 10% opacity
-      activeBackground: "#ea43001a", // accent.red with 1a (10%) opacity
+      accentColor: "#ea4300", 
+      hoverBackground: "#ea430010", 
+      activeBackground: "#ea43001a", 
       inactiveBorder: "var(--muted-text)",
       inactiveText: "var(--muted-text)",
       selectedText: "#fff",
@@ -404,12 +399,12 @@ export const lightColorsTheme: ColorsTheme = {
     },
     weather: {
       loadingText: "var(--color-gray)",
-      errorText: "#ea4300", // accent.red
+      errorText: "#ea4300", 
       statusColors: {
         cached: "var(--color-gray)",
-        preloading: "#eab308", // yellow
-        stale: "#f87171", // red
-        fallback: "#b0b0a8", // gray
+        preloading: "#eab308", 
+        stale: "#f87171", 
+        fallback: "#b0b0a8", 
       },
     },
     timer: {
@@ -420,10 +415,10 @@ export const lightColorsTheme: ColorsTheme = {
         knobBorder: "#ff9a9a",
       },
       modeColors: {
-        focus: "#ea4300", // accent.red
-        break: "#7bc2e8", // accent.blue
-        rest: "#425b59", // accent.teal
-        quick: "#ffdd6d", // accent.yellow
+        focus: "#ea4300", 
+        break: "#7bc2e8", 
+        rest: "#425b59", 
+        quick: "#ffdd6d", 
       },
       buttonColors: {
         activeBackground: "var(--button-bg)",
@@ -447,20 +442,20 @@ export const lightColorsTheme: ColorsTheme = {
       },
     },
     calendar: {
-      accentColor: "#425b59", // accent.teal
+      accentColor: "#425b59", 
       todayBackground: "rgba(35, 35, 35, 0.15)",
       textColors: {
-        primary: "#1f2937", // gray-800
-        secondary: "#4b5563", // gray-600
-        muted: "#6b7280", // gray-500
-        label: "#374151", // gray-700
+        primary: "#1f2937", 
+        secondary: "#4b5563", 
+        muted: "#6b7280", 
+        label: "#374151", 
       },
       backgroundColors: {
-        event: "#f9fafb", // gray-50
+        event: "#f9fafb", 
         input: "rgba(255, 255, 255, 0.3)",
       },
       borderColors: {
-        input: "#e5e7eb", // gray-200
+        input: "#e5e7eb", 
         focus: "var(--accent-color)",
       },
     },
@@ -480,14 +475,14 @@ export const lightColorsTheme: ColorsTheme = {
       cardColors: {
         defaultText: "#222",
         defaultBackgrounds: [
-          "#F4E4A6", // Pastel yellow
-          "#F4C2C2", // Pastel pink
-          "#B8D4E3", // Pastel blue
-          "#B8D4B8", // Pastel green
-          "#D4B8F4", // Pastel purple
-          "#F4D4B8", // Pastel orange
-          "#B8E3F4", // Pastel cyan
-          "#F4B8D4", // Pastel magenta
+          "#F4E4A6", 
+          "#F4C2C2", 
+          "#B8D4E3", 
+          "#B8D4B8", 
+          "#D4B8F4", 
+          "#F4D4B8", 
+          "#B8E3F4", 
+          "#F4B8D4", 
         ],
       },
     },
@@ -776,20 +771,17 @@ export const lightColorsTheme: ColorsTheme = {
 };
 
 export const darkColorsTheme: ColorsTheme = {
-  // Base colors
   primary: "#ffffff",
   secondary: "#a0a0a0",
   muted: "#808080",
   cardBackground: "rgba(255, 255, 255, 0.05)",
   borderSecondary: "#333333",
 
-  // Text colors
   primaryText: "var(--primary-text)",
   secondaryText: "var(--secondary-text)",
   mutedText: "var(--muted-text)",
   weatherTextSecondary: "var(--weather-text-secondary)",
 
-  // Accent colors
   accent: {
     red: "#ff6b4a",
     yellow: "#ffdd6d",
@@ -798,12 +790,11 @@ export const darkColorsTheme: ColorsTheme = {
     blue: "#7bc2e8",
   },
 
-  // Widget-specific colors
   widgets: {
     clock: {
-      accentColor: "#ff6b4a", // accent.red
-      hoverBackground: "#ff6b4a10", // accent.red with 10% opacity
-      activeBackground: "#ff6b4a1a", // accent.red with 1a (10%) opacity
+      accentColor: "#ff6b4a", 
+      hoverBackground: "#ff6b4a10", 
+      activeBackground: "#ff6b4a1a", 
       inactiveBorder: "var(--muted-text)",
       inactiveText: "var(--muted-text)",
       selectedText: "#fff",
@@ -811,26 +802,26 @@ export const darkColorsTheme: ColorsTheme = {
     },
     weather: {
       loadingText: "var(--color-gray)",
-      errorText: "#ff6b4a", // accent.red
+      errorText: "#ff6b4a", 
       statusColors: {
         cached: "var(--color-gray)",
-        preloading: "#eab308", // yellow
-        stale: "#f87171", // red
-        fallback: "#b0b0a8", // gray
+        preloading: "#eab308", 
+        stale: "#f87171", 
+        fallback: "#b0b0a8", 
       },
     },
     timer: {
       circleColors: {
-        background: "#666", // darker gray for dark theme
+        background: "#666",
         progress: "#ff9a9a",
         knob: "#fff",
         knobBorder: "#ff9a9a",
       },
       modeColors: {
-        focus: "#ff6b4a", // accent.red
-        break: "#7bc2e8", // accent.blue
-        rest: "#5a7a78", // accent.teal
-        quick: "#ffdd6d", // accent.yellow
+        focus: "#ff6b4a",
+        break: "#7bc2e8",
+        rest: "#5a7a78",
+        quick: "#ffdd6d",
       },
       buttonColors: {
         activeBackground: "var(--button-bg)",
@@ -854,20 +845,20 @@ export const darkColorsTheme: ColorsTheme = {
       },
     },
     calendar: {
-      accentColor: "#5a7a78", // accent.teal
+      accentColor: "#5a7a78",
       todayBackground: "rgba(255, 255, 255, 0.15)",
       textColors: {
-        primary: "#f9fafb", // gray-100
-        secondary: "#d1d5db", // gray-300
-        muted: "#9ca3af", // gray-400
-        label: "#e5e7eb", // gray-200
+        primary: "#f9fafb",
+        secondary: "#d1d5db",
+        muted: "#9ca3af",
+        label: "#e5e7eb",
       },
       backgroundColors: {
-        event: "#374151", // gray-700
+        event: "#374151",
         input: "rgba(0, 0, 0, 0.3)",
       },
       borderColors: {
-        input: "#4b5563", // gray-600
+        input: "#4b5563",
         focus: "var(--accent-color)",
       },
     },
@@ -885,16 +876,16 @@ export const darkColorsTheme: ColorsTheme = {
           "inset 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 -1px 2px rgba(255, 255, 255, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2)",
       },
       cardColors: {
-        defaultText: "#333", // Darker text for better contrast on pastel backgrounds
+        defaultText: "#e5e7eb",
         defaultBackgrounds: [
-          "#F4E4A6", // Pastel yellow
-          "#F4C2C2", // Pastel pink
-          "#B8D4E3", // Pastel blue
-          "#B8D4B8", // Pastel green
-          "#D4B8F4", // Pastel purple
-          "#F4D4B8", // Pastel orange
-          "#B8E3F4", // Pastel cyan
-          "#F4B8D4", // Pastel magenta
+          "#4a4a2a",
+          "#4a2a2a",
+          "#2a3a4a",
+          "#2a4a2a",
+          "#3a2a4a",
+          "#4a3a2a",
+          "#2a4a4a",
+          "#4a2a3a",
         ],
       },
     },
@@ -1150,7 +1141,7 @@ export const darkColorsTheme: ColorsTheme = {
       thermometer: {
         fill: "#fff",
         stroke: "#444",
-        mercury: "#444",
+        mercury: "#ea4300",
         glow: "#ff5722",
       },
       sunGradient: {

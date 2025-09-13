@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   RadarChart as RechartsRadarChart,
   PolarGrid,
@@ -17,8 +18,7 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  Cpu,
-  Database,
+  Activity,
 } from "lucide-react";
 import type {
   WidgetRadarChartData,
@@ -26,6 +26,7 @@ import type {
 } from "@/interfaces/widgets";
 import { useChartLogic } from "@/hooks/useChartLogic";
 import { useTheme } from "@/hooks/useTheme";
+import FlexiblePerformanceTimeline from "./FlexiblePerformanceTimeline";
 
 interface PerformanceMetricsContainerProps {
   data: WidgetRadarChartData[] | PerformanceMetricsData;
@@ -42,34 +43,6 @@ export default function PerformanceMetricsContainer({
   const [currentMetrics, setCurrentMetrics] = useState<WidgetRadarChartData[]>(
     []
   );
-  const [historicalData, setHistoricalData] = useState<
-    Array<{
-      time: string;
-      cpu: number;
-      memory: number;
-      network: number;
-      disk: number;
-      response: number;
-      errors: number;
-      throughput: number;
-      availability: number;
-    }>
-  >([]);
-  const [alerts, setAlerts] = useState<
-    Array<{
-      id: number;
-      severity: string;
-      metric: string;
-      message: string;
-      time: string;
-      status: string;
-    }>
-  >([]);
-  const [capacityData, setCapacityData] = useState<{
-    currentUtilization: Record<string, number>;
-    projectedGrowth: Record<string, number>;
-    recommendations: string[];
-  } | null>(null);
 
   const { tooltipStyle } = useChartLogic();
   const { colors } = useTheme();
@@ -89,15 +62,11 @@ export default function PerformanceMetricsContainer({
     if (typeof data === "object" && "currentMetrics" in data) {
       const performanceData = data as PerformanceMetricsData;
       setCurrentMetrics(performanceData.currentMetrics);
-      setHistoricalData(performanceData.historicalData.hourly);
-      setAlerts(performanceData.alerts);
-      setCapacityData(performanceData.capacityPlanning);
     } else {
       setCurrentMetrics(data as WidgetRadarChartData[]);
     }
   }, [data]);
 
-  // Simulate real-time data updates
   useEffect(() => {
     if (!isRealTime) return;
 
@@ -112,7 +81,7 @@ export default function PerformanceMetricsContainer({
           change: (Math.random() - 0.5) * 10,
         }))
       );
-    }, 10000); // Update data every 10 seconds
+    }, 10000);
 
     return () => clearInterval(interval);
   }, [isRealTime]);
@@ -128,23 +97,10 @@ export default function PerformanceMetricsContainer({
     }
   };
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "high":
-        return "text-red-500";
-      case "medium":
-        return "text-yellow-500";
-      case "low":
-        return "text-blue-500";
-      default:
-        return "text-gray-500";
-    }
-  };
-
   const renderRadarView = () => {
-    // Create comparison data - current vs previous with very different values for each metric
+    
     const comparisonData = currentMetrics.map((metric) => {
-      // Generate very different current values for each metric
+      
       let currentValue;
       switch (metric.subject) {
         case "CPU Utilization":
@@ -201,8 +157,6 @@ export default function PerformanceMetricsContainer({
             Math.min(100, metric.value + (Math.random() - 0.5) * 20)
           );
       }
-
-      // Generate very different previous values for each metric based on the metric type
       let previousValue;
       switch (metric.subject) {
         case "CPU Utilization":
@@ -295,7 +249,6 @@ export default function PerformanceMetricsContainer({
                 fontWeight: 700,
               }}
             />
-            {/* Current values */}
             <Radar
               name="Current"
               dataKey="current"
@@ -304,7 +257,6 @@ export default function PerformanceMetricsContainer({
               fillOpacity={0.3}
               strokeWidth={isMobile ? 2 : 3}
             />
-            {/* Previous values */}
             <Radar
               name="Previous"
               dataKey="previous"
@@ -351,7 +303,6 @@ export default function PerformanceMetricsContainer({
           </RechartsRadarChart>
         </ResponsiveContainer>
 
-        {/* Comparison Legend */}
         <div className="flex items-center justify-center space-x-4 mt-4 mb-2">
           <div className="flex items-center space-x-2">
             <div
@@ -387,7 +338,6 @@ export default function PerformanceMetricsContainer({
           </div>
         </div>
 
-        {/* Enhanced Metrics Summary with Comparison */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 w-full">
           {comparisonData.slice(0, 4).map((metric) => {
             const change = metric.current - metric.previous;
@@ -434,7 +384,6 @@ export default function PerformanceMetricsContainer({
           })}
         </div>
 
-        {/* Performance Summary */}
         <div
           className="mt-4 p-3 rounded-lg w-full"
           style={{
@@ -477,531 +426,975 @@ export default function PerformanceMetricsContainer({
     );
   };
 
-  const renderTimelineView = () => (
-    <div className="flex flex-col h-full">
-      {/* Timeline Header */}
-      <div
-        className="flex items-center justify-between mb-4 p-3 rounded-lg"
-        style={{
-          background: "var(--button-bg)",
-          border: "1px solid var(--button-border)",
-        }}
-      >
-        <div>
-          <h4
-            className="text-sm font-bold primary-text"
-            style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-          >
-            System Activity Timeline
-          </h4>
-          <div className="text-xs secondary-text">
-            Last 24 hours of system events and performance
-          </div>
-        </div>
-        <div className="text-right">
-          <div
-            className="text-lg font-bold"
-            style={{
-              color: colors.accent.teal,
-              fontFamily: "var(--font-mono)",
-              fontWeight: 700,
-            }}
-          >
-            {historicalData.length}
-          </div>
-          <div className="text-xs secondary-text">Events</div>
-        </div>
-      </div>
+  const renderTimelineView = () => {
+    
+    const generateEvent = (index: number, baseTime: Date) => {
+      const eventTypes = [
+        "performance",
+        "alert",
+        "maintenance",
+        "deployment",
+      ] as const;
+      const severities = ["low", "medium", "high", "critical"] as const;
+      const statuses = ["active", "resolved", "investigating"] as const;
+      const impacts = ["low", "medium", "high"] as const;
 
-      {/* Activity Timeline */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="relative">
-          {/* Timeline line */}
-          <div
-            className="absolute left-4 top-0 bottom-0 w-0.5"
-            style={{ background: colors.borderSecondary }}
-          />
+      const eventType =
+        eventTypes[Math.floor(Math.random() * eventTypes.length)];
+      const severity =
+        severities[Math.floor(Math.random() * severities.length)];
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
+      const impact = impacts[Math.floor(Math.random() * impacts.length)];
 
-          {historicalData.slice(-8).map((data, index) => {
-            const isHighActivity = data.cpu > 85 || data.memory > 80;
-            const isMediumActivity = data.cpu > 70 || data.memory > 70;
+      const timeOffset = index * 15; 
+      const eventTime = new Date(baseTime.getTime() - timeOffset * 60000);
 
-            return (
-              <div key={index} className="relative mb-4">
-                {/* Timeline dot */}
+      const eventTitles = {
+        performance: [
+          "System Performance Update",
+          "Resource Utilization Report",
+          "Performance Metrics Analysis",
+          "System Health Check",
+          "Performance Optimization",
+        ],
+        alert: [
+          "High CPU Usage Alert",
+          "Memory Threshold Exceeded",
+          "Network Latency Warning",
+          "Disk Space Critical",
+          "Service Response Time Alert",
+        ],
+        maintenance: [
+          "Scheduled System Maintenance",
+          "Database Optimization",
+          "Cache Clearing",
+          "Security Patch Applied",
+          "System Reboot Completed",
+        ],
+        deployment: [
+          "New Version Deployed",
+          "Feature Rollout",
+          "Configuration Update",
+          "Service Restart",
+          "Hotfix Applied",
+        ],
+      };
+
+      const descriptions = {
+        performance: [
+          "System performance metrics updated with latest measurements",
+          "Resource utilization within normal parameters",
+          "Performance analysis completed successfully",
+          "System health indicators show optimal status",
+          "Performance optimization recommendations generated",
+        ],
+        alert: [
+          "System alert triggered due to resource constraints",
+          "Warning condition detected in system monitoring",
+          "Alert condition resolved after investigation",
+          "Critical threshold exceeded requiring attention",
+          "Alert status updated after system intervention",
+        ],
+        maintenance: [
+          "Scheduled maintenance window completed successfully",
+          "System maintenance tasks executed without issues",
+          "Maintenance procedures completed as planned",
+          "System maintenance window closed",
+          "Maintenance activities finished successfully",
+        ],
+        deployment: [
+          "New deployment completed successfully",
+          "Feature deployment rolled out to production",
+          "Configuration changes applied successfully",
+          "Service deployment completed without issues",
+          "Deployment process finished successfully",
+        ],
+      };
+
+      const title =
+        eventTitles[eventType][
+          Math.floor(Math.random() * eventTitles[eventType].length)
+        ];
+      const description =
+        descriptions[eventType][
+          Math.floor(Math.random() * descriptions[eventType].length)
+        ];
+
+      return {
+        id: `event-${index}-${Date.now()}`,
+        timestamp: eventTime.toISOString(),
+        time: eventTime.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        type: eventType,
+        severity: severity,
+        title: title,
+        description: description,
+        metrics: {
+          cpu: Math.floor(Math.random() * 100),
+          memory: Math.floor(Math.random() * 100),
+          network: Math.floor(Math.random() * 100),
+          disk: Math.floor(Math.random() * 100),
+          response: Math.floor(Math.random() * 200),
+          errors: Math.floor(Math.random() * 10),
+          throughput: Math.floor(Math.random() * 1000),
+          availability: 99 + Math.random(),
+        },
+        tags: [
+          eventType,
+          severity,
+          ...(severity === "critical" ? ["urgent"] : []),
+          ...(eventType === "deployment" ? ["release"] : []),
+          ...(eventType === "maintenance" ? ["scheduled"] : []),
+        ],
+        status: status,
+        impact: impact,
+      };
+    };
+    const now = new Date();
+    const timelineEvents = Array.from({ length: 20 }, (_, index) =>
+      generateEvent(index, now)
+    );
+
+    return (
+      <FlexiblePerformanceTimeline
+        data={timelineEvents}
+        isRealTime={isRealTime}
+      />
+    );
+  };
+
+  const renderAlertsView = () => {
+    
+    const generateAlert = (index: number) => {
+      const alertTypes = [
+        {
+          metric: "CPU Usage",
+          message: "High CPU utilization detected",
+          severity: "high",
+          status: "active",
+          value: "95%",
+          threshold: "85%",
+          duration: "5m",
+          source: "System Monitor",
+        },
+        {
+          metric: "Memory Usage",
+          message: "Memory consumption approaching limit",
+          severity: "medium",
+          status: "active",
+          value: "78%",
+          threshold: "80%",
+          duration: "12m",
+          source: "Memory Monitor",
+        },
+        {
+          metric: "Disk Space",
+          message: "Disk space critically low",
+          severity: "critical",
+          status: "active",
+          value: "5%",
+          threshold: "10%",
+          duration: "2h",
+          source: "Storage Monitor",
+        },
+        {
+          metric: "Network Latency",
+          message: "Network response time elevated",
+          severity: "medium",
+          status: "resolved",
+          value: "250ms",
+          threshold: "200ms",
+          duration: "30m",
+          source: "Network Monitor",
+        },
+        {
+          metric: "Database Connections",
+          message: "Connection pool near capacity",
+          severity: "high",
+          status: "active",
+          value: "95/100",
+          threshold: "90/100",
+          duration: "8m",
+          source: "Database Monitor",
+        },
+        {
+          metric: "Error Rate",
+          message: "Application error rate spike",
+          severity: "high",
+          status: "investigating",
+          value: "5.2%",
+          threshold: "2%",
+          duration: "15m",
+          source: "Application Monitor",
+        },
+        {
+          metric: "Response Time",
+          message: "API response time degraded",
+          severity: "medium",
+          status: "resolved",
+          value: "1.2s",
+          threshold: "1s",
+          duration: "45m",
+          source: "API Monitor",
+        },
+        {
+          metric: "Queue Depth",
+          message: "Message queue backlog detected",
+          severity: "medium",
+          status: "active",
+          value: "1,250",
+          threshold: "1,000",
+          duration: "20m",
+          source: "Queue Monitor",
+        },
+      ];
+
+      const alert = alertTypes[index % alertTypes.length];
+      const timeOffset = index * 30; 
+      const alertTime = new Date(Date.now() - timeOffset * 60000);
+
+      return {
+        id: `alert-${index}`,
+        metric: alert.metric,
+        message: alert.message,
+        severity: alert.severity,
+        status: alert.status,
+        value: alert.value,
+        threshold: alert.threshold,
+        duration: alert.duration,
+        source: alert.source,
+        time: alertTime.toISOString(),
+        timestamp: alertTime.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        tags: [
+          alert.severity,
+          alert.status,
+          alert.source.toLowerCase().replace(" ", "-"),
+          ...(alert.severity === "critical" ? ["urgent"] : []),
+          ...(alert.status === "active" ? ["ongoing"] : ["resolved"]),
+        ],
+      };
+    };
+
+    const alertData = Array.from({ length: 12 }, (_, index) =>
+      generateAlert(index)
+    );
+
+    return (
+      <div className="flex flex-col h-full">
+        <div
+          className="p-4 rounded-xl mb-4"
+          style={{
+            background: "var(--button-bg)",
+            border: "1px solid var(--button-border)",
+          }}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h3
+                className="text-lg font-bold primary-text"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                System Alerts
+              </h3>
+              <p className="text-sm secondary-text">
+                Real-time monitoring and alert management
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-center">
                 <div
-                  className={`absolute left-3 w-3 h-3 rounded-full border-2 ${
-                    isHighActivity
-                      ? "bg-red-500 border-red-500"
-                      : isMediumActivity
-                        ? "bg-yellow-500 border-yellow-500"
-                        : "bg-green-500 border-green-500"
-                  }`}
-                  style={{ marginTop: "4px" }}
-                />
-
-                {/* Event card */}
-                <div
-                  className="ml-8 p-3 rounded-lg"
-                  style={{
-                    background: "var(--button-bg)",
-                    border: "1px solid var(--button-border)",
-                  }}
+                  className="text-2xl font-bold"
+                  style={{ color: colors.accent.red }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <Clock
-                        className="w-3 h-3"
-                        style={{ color: colors.secondary }}
-                      />
-                      <span
-                        className="text-xs font-bold primary-text"
-                        style={{
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {data.time}
-                      </span>
-                    </div>
-                    <div
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        isHighActivity
-                          ? "bg-red-100 text-red-800"
-                          : isMediumActivity
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-green-100 text-green-800"
-                      }`}
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {isHighActivity
-                        ? "HIGH"
-                        : isMediumActivity
-                          ? "MEDIUM"
-                          : "LOW"}
-                    </div>
-                  </div>
+                  {alertData.filter((a) => a.severity === "critical").length}
+                </div>
+                <div className="text-xs secondary-text">Critical</div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-2xl font-bold"
+                  style={{ color: colors.accent.yellow }}
+                >
+                  {alertData.filter((a) => a.severity === "high").length}
+                </div>
+                <div className="text-xs secondary-text">High</div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-2xl font-bold"
+                  style={{ color: colors.accent.blue }}
+                >
+                  {alertData.filter((a) => a.severity === "medium").length}
+                </div>
+                <div className="text-xs secondary-text">Medium</div>
+              </div>
+            </div>
+          </div>
 
-                  {/* Performance indicators */}
-                  <div className="grid grid-cols-2 gap-2 mb-2">
-                    <div className="flex items-center space-x-2">
-                      <Cpu
-                        className="w-3 h-3"
-                        style={{ color: colors.accent.red }}
-                      />
-                      <div className="flex-1">
-                        <div className="text-xs secondary-text">CPU</div>
-                        <div className="w-full bg-gray-200 rounded-full h-1">
-                          <div
-                            className="h-1 rounded-full transition-all duration-300"
-                            style={{
-                              width: `${data.cpu}%`,
-                              background:
-                                data.cpu > 80
-                                  ? colors.accent.red
-                                  : data.cpu > 60
-                                    ? colors.accent.yellow
-                                    : colors.accent.teal,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <span
-                        className="text-xs font-bold"
-                        style={{
-                          color:
-                            data.cpu > 80
-                              ? colors.accent.red
-                              : data.cpu > 60
-                                ? colors.accent.yellow
-                                : colors.accent.teal,
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {data.cpu}%
-                      </span>
-                    </div>
+          <div className="flex flex-wrap gap-2">
+            <select
+              className="px-3 py-2 text-sm rounded-lg border"
+              style={{
+                background: "var(--background)",
+                borderColor: "var(--button-border)",
+                color: "var(--primary-text)",
+              }}
+            >
+              <option value="all">All Severities</option>
+              <option value="critical">Critical</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+            </select>
+            <select
+              className="px-3 py-2 text-sm rounded-lg border"
+              style={{
+                background: "var(--background)",
+                borderColor: "var(--button-border)",
+                color: "var(--primary-text)",
+              }}
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="resolved">Resolved</option>
+              <option value="investigating">Investigating</option>
+            </select>
+            <button
+              className="px-3 py-2 text-sm rounded-lg border"
+              style={{
+                background: "var(--accent-color)20",
+                borderColor: "var(--accent-color)",
+                color: "var(--accent-color)",
+              }}
+            >
+              <AlertCircle className="w-4 h-4 inline mr-1" />
+              Acknowledge All
+            </button>
+          </div>
+        </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Database
-                        className="w-3 h-3"
-                        style={{ color: colors.accent.blue }}
-                      />
-                      <div className="flex-1">
-                        <div className="text-xs secondary-text">Memory</div>
-                        <div className="w-full bg-gray-200 rounded-full h-1">
-                          <div
-                            className="h-1 rounded-full transition-all duration-300"
-                            style={{
-                              width: `${data.memory}%`,
-                              background:
-                                data.memory > 80
-                                  ? colors.accent.red
-                                  : data.memory > 60
-                                    ? colors.accent.yellow
-                                    : colors.accent.teal,
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <span
-                        className="text-xs font-bold"
-                        style={{
-                          color:
-                            data.memory > 80
-                              ? colors.accent.red
-                              : data.memory > 60
-                                ? colors.accent.yellow
-                                : colors.accent.teal,
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {data.memory}%
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Additional metrics */}
-                  <div className="grid grid-cols-3 gap-1 text-xs">
-                    <div className="text-center">
-                      <div className="secondary-text">Network</div>
-                      <div
-                        className="font-bold"
-                        style={{
-                          color:
-                            data.network > 80
-                              ? colors.accent.red
-                              : colors.accent.teal,
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {data.network}%
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="secondary-text">Disk</div>
-                      <div
-                        className="font-bold"
-                        style={{
-                          color:
-                            data.disk > 80
-                              ? colors.accent.red
-                              : colors.accent.teal,
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {data.disk}%
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="secondary-text">Response</div>
-                      <div
-                        className="font-bold"
-                        style={{
-                          color:
-                            data.response > 80
-                              ? colors.accent.red
-                              : colors.accent.teal,
-                          fontFamily: "var(--font-mono)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {data.response}ms
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Event description */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide space-y-3">
+          {alertData.map((alert, index) => (
+            <motion.div
+              key={alert.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`p-4 rounded-xl border-l-4 ${
+                alert.status === "active" ? "opacity-100" : "opacity-70"
+              }`}
+              style={{
+                background: "var(--button-bg)",
+                borderLeftColor:
+                  alert.severity === "critical"
+                    ? colors.accent.red
+                    : alert.severity === "high"
+                      ? colors.accent.red
+                      : alert.severity === "medium"
+                        ? colors.accent.yellow
+                        : colors.accent.blue,
+              }}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center space-x-3">
                   <div
-                    className="mt-2 pt-2 border-t"
-                    style={{ borderColor: colors.borderSecondary }}
+                    className="p-2 rounded-lg"
+                    style={{
+                      background: `${
+                        alert.severity === "critical"
+                          ? colors.accent.red
+                          : alert.severity === "high"
+                            ? colors.accent.red
+                            : alert.severity === "medium"
+                              ? colors.accent.yellow
+                              : colors.accent.blue
+                      }20`,
+                      color:
+                        alert.severity === "critical"
+                          ? colors.accent.red
+                          : alert.severity === "high"
+                            ? colors.accent.red
+                            : alert.severity === "medium"
+                              ? colors.accent.yellow
+                              : colors.accent.blue,
+                    }}
                   >
-                    <div
-                      className="text-xs secondary-text"
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 700,
-                      }}
+                    {alert.status === "active" ? (
+                      <AlertCircle className="w-5 h-5" />
+                    ) : alert.status === "resolved" ? (
+                      <CheckCircle className="w-5 h-5" />
+                    ) : (
+                      <Clock className="w-5 h-5" />
+                    )}
+                  </div>
+                  <div>
+                    <h4
+                      className="text-base font-bold primary-text"
+                      style={{ fontFamily: "var(--font-mono)" }}
                     >
-                      {isHighActivity
-                        ? `High system load detected - CPU at ${data.cpu}%, Memory at ${data.memory}%`
-                        : isMediumActivity
-                          ? `Moderate system activity - monitoring performance metrics`
-                          : `System running optimally - all metrics within normal range`}
-                    </div>
+                      {alert.metric}
+                    </h4>
+                    <p className="text-sm secondary-text">{alert.message}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div
+                    className="text-lg font-bold"
+                    style={{
+                      color:
+                        alert.severity === "critical"
+                          ? colors.accent.red
+                          : alert.severity === "high"
+                            ? colors.accent.red
+                            : alert.severity === "medium"
+                              ? colors.accent.yellow
+                              : colors.accent.blue,
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  >
+                    {alert.value}
+                  </div>
+                  <div className="text-xs secondary-text">
+                    Threshold: {alert.threshold}
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </div>
 
-      {/* Timeline Summary */}
-      <div
-        className="mt-4 p-3 rounded-lg"
-        style={{
-          background: "var(--button-bg)",
-          border: "1px solid var(--button-border)",
-        }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <div
-              className="text-sm font-bold primary-text"
-              style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-            >
-              Activity Summary
-            </div>
-            <div className="text-xs secondary-text">
-              {historicalData.filter((d) => d.cpu > 85 || d.memory > 80).length}{" "}
-              high activity events
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-center">
-              <div
-                className="text-sm font-bold"
-                style={{
-                  color: colors.accent.teal,
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
-                }}
-              >
-                {Math.round(
-                  historicalData.reduce((sum, d) => sum + d.cpu, 0) /
-                    historicalData.length
-                )}
-                %
-              </div>
-              <div className="text-xs secondary-text">Avg CPU</div>
-            </div>
-            <div className="text-center">
-              <div
-                className="text-sm font-bold"
-                style={{
-                  color: colors.accent.blue,
-                  fontFamily: "var(--font-mono)",
-                  fontWeight: 700,
-                }}
-              >
-                {Math.round(
-                  historicalData.reduce((sum, d) => sum + d.memory, 0) /
-                    historicalData.length
-                )}
-                %
-              </div>
-              <div className="text-xs secondary-text">Avg Memory</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderAlertsView = () => (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto scrollbar-hide">
-        {alerts.map((alert) => (
-          <div
-            key={alert.id}
-            className={`flex items-start space-x-3 p-3 mb-3 rounded-lg border-l-4 ${
-              alert.status === "active" ? "opacity-100" : "opacity-60"
-            }`}
-            style={{
-              background: "var(--button-bg)",
-              borderLeftColor:
-                alert.severity === "high"
-                  ? colors.accent.red
-                  : alert.severity === "medium"
-                    ? colors.accent.yellow
-                    : colors.accent.blue,
-            }}
-          >
-            <div className={`mt-1 ${getSeverityColor(alert.severity)}`}>
-              {alert.status === "active" ? (
-                <AlertCircle className="w-4 h-4" />
-              ) : (
-                <CheckCircle className="w-4 h-4" />
-              )}
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-1">
-                <span
-                  className="text-sm font-bold primary-text"
-                  style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-                >
-                  {alert.metric}
-                </span>
-                <span
-                  className="text-xs secondary-text"
-                  style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-                >
-                  {new Date(alert.time).toLocaleTimeString()}
-                </span>
-              </div>
-              <p
-                className="text-xs secondary-text"
-                style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-              >
-                {alert.message}
-              </p>
-              <div className="flex items-center mt-2">
-                <span
-                  className={`text-xs px-2 py-1 rounded-full ${
-                    alert.severity === "high"
-                      ? "bg-red-100 text-red-800"
-                      : alert.severity === "medium"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-blue-100 text-blue-800"
-                  }`}
-                  style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-                >
-                  {alert.severity.toUpperCase()}
-                </span>
-                <span
-                  className={`text-xs ml-2 px-2 py-1 rounded-full ${
-                    alert.status === "active"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                  style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-                >
-                  {alert.status.toUpperCase()}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-
-  const renderCapacityView = () => (
-    <div className="flex flex-col h-full">
-      {capacityData && (
-        <>
-          {/* Current vs Projected */}
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="space-y-3">
-              <h4
-                className="text-sm font-bold primary-text"
-                style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-              >
-                Current Utilization
-              </h4>
-              {Object.entries(capacityData.currentUtilization).map(
-                ([key, value]) => (
-                  <div key={key} className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="secondary-text capitalize">{key}</span>
-                      <span className="primary-text font-bold">
-                        {value as number}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${value as number}%`,
-                          background:
-                            (value as number) > 80
-                              ? colors.accent.red
-                              : (value as number) > 60
-                                ? colors.accent.yellow
-                                : colors.accent.teal,
-                        }}
-                      />
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <h4
-                className="text-sm font-bold primary-text"
-                style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-              >
-                Projected Growth
-              </h4>
-              {Object.entries(capacityData.projectedGrowth).map(
-                ([key, value]) => (
-                  <div key={key} className="space-y-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="secondary-text capitalize">{key}</span>
-                      <span className="primary-text font-bold">
-                        {value as number}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${value as number}%`,
-                          background:
-                            (value as number) > 90
-                              ? colors.accent.red
-                              : (value as number) > 75
-                                ? colors.accent.yellow
-                                : colors.accent.teal,
-                        }}
-                      />
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-
-          {/* Recommendations */}
-          <div className="flex-1">
-            <h4
-              className="text-sm font-bold primary-text mb-3"
-              style={{ fontFamily: "var(--font-mono)", fontWeight: 700 }}
-            >
-              Recommendations
-            </h4>
-            <div className="space-y-2">
-              {capacityData.recommendations.map(
-                (rec: string, index: number) => (
-                  <div
-                    key={index}
-                    className="flex items-start space-x-2 p-2 rounded-lg"
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <span
+                    className="px-3 py-1 text-xs font-bold rounded-full"
                     style={{
-                      background: "var(--button-bg)",
-                      border: "1px solid var(--button-border)",
+                      background: `${
+                        alert.severity === "critical"
+                          ? colors.accent.red
+                          : alert.severity === "high"
+                            ? colors.accent.red
+                            : alert.severity === "medium"
+                              ? colors.accent.yellow
+                              : colors.accent.blue
+                      }20`,
+                      color:
+                        alert.severity === "critical"
+                          ? colors.accent.red
+                          : alert.severity === "high"
+                            ? colors.accent.red
+                            : alert.severity === "medium"
+                              ? colors.accent.yellow
+                              : colors.accent.blue,
                     }}
                   >
-                    <Clock
-                      className="w-3 h-3 mt-0.5"
-                      style={{ color: colors.accent.blue }}
-                    />
-                    <span
-                      className="text-xs secondary-text"
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {rec}
-                    </span>
-                  </div>
-                )
-              )}
+                    {alert.severity.toUpperCase()}
+                  </span>
+                  <span
+                    className="px-3 py-1 text-xs font-bold rounded-full"
+                    style={{
+                      background:
+                        alert.status === "active"
+                          ? `${colors.accent.teal}20`
+                          : alert.status === "resolved"
+                            ? `${colors.accent.blue}20`
+                            : `${colors.accent.yellow}20`,
+                      color:
+                        alert.status === "active"
+                          ? colors.accent.teal
+                          : alert.status === "resolved"
+                            ? colors.accent.blue
+                            : colors.accent.yellow,
+                    }}
+                  >
+                    {alert.status.toUpperCase()}
+                  </span>
+                  <span className="text-xs secondary-text">
+                    Duration: {alert.duration}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs secondary-text">
+                    {alert.timestamp}
+                  </span>
+                  <button
+                    className="px-2 py-1 text-xs rounded border"
+                    style={{
+                      background: "var(--background)",
+                      borderColor: "var(--button-border)",
+                      color: "var(--primary-text)",
+                    }}
+                  >
+                    {alert.status === "active" ? "Acknowledge" : "View Details"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-1">
+                {alert.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2 py-1 text-xs rounded"
+                    style={{
+                      background: "var(--accent-color)20",
+                      color: "var(--accent-color)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderCapacityView = () => {
+    
+    const generateCapacityData = () => {
+      const resources = [
+        {
+          name: "CPU Cores",
+          current: 75,
+          projected: 85,
+          unit: "cores",
+          total: 16,
+        },
+        { name: "Memory", current: 68, projected: 78, unit: "GB", total: 64 },
+        { name: "Storage", current: 45, projected: 52, unit: "TB", total: 10 },
+        {
+          name: "Network Bandwidth",
+          current: 32,
+          projected: 38,
+          unit: "Gbps",
+          total: 100,
+        },
+        {
+          name: "Database Connections",
+          current: 82,
+          projected: 88,
+          unit: "connections",
+          total: 1000,
+        },
+        {
+          name: "API Rate Limit",
+          current: 28,
+          projected: 35,
+          unit: "req/s",
+          total: 10000,
+        },
+        {
+          name: "Cache Hit Rate",
+          current: 94,
+          projected: 92,
+          unit: "%",
+          total: 100,
+        },
+        {
+          name: "Queue Depth",
+          current: 15,
+          projected: 22,
+          unit: "messages",
+          total: 10000,
+        },
+      ];
+
+      const recommendations = [
+        {
+          priority: "high",
+          category: "Infrastructure",
+          title: "Scale CPU Resources",
+          description:
+            "CPU utilization projected to reach 85% within 30 days. Consider adding 4 additional cores.",
+          impact: "Prevents performance degradation",
+          effort: "Medium",
+          timeline: "2 weeks",
+        },
+        {
+          priority: "medium",
+          category: "Database",
+          title: "Optimize Connection Pool",
+          description:
+            "Database connections approaching capacity. Implement connection pooling optimization.",
+          impact: "Improves database performance",
+          effort: "Low",
+          timeline: "1 week",
+        },
+        {
+          priority: "high",
+          category: "Storage",
+          title: "Expand Storage Capacity",
+          description:
+            "Storage growth rate indicates need for additional capacity within 60 days.",
+          impact: "Prevents storage exhaustion",
+          effort: "High",
+          timeline: "4 weeks",
+        },
+        {
+          priority: "low",
+          category: "Performance",
+          title: "Cache Optimization",
+          description:
+            "Cache hit rate declining. Review and optimize caching strategies.",
+          impact: "Improves response times",
+          effort: "Medium",
+          timeline: "3 weeks",
+        },
+        {
+          priority: "medium",
+          category: "Network",
+          title: "Bandwidth Monitoring",
+          description:
+            "Network utilization trending upward. Implement advanced monitoring.",
+          impact: "Better network visibility",
+          effort: "Low",
+          timeline: "1 week",
+        },
+      ];
+
+      return { resources, recommendations };
+    };
+
+    const { resources, recommendations } = generateCapacityData();
+
+    const getPriorityColor = (priority: string) => {
+      switch (priority) {
+        case "high":
+          return colors.accent.red;
+        case "medium":
+          return colors.accent.yellow;
+        case "low":
+          return colors.accent.blue;
+        default:
+          return colors.accent.teal;
+      }
+    };
+
+    const getPriorityIcon = (priority: string) => {
+      switch (priority) {
+        case "high":
+          return <AlertCircle className="w-4 h-4" />;
+        case "medium":
+          return <Clock className="w-4 h-4" />;
+        case "low":
+          return <CheckCircle className="w-4 h-4" />;
+        default:
+          return <Activity className="w-4 h-4" />;
+      }
+    };
+
+    return (
+      <div className="flex flex-col h-full">
+        <div
+          className="p-4 rounded-xl mb-4"
+          style={{
+            background: "var(--button-bg)",
+            border: "1px solid var(--button-border)",
+          }}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h3
+                className="text-lg font-bold primary-text"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Capacity Planning
+              </h3>
+              <p className="text-sm secondary-text">
+                Resource utilization and growth projections
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-center">
+                <div
+                  className="text-2xl font-bold"
+                  style={{ color: colors.accent.red }}
+                >
+                  {resources.filter((r) => r.projected > 80).length}
+                </div>
+                <div className="text-xs secondary-text">Critical</div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-2xl font-bold"
+                  style={{ color: colors.accent.yellow }}
+                >
+                  {
+                    resources.filter(
+                      (r) => r.projected > 60 && r.projected <= 80
+                    ).length
+                  }
+                </div>
+                <div className="text-xs secondary-text">Warning</div>
+              </div>
+              <div className="text-center">
+                <div
+                  className="text-2xl font-bold"
+                  style={{ color: colors.accent.teal }}
+                >
+                  {resources.filter((r) => r.projected <= 60).length}
+                </div>
+                <div className="text-xs secondary-text">Healthy</div>
+              </div>
             </div>
           </div>
-        </>
-      )}
-    </div>
-  );
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {resources.map((resource, index) => (
+            <motion.div
+              key={resource.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="p-4 rounded-xl"
+              style={{
+                background: "var(--button-bg)",
+                border: "1px solid var(--button-border)",
+              }}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h4
+                  className="text-sm font-bold primary-text"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
+                  {resource.name}
+                </h4>
+                <div className="text-right">
+                  <div
+                    className="text-lg font-bold"
+                    style={{
+                      color:
+                        resource.projected > 80
+                          ? colors.accent.red
+                          : resource.projected > 60
+                            ? colors.accent.yellow
+                            : colors.accent.teal,
+                      fontFamily: "var(--font-mono)",
+                    }}
+                  >
+                    {resource.current}
+                    {resource.unit}
+                  </div>
+                  <div className="text-xs secondary-text">
+                    of {resource.total}
+                    {resource.unit}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="secondary-text">Current</span>
+                  <span className="primary-text font-bold">
+                    {resource.current}%
+                  </span>
+                </div>
+                <div
+                  className="w-full rounded-full h-2"
+                  style={{ background: "var(--background)" }}
+                >
+                  <div
+                    className="h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${resource.current}%`,
+                      background:
+                        resource.current > 80
+                          ? colors.accent.red
+                          : resource.current > 60
+                            ? colors.accent.yellow
+                            : colors.accent.teal,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="secondary-text">Projected (30d)</span>
+                  <span className="primary-text font-bold">
+                    {resource.projected}%
+                  </span>
+                </div>
+                <div
+                  className="w-full rounded-full h-2"
+                  style={{ background: "var(--background)" }}
+                >
+                  <div
+                    className="h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${resource.projected}%`,
+                      background:
+                        resource.projected > 80
+                          ? colors.accent.red
+                          : resource.projected > 60
+                            ? colors.accent.yellow
+                            : colors.accent.teal,
+                      opacity: 0.7,
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-1">
+                  {resource.projected > resource.current ? (
+                    <TrendingUp
+                      className="w-3 h-3"
+                      style={{ color: colors.accent.red }}
+                    />
+                  ) : (
+                    <TrendingDown
+                      className="w-3 h-3"
+                      style={{ color: colors.accent.teal }}
+                    />
+                  )}
+                  <span className="text-xs secondary-text">
+                    {resource.projected > resource.current ? "+" : ""}
+                    {resource.projected - resource.current}%
+                  </span>
+                </div>
+                <span
+                  className="px-2 py-1 text-xs rounded-full"
+                  style={{
+                    background:
+                      resource.projected > 80
+                        ? `${colors.accent.red}20`
+                        : resource.projected > 60
+                          ? `${colors.accent.yellow}20`
+                          : `${colors.accent.teal}20`,
+                    color:
+                      resource.projected > 80
+                        ? colors.accent.red
+                        : resource.projected > 60
+                          ? colors.accent.yellow
+                          : colors.accent.teal,
+                  }}
+                >
+                  {resource.projected > 80
+                    ? "Critical"
+                    : resource.projected > 60
+                      ? "Warning"
+                      : "Healthy"}
+                </span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <div
+            className="p-4 rounded-xl mb-4"
+            style={{
+              background: "var(--button-bg)",
+              border: "1px solid var(--button-border)",
+            }}
+          >
+            <h4
+              className="text-lg font-bold primary-text mb-4"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Capacity Recommendations
+            </h4>
+            <div className="space-y-3">
+              {recommendations.map((rec, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-4 rounded-lg border-l-4"
+                  style={{
+                    background: "var(--background)",
+                    borderLeftColor: getPriorityColor(rec.priority),
+                  }}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center space-x-3">
+                      <div
+                        className="p-2 rounded-lg"
+                        style={{
+                          background: `${getPriorityColor(rec.priority)}20`,
+                          color: getPriorityColor(rec.priority),
+                        }}
+                      >
+                        {getPriorityIcon(rec.priority)}
+                      </div>
+                      <div>
+                        <h5
+                          className="text-sm font-bold primary-text"
+                          style={{ fontFamily: "var(--font-mono)" }}
+                        >
+                          {rec.title}
+                        </h5>
+                        <p className="text-xs secondary-text">
+                          {rec.description}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className="px-2 py-1 text-xs font-bold rounded-full"
+                      style={{
+                        background: `${getPriorityColor(rec.priority)}20`,
+                        color: getPriorityColor(rec.priority),
+                      }}
+                    >
+                      {rec.priority.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mt-3">
+                    <div>
+                      <div className="text-xs secondary-text">Impact</div>
+                      <div className="text-sm font-bold primary-text">
+                        {rec.impact}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs secondary-text">Effort</div>
+                      <div className="text-sm font-bold primary-text">
+                        {rec.effort}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs secondary-text">Timeline</div>
+                      <div className="text-sm font-bold primary-text">
+                        {rec.timeline}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-3">
+                    <span
+                      className="px-2 py-1 text-xs rounded"
+                      style={{
+                        background: "var(--accent-color)20",
+                        color: "var(--accent-color)",
+                      }}
+                    >
+                      {rec.category}
+                    </span>
+                    <button
+                      className="px-3 py-1 text-xs rounded border"
+                      style={{
+                        background: "var(--button-bg)",
+                        borderColor: "var(--button-border)",
+                        color: "var(--primary-text)",
+                      }}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderView = () => {
     switch (currentView) {

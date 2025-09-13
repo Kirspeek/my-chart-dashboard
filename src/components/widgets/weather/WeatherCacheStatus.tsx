@@ -44,7 +44,7 @@ export default function WeatherCacheStatus({
       <div className="mt-3 pt-3 border-t border-white/10">
         <div className="text-xs text-white/60 mb-2">City Status:</div>
         <div className="space-y-1">
-          {cities.map((city) => (
+          {cities.map((city: string) => (
             <div key={city} className="flex justify-between text-xs">
               <span className="text-white/80">{city}</span>
               <span

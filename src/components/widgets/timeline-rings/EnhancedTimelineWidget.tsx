@@ -227,12 +227,16 @@ export default function EnhancedTimelineWidget({
 
           <TimelineControls
             viewMode={viewMode}
-            setViewMode={(m) => setViewMode(m)}
+            setViewMode={(m: "timeline" | "stats" | "achievements") =>
+              setViewMode(m)
+            }
             isMobile={isMobile}
             isPlaying={isPlaying}
             setIsPlaying={setIsPlaying}
             animationSpeed={animationSpeed}
-            setAnimationSpeed={(s) => setAnimationSpeed(s)}
+            setAnimationSpeed={(s: "slow" | "normal" | "fast") =>
+              setAnimationSpeed(s)
+            }
             onReset={handleReset}
             showDetails={showDetails}
             setShowDetails={setShowDetails}
@@ -262,10 +266,11 @@ export default function EnhancedTimelineWidget({
                             style={{
                               color,
                               fontFamily: "var(--font-mono)",
-                              fontWeight: 800,
-                              fontSize: isTablet ? "16px" : "24px",
-                              letterSpacing: 1.5,
-                              marginBottom: isTablet ? "6px" : "10px",
+                              fontWeight: 500,
+                              fontSize: isTablet ? "10px" : "14px",
+                              letterSpacing: 0.6,
+                              marginBottom: isTablet ? "3px" : "5px",
+                              textAlign: "center",
                               textShadow: `0 2px 4px ${color}30, 0 1px 2px ${shadeColor(color, 0.6)}40`,
                               lineHeight: 1.2,
                             }}
@@ -277,12 +282,13 @@ export default function EnhancedTimelineWidget({
                             style={{
                               color: shadeColor(color, 0.3),
                               fontFamily: "var(--font-mono)",
-                              fontWeight: 600,
+                              fontWeight: 500,
                               lineHeight: 1.5,
-                              fontSize: isTablet ? "11px" : "17px",
-                              marginBottom: isTablet ? "6px" : "10px",
-                              opacity: 0.9,
-                              letterSpacing: 0.5,
+                              fontSize: isTablet ? "8px" : "11px",
+                              marginBottom: isTablet ? "3px" : "5px",
+                              opacity: 0.8,
+                              letterSpacing: 0.3,
+                              textAlign: "center",
                               textShadow: `0 1px 2px ${color}15`,
                             }}
                           >
@@ -305,7 +311,7 @@ export default function EnhancedTimelineWidget({
                                 (isTablet ? 28 : 38) * animatedLineProgress[idx]
                               }
                               stroke={color}
-                              strokeWidth={2}
+                              strokeWidth={0.5}
                               style={{ transition: "y2 0.18s" }}
                             />
                           </svg>
@@ -390,7 +396,7 @@ export default function EnhancedTimelineWidget({
                           )}
                           fill="none"
                           stroke={color}
-                          strokeWidth={isTablet ? 12 : 16}
+                          strokeWidth={isTablet ? 0.5 : 1}
                           opacity={
                             hoveredIdx === null
                               ? 1
@@ -417,7 +423,7 @@ export default function EnhancedTimelineWidget({
                           )}
                           fill="none"
                           stroke={color}
-                          strokeWidth={isTablet ? 12 : 16}
+                          strokeWidth={isTablet ? 0.5 : 1}
                           opacity={0.15}
                           strokeLinecap="round"
                         />
@@ -428,7 +434,7 @@ export default function EnhancedTimelineWidget({
                           r={isTablet ? 26 : 36}
                           fill="transparent"
                           stroke={selectedMilestone === idx ? color : "none"}
-                          strokeWidth={selectedMilestone === idx ? 4 : 0}
+                          strokeWidth={selectedMilestone === idx ? 0.1 : 0}
                           style={{
                             transition: "stroke-width 0.2s, r 0.2s",
                           }}
@@ -440,7 +446,7 @@ export default function EnhancedTimelineWidget({
                           textAnchor="middle"
                           fontFamily="var(--font-mono)"
                           fontWeight="800"
-                          fontSize={isTablet ? "1.1rem" : "1.4rem"}
+                          fontSize={isTablet ? "0.8rem" : "1rem"}
                           fill={color}
                           style={{
                             letterSpacing: 3,
@@ -498,7 +504,7 @@ export default function EnhancedTimelineWidget({
                                 (isTablet ? 28 : 38) * animatedLineProgress[idx]
                               }
                               stroke={color}
-                              strokeWidth={2}
+                              strokeWidth={0.5}
                               style={{ transition: "y2 0.18s" }}
                             />
                           </svg>
@@ -511,7 +517,7 @@ export default function EnhancedTimelineWidget({
                               style={{
                                 color,
                                 fontFamily: "var(--font-mono)",
-                                fontSize: isTablet ? "16px" : "24px",
+                                fontSize: isTablet ? "10px" : "14px",
                                 letterSpacing: 1.5,
                                 marginBottom: isTablet ? "4px" : "6px",
                                 textShadow: `0 2px 4px ${color}30, 0 1px 2px ${shadeColor(color, 0.6)}40`,
@@ -525,10 +531,10 @@ export default function EnhancedTimelineWidget({
                               style={{
                                 color: shadeColor(color, 0.3),
                                 fontFamily: "var(--font-mono)",
-                                fontWeight: 600,
+                                fontWeight: 500,
                                 lineHeight: 1.5,
                                 marginTop: isTablet ? "6px" : "10px",
-                                fontSize: isTablet ? "11px" : "17px",
+                                fontSize: isTablet ? "8px" : "11px",
                                 opacity: 0.9,
                                 letterSpacing: 0.5,
                                 textShadow: `0 1px 2px ${color}15`,

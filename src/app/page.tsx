@@ -26,71 +26,23 @@ import {
   ContributionGraphWidget,
   AggregatedSpendingWidget,
   WorkInProgressWidget,
+  MusicWidget,
 } from "@/components/widgets";
 import CalendarWidgetMobile from "@/components/widgets/calendar/CalendarWidgetMobile";
 import { useWeatherPreload } from "@/hooks";
 import { Menu } from "lucide-react";
-import type { UserData } from "@/interfaces/dashboard";
-import type { PerformanceMetricsData } from "@/interfaces/widgets";
+import type {
+  PerformanceMetricsData,
+  RadarChartDataItem,
+  DashboardData,
+  CityMap,
+} from "@/interfaces";
 import { WidgetHeightProvider } from "../context/WidgetHeightContext";
 import { WidgetStateProvider } from "../context/WidgetStateContext";
 import { SearchProvider } from "../context/SearchContext";
 import FilteredWidgetsGrid from "../components/common/FilteredWidgetsGrid";
 
-interface MetricCardData {
-  title: string;
-  value: string;
-  change: number;
-  icon: string;
-}
-
-interface RadarChartDataItem {
-  subject: string;
-  value: number;
-  fullMark: number;
-}
-
-interface SankeyChartDataItem {
-  from: string;
-  to: string;
-  size: number;
-}
-
-interface BubbleChartDataItem {
-  x: number;
-  y: number;
-  size: number;
-  category: string;
-  label: string;
-}
-
-interface DashboardData {
-  metricCards?: MetricCardData[];
-  salesData?: Array<{
-    month: string;
-    sales: number;
-    revenue: number;
-    profit: number;
-  }>;
-  barChartData?: Array<{
-    name: string;
-    sales: number;
-    revenue: number;
-  }>;
-  pieChartData?: Array<{
-    name: string;
-    value: number;
-    color: string;
-  }>;
-  userData?: UserData[];
-  radarChartData?: RadarChartDataItem[];
-  migrationData?: SankeyChartDataItem[];
-  sankeyData?: SankeyChartDataItem[];
-  bubbleData?: BubbleChartDataItem[];
-  performanceMetricsData?: PerformanceMetricsData;
-}
-
-const cityMap: { [key: string]: string } = {
+const cityMap: CityMap = {
   "America/New_York": "New York",
   "Europe/London": "London",
   "Europe/Rome": "Rome",
@@ -167,10 +119,7 @@ export default function Home() {
     const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     setSelectedZone(localZone);
 
-    // Check if mobile (phones only, not tablets)
     const checkMobile = () => {
-      // Use mobile slides only for phones (≤425px)
-      // Tablets (≥426px) and desktop use desktop layout
       const isPhone = window.innerWidth <= 425;
       setIsMobile(isPhone);
     };
@@ -181,7 +130,6 @@ export default function Home() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Touch/swipe handling for mobile
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
@@ -198,8 +146,6 @@ export default function Home() {
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-
-    // Disable slide navigation when map widget is active (slide 3, index 2)
     if (currentSlide === 2) {
       return;
     }
@@ -209,7 +155,6 @@ export default function Home() {
     const isDownSwipe = distance < -minSwipeDistance;
 
     if (isUpSwipe && currentSlide < 16) {
-      // Changed from 15 to 16 (0-16 = 17 slides)
       setCurrentSlide(currentSlide + 1);
     }
     if (isDownSwipe && currentSlide > 0) {
@@ -218,15 +163,11 @@ export default function Home() {
   };
 
   if (!data.metricCards) return <div>Loading dashboard data...</div>;
-
-  // Mobile swipe interface
   if (isMobile) {
     return (
       <SearchProvider>
         <div className="flex min-h-screen bg-[var(--background)]">
-          {/* Sidebar (mobile/desktop) */}
           <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-          {/* Overlay for mobile sidebar */}
           {sidebarOpen && (
             <div
               className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
@@ -245,7 +186,6 @@ export default function Home() {
                 className="mobile-slides-container"
                 style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
               >
-                {/* Slide 1: Clock + Weather (original combined layout) */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="h-[45vh] relative">
@@ -266,7 +206,6 @@ export default function Home() {
                         setCurrentSlide={setCurrentSlide}
                       />
                     </div>
-                    {/* Navigation buttons for slide 1 - positioned between widgets */}
                     <SlideNavigation
                       currentSlide={currentSlide}
                       setCurrentSlide={setCurrentSlide}
@@ -274,7 +213,6 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                {/* Slide 2: Timer (original) */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="relative h-full">
@@ -287,7 +225,6 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                {/* Slide 3: Map (original) */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="relative h-full">
@@ -295,11 +232,9 @@ export default function Home() {
                         onOpenSidebar={() => setSidebarOpen(true)}
                         showSidebarButton={true}
                       />
-                      {/* Visual indicator that slide navigation is disabled */}
                       <div className="absolute top-4 right-4 z-10 bg-black/20 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
                         Map Mode
                       </div>
-                      {/* Navigation buttons for map slide */}
                       <SlideNavigation
                         currentSlide={currentSlide}
                         setCurrentSlide={setCurrentSlide}
@@ -308,7 +243,6 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                {/* Slide 4: Calendar (original) */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="relative h-full">
@@ -321,7 +255,6 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                {/* Slide 6-8: Wallet-related, wrapped with providers */}
                 <WidgetHeightProvider>
                   <div className="mobile-slide">
                     <div className="relative h-full">
@@ -356,7 +289,6 @@ export default function Home() {
                     </div>
                   </div>
                 </WidgetHeightProvider>
-                {/* Slide 9: Contribution Graph */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="relative h-full">
@@ -370,7 +302,6 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                {/* Slide 10: Metric Cards */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="flex flex-col gap-4 h-full px-4 relative">
@@ -385,7 +316,6 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
-                    {/* Navigation buttons for the entire metric cards slide */}
                     <SlideNavigation
                       currentSlide={currentSlide}
                       setCurrentSlide={setCurrentSlide}
@@ -393,7 +323,6 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                {/* Slide 11: Metrics/Charts examples */}
                 <div className="mobile-slide">
                   <div className="flex flex-col h-full pt-4">
                     <div className="relative h-full">
@@ -478,7 +407,6 @@ export default function Home() {
                         setCurrentSlide={setCurrentSlide}
                       />
                     </div>
-                    {/* Navigation buttons for the Global Migrations slide */}
                     <SlideNavigation
                       currentSlide={currentSlide}
                       setCurrentSlide={setCurrentSlide}
@@ -521,13 +449,10 @@ export default function Home() {
     );
   }
 
-  // Desktop layout (unchanged)
   return (
     <SearchProvider>
       <div className="flex min-h-screen bg-[var(--background)]">
-        {/* Sidebar (mobile/desktop) */}
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        {/* Overlay for mobile sidebar */}
         {sidebarOpen && (
           <div
             className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
@@ -535,7 +460,6 @@ export default function Home() {
           />
         )}
 
-        {/* Filtered Widgets Grid (Desktop/Tablet only) */}
         <FilteredWidgetsGrid
           data={data}
           selectedZone={selectedZone}
@@ -543,12 +467,9 @@ export default function Home() {
           selectedCity={selectedCity}
         />
 
-        {/* Main content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header with menu button */}
           <div className="relative">
             <Header />
-            {/* Mobile-only menu button */}
             {isMobile && (
               <button
                 className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -560,14 +481,12 @@ export default function Home() {
               </button>
             )}
           </div>
-          {/* Main dashboard content */}
+
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
             <div className="max-w-7xl mx-auto">
-              {/* Widget grid */}
               {mounted && (
                 <>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-                    {/* Column 1: ClockWidget */}
                     <div className="h-full">
                       <ClockWidget
                         selectedZone={selectedZone}
@@ -575,7 +494,7 @@ export default function Home() {
                         isMobile={false}
                       />
                     </div>
-                    {/* Column 2: Weather + Timer with proper height distribution */}
+
                     <div className="h-full flex flex-col">
                       <div className="flex-none h-72 2xl:h-96">
                         {isMobile ? (
@@ -585,13 +504,16 @@ export default function Home() {
                         )}
                       </div>
                       <div className="h-2"></div>{" "}
-                      {/* Smaller gap between weather and timer */}
                       <div className="flex-1 min-h-0">
                         <TimerWidget className="h-full" />
                       </div>
                     </div>
                   </div>
-                  {/* New row: Map and Calendar widgets */}
+
+                  <div className="grid grid-cols-1 gap-8 my-8">
+                    <MusicWidget title="Spotify Music Player" compact={true} />
+                  </div>
+
                   <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-6 lg:mt-8 mb-8">
                     <div className="h-full">
                       <MapWidget />
@@ -603,7 +525,6 @@ export default function Home() {
                 </>
               )}
 
-              {/* Wallet Widget */}
               <WidgetHeightProvider>
                 <WidgetStateProvider>
                   <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
@@ -620,7 +541,6 @@ export default function Home() {
                 </WidgetStateProvider>
               </WidgetHeightProvider>
 
-              {/* Contribution Graph Widget */}
               <WidgetHeightProvider>
                 <WidgetStateProvider>
                   <div className="grid grid-cols-1 gap-8 my-8">
@@ -630,13 +550,13 @@ export default function Home() {
                   </div>
                 </WidgetStateProvider>
               </WidgetHeightProvider>
-              {/* Metric cards */}
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 my-8">
                 {(data.metricCards ?? []).map((metric, index) => (
                   <MetricWidget key={index} metric={metric} index={index} />
                 ))}
               </div>
-              {/* Charts grid */}
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
                 <LineChartWidget
                   data={data.salesData ?? []}
@@ -647,7 +567,7 @@ export default function Home() {
                   title="Quarterly Overview"
                 />
               </div>
-              {/* New charts row: Performance Metrics and Chord Diagram side by side */}
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
                 <RadarChartWidget
                   data={
@@ -660,7 +580,7 @@ export default function Home() {
                 />
                 <WorkInProgressWidget />
               </div>
-              {/* Bottom row */}
+
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
                 <div className="lg:col-span-2 xl:col-span-2 h-full">
                   <RecentUsersWidget
@@ -675,7 +595,7 @@ export default function Home() {
                   />
                 </div>
               </div>
-              {/* Sankey Chart and Global Migrations row */}
+
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
                 <div className="lg:col-span-2 xl:col-span-2 h-full">
                   <SankeyChartWidget
@@ -694,7 +614,7 @@ export default function Home() {
                   />
                 </div>
               </div>
-              {/* Bubble Chart row */}
+
               <div className="grid grid-cols-1 gap-8 my-8">
                 <div className="h-full">
                   <BubbleChartWidget
@@ -704,7 +624,7 @@ export default function Home() {
                   />
                 </div>
               </div>
-              {/* Timeline Rings row */}
+
               <div className="grid grid-cols-1 gap-8 my-8">
                 <EnhancedTimelineWidget />
               </div>

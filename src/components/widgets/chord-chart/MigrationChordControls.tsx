@@ -74,8 +74,9 @@ export default function MigrationChordControls({
               variant={isActive ? "primary" : "secondary"}
               size={isMobile ? "sm" : "md"}
               icon={<Icon className="w-3 h-3" />}
-              tooltip={mode.tooltip}
+              tooltip={true}
               tooltipTitle={mode.label}
+              tooltipSubtitle={mode.tooltip}
             >
               {!isMobile && mode.label}
             </MigrationFlowButton>
@@ -103,7 +104,6 @@ export default function MigrationChordControls({
             )}
           </button>
 
-          {/* Speed Selector */}
           <div className="flex items-center space-x-1">
             {speedOptions.map((speed) => {
               const Icon = speed.icon;
@@ -150,7 +150,6 @@ export default function MigrationChordControls({
           </button>
         </div>
 
-        {/* Details Toggle */}
         <button
           onClick={() => setShowDetails(!showDetails)}
           className={`relative p-3 rounded-xl transition-all duration-200 hover:scale-105 hover:shadow-lg ${
@@ -181,7 +180,6 @@ export default function MigrationChordControls({
         </button>
       </div>
 
-      {/* Status Bar */}
       <div className="mt-3 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <div
