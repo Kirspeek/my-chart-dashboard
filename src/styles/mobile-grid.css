@@ -1,0 +1,277 @@
+/* Mobile Grid Layout Styles */
+
+/* Mobile-specific widget container */
+.mobile-grid-container {
+  padding: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+/* Mobile widget spacing */
+.mobile-grid-container .widget-container {
+  margin-bottom: 1rem;
+}
+
+/* Consistent gap between all widgets */
+.mobile-grid-container > * {
+  margin-bottom: 1rem;
+}
+
+.mobile-grid-container > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Grid section spacing */
+.mobile-grid-container .grid {
+  gap: 1rem;
+}
+
+.mobile-grid-container .space-y-6 > * + * {
+  margin-top: 1rem;
+}
+
+/* Ensure proper spacing between clock and weather widgets */
+.mobile-grid-container .clock-widget-container {
+  margin-bottom: 1.5rem !important;
+}
+
+.mobile-grid-container .weather-widget-container {
+  margin-top: 0 !important;
+}
+
+/* Mobile-specific widget heights - using fixed viewport heights */
+.mobile-grid-container .clock-widget-container {
+  height: 38vh !important;
+  min-height: 38vh !important;
+  max-height: 38vh !important;
+  overflow: visible !important;
+}
+
+.mobile-grid-container .weather-widget-container {
+  height: 44vh !important;
+  min-height: 44vh !important;
+  max-height: 44vh !important;
+  overflow: visible !important;
+}
+
+.mobile-grid-container .clock-widget {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  overflow: visible !important;
+}
+
+.mobile-grid-container .weather-widget-mobile {
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  overflow: visible !important;
+  /* New mobile layout - vertical stack: full width current weather on top, forecast buttons below */
+  flex-direction: column !important;
+  display: flex !important;
+  padding: 0 !important;
+  border-radius: 1rem !important;
+}
+
+/* Mobile weather panel layouts - vertical stack */
+.mobile-grid-container .weather-left-panel-mobile {
+  flex: none !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  border-radius: 0.5rem 1rem 0 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: fit-content !important;
+}
+
+.mobile-grid-container .weather-right-panel-mobile {
+  flex: none !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  border-radius: 0 0 1rem 1rem !important;
+  padding: 1rem !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  min-height: fit-content !important;
+  height: auto !important;
+}
+
+.mobile-grid-container .weather-forecast-mobile {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  justify-content: space-evenly !important;
+  align-items: stretch !important;
+  padding: 0 0.5rem !important;
+  margin: 0 !important;
+  height: fit-content !important;
+  overflow: visible !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Make each forecast button bigger and properly aligned */
+.mobile-grid-container .forecast-day-mobile {
+  flex: 1 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 140px !important;
+  max-height: 200px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 1rem !important;
+}
+
+/* Standardized widget heights for mobile */
+.mobile-grid-container .timer-widget {
+  height: 18rem !important;
+  min-height: 18rem !important;
+}
+
+.mobile-grid-container .music-widget {
+  height: 16rem !important;
+  min-height: 16rem !important;
+}
+
+.mobile-grid-container .map-widget {
+  height: 22rem !important;
+  min-height: 22rem !important;
+}
+
+.mobile-grid-container .calendar-widget-mobile {
+  height: 22rem !important;
+  min-height: 22rem !important;
+}
+
+.mobile-grid-container .wallet-widget {
+  height: 18rem !important;
+  min-height: 18rem !important;
+}
+
+.mobile-grid-container .wheel-widget {
+  height: 18rem !important;
+  min-height: 18rem !important;
+}
+
+.mobile-grid-container .aggregated-spending-widget {
+  height: 18rem !important;
+  min-height: 18rem !important;
+}
+
+.mobile-grid-container .contribution-graph-widget {
+  height: 22rem !important;
+  min-height: 22rem !important;
+}
+
+.mobile-grid-container .metric-widget {
+  height: 12rem !important;
+  min-height: 12rem !important;
+}
+
+.mobile-grid-container .line-chart-widget,
+.mobile-grid-container .bar-chart-widget,
+.mobile-grid-container .radar-chart-widget,
+.mobile-grid-container .device-usage-widget,
+.mobile-grid-container .sankey-chart-widget,
+.mobile-grid-container .chord-chart-widget,
+.mobile-grid-container .bubble-chart-widget,
+.mobile-grid-container .timeline-rings-widget,
+.mobile-grid-container .recent-users-widget {
+  height: 22rem !important;
+  min-height: 22rem !important;
+}
+
+/* Hide slide navigation elements on mobile grid */
+.mobile-grid-container .mobile-slide-indicators,
+.mobile-grid-container .slide-navigation {
+  display: none !important;
+}
+
+/* Ensure proper scrolling on mobile */
+.mobile-grid-container {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Mobile grid specific widget adjustments */
+.mobile-grid-container .widget-title {
+  font-size: 1rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.mobile-grid-container .widget-content {
+  flex: 1 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* World Clocks mobile styling - 2x2 grid with bigger buttons */
+.mobile-grid-container .world-clocks-mobile {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 0.75rem !important;
+  width: 100% !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+  padding: 0 1rem !important;
+}
+
+.mobile-grid-container .world-clock-card-mobile {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  min-height: 4rem !important;
+  max-height: none !important;
+  padding: 0.75rem !important;
+  border-radius: 0.75rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}
+
+.mobile-grid-container .world-clock-city-mobile {
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.mobile-grid-container .world-clock-utc-mobile {
+  font-size: 0.625rem !important;
+  margin-bottom: 0.5rem !important;
+  opacity: 0.7 !important;
+}
+
+.mobile-grid-container .world-clock-time-mobile {
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.mobile-grid-container .world-clock-status-mobile {
+  font-size: 0.75rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+}
+
+/* Dark mode adjustments for mobile grid */
+.dark .mobile-grid-container .widget-base {
+  background: var(--widget-bg) !important;
+  border-color: var(--widget-border) !important;
+}
+
+.dark .mobile-grid-container .widget-title {
+  color: var(--primary-text) !important;
+}

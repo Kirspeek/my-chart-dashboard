@@ -452,6 +452,17 @@
   color: var(--color-gray);
   opacity: 0.7;
   z-index: 10;
+  margin-bottom: 2em; /* default desktop spacing */
+}
+
+/* Exact 1440px adjustment: remove extra space under status */
+@media (width: 1440px) {
+  .weather-status-desktop {
+    margin-bottom: 0 !important;
+  }
+  .weather-forecast-desktop {
+    margin-top: 0 !important;
+  }
 }
 
 /* Dark mode overrides for weather status */
@@ -542,6 +553,7 @@
   .weather-forecast-desktop {
     align-items: stretch;
     width: 100%;
+    margin: 0; /* prevent vertical auto margin at exactly 1440 */
   }
   .forecast-day-desktop {
     align-items: stretch;

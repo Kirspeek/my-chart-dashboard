@@ -1,14 +1,25 @@
 "use client";
 
 import AppShell from "@/components/common/AppShell";
+import dynamic from "next/dynamic";
 import { WidgetHeightProvider } from "@/context/WidgetHeightContext";
 import { WidgetStateProvider } from "@/context/WidgetStateContext";
-import {
-  WalletWidget,
-  AggregatedSpendingWidget,
-  WheelWidget,
-  EnhancedTimelineWidget,
-} from "@/components/widgets";
+const WalletWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.WalletWidget),
+  { ssr: false }
+);
+const AggregatedSpendingWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.AggregatedSpendingWidget),
+  { ssr: false }
+);
+const WheelWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.WheelWidget),
+  { ssr: false }
+);
+const EnhancedTimelineWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.EnhancedTimelineWidget),
+  { ssr: false }
+);
 
 export default function ReportsPage() {
   return (

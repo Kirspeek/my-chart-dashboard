@@ -2,14 +2,27 @@
 
 import { useEffect, useState } from "react";
 import AppShell from "@/components/common/AppShell";
+import dynamic from "next/dynamic";
 import {
   ContributionGraphWidget,
-  SankeyChartWidget,
-  RadarChartWidget,
-  ChordChartWidget,
-  EnhancedTimelineWidget,
   WorkInProgressWidget,
 } from "@/components/widgets";
+const EnhancedTimelineWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.EnhancedTimelineWidget),
+  { ssr: false }
+);
+const SankeyChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.SankeyChartWidget),
+  { ssr: false }
+);
+const ChordChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.ChordChartWidget),
+  { ssr: false }
+);
+const RadarChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.RadarChartWidget),
+  { ssr: false }
+);
 import type {
   PerformanceMetricsData,
   WidgetRadarChartData,

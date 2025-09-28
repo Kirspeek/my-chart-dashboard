@@ -2,7 +2,15 @@
 
 import { useEffect, useState } from "react";
 import AppShell from "@/components/common/AppShell";
-import { RecentUsersWidget, DeviceUsageWidget } from "@/components/widgets";
+import dynamic from "next/dynamic";
+const RecentUsersWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.RecentUsersWidget),
+  { ssr: false }
+);
+const DeviceUsageWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.DeviceUsageWidget),
+  { ssr: false }
+);
 import type { UserData } from "@/interfaces/dashboard";
 
 export default function UsersPage() {

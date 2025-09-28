@@ -77,9 +77,11 @@ export default function WorldClocks({
       </div>
 
       <div
-        className={`grid grid-cols-2 gap-2 justify-center w-full ${
-          isMobile ? "px-25" : isViewportAtLeast1440 ? "px-18" : ""
-        }`}
+        className={`${
+          isMobile
+            ? "world-clocks-mobile"
+            : "grid grid-cols-2 gap-2 justify-center w-full"
+        } ${isMobile ? "18px" : isViewportAtLeast1440 ? "px18" : ""}`}
       >
         {timeZones.map((tz) => {
           const t = mounted ? getTimeInZone(tz.zone) : new Date(0);

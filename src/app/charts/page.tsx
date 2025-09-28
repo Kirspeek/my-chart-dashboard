@@ -2,12 +2,23 @@
 
 import { useEffect, useState } from "react";
 import AppShell from "@/components/common/AppShell";
-import {
-  LineChartWidget,
-  BarChartWidget,
-  ChordChartWidget,
-  SankeyChartWidget,
-} from "@/components/widgets";
+import dynamic from "next/dynamic";
+const LineChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.LineChartWidget),
+  { ssr: false }
+);
+const BarChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.BarChartWidget),
+  { ssr: false }
+);
+const ChordChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.ChordChartWidget),
+  { ssr: false }
+);
+const SankeyChartWidget = dynamic(
+  () => import("@/components/widgets").then((m) => m.SankeyChartWidget),
+  { ssr: false }
+);
 import type { PerformanceMetricsData } from "@/interfaces/widgets";
 
 export default function ChartsPage() {

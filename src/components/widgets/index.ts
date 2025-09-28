@@ -7,6 +7,7 @@ export { ClockWidget } from "./clock";
 // Weather Widget
 export { default as WeatherWidget } from "./weather/WeatherWidget";
 export { default as WeatherWidgetMobile } from "./weather/WeatherWidgetMobile";
+export { default as HeaderWidget } from "./header/HeaderWidget";
 
 // Map Widget
 export { MapWidget } from "./map";

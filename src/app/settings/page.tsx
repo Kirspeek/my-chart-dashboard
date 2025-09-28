@@ -3,16 +3,17 @@
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { SearchProvider } from "@/context/SearchContext";
-import ThemeToggle from "@/components/examples/ThemeToggle";
-import { useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
+import { Sun, Moon } from "lucide-react";
+// no local state needed
 
 export default function SettingsPage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
 
   return (
     <SearchProvider>
       <div className="flex min-h-screen bg-[var(--background)]">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <Sidebar isOpen={false} onClose={() => {}} />
         <div className="flex-1 flex flex-col overflow-hidden">
           <Header />
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
@@ -21,7 +22,28 @@ export default function SettingsPage() {
                 Appearance
               </h2>
               <div className="flex items-center gap-4 bg-[var(--widget-bg)] rounded-xl p-4">
-                <ThemeToggle />
+                <button
+                  onClick={toggleTheme}
+                  className="widget-button px-3 py-1.5 rounded-full text-sm"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontWeight: 700,
+                    letterSpacing: "0.01em",
+                    background: "var(--button-bg)",
+                    border: "2px solid var(--button-border)",
+                    color: "var(--primary-text)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                  }}
+                >
+                  {isDark ? (
+                    <Moon size={18} style={{ color: "var(--primary-text)" }} />
+                  ) : (
+                    <Sun size={18} style={{ color: "var(--primary-text)" }} />
+                  )}
+                  {isDark ? "Dark" : "Light"}
+                </button>
                 <span className="secondary-text">Toggle theme</span>
               </div>
             </div>

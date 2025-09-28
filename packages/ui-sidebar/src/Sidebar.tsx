@@ -1,5 +1,4 @@
-"use client";
-
+import React from "react";
 import {
   BarChart3,
   Users,
@@ -10,12 +9,23 @@ import {
   X as CloseIcon,
   Box,
 } from "lucide-react";
-import React, { useEffect, useTransition } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import SunMoonToggle from "./common/SunMoonToggle";
 
-const navigation = [
+export type SidebarItem = {
+  name: string;
+  href: string;
+  icon?: React.ComponentType<{ className?: string }>;
+};
+
+export type SidebarProps = {
+  isOpen?: boolean;
+  onClose?: () => void;
+  items?: SidebarItem[];
+  activeHref?: string;
+  renderLink?: (item: SidebarItem, content: React.ReactNode) => React.ReactNode;
+  showThemeToggle?: boolean;
+};
+
+const defaultItems: SidebarItem[] = [
   { name: "Widgets", href: "/", icon: Home },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Users", href: "/users", icon: Users },
@@ -29,21 +39,11 @@ const navigation = [
 export default function Sidebar({
   isOpen = true,
   onClose,
-}: {
-  isOpen?: boolean;
-  onClose?: () => void;
-}) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [, startTransition] = useTransition();
-
-  useEffect(() => {
-    try {
-      navigation.forEach((item) => {
-        router.prefetch?.(item.href);
-      });
-    } catch {}
-  }, [router]);
+  items = defaultItems,
+  activeHref,
+  renderLink,
+  showThemeToggle = false,
+}: SidebarProps) {
   return (
     <div
       className={`glass-panel fixed z-40 top-0 left-0 h-full w-64 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:translate-x-0 lg:h-auto`}
@@ -60,33 +60,24 @@ export default function Sidebar({
       <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
         <div className="flex items-center justify-between flex-shrink-0 px-4 pr-16">
           <h2 className="sidebar-secondary">Widgets</h2>
-          <SunMoonToggle />
+          {showThemeToggle && <div />}
         </div>
         <nav className="mt-5 flex-1 px-2 space-y-1">
-          {navigation.map((item) => {
-            const Icon = item.icon;
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                prefetch
-                onClick={(e) => {
-                  e.preventDefault();
-                  startTransition(() => {
-                    router.push(item.href);
-                    onClose?.();
-                  });
-                }}
-                className={`group flex items-center px-2 py-2 rounded-[1rem] ${
-                  active
-                    ? "sidebar-active"
-                    : "sidebar-secondary hover:bg-[var(--button-hover-bg)] hover:text-[var(--secondary-text)] dark:hover:bg-[var(--button-hover-bg)] dark:hover:text-[var(--secondary-text)]"
-                }`}
+          {items.map((item) => {
+            const Icon = item.icon ?? Box;
+            const active = activeHref === item.href;
+            const content = (
+              <div
+                className={`group flex items-center px-2 py-2 rounded-md ${active ? "sidebar-active" : "sidebar-secondary hover:bg-gray-50 dark:hover:bg-gray-700"}`}
               >
                 <Icon className={`mr-3 flex-shrink-0 sidebar-icon`} />
                 {item.name}
-              </Link>
+              </div>
+            );
+            return (
+              <div key={item.name}>
+                {renderLink ? renderLink(item, content) : content}
+              </div>
             );
           })}
         </nav>
@@ -94,3 +85,4 @@ export default function Sidebar({
     </div>
   );
 }
+

@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
-import SlideNavigation from "@/components/common/SlideNavigation";
 import {
   ClockWidget,
   WeatherWidget,
@@ -27,10 +25,9 @@ import {
   AggregatedSpendingWidget,
   WorkInProgressWidget,
   MusicWidget,
+  HeaderWidget,
 } from "@/components/widgets";
-import CalendarWidgetMobile from "@/components/widgets/calendar/CalendarWidgetMobile";
 import { useWeatherPreload } from "@/hooks";
-import { Menu } from "lucide-react";
 import type {
   PerformanceMetricsData,
   RadarChartDataItem,
@@ -41,6 +38,7 @@ import { WidgetHeightProvider } from "../context/WidgetHeightContext";
 import { WidgetStateProvider } from "../context/WidgetStateContext";
 import { SearchProvider } from "../context/SearchContext";
 import FilteredWidgetsGrid from "../components/common/FilteredWidgetsGrid";
+import MobileGridLayout from "../components/common/MobileGridLayout";
 
 const cityMap: CityMap = {
   "America/New_York": "New York",
@@ -105,7 +103,9 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [activeSection, setActiveSection] = useState<
+    "dashboard" | "projects" | "about" | "experience"
+  >("dashboard");
 
   const data = useDashboardData();
 
@@ -130,320 +130,111 @@ export default function Home() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(0);
-    setTouchStart(e.targetTouches[0].clientY);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientY);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    if (currentSlide === 2) {
-      return;
-    }
-
-    const distance = touchStart - touchEnd;
-    const isUpSwipe = distance > minSwipeDistance;
-    const isDownSwipe = distance < -minSwipeDistance;
-
-    if (isUpSwipe && currentSlide < 16) {
-      setCurrentSlide(currentSlide + 1);
-    }
-    if (isDownSwipe && currentSlide > 0) {
-      setCurrentSlide(currentSlide - 1);
-    }
-  };
-
   if (!data.metricCards) return <div>Loading dashboard data...</div>;
+
+  const handleSectionChange = (
+    s: "dashboard" | "projects" | "about" | "experience"
+  ) => {
+    setActiveSection(s);
+    if (typeof window !== "undefined" && s !== "dashboard") {
+      const el = document.getElementById(s);
+      if (el) {
+        requestAnimationFrame(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    } else if (typeof window !== "undefined" && s === "dashboard") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
   if (isMobile) {
     return (
       <SearchProvider>
         <div className="flex min-h-screen bg-[var(--background)]">
-          <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-          {sidebarOpen && (
-            <div
-              className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
+          {activeSection === "dashboard" && (
+            <>
+              <Sidebar
+                isOpen={sidebarOpen}
+                onClose={() => setSidebarOpen(false)}
+              />
+              {sidebarOpen && (
+                <div
+                  className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+                  onClick={() => setSidebarOpen(false)}
+                />
+              )}
+            </>
           )}
 
-          <WidgetStateProvider>
-            <div
-              className="mobile-swipe-container"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEnd}
-            >
-              <div
-                className="mobile-slides-container"
-                style={{ transform: `translateY(-${currentSlide * 100}vh)` }}
-              >
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="h-[45vh] relative">
-                      <ClockWidget
-                        selectedZone={selectedZone}
-                        setSelectedZone={setSelectedZone}
-                        isMobile={true}
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <HeaderWidget
+              defaultSection={activeSection}
+              onSectionChange={handleSectionChange}
+              sections={[
+                { key: "dashboard", label: "Chart Dashboard" },
+                { key: "projects", label: "Projects" },
+                { key: "about", label: "About me" },
+                { key: "experience", label: "Work experience" },
+              ]}
+            />
+
+            {activeSection === "dashboard" ? (
+              <MobileGridLayout
+                data={data}
+                selectedZone={selectedZone}
+                setSelectedZone={setSelectedZone}
+                selectedCity={selectedCity}
+                setSidebarOpen={setSidebarOpen}
+              />
+            ) : (
+              <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
+                <div className="max-w-5xl mx-auto space-y-12">
+                  <section id="about" className="h-screen flex items-center">
+                    <div>
+                      <h2
+                        className="text-2xl font-extrabold primary-text"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        About me
+                      </h2>
+                      <p className="secondary-text mt-2">
+                        Content coming soon.
+                      </p>
                     </div>
-                    <div className="h-[65vh] relative">
-                      <WeatherWidgetMobile
-                        city={selectedCity}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
+                  </section>
+                  <section id="projects" className="h-screen flex items-center">
+                    <div>
+                      <h2
+                        className="text-2xl font-extrabold primary-text"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        Projects
+                      </h2>
+                      <p className="secondary-text mt-2">
+                        Content coming soon.
+                      </p>
                     </div>
-                    <SlideNavigation
-                      currentSlide={currentSlide}
-                      setCurrentSlide={setCurrentSlide}
-                      className="slide-1-navigation"
-                    />
-                  </div>
+                  </section>
+                  <section
+                    id="experience"
+                    className="h-screen flex items-center"
+                  >
+                    <div>
+                      <h2
+                        className="text-2xl font-extrabold primary-text"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        Work experience
+                      </h2>
+                      <p className="secondary-text mt-2">
+                        Content coming soon.
+                      </p>
+                    </div>
+                  </section>
                 </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <TimerWidget
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <MapWidget
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                      />
-                      <div className="absolute top-4 right-4 z-10 bg-black/20 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                        Map Mode
-                      </div>
-                      <SlideNavigation
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                        className="absolute bottom-4 right-4"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <CalendarWidgetMobile
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <WidgetHeightProvider>
-                  <div className="mobile-slide">
-                    <div className="relative h-full">
-                      <WalletWidget
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                  <div className="mobile-slide">
-                    <div className="flex flex-col h-full pt-4">
-                      <div className="relative h-full">
-                        <WheelWidget
-                          onOpenSidebar={() => setSidebarOpen(true)}
-                          showSidebarButton={true}
-                          currentSlide={currentSlide}
-                          setCurrentSlide={setCurrentSlide}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mobile-slide">
-                    <div className="flex flex-col h-full pt-4">
-                      <div className="relative h-full">
-                        <AggregatedSpendingWidget
-                          onOpenSidebar={() => setSidebarOpen(true)}
-                          showSidebarButton={true}
-                          currentSlide={currentSlide}
-                          setCurrentSlide={setCurrentSlide}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </WidgetHeightProvider>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <ContributionGraphWidget
-                        title="Financial Activity Overview"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="flex flex-col gap-4 h-full px-4 relative">
-                      {(data.metricCards ?? []).map((metric, index) => (
-                        <div key={index} className="h-[18vh]">
-                          <MetricWidget
-                            metric={metric}
-                            index={index}
-                            onOpenSidebar={() => setSidebarOpen(true)}
-                            showSidebarButton={index === 0}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    <SlideNavigation
-                      currentSlide={currentSlide}
-                      setCurrentSlide={setCurrentSlide}
-                      totalSlides={17}
-                    />
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <LineChartWidget
-                        data={data.salesData ?? []}
-                        title="Sales Performance"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <BarChartWidget
-                        data={data.barChartData ?? []}
-                        title="Quarterly Overview"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <RadarChartWidget
-                        data={data.radarChartData ?? []}
-                        title="Performance Metrics"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <DeviceUsageWidget
-                        data={data.pieChartData ?? []}
-                        title="Device Usage"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <SankeyChartWidget
-                        data={data.sankeyData ?? []}
-                        title="Global Migration Flows"
-                        subtitle="2019/2020"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <ChordChartWidget
-                        data={data.migrationData ?? []}
-                        title="Global Migrations"
-                        subtitle="2023"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                    <SlideNavigation
-                      currentSlide={currentSlide}
-                      setCurrentSlide={setCurrentSlide}
-                      totalSlides={17}
-                    />
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <BubbleChartWidget
-                        data={data.bubbleData ?? []}
-                        title="Global Tech Investment"
-                        subtitle="Market Cap vs Growth vs Workforce Size"
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="mobile-slide">
-                  <div className="flex flex-col h-full pt-4">
-                    <div className="relative h-full">
-                      <EnhancedTimelineWidget
-                        onOpenSidebar={() => setSidebarOpen(true)}
-                        showSidebarButton={true}
-                        currentSlide={currentSlide}
-                        setCurrentSlide={setCurrentSlide}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </WidgetStateProvider>
+              </main>
+            )}
+          </div>
         </div>
       </SearchProvider>
     );
@@ -452,39 +243,39 @@ export default function Home() {
   return (
     <SearchProvider>
       <div className="flex min-h-screen bg-[var(--background)]">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
+        {activeSection === "dashboard" && (
+          <Sidebar isOpen={true} onClose={() => {}} />
         )}
 
-        <FilteredWidgetsGrid
-          data={data}
-          selectedZone={selectedZone}
-          setSelectedZone={setSelectedZone}
-          selectedCity={selectedCity}
-        />
+        {activeSection === "dashboard" ? (
+          <FilteredWidgetsGrid
+            data={data}
+            selectedZone={selectedZone}
+            setSelectedZone={setSelectedZone}
+            selectedCity={selectedCity}
+          />
+        ) : null}
 
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="relative">
-            <Header />
-            {isMobile && (
-              <button
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onClick={() => setSidebarOpen(true)}
-                aria-label="Open sidebar"
-                type="button"
-              >
-                <Menu className="h-6 w-6" />
-              </button>
-            )}
-          </div>
-
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
             <div className="max-w-7xl mx-auto">
-              {mounted && (
+              {/* Header always at top */}
+              <div className="grid grid-cols-1 gap-8 items-stretch mb-8">
+                <div className="h-full">
+                  <HeaderWidget
+                    defaultSection={activeSection}
+                    onSectionChange={handleSectionChange}
+                    sections={[
+                      { key: "dashboard", label: "Chart Dashboard" },
+                      { key: "projects", label: "Projects" },
+                      { key: "about", label: "About me" },
+                      { key: "experience", label: "Work experience" },
+                    ]}
+                  />
+                </div>
+              </div>
+
+              {mounted && activeSection === "dashboard" && (
                 <>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
                     <div className="h-full">
@@ -525,109 +316,172 @@ export default function Home() {
                 </>
               )}
 
-              <WidgetHeightProvider>
-                <WidgetStateProvider>
-                  <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
-                    <div className="md:w-full lg:col-span-2 xl:col-span-1">
-                      <WalletWidget />
+              {activeSection === "dashboard" && (
+                <WidgetHeightProvider>
+                  <WidgetStateProvider>
+                    <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
+                      <div className="md:w-full lg:col-span-2 xl:col-span-1">
+                        <WalletWidget />
+                      </div>
+                      <div className="md:w-full">
+                        <WheelWidget />
+                      </div>
+                      <div className="md:w-full">
+                        <AggregatedSpendingWidget />
+                      </div>
                     </div>
-                    <div className="md:w-full">
-                      <WheelWidget />
-                    </div>
-                    <div className="md:w-full">
-                      <AggregatedSpendingWidget />
-                    </div>
-                  </div>
-                </WidgetStateProvider>
-              </WidgetHeightProvider>
+                  </WidgetStateProvider>
+                </WidgetHeightProvider>
+              )}
 
-              <WidgetHeightProvider>
-                <WidgetStateProvider>
-                  <div className="grid grid-cols-1 gap-8 my-8">
+              {activeSection === "dashboard" && (
+                <WidgetHeightProvider>
+                  <WidgetStateProvider>
+                    <div className="grid grid-cols-1 gap-8 my-8">
+                      <div>
+                        <ContributionGraphWidget title="Financial Activity Overview" />
+                      </div>
+                    </div>
+                  </WidgetStateProvider>
+                </WidgetHeightProvider>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 my-8">
+                  {(data.metricCards ?? []).map((metric, index) => (
+                    <MetricWidget key={index} metric={metric} index={index} />
+                  ))}
+                </div>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
+                  <LineChartWidget
+                    data={data.salesData ?? []}
+                    title="Sales Performance"
+                  />
+                  <BarChartWidget
+                    data={data.barChartData ?? []}
+                    title="Quarterly Overview"
+                  />
+                </div>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
+                  <RadarChartWidget
+                    data={
+                      (data.performanceMetricsData
+                        ?.currentMetrics as RadarChartDataItem[]) ??
+                      data.radarChartData ??
+                      []
+                    }
+                    title="Performance Metrics"
+                  />
+                  <WorkInProgressWidget />
+                </div>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
+                  <div className="lg:col-span-2 xl:col-span-2 h-full">
+                    <RecentUsersWidget
+                      data={data.userData ?? []}
+                      title="Recent Users"
+                    />
+                  </div>
+                  <div className="h-full">
+                    <DeviceUsageWidget
+                      data={data.pieChartData ?? []}
+                      title="Device Usage"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
+                  <div className="lg:col-span-2 xl:col-span-2 h-full">
+                    <SankeyChartWidget
+                      data={data.sankeyData ?? []}
+                      title="Global Migration Flows"
+                      subtitle="2019/2020"
+                    />
+                  </div>
+                  <div className="h-full">
+                    <ChordChartWidget
+                      data={data.migrationData ?? []}
+                      title="Global Migrations"
+                      subtitle="2023"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 gap-8 my-8">
+                  <div className="h-full">
+                    <BubbleChartWidget
+                      data={data.bubbleData ?? []}
+                      title="Global Tech Investment"
+                      subtitle="Market Cap vs Growth vs Workforce Size"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {activeSection === "dashboard" && (
+                <div className="grid grid-cols-1 gap-8 my-8">
+                  <EnhancedTimelineWidget />
+                </div>
+              )}
+
+              {activeSection !== "dashboard" && (
+                <div className="max-w-5xl mx-auto space-y-12">
+                  <section id="about" className="h-screen flex items-center">
                     <div>
-                      <ContributionGraphWidget title="Financial Activity Overview" />
+                      <h2
+                        className="text-2xl font-extrabold primary-text"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        About me
+                      </h2>
+                      <p className="secondary-text mt-2">
+                        Content coming soon.
+                      </p>
                     </div>
-                  </div>
-                </WidgetStateProvider>
-              </WidgetHeightProvider>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 my-8">
-                {(data.metricCards ?? []).map((metric, index) => (
-                  <MetricWidget key={index} metric={metric} index={index} />
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
-                <LineChartWidget
-                  data={data.salesData ?? []}
-                  title="Sales Performance"
-                />
-                <BarChartWidget
-                  data={data.barChartData ?? []}
-                  title="Quarterly Overview"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
-                <RadarChartWidget
-                  data={
-                    (data.performanceMetricsData
-                      ?.currentMetrics as RadarChartDataItem[]) ??
-                    data.radarChartData ??
-                    []
-                  }
-                  title="Performance Metrics"
-                />
-                <WorkInProgressWidget />
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
-                <div className="lg:col-span-2 xl:col-span-2 h-full">
-                  <RecentUsersWidget
-                    data={data.userData ?? []}
-                    title="Recent Users"
-                  />
+                  </section>
+                  <section id="projects" className="h-screen flex items-center">
+                    <div>
+                      <h2
+                        className="text-2xl font-extrabold primary-text"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        Projects
+                      </h2>
+                      <p className="secondary-text mt-2">
+                        Content coming soon.
+                      </p>
+                    </div>
+                  </section>
+                  <section
+                    id="experience"
+                    className="h-screen flex items-center"
+                  >
+                    <div>
+                      <h2
+                        className="text-2xl font-extrabold primary-text"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        Work experience
+                      </h2>
+                      <p className="secondary-text mt-2">
+                        Content coming soon.
+                      </p>
+                    </div>
+                  </section>
                 </div>
-                <div className="h-full">
-                  <DeviceUsageWidget
-                    data={data.pieChartData ?? []}
-                    title="Device Usage"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
-                <div className="lg:col-span-2 xl:col-span-2 h-full">
-                  <SankeyChartWidget
-                    data={data.sankeyData ?? []}
-                    title="Global Migration Flows"
-                    subtitle="2019/2020"
-                  />
-                </div>
-                <div className="h-full">
-                  <ChordChartWidget
-                    data={data.migrationData ?? []}
-                    title="Global Migrations"
-                    subtitle="2023"
-                    currentSlide={currentSlide}
-                    setCurrentSlide={setCurrentSlide}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-8 my-8">
-                <div className="h-full">
-                  <BubbleChartWidget
-                    data={data.bubbleData ?? []}
-                    title="Global Tech Investment"
-                    subtitle="Market Cap vs Growth vs Workforce Size"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-8 my-8">
-                <EnhancedTimelineWidget />
-              </div>
+              )}
             </div>
           </main>
         </div>

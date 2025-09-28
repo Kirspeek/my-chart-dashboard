@@ -51,12 +51,12 @@ export default function WeatherStatus({
 
   return (
     <div
+      data-weather-status
       className="weather-status-mobile lg:weather-status-desktop"
       style={{
         fontSize: 12,
         color: statusInfo.color,
         opacity: 0.7,
-        marginBottom: 4,
         minHeight: 18,
         minWidth: 70,
         textAlign: "center",
@@ -71,6 +71,13 @@ export default function WeatherStatus({
     >
       {statusInfo.icon}
       <span style={{ transition: "opacity 0.3s ease" }}>{statusInfo.text}</span>
+      <style jsx>{`
+        @media (width: 1440px) {
+          [data-weather-status] {
+            margin-bottom: 0 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
