@@ -5,6 +5,7 @@ import { useSearch } from "../context/SearchContext";
 import SearchResults from "./common/SearchResults";
 import { useState, useRef, useEffect } from "react";
 import { useTheme } from "@/hooks/useTheme";
+import SunMoonToggle from "./common/SunMoonToggle";
 
 export default function Header() {
   const { searchTerm, setSearchTerm } = useSearch();
@@ -76,7 +77,10 @@ export default function Header() {
             </h1>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center h-16 gap-4">
+            <div className="-ml-2">
+              <SunMoonToggle />
+            </div>
             {/* Search */}
             <div className="relative" ref={searchRef}>
               <div

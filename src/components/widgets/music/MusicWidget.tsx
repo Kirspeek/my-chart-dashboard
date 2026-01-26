@@ -105,42 +105,42 @@ export default function MusicWidget({
             isSearchMode
               ? "flex flex-col gap-2 scrollbar-hide"
               : compact
-                ? "flex flex-col gap-2 items-stretch"
+                ? "flex flex-row gap-2 items-start"
                 : "flex flex-col"
           }
           style={
             isSearchMode
               ? {
-                flex: 1,
-                minHeight: 0,
-                overflowY: "auto",
-                paddingBottom: embedHeight + 2,
-              }
+                  flex: 1,
+                  minHeight: 0,
+                  overflowY: "auto",
+                  paddingBottom: embedHeight + 2,
+                }
               : compact
                 ? {
-                  flex: 1,
-                  minHeight: 0,
-                  alignItems: "stretch",
-                }
+                    flex: 1,
+                    minHeight: 0,
+                    alignItems: "stretch",
+                  }
                 : {
-                  flex: 1,
-                  minHeight: 0,
-                }
+                    flex: 1,
+                    minHeight: 0,
+                  }
           }
         >
           {isSearchMode &&
-            (results.tracks.length ||
-              results.albums.length ||
-              results.artists.length ||
-              results.playlists.length) ? (
+          (results.tracks.length ||
+            results.albums.length ||
+            results.artists.length ||
+            results.playlists.length) ? (
             <SearchTabs activeTab={activeTab} onChange={setActiveTab} />
           ) : null}
 
           {isSearchMode &&
-            (results.tracks.length ||
-              results.albums.length ||
-              results.artists.length ||
-              results.playlists.length) ? (
+          (results.tracks.length ||
+            results.albums.length ||
+            results.artists.length ||
+            results.playlists.length) ? (
             <div className="flex flex-col gap-4">
               {(() => {
                 const items = results[activeTab] as SearchItemPart[];
@@ -260,7 +260,7 @@ export default function MusicWidget({
               <div
                 className="flex-1"
                 style={{
-                  width: "100%",
+                  width: "50%",
                   height: "180px",
                 }}
               >
@@ -311,7 +311,7 @@ export default function MusicWidget({
               <div
                 className="flex-1"
                 style={{
-                  width: "100%",
+                  width: "50%",
                   height: "150px",
                 }}
               >

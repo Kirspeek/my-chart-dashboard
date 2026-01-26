@@ -121,13 +121,30 @@ export default function DeviceUsageChart({
         />
 
         <Tooltip
-          contentStyle={tooltipStyle}
-          formatter={formatTooltip}
-          labelStyle={{
-            fontSize: isMobile ? "0.8rem" : 12,
-            color: "var(--primary-text)",
-            fontFamily: "var(--font-mono)",
-            fontWeight: 700,
+          content={({ active, payload }) => {
+            if (active && payload && payload.length) {
+              const data = payload[0].payload;
+              const formattedValue = formatTooltip(
+                data.value,
+                data.name
+              );
+              return (
+                <div style={tooltipStyle}>
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--primary-text)",
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: 700,
+                      fontSize: isMobile ? "0.8rem" : 12,
+                    }}
+                  >
+                    {`${formattedValue[1]} : ${Math.round(data.value)}%`}
+                  </p>
+                </div>
+              );
+            }
+            return null;
           }}
         />
       </RechartsPieChart>

@@ -8,13 +8,21 @@ import HotAnimation from "../../animations/HotAnimation";
 import Lightning from "../../animations/Lightning";
 import FogAnimation from "../../animations/FogAnimation";
 
+import SnowAnimation from "../../animations/SnowAnimation";
+import ColdAnimation from "../../animations/ColdAnimation";
+
 interface WeatherAnimationsProps {
   weatherDesc: string;
+  temperature?: number;
 }
 
 export default function WeatherAnimations({
   weatherDesc,
+  temperature,
 }: WeatherAnimationsProps) {
+  const isSnowing = /snow/i.test(weatherDesc);
+  const isFreezing = temperature !== undefined && temperature <= 0;
+
   return (
     <>
       {/* Weather-specific animations */}
@@ -41,6 +49,10 @@ export default function WeatherAnimations({
       {/rain/i.test(weatherDesc) && <RainAnimation />}
       {/thunderstorm/i.test(weatherDesc) && <Lightning />}
       {/fog/i.test(weatherDesc) && <FogAnimation />}
+      {isSnowing && <SnowAnimation />}
+      
+      {/* Cold weather animation (frost) if freezing and NOT snowing */}
+      {isFreezing && !isSnowing && <ColdAnimation />}
     </>
   );
 }

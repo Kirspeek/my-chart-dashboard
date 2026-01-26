@@ -39,8 +39,6 @@ export default function WidgetBase({
         boxShadow:
           "0 8px 32px 0 rgba(35,35,35,0.18), 0 2px 8px 0 rgba(255,255,255,0.10) inset, 0 1.5px 8px 0 rgba(234,67,0,0.04)",
         borderWidth: 2,
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
         ...style,
       }}
       {...props}

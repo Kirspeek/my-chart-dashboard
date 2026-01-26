@@ -104,7 +104,8 @@
   min-height: 0;
   height: auto;
   max-height: 100%;
-  overflow: hidden;
+  overflow: visible; /* Allow snow to spill out */
+  position: relative; /* Ensure z-index context works */
 }
 
 .weather-left-panel-desktop {
@@ -570,4 +571,45 @@
     align-items: stretch;
     width: 100%;
   }
+}
+
+/* ============================================================================
+   SNOW ANIMATION
+   ============================================================================ */
+
+.snow-flake {
+  position: absolute;
+  top: -2vh;
+  color: white;
+  pointer-events: none;
+  z-index: 9999; /* On top of everything */
+  /* Font-size managed by JS/Classes */
+  line-height: 1;
+}
+
+@keyframes flickr {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@keyframes fall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(20vw, 110vh) rotate(360deg);
+  }
+}
+
+.snow-flake-dot {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
 }

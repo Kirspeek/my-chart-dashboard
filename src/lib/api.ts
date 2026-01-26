@@ -23,10 +23,10 @@ export class WeatherAPI {
       }
 
       const data = await response.json();
-      if (data && data.length > 0) {
+      if (data && data.results && data.results.length > 0) {
         return {
-          lat: data[0].lat,
-          lon: data[0].lon,
+          lat: data.results[0].latitude,
+          lon: data.results[0].longitude,
         };
       }
 

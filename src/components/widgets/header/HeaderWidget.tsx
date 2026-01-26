@@ -3,6 +3,7 @@
 import React from "react";
 import { Header as UIHeader } from "../../../../packages/ui-header/src";
 import WidgetBase from "@/components/common/WidgetBase";
+import SunMoonToggle from "@/components/common/SunMoonToggle";
 
 type SectionKey = "dashboard";
 
@@ -26,6 +27,7 @@ export default function HeaderWidget({
           onSectionChange={onSectionChange}
           onMenuClick={onMenuClick}
           showThemeToggle
+          themeToggleNode={<SunMoonToggle />}
           contactLinks={[
             {
               label: "Contact",

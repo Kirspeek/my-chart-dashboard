@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Sidebar from "@/components/Sidebar";
+import { Header as UIHeader } from "../../packages/ui-header/src";
+import SunMoonToggle from "@/components/common/SunMoonToggle";
 import {
   ClockWidget,
   WeatherWidget,
@@ -101,8 +102,8 @@ export default function Home() {
   const [selectedZone, setSelectedZone] = useState("Europe/London");
   const selectedCity = cityMap[selectedZone] || "London";
   const [mounted, setMounted] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const data = useDashboardData();
 
@@ -133,25 +134,11 @@ export default function Home() {
     return (
       <SearchProvider>
         <div className="flex min-h-screen bg-[var(--background)]">
-          <>
-            <Sidebar
-              isOpen={sidebarOpen}
-              onClose={() => setSidebarOpen(false)}
-            />
-            {sidebarOpen && (
-              <div
-                className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300"
-                onClick={() => setSidebarOpen(false)}
-              />
-            )}
-          </>
-
           <div className="flex-1 flex flex-col overflow-hidden">
             <div className="px-4 mt-2">
               <HeaderWidget
                 defaultSection="dashboard"
                 sections={[{ key: "dashboard", label: "Chart Dashboard" }]}
-                onMenuClick={() => setSidebarOpen(true)}
               />
             </div>
 
@@ -160,7 +147,6 @@ export default function Home() {
               selectedZone={selectedZone}
               setSelectedZone={setSelectedZone}
               selectedCity={selectedCity}
-              setSidebarOpen={setSidebarOpen}
             />
           </div>
         </div>
@@ -171,17 +157,6 @@ export default function Home() {
   return (
     <SearchProvider>
       <div className="flex min-h-screen bg-[var(--background)]">
-        <Sidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
         <FilteredWidgetsGrid
           data={data}
           selectedZone={selectedZone}
@@ -190,18 +165,28 @@ export default function Home() {
         />
 
         <div className="flex-1 flex flex-col overflow-hidden">
+          <UIHeader
+            className="border-b border-[var(--widget-border)] w-full"
+            style={{ borderRadius: 0, margin: 0 }}
+            contentClassName="!max-w-none"
+            defaultSection="dashboard"
+            titles={["Charts & Analytics Dashboard", "Real-time Metrics", "Global Insights"]}
+            sections={[{ key: "dashboard", label: "Dashboard" }]}
+            showThemeToggle
+            themeToggleNode={<SunMoonToggle />}
+            contactLinks={[
+              {
+                label: "Contact",
+                href: "https://kirspeek.dev",
+                target: "_blank",
+                rel: "noopener noreferrer",
+              },
+            ]}
+            onMenuClick={() => setSidebarOpen(true)}
+          />
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
             <div className="max-w-7xl mx-auto">
-              {/* Header always at top */}
-              <div className="grid grid-cols-1 gap-8 items-stretch mb-8">
-                <div className="h-full">
-                  <HeaderWidget
-                    defaultSection="dashboard"
-                    sections={[{ key: "dashboard", label: "Chart Dashboard" }]}
-                    onMenuClick={() => setSidebarOpen(true)}
-                  />
-                </div>
-              </div>
+              {/* Header removed from here */}
 
               {mounted && (
                 <>

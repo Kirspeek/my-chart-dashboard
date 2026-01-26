@@ -1,7 +1,7 @@
 "use client";
 
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import { Header as UIHeader } from "../../../packages/ui-header/src";
+import SunMoonToggle from "@/components/common/SunMoonToggle";
 import { SearchProvider } from "@/context/SearchContext";
 import { useTheme } from "@/hooks/useTheme";
 import { Sun, Moon } from "lucide-react";
@@ -13,9 +13,24 @@ export default function SettingsPage() {
   return (
     <SearchProvider>
       <div className="flex min-h-screen bg-[var(--background)]">
-        <Sidebar isOpen={false} onClose={() => {}} />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <Header />
+          <UIHeader 
+            className="border-b border-[var(--widget-border)] w-full"
+            style={{ borderRadius: 0, margin: 0 }}
+            contentClassName="!max-w-none"
+            defaultSection="dashboard"
+            sections={[{ key: "dashboard", label: "Charts & Analytics Dashboard" }]}
+            showThemeToggle
+            themeToggleNode={<SunMoonToggle />}
+            contactLinks={[
+              {
+                label: "Contact",
+                href: "https://kirspeek.dev",
+                target: "_blank",
+                rel: "noopener noreferrer",
+              },
+            ]}
+          />
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
             <div className="max-w-5xl mx-auto">
               <h2 className="text-xl font-bold primary-text mb-4">

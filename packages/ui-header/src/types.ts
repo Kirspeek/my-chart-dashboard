@@ -38,4 +38,8 @@ export type HeaderProps = {
   showThemeToggle?: boolean;
   isDark?: boolean;
   onToggleTheme?: () => void;
+  themeToggleNode?: React.ReactNode;
+  style?: React.CSSProperties;
+  contentClassName?: string;
+  titles?: string[];
 };

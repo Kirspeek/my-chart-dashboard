@@ -8,7 +8,8 @@ import ContactIcons from "./parts/ContactIcons";
 import type { HeaderProps, HeaderLink, SectionKey } from "./types";
 
 export default function Header({
-  title = "Chart Dashboard",
+  title, // kept for back-compat
+  titles, // new prop for animation
   onSearch,
   searchPlaceholder = "Search...",
   contactEmail,
@@ -20,8 +21,29 @@ export default function Header({
   sections,
   onSectionChange,
   onMenuClick,
+  themeToggleNode,
+  style,
+  contentClassName,
 }: HeaderProps) {
   const [value, setValue] = useState("");
+  const [displayedTitle, setDisplayedTitle] = useState(title || "Chart Dashboard");
+  
+  // Animation effect for titles
+  useEffect(() => {
+    if (titles && titles.length > 0) {
+      let index = 0;
+      setDisplayedTitle(titles[0]);
+      
+      const interval = setInterval(() => {
+        index = (index + 1) % titles.length;
+        setDisplayedTitle(titles[index]);
+      }, 3000); // Change every 3 seconds
+      
+      return () => clearInterval(interval);
+    } else if (title) {
+       setDisplayedTitle(title);
+    }
+  }, [title, titles]);
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -76,7 +98,7 @@ export default function Header({
   ];
   const sectionList = sections && sections.length ? sections : defaultSections;
   const sectionLabelMap = new Map(sectionList.map((s) => [s.key, s.label]));
-  const computedTitle = sectionLabelMap.get(activeSection) || title;
+  const computedTitle = activeSection !== "dashboard" ? (sectionLabelMap.get(activeSection) || displayedTitle) : displayedTitle;
 
   const setSection = (next: SectionKey) => {
     setActiveSection(next);
@@ -95,42 +117,26 @@ export default function Header({
   return (
     <header
       className={`relative z-30 ${className ?? ""}`}
-      style={containerStyle}
+      style={{ ...containerStyle, ...style }}
     >
-      <div className="px-4 sm:px-6 lg:px-8">
+      <div className={`px-4 sm:px-6 lg:px-8 ${contentClassName ?? ""}`}>
         {isMobile ? (
           <div className="flex items-center gap-3 py-1 w-full relative">
-            {/* Left: Hamburger */}
-            <button
-              type="button"
-              className="p-2 -ml-2 rounded-md focus:outline-none flex-shrink-0"
-              onClick={onMenuClick}
-              aria-label="Open menu"
-            >
-              <div className="space-y-1.5">
-                <span
-                  className="block w-6 h-0.5"
-                  style={{ background: orangeColor }}
-                ></span>
-                <span
-                  className="block w-6 h-0.5"
-                  style={{ background: orangeColor }}
-                ></span>
-                <span
-                  className="block w-6 h-0.5"
-                  style={{ background: orangeColor }}
-                ></span>
+            {/* Left: Theme Toggle */}
+            {themeToggleNode && (
+              <div className="-ml-2 flex-shrink-0">
+                {themeToggleNode}
               </div>
-            </button>
+            )}
 
             {/* Center: Title (Expanded to push right icons) */}
             <div className="flex-1 flex justify-center">
-              <Title text={computedTitle} fontSize="1.1rem" />
+              <Title text={computedTitle ?? "Chart Dashboard"} fontSize="1.1rem" />
             </div>
 
             {/* Right: Actions */}
             <div className="flex items-center gap-3 flex-shrink-0">
-              {activeSection === "dashboard" && (
+              {activeSection === "dashboard" && onSearch && (
                 <div style={{ transform: "translateY(2px)" }}>
                   <SearchBox
                     value={value}
@@ -162,31 +168,15 @@ export default function Header({
           </div>
         ) : isTablet ? (
           <div className="flex items-center h-16 gap-4">
-            <button
-              type="button"
-              className="p-2 -ml-2 rounded-md focus:outline-none"
-              onClick={onMenuClick}
-              aria-label="Open menu"
-            >
-              <div className="space-y-1.5">
-                <span
-                  className="block w-7 h-0.5"
-                  style={{ background: orangeColor }}
-                ></span>
-                <span
-                  className="block w-7 h-0.5"
-                  style={{ background: orangeColor }}
-                ></span>
-                <span
-                  className="block w-7 h-0.5"
-                  style={{ background: orangeColor }}
-                ></span>
-              </div>
-            </button>
-            <Title text={computedTitle} fontSize="1.55rem" />
+            {themeToggleNode && (
+               <div className="-ml-2">
+                 {themeToggleNode}
+               </div>
+            )}
+            <Title text={computedTitle ?? "Chart Dashboard"} fontSize="1.55rem" />
 
             <div className="flex items-center gap-4 ml-4">
-              {activeSection === "dashboard" && (
+              {activeSection === "dashboard" && onSearch && (
                 <SearchBox
                   value={value}
                   onChange={onChange}
@@ -218,28 +208,12 @@ export default function Header({
         ) : (
           <div className="relative flex items-center h-16">
             <div className="flex items-center gap-4">
-              {/* Desktop Hamburger */}
-              <button
-                type="button"
-                className="p-2 -ml-2 rounded-md focus:outline-none hover:bg-white/5 transition-colors"
-                onClick={onMenuClick}
-                aria-label="Open menu"
-              >
-                <div className="space-y-1.5">
-                  <span
-                    className="block w-6 h-[3px] rounded-full"
-                    style={{ background: orangeColor }}
-                  ></span>
-                  <span
-                    className="block w-6 h-[3px] rounded-full"
-                    style={{ background: orangeColor }}
-                  ></span>
-                  <span
-                    className="block w-6 h-[3px] rounded-full"
-                    style={{ background: orangeColor }}
-                  ></span>
+              {/* Desktop Theme Toggle */}
+              {themeToggleNode && (
+                <div className="-ml-2">
+                  {themeToggleNode}
                 </div>
-              </button>
+              )}
               <h1
                 className="primary-text"
                 style={{
@@ -281,7 +255,7 @@ export default function Header({
 
             <div className="ml-auto flex items-center space-x-4">
               {/* Search icon that reveals input on hover/focus (Dashboard only) */}
-              {activeSection === "dashboard" && (
+              {activeSection === "dashboard" && onSearch && (
                 <div
                   className="relative flex items-center"
                   ref={searchRef}

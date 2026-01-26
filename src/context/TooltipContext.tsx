@@ -37,9 +37,10 @@ export function TooltipProvider({ children }: TooltipProviderProps) {
           style={{
             position: "fixed",
             left: tooltip.x + 10,
-            top: tooltip.y - 10,
-            background: "#fff",
-            color: "#000",
+            top: tooltip.y - 15,
+            transform: "translateY(-100%)",
+            background: "var(--widget-bg)",
+            color: "var(--primary-text)",
             borderRadius: "12px",
             boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
             padding: "12px 18px",
@@ -49,7 +50,7 @@ export function TooltipProvider({ children }: TooltipProviderProps) {
             pointerEvents: "none",
             zIndex: 9999,
             minWidth: 200,
-            border: "1px solid rgba(0,0,0,0.1)",
+            border: "1px solid var(--widget-border)",
             maxWidth: 300,
           }}
         >
@@ -59,7 +60,7 @@ export function TooltipProvider({ children }: TooltipProviderProps) {
                 style={{
                   fontSize: 16,
                   fontWeight: 800,
-                  color: "#000",
+                  color: "var(--primary-text)",
                   marginBottom: 4,
                 }}
               >
@@ -70,7 +71,7 @@ export function TooltipProvider({ children }: TooltipProviderProps) {
                   style={{
                     fontSize: 12,
                     fontWeight: 600,
-                    color: "rgba(0,0,0,0.7)",
+                    color: "var(--secondary-text)",
                   }}
                 >
                   {tooltip.subtitle}

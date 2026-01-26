@@ -224,7 +224,7 @@ export default function BarChartChartView({
                 fontWeight={axisStyle.fontWeight}
                 tickFormatter={formatValue}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
               <Legend
                 wrapperStyle={{
                   fontFamily: "var(--font-mono)",
@@ -292,7 +292,7 @@ export default function BarChartChartView({
                 fontWeight={axisStyle.fontWeight}
                 tickFormatter={formatValue}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
               <Legend
                 wrapperStyle={{
                   fontFamily: "var(--font-mono)",
@@ -406,7 +406,7 @@ export default function BarChartChartView({
                 fontWeight={axisStyle.fontWeight}
                 tickFormatter={formatValue}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
               <Legend
                 wrapperStyle={{
                   fontFamily: "var(--font-mono)",

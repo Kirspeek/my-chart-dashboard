@@ -37,18 +37,20 @@ export default function MapWidget({
   return (
     <WidgetBase
       style={{
-        width: "100%",
-        height: "100%",
+        width: isMobile ? "100vw" : "100%",
+        height: isMobile ? "82vh" : "40vh",
         minHeight: 0,
         padding: 0,
+        paddingTop: isMobile ? "calc(var(--spacing) * 4)" : undefined,
+        margin: isMobile ? "0 0 3rem 0" : undefined,
         position: "relative",
         overflow: "hidden",
         boxSizing: "border-box",
-        borderRadius: isMobile ? "1.25rem" : undefined,
+        borderRadius: isMobile ? "2rem" : undefined,
         display: "flex",
         flexDirection: "column",
-        alignItems: "stretch",
-        justifyContent: "flex-start",
+        alignItems: "center",
+        justifyContent: "center",
       }}
       className="map-widget"
       onOpenSidebar={onOpenSidebar}
@@ -62,13 +64,11 @@ export default function MapWidget({
         onSearchFocus={setSearchFocused}
         onSubmit={handleSearch}
       />
-      <div className="flex-1 relative w-full h-full">
-        <MapContainer
-          internalLocation={internalLocation}
-          searchResult={searchResult}
-          onMarkerChange={onMarkerChange}
-        />
-      </div>
+      <MapContainer
+        internalLocation={internalLocation}
+        searchResult={searchResult}
+        onMarkerChange={onMarkerChange}
+      />
       {currentSlide !== undefined && setCurrentSlide && (
         <SlideNavigation
           currentSlide={currentSlide}

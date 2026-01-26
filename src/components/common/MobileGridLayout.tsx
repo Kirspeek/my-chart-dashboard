@@ -33,7 +33,6 @@ interface MobileGridLayoutProps {
   selectedZone: string;
   setSelectedZone: React.Dispatch<React.SetStateAction<string>>;
   selectedCity: string;
-  setSidebarOpen: (open: boolean) => void;
 }
 
 export default function MobileGridLayout({
@@ -41,7 +40,6 @@ export default function MobileGridLayout({
   selectedZone,
   setSelectedZone,
   selectedCity,
-  setSidebarOpen,
 }: MobileGridLayoutProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -54,8 +52,6 @@ export default function MobileGridLayout({
                 selectedZone={selectedZone}
                 setSelectedZone={setSelectedZone}
                 isMobile={true}
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
             <div className="weather-widget-container">
@@ -65,10 +61,7 @@ export default function MobileGridLayout({
 
           {/* Timer Section */}
           <div className="h-auto">
-            <TimerWidget
-              onOpenSidebar={() => setSidebarOpen(true)}
-              showSidebarButton={false}
-            />
+            <TimerWidget />
           </div>
 
           {/* Music Widget */}
@@ -79,16 +72,10 @@ export default function MobileGridLayout({
           {/* Map and Calendar Section */}
           <div className="grid grid-cols-1 gap-4">
             <div className="h-auto">
-              <MapWidget
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
-              />
+              <MapWidget />
             </div>
             <div className="h-auto">
-              <CalendarWidgetMobile
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
-              />
+              <CalendarWidgetMobile />
             </div>
           </div>
 
@@ -100,16 +87,10 @@ export default function MobileGridLayout({
                   <WalletWidget />
                 </div>
                 <div className="h-auto">
-                  <WheelWidget
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={false}
-                  />
+                  <WheelWidget />
                 </div>
                 <div className="h-auto">
-                  <AggregatedSpendingWidget
-                    onOpenSidebar={() => setSidebarOpen(true)}
-                    showSidebarButton={false}
-                  />
+                  <AggregatedSpendingWidget />
                 </div>
               </div>
             </WidgetStateProvider>
@@ -131,8 +112,6 @@ export default function MobileGridLayout({
                 <MetricWidget
                   metric={metric}
                   index={index}
-                  onOpenSidebar={() => setSidebarOpen(true)}
-                  showSidebarButton={false}
                 />
               </div>
             ))}
@@ -144,16 +123,12 @@ export default function MobileGridLayout({
               <LineChartWidget
                 data={data.salesData ?? []}
                 title="Sales Performance"
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
             <div className="h-auto">
               <BarChartWidget
                 data={data.barChartData ?? []}
                 title="Quarterly Overview"
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
           </div>
@@ -169,16 +144,12 @@ export default function MobileGridLayout({
                   []
                 }
                 title="Performance Metrics"
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
             <div className="h-auto">
               <DeviceUsageWidget
                 data={data.pieChartData ?? []}
                 title="Device Usage"
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
           </div>
@@ -198,8 +169,6 @@ export default function MobileGridLayout({
                 data={data.sankeyData ?? []}
                 title="Global Migration Flows"
                 subtitle="2019/2020"
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
             <div className="h-auto">
@@ -207,8 +176,6 @@ export default function MobileGridLayout({
                 data={data.migrationData ?? []}
                 title="Global Migrations"
                 subtitle="2023"
-                onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={false}
               />
             </div>
           </div>
@@ -219,17 +186,12 @@ export default function MobileGridLayout({
               data={data.bubbleData ?? []}
               title="Global Tech Investment"
               subtitle="Market Cap vs Growth vs Workforce Size"
-              onOpenSidebar={() => setSidebarOpen(true)}
-              showSidebarButton={false}
             />
           </div>
 
           {/* Timeline */}
           <div className="h-auto">
-            <EnhancedTimelineWidget
-              onOpenSidebar={() => setSidebarOpen(true)}
-              showSidebarButton={false}
-            />
+            <EnhancedTimelineWidget />
           </div>
         </div>
       </main>

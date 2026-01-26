@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import WidgetBase from "../../common/WidgetBase";
 import SlideNavigation from "../../common/SlideNavigation";
 import { CalendarWidgetProps } from "@/interfaces/widgets";
@@ -27,7 +27,6 @@ export default function CalendarWidgetMobile({
     selectedDate,
     viewMode,
     events,
-    showEventForm,
     setSelectedDate,
     setViewMode,
     goToPrevious,
@@ -38,11 +37,7 @@ export default function CalendarWidgetMobile({
     isToday,
     isSelected,
     isCurrentMonth,
-    addEvent,
-    toggleEventForm,
   } = useCalendarLogic(onDateSelect, initialDate);
-
-  const [newEventTitle, setNewEventTitle] = useState("");
 
   React.useEffect(() => {
     if (!selectedDate) {
@@ -60,18 +55,6 @@ export default function CalendarWidgetMobile({
     return events.some(
       (event) => event.date.toDateString() === date.toDateString()
     );
-  };
-
-  const handleAddEvent = () => {
-    if (!selectedDate || !newEventTitle.trim()) return;
-
-    addEvent({
-      title: newEventTitle.trim(),
-      date: selectedDate,
-    });
-
-    setNewEventTitle("");
-    toggleEventForm();
   };
 
   const formatDate = (date: Date) => {
@@ -100,11 +83,6 @@ export default function CalendarWidgetMobile({
   };
 
   const selectedDateInfo = selectedDate ? formatDate(selectedDate) : null;
-  const dayEvents = selectedDate
-    ? events.filter(
-      (event) => event.date.toDateString() === selectedDate.toDateString()
-    )
-    : [];
 
   return (
     <WidgetBase

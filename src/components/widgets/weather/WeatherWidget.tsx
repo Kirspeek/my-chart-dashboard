@@ -84,10 +84,18 @@ export default function WeatherWidget({
       {/* Left: Current weather */}
       <div
         className="weather-left-panel-desktop"
-        style={{ overflow: isCloudy ? undefined : "hidden" }}
+        style={{
+          overflow:
+            isCloudy || /snow/i.test(forecast[selectedDay]?.desc || "")
+              ? undefined
+              : "hidden",
+        }}
       >
         <WeatherBackground desc={forecast[selectedDay]?.desc || ""}>
-          <WeatherAnimations weatherDesc={forecast[selectedDay]?.desc || ""} />
+          <WeatherAnimations 
+            weatherDesc={forecast[selectedDay]?.desc || ""} 
+            temperature={forecast[selectedDay]?.max}
+            />
         </WeatherBackground>
         {forecast[selectedDay] && dateString && (
           <WeatherText
