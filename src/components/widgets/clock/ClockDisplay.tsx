@@ -59,7 +59,7 @@ export default function ClockDisplay({
       <style jsx>{`
         @media (min-width: 768px) {
           .clock-main-size {
-            font-size: clamp(4rem, 9vw, 8rem);
+            font-size: clamp(3.5rem, 5.5vw, 6rem);
           }
         }
         /* Make controls more compact on screens narrower than 1440px */

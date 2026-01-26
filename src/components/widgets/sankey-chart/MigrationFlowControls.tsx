@@ -98,7 +98,7 @@ export default function MigrationFlowControls({
         }}
       >
         {/* Left side - Animation controls */}
-        <div className="flex items-center space-x-2">
+        <div className={`flex items-center space-x-2 ${isMobile ? "flex-wrap gap-y-2 justify-center w-full" : ""}`}>
           <MigrationFlowButton
             onClick={() => setIsPlaying(!isPlaying)}
             variant={isPlaying ? "danger" : "primary"}
@@ -149,7 +149,7 @@ export default function MigrationFlowControls({
         </div>
 
         {/* Right side - Speed selector */}
-        <div className="flex items-center space-x-2">
+        <div className={`flex items-center space-x-2 ${isMobile ? "flex-wrap gap-y-2 justify-center w-full" : ""}`}>
           <span
             className="text-xs font-medium"
             style={{

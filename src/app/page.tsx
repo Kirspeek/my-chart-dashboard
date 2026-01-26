@@ -233,32 +233,25 @@ export default function Home() {
                     <MusicWidget title="Spotify Music Player" compact={true} />
                   </div>
 
-                  <div className="grid grid-cols-1 gap-8 mt-6 lg:mt-8 mb-8">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-6 lg:mt-8 mb-8">
                     <div className="h-full">
                       <MapWidget />
+                    </div>
+                    <div className="h-full">
+                      <CalendarWidget />
                     </div>
                   </div>
                 </>
               )}
 
-              {mounted && (
-                <div className="flex flex-col lg:flex-row gap-8 mb-8 items-stretch">
-                  <div className="w-full lg:w-auto flex-none">
-                    <WidgetHeightProvider>
-                      <WidgetStateProvider>
-                        <WalletWidget />
-                      </WidgetStateProvider>
-                    </WidgetHeightProvider>
-                  </div>
-                  <div className="w-full flex-1 min-w-0">
-                    <CalendarWidget />
-                  </div>
-                </div>
-              )}
+
 
               <WidgetHeightProvider>
                 <WidgetStateProvider>
-                  <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
+                  <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
+                    <div className="md:w-full lg:col-span-2 xl:col-span-1">
+                      <WalletWidget />
+                    </div>
                     <div className="md:w-full">
                       <WheelWidget />
                     </div>
