@@ -103,7 +103,7 @@ export default function Home() {
   const selectedCity = cityMap[selectedZone] || "London";
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+
 
   const data = useDashboardData();
 
@@ -182,7 +182,6 @@ export default function Home() {
                 rel: "noopener noreferrer",
               },
             ]}
-            onMenuClick={() => setSidebarOpen(true)}
           />
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
             <div className="max-w-7xl mx-auto">
