@@ -136,7 +136,7 @@ export default function AggregatedSpendingWidget({
       const monthlyData = monthlyCategories.map((category) => {
         const value =
           monthlySpending.categories[
-            category.name.toLowerCase() as keyof typeof monthlySpending.categories
+          category.name.toLowerCase() as keyof typeof monthlySpending.categories
           ] || 0;
         const percentage =
           monthlyTotal > 0 ? Math.round((value / monthlyTotal) * 100) : 0;
@@ -175,7 +175,7 @@ export default function AggregatedSpendingWidget({
       const annualData = monthlyCategories.map((category) => {
         const value =
           yearlyCategories[
-            category.name.toLowerCase() as keyof typeof yearlyCategories
+          category.name.toLowerCase() as keyof typeof yearlyCategories
           ] || 0;
         const percentage =
           yearlyTotal > 0 ? Math.round((value / yearlyTotal) * 100) : 0;
@@ -216,7 +216,7 @@ export default function AggregatedSpendingWidget({
 
   return (
     <WidgetBase
-      className="w-full h-full flex flex-col items-center justify-center p-6"
+      className="aggregated-spending-widget w-full h-full flex flex-col items-center justify-center p-6"
       style={widgetStyle}
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}

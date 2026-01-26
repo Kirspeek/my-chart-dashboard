@@ -63,7 +63,7 @@ export default function ClockWidget({
       className="flex flex-col gap-8 clock-widget-mobile"
       style={{
         width: "100%",
-        padding: "2.5rem 2.5rem",
+        padding: isMobile ? "0.5rem" : "2.5rem 2.5rem",
       }}
       onOpenSidebar={onOpenSidebar}
       showSidebarButton={showSidebarButton}

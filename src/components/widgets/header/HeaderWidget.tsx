@@ -4,15 +4,17 @@ import React from "react";
 import { Header as UIHeader } from "../../../../packages/ui-header/src";
 import WidgetBase from "@/components/common/WidgetBase";
 
-type SectionKey = "dashboard" | "projects" | "about" | "experience";
+type SectionKey = "dashboard";
 
 export default function HeaderWidget({
   defaultSection = "dashboard",
   onSectionChange,
+  onMenuClick,
   sections,
 }: {
   defaultSection?: SectionKey;
   onSectionChange?: (s: SectionKey) => void;
+  onMenuClick?: () => void;
   sections?: Array<{ key: SectionKey; label: string }>;
 }) {
   return (
@@ -22,24 +24,12 @@ export default function HeaderWidget({
           defaultSection={defaultSection}
           sections={sections}
           onSectionChange={onSectionChange}
+          onMenuClick={onMenuClick}
           showThemeToggle
-          contactEmail="cherepenko.iryna@gmail.com"
           contactLinks={[
             {
-              label: "LinkedIn",
-              href: "https://www.linkedin.com/in/irynacherepenko/",
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-            {
-              label: "GitHub",
-              href: "https://github.com/Kirspeek",
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-            {
-              label: "Telegram",
-              href: "https://t.me/kirstnd",
+              label: "Contact",
+              href: "https://kirspeek.dev",
               target: "_blank",
               rel: "noopener noreferrer",
             },

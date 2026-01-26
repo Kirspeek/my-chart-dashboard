@@ -14,11 +14,11 @@
 }
 
 /* Consistent gap between all widgets */
-.mobile-grid-container > * {
+.mobile-grid-container>* {
   margin-bottom: 1rem;
 }
 
-.mobile-grid-container > *:last-child {
+.mobile-grid-container>*:last-child {
   margin-bottom: 0;
 }
 
@@ -27,7 +27,7 @@
   gap: 1rem;
 }
 
-.mobile-grid-container .space-y-6 > * + * {
+.mobile-grid-container .space-y-6>*+* {
   margin-top: 1rem;
 }
 
@@ -42,24 +42,25 @@
 
 /* Mobile-specific widget heights - using fixed viewport heights */
 .mobile-grid-container .clock-widget-container {
-  height: 38vh !important;
-  min-height: 38vh !important;
-  max-height: 38vh !important;
+  height: auto !important;
+  min-height: fit-content !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
 .mobile-grid-container .weather-widget-container {
-  height: 44vh !important;
-  min-height: 44vh !important;
-  max-height: 44vh !important;
+  height: auto !important;
+  min-height: fit-content !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
-.mobile-grid-container .clock-widget {
-  height: 100% !important;
-  min-height: 100% !important;
-  max-height: 100% !important;
+.mobile-grid-container .clock-widget-mobile {
+  height: auto !important;
+  min-height: fit-content !important;
+  max-height: none !important;
   overflow: visible !important;
+  gap: 1rem !important;
 }
 
 .mobile-grid-container .weather-widget-mobile {
@@ -134,18 +135,18 @@
 
 /* Standardized widget heights for mobile */
 .mobile-grid-container .timer-widget {
-  height: 18rem !important;
-  min-height: 18rem !important;
+  height: 15rem !important;
+  min-height: 15rem !important;
 }
 
 .mobile-grid-container .music-widget {
-  height: 16rem !important;
-  min-height: 16rem !important;
+  height: 24rem !important;
+  min-height: 24rem !important;
 }
 
 .mobile-grid-container .map-widget {
-  height: 22rem !important;
-  min-height: 22rem !important;
+  height: 24rem !important;
+  min-height: 24rem !important;
 }
 
 .mobile-grid-container .calendar-widget-mobile {
@@ -219,21 +220,38 @@
 .mobile-grid-container .world-clocks-mobile {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  grid-template-rows: 1fr 1fr !important;
-  gap: 0.75rem !important;
+  grid-template-rows: auto auto !important;
+  gap: 0.25rem !important;
   width: 100% !important;
-  margin-top: 1rem !important;
+  margin-top: 0.5rem !important;
   margin-bottom: 0.5rem !important;
-  padding: 0 1rem !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 350px) {
+  .mobile-grid-container .world-clocks-mobile {
+    grid-template-columns: 1fr !important;
+    gap: 0.25rem !important;
+  }
+}
+
+.mobile-grid-container .world-clock-card {
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
 }
 
 .mobile-grid-container .world-clock-card-mobile {
   width: 100% !important;
-  min-width: 100% !important;
-  max-width: 100% !important;
-  min-height: 4rem !important;
-  max-height: none !important;
-  padding: 0.75rem !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  min-height: 7rem !important;
+  height: auto !important;
+  padding: 0.5rem !important;
   border-radius: 0.75rem !important;
   display: flex !important;
   flex-direction: column !important;
@@ -272,6 +290,91 @@
   border-color: var(--widget-border) !important;
 }
 
+
 .dark .mobile-grid-container .widget-title {
   color: var(--primary-text) !important;
+}
+
+/* Wheel widget sizing override for mobile grid */
+.mobile-grid-container .wheel-widget {
+  height: 30rem !important;
+  width: 100% !important;
+  min-height: 30rem !important;
+}
+
+/* Aggregated Spending widget sizing override for mobile grid */
+.mobile-grid-container .aggregated-spending-widget {
+  height: 24rem !important;
+  width: 100% !important;
+  min-height: 24rem !important;
+}
+
+/* Contribution Graph widget sizing override for mobile grid */
+.mobile-grid-container .contribution-graph-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Line Chart widget sizing override for mobile grid */
+.mobile-grid-container .line-chart-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Bar Chart widget sizing override for mobile grid */
+.mobile-grid-container .bar-chart-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Performance Metrics widget sizing override for mobile grid */
+.mobile-grid-container .performance-metrics-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Device Usage widget sizing override for mobile grid */
+.mobile-grid-container .device-usage-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Global Migration Flows widget sizing override for mobile grid */
+.mobile-grid-container .sankey-chart-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
+}
+
+/* Recent Users widget sizing override for mobile grid */
+.mobile-grid-container .recent-users-widget {
+  height: auto !important;
+  width: 100% !important;
+  min-height: auto !important;
+  flex: none !important;
+  border-radius: 1.5rem !important;
+  padding: 1.5rem !important;
 }

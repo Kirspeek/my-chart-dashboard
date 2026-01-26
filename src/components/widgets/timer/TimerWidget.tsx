@@ -102,7 +102,7 @@ export default function TimerWidget({
     ) {
       try {
         Notification.requestPermission();
-      } catch {}
+      } catch { }
     }
     if (timeLeft === 0) {
       resetLogic();
@@ -142,18 +142,17 @@ export default function TimerWidget({
   return (
     <WidgetBase
       style={{
-        width: isMobile ? "100vw" : "100%",
-        padding: isMobile ? "1rem" : "0.75rem",
+        width: "100%",
+        padding: isMobile ? "0.5rem" : "0.75rem",
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
         alignItems: "center",
-        justifyContent: "center",
-        height: isMobile ? "82vh" : "100%",
-        margin: isMobile ? "0 1rem 3rem 1rem" : undefined,
+        justifyContent: "space-between",
+        height: isMobile ? "auto" : "100%",
         boxSizing: "border-box",
-        borderRadius: isMobile ? "2rem" : undefined,
+        borderRadius: isMobile ? "1.5rem" : undefined,
         position: "relative",
-        gap: isMobile ? "1.5rem" : "1rem",
+        gap: isMobile ? "0.5rem" : "1rem",
       }}
       className={className}
       onOpenSidebar={onOpenSidebar}

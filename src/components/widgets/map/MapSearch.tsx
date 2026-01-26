@@ -27,8 +27,8 @@ export default function MapSearch({
       onSubmit={onSubmit}
       style={{
         position: "absolute",
-        top: 16,
-        left: 16,
+        top: 8,
+        left: 8,
         right: "auto",
         zIndex: 10,
         display: "flex",

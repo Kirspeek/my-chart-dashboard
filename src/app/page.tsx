@@ -103,9 +103,6 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeSection, setActiveSection] = useState<
-    "dashboard" | "projects" | "about" | "experience"
-  >("dashboard");
 
   const data = useDashboardData();
 
@@ -132,108 +129,39 @@ export default function Home() {
 
   if (!data.metricCards) return <div>Loading dashboard data...</div>;
 
-  const handleSectionChange = (
-    s: "dashboard" | "projects" | "about" | "experience"
-  ) => {
-    setActiveSection(s);
-    if (typeof window !== "undefined" && s !== "dashboard") {
-      const el = document.getElementById(s);
-      if (el) {
-        requestAnimationFrame(() => {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      }
-    } else if (typeof window !== "undefined" && s === "dashboard") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
   if (isMobile) {
     return (
       <SearchProvider>
         <div className="flex min-h-screen bg-[var(--background)]">
-          {activeSection === "dashboard" && (
-            <>
-              <Sidebar
-                isOpen={sidebarOpen}
-                onClose={() => setSidebarOpen(false)}
+          <>
+            <Sidebar
+              isOpen={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+            />
+            {sidebarOpen && (
+              <div
+                className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300"
+                onClick={() => setSidebarOpen(false)}
               />
-              {sidebarOpen && (
-                <div
-                  className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
-                  onClick={() => setSidebarOpen(false)}
-                />
-              )}
-            </>
-          )}
+            )}
+          </>
 
           <div className="flex-1 flex flex-col overflow-hidden">
-            <HeaderWidget
-              defaultSection={activeSection}
-              onSectionChange={handleSectionChange}
-              sections={[
-                { key: "dashboard", label: "Chart Dashboard" },
-                { key: "projects", label: "Projects" },
-                { key: "about", label: "About me" },
-                { key: "experience", label: "Work experience" },
-              ]}
-            />
-
-            {activeSection === "dashboard" ? (
-              <MobileGridLayout
-                data={data}
-                selectedZone={selectedZone}
-                setSelectedZone={setSelectedZone}
-                selectedCity={selectedCity}
-                setSidebarOpen={setSidebarOpen}
+            <div className="px-4 mt-2">
+              <HeaderWidget
+                defaultSection="dashboard"
+                sections={[{ key: "dashboard", label: "Chart Dashboard" }]}
+                onMenuClick={() => setSidebarOpen(true)}
               />
-            ) : (
-              <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
-                <div className="max-w-5xl mx-auto space-y-12">
-                  <section id="about" className="h-screen flex items-center">
-                    <div>
-                      <h2
-                        className="text-2xl font-extrabold primary-text"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        About me
-                      </h2>
-                      <p className="secondary-text mt-2">
-                        Content coming soon.
-                      </p>
-                    </div>
-                  </section>
-                  <section id="projects" className="h-screen flex items-center">
-                    <div>
-                      <h2
-                        className="text-2xl font-extrabold primary-text"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        Projects
-                      </h2>
-                      <p className="secondary-text mt-2">
-                        Content coming soon.
-                      </p>
-                    </div>
-                  </section>
-                  <section
-                    id="experience"
-                    className="h-screen flex items-center"
-                  >
-                    <div>
-                      <h2
-                        className="text-2xl font-extrabold primary-text"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        Work experience
-                      </h2>
-                      <p className="secondary-text mt-2">
-                        Content coming soon.
-                      </p>
-                    </div>
-                  </section>
-                </div>
-              </main>
-            )}
+            </div>
+
+            <MobileGridLayout
+              data={data}
+              selectedZone={selectedZone}
+              setSelectedZone={setSelectedZone}
+              selectedCity={selectedCity}
+              setSidebarOpen={setSidebarOpen}
+            />
           </div>
         </div>
       </SearchProvider>
@@ -243,18 +171,23 @@ export default function Home() {
   return (
     <SearchProvider>
       <div className="flex min-h-screen bg-[var(--background)]">
-        {activeSection === "dashboard" && (
-          <Sidebar isOpen={true} onClose={() => {}} />
+        <Sidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
         )}
 
-        {activeSection === "dashboard" ? (
-          <FilteredWidgetsGrid
-            data={data}
-            selectedZone={selectedZone}
-            setSelectedZone={setSelectedZone}
-            selectedCity={selectedCity}
-          />
-        ) : null}
+        <FilteredWidgetsGrid
+          data={data}
+          selectedZone={selectedZone}
+          setSelectedZone={setSelectedZone}
+          selectedCity={selectedCity}
+        />
 
         <div className="flex-1 flex flex-col overflow-hidden">
           <main className="flex-1 overflow-y-auto px-6 py-8 bg-[var(--background)]">
@@ -263,19 +196,14 @@ export default function Home() {
               <div className="grid grid-cols-1 gap-8 items-stretch mb-8">
                 <div className="h-full">
                   <HeaderWidget
-                    defaultSection={activeSection}
-                    onSectionChange={handleSectionChange}
-                    sections={[
-                      { key: "dashboard", label: "Chart Dashboard" },
-                      { key: "projects", label: "Projects" },
-                      { key: "about", label: "About me" },
-                      { key: "experience", label: "Work experience" },
-                    ]}
+                    defaultSection="dashboard"
+                    sections={[{ key: "dashboard", label: "Chart Dashboard" }]}
+                    onMenuClick={() => setSidebarOpen(true)}
                   />
                 </div>
               </div>
 
-              {mounted && activeSection === "dashboard" && (
+              {mounted && (
                 <>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
                     <div className="h-full">
@@ -287,14 +215,14 @@ export default function Home() {
                     </div>
 
                     <div className="h-full flex flex-col">
-                      <div className="flex-none h-72 2xl:h-96">
+                      <div className="flex-none h-72 md:h-96 lg:h-72 2xl:h-96">
                         {isMobile ? (
                           <WeatherWidgetMobile city={selectedCity} />
                         ) : (
                           <WeatherWidget city={selectedCity} />
                         )}
                       </div>
-                      <div className="h-2"></div>{" "}
+                      <div className="h-8"></div>{" "}
                       <div className="flex-1 min-h-0">
                         <TimerWidget className="h-full" />
                       </div>
@@ -305,183 +233,130 @@ export default function Home() {
                     <MusicWidget title="Spotify Music Player" compact={true} />
                   </div>
 
-                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-6 lg:mt-8 mb-8">
+                  <div className="grid grid-cols-1 gap-8 mt-6 lg:mt-8 mb-8">
                     <div className="h-full">
                       <MapWidget />
-                    </div>
-                    <div className="h-full">
-                      <CalendarWidget />
                     </div>
                   </div>
                 </>
               )}
 
-              {activeSection === "dashboard" && (
-                <WidgetHeightProvider>
-                  <WidgetStateProvider>
-                    <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
-                      <div className="md:w-full lg:col-span-2 xl:col-span-1">
+              {mounted && (
+                <div className="flex flex-col lg:flex-row gap-8 mb-8 items-stretch">
+                  <div className="w-full lg:w-auto flex-none">
+                    <WidgetHeightProvider>
+                      <WidgetStateProvider>
                         <WalletWidget />
-                      </div>
-                      <div className="md:w-full">
-                        <WheelWidget />
-                      </div>
-                      <div className="md:w-full">
-                        <AggregatedSpendingWidget />
-                      </div>
+                      </WidgetStateProvider>
+                    </WidgetHeightProvider>
+                  </div>
+                  <div className="w-full flex-1 min-w-0">
+                    <CalendarWidget />
+                  </div>
+                </div>
+              )}
+
+              <WidgetHeightProvider>
+                <WidgetStateProvider>
+                  <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8 mt-8 mb-6 lg:mb-8 items-stretch md:justify-items-center lg:justify-items-stretch">
+                    <div className="md:w-full">
+                      <WheelWidget />
                     </div>
-                  </WidgetStateProvider>
-                </WidgetHeightProvider>
-              )}
-
-              {activeSection === "dashboard" && (
-                <WidgetHeightProvider>
-                  <WidgetStateProvider>
-                    <div className="grid grid-cols-1 gap-8 my-8">
-                      <div>
-                        <ContributionGraphWidget title="Financial Activity Overview" />
-                      </div>
+                    <div className="md:w-full">
+                      <AggregatedSpendingWidget />
                     </div>
-                  </WidgetStateProvider>
-                </WidgetHeightProvider>
-              )}
-
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 my-8">
-                  {(data.metricCards ?? []).map((metric, index) => (
-                    <MetricWidget key={index} metric={metric} index={index} />
-                  ))}
-                </div>
-              )}
-
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
-                  <LineChartWidget
-                    data={data.salesData ?? []}
-                    title="Sales Performance"
-                  />
-                  <BarChartWidget
-                    data={data.barChartData ?? []}
-                    title="Quarterly Overview"
-                  />
-                </div>
-              )}
-
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
-                  <RadarChartWidget
-                    data={
-                      (data.performanceMetricsData
-                        ?.currentMetrics as RadarChartDataItem[]) ??
-                      data.radarChartData ??
-                      []
-                    }
-                    title="Performance Metrics"
-                  />
-                  <WorkInProgressWidget />
-                </div>
-              )}
-
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
-                  <div className="lg:col-span-2 xl:col-span-2 h-full">
-                    <RecentUsersWidget
-                      data={data.userData ?? []}
-                      title="Recent Users"
-                    />
                   </div>
-                  <div className="h-full">
-                    <DeviceUsageWidget
-                      data={data.pieChartData ?? []}
-                      title="Device Usage"
-                    />
-                  </div>
-                </div>
-              )}
+                </WidgetStateProvider>
+              </WidgetHeightProvider>
 
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 my-8">
-                  <div className="lg:col-span-2 xl:col-span-2 h-full">
-                    <SankeyChartWidget
-                      data={data.sankeyData ?? []}
-                      title="Global Migration Flows"
-                      subtitle="2019/2020"
-                    />
-                  </div>
-                  <div className="h-full">
-                    <ChordChartWidget
-                      data={data.migrationData ?? []}
-                      title="Global Migrations"
-                      subtitle="2023"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 gap-8 my-8">
-                  <div className="h-full">
-                    <BubbleChartWidget
-                      data={data.bubbleData ?? []}
-                      title="Global Tech Investment"
-                      subtitle="Market Cap vs Growth vs Workforce Size"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {activeSection === "dashboard" && (
-                <div className="grid grid-cols-1 gap-8 my-8">
-                  <EnhancedTimelineWidget />
-                </div>
-              )}
-
-              {activeSection !== "dashboard" && (
-                <div className="max-w-5xl mx-auto space-y-12">
-                  <section id="about" className="h-screen flex items-center">
+              <WidgetHeightProvider>
+                <WidgetStateProvider>
+                  <div className="grid grid-cols-1 gap-8 my-8">
                     <div>
-                      <h2
-                        className="text-2xl font-extrabold primary-text"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        About me
-                      </h2>
-                      <p className="secondary-text mt-2">
-                        Content coming soon.
-                      </p>
+                      <ContributionGraphWidget title="Financial Activity Overview" />
                     </div>
-                  </section>
-                  <section id="projects" className="h-screen flex items-center">
-                    <div>
-                      <h2
-                        className="text-2xl font-extrabold primary-text"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        Projects
-                      </h2>
-                      <p className="secondary-text mt-2">
-                        Content coming soon.
-                      </p>
-                    </div>
-                  </section>
-                  <section
-                    id="experience"
-                    className="h-screen flex items-center"
-                  >
-                    <div>
-                      <h2
-                        className="text-2xl font-extrabold primary-text"
-                        style={{ fontFamily: "var(--font-mono)" }}
-                      >
-                        Work experience
-                      </h2>
-                      <p className="secondary-text mt-2">
-                        Content coming soon.
-                      </p>
-                    </div>
-                  </section>
+                  </div>
+                </WidgetStateProvider>
+              </WidgetHeightProvider>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 my-8">
+                {(data.metricCards ?? []).map((metric, index) => (
+                  <MetricWidget key={index} metric={metric} index={index} />
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
+                <LineChartWidget
+                  data={data.salesData ?? []}
+                  title="Sales Performance"
+                />
+                <BarChartWidget
+                  data={data.barChartData ?? []}
+                  title="Quarterly Overview"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
+                <RadarChartWidget
+                  data={
+                    (data.performanceMetricsData
+                      ?.currentMetrics as RadarChartDataItem[]) ??
+                    data.radarChartData ??
+                    []
+                  }
+                  title="Performance Metrics"
+                />
+                <WorkInProgressWidget />
+              </div>
+
+              <div className="grid grid-cols-1 gap-8 my-8">
+                <div className="h-full">
+                  <RecentUsersWidget
+                    data={data.userData ?? []}
+                    title="Recent Users"
+                  />
                 </div>
-              )}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 my-8">
+                <div className="h-full">
+                  <DeviceUsageWidget
+                    data={data.pieChartData ?? []}
+                    title="Device Usage"
+                  />
+                </div>
+                <div className="h-full">
+                  <ChordChartWidget
+                    data={data.migrationData ?? []}
+                    title="Global Migrations"
+                    subtitle="2023"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-8 my-8">
+                <div className="h-full">
+                  <SankeyChartWidget
+                    data={data.sankeyData ?? []}
+                    title="Global Migration Flows"
+                    subtitle="2019/2020"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-8 my-8">
+                <div className="h-full">
+                  <BubbleChartWidget
+                    data={data.bubbleData ?? []}
+                    title="Global Tech Investment"
+                    subtitle="Market Cap vs Growth vs Workforce Size"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-8 my-8">
+                <EnhancedTimelineWidget />
+              </div>
             </div>
           </main>
         </div>

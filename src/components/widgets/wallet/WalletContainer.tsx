@@ -39,14 +39,15 @@ export default function WalletContainer({
     <div
       style={{
         position: "relative",
-        width: WALLET_WIDTH,
+        width: "100%",
+        maxWidth: WALLET_WIDTH,
         height: dynamicHeight,
         margin: "0 auto",
         marginTop: WALLET_CONSTANTS.TOP_PADDING,
         transition: "height 0.3s ease-in-out",
       }}
     >
-      <MainContainer width={WALLET_WIDTH} height={dynamicHeight} zIndex={1} />
+      <MainContainer width="100%" height={dynamicHeight} zIndex={1} />
 
       <div
         style={{
@@ -85,7 +86,7 @@ export default function WalletContainer({
       </div>
 
       <PocketContainer
-        width={WALLET_WIDTH}
+        width="100%"
         height={POCKET_HEIGHT}
         zIndex={15}
       />

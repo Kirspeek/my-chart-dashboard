@@ -41,50 +41,52 @@ export default function CalendarHeader({
   };
 
   return (
-    <div className="flex items-center justify-between mb-3">
-      <div className="flex items-center gap-2">
-        <Button3D
-          onClick={onPrevious}
-          style={{
-            padding: "0.125rem 0.25rem",
-            minWidth: "auto",
-            minHeight: "auto",
-            fontSize: "0.625rem",
-          }}
-        >
-          ‹
-        </Button3D>
-        <Button3D
-          onClick={onNext}
-          style={{
-            padding: "0.125rem 0.25rem",
-            minWidth: "auto",
-            minHeight: "auto",
-            fontSize: "0.625rem",
-          }}
-        >
-          ›
-        </Button3D>
-        <Button3D
-          onClick={onToday}
-          style={{
-            padding: "0.125rem 0.25rem",
-            minWidth: "auto",
-            minHeight: "auto",
-            fontSize: "0.625rem",
-          }}
-        >
-          Today
-        </Button3D>
+    <div className="flex flex-col gap-3 mb-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center justify-between w-full sm:w-auto sm:justify-start sm:gap-4">
+        <div className="flex items-center gap-2">
+          <Button3D
+            onClick={onPrevious}
+            style={{
+              padding: "0.125rem 0.25rem",
+              minWidth: "auto",
+              minHeight: "auto",
+              fontSize: "0.625rem",
+            }}
+          >
+            ‹
+          </Button3D>
+          <Button3D
+            onClick={onNext}
+            style={{
+              padding: "0.125rem 0.25rem",
+              minWidth: "auto",
+              minHeight: "auto",
+              fontSize: "0.625rem",
+            }}
+          >
+            ›
+          </Button3D>
+          <Button3D
+            onClick={onToday}
+            style={{
+              padding: "0.125rem 0.25rem",
+              minWidth: "auto",
+              minHeight: "auto",
+              fontSize: "0.625rem",
+            }}
+          >
+            Today
+          </Button3D>
+        </div>
+
+        <div className="text-center px-2">
+          <h3 className="text-base font-bold calendar-header">
+            {formatDate(currentDate)}
+          </h3>
+        </div>
       </div>
 
-      <div className="text-center px-2">
-        <h3 className="text-base font-bold calendar-header">
-          {formatDate(currentDate)}
-        </h3>
-      </div>
-
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2 w-full sm:w-auto sm:justify-end">
         {(["year", "month", "week", "day"] as const).map((mode) => (
           <Button3D
             key={mode}
@@ -95,6 +97,8 @@ export default function CalendarHeader({
               minWidth: "auto",
               minHeight: "auto",
               fontSize: "0.7rem",
+              flex: "1",
+              maxWidth: "none",
             }}
           >
             {mode === "year"

@@ -83,7 +83,7 @@ export default function MigrationFlowControls({
       </div>
 
       <div
-        className="flex items-center justify-between p-3 rounded-xl"
+        className={`flex ${isMobile ? "flex-col gap-3" : "flex-row items-center justify-between"} p-3 rounded-xl`}
         style={{
           background: isDark
             ? "rgba(255, 255, 255, 0.08)"

@@ -57,9 +57,9 @@ export default function ClockDisplay({
       onMouseLeave={handleMouseLeave}
     >
       <style jsx>{`
-        @media (min-width: 1024px) {
+        @media (min-width: 768px) {
           .clock-main-size {
-            font-size: clamp(3.5rem, 5.5vw, 6rem);
+            font-size: clamp(4rem, 9vw, 8rem);
           }
         }
         /* Make controls more compact on screens narrower than 1440px */
@@ -153,7 +153,7 @@ export default function ClockDisplay({
 
       <div className="flex flex-col items-center gap-2 mt-2">
         <div
-          className="date-display flex items-center gap-2 px-3 py-1 rounded-full"
+          className="date-display flex items-center justify-center gap-2 px-3 py-1 rounded-full"
           style={{
             background: isHovered ? clockColors.hoverBackground : "transparent",
             border: `2px solid ${isHovered ? clockColors.accentColor : "transparent"}`,
@@ -177,7 +177,7 @@ export default function ClockDisplay({
           </span>
         </div>
 
-        <div className="flex items-center gap-3 clock-controls">
+        <div className="flex items-center justify-center gap-3 clock-controls">
           <div
             className="flex items-center gap-1 px-2 py-1 rounded-full border transition-all duration-300 hover:scale-105"
             style={{

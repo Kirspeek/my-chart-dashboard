@@ -311,7 +311,7 @@ export default function EnhancedTimelineWidget({
                                 (isTablet ? 28 : 38) * animatedLineProgress[idx]
                               }
                               stroke={color}
-                              strokeWidth={0.5}
+                              strokeWidth={1.5}
                               style={{ transition: "y2 0.18s" }}
                             />
                           </svg>
@@ -396,7 +396,7 @@ export default function EnhancedTimelineWidget({
                           )}
                           fill="none"
                           stroke={color}
-                          strokeWidth={isTablet ? 0.5 : 1}
+                          strokeWidth={isTablet ? 2 : 3.5}
                           opacity={
                             hoveredIdx === null
                               ? 1
@@ -423,7 +423,7 @@ export default function EnhancedTimelineWidget({
                           )}
                           fill="none"
                           stroke={color}
-                          strokeWidth={isTablet ? 0.5 : 1}
+                          strokeWidth={isTablet ? 2 : 3.5}
                           opacity={0.15}
                           strokeLinecap="round"
                         />
@@ -504,7 +504,7 @@ export default function EnhancedTimelineWidget({
                                 (isTablet ? 28 : 38) * animatedLineProgress[idx]
                               }
                               stroke={color}
-                              strokeWidth={0.5}
+                              strokeWidth={1.5}
                               style={{ transition: "y2 0.18s" }}
                             />
                           </svg>

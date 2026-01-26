@@ -77,11 +77,10 @@ export default function WorldClocks({
       </div>
 
       <div
-        className={`${
-          isMobile
+        className={`${isMobile
             ? "world-clocks-mobile"
             : "grid grid-cols-2 gap-2 justify-center w-full"
-        } ${isMobile ? "18px" : isViewportAtLeast1440 ? "px18" : ""}`}
+          }`}
       >
         {timeZones.map((tz) => {
           const t = mounted ? getTimeInZone(tz.zone) : new Date(0);
@@ -102,15 +101,15 @@ export default function WorldClocks({
                     ? undefined
                     : isViewportAtLeast1440
                       ? {
-                          padding: "1rem 1.25rem",
-                          minWidth: 150,
-                          minHeight: 90,
-                        }
+                        padding: "1rem 1.25rem",
+                        minWidth: 150,
+                        minHeight: 90,
+                      }
                       : {
-                          padding: "0.75rem 0.85rem",
-                          minWidth: 140,
-                          minHeight: 72,
-                        }
+                        padding: "0.75rem 0.85rem",
+                        minWidth: 140,
+                        minHeight: 72,
+                      }
                 }
               >
                 <div className="flex items-center gap-1 mb-1">

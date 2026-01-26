@@ -11,7 +11,7 @@ export default function RecentUsersWidget({
   title,
 }: RecentUsersWidgetProps) {
   return (
-    <WidgetBase className="flex flex-col h-full">
+    <WidgetBase className="recent-users-widget flex flex-col h-full">
       <RecentUsersHeader title={title} />
       <RecentUsersContainer data={data} />
     </WidgetBase>

@@ -64,7 +64,9 @@ export default function MigrationFlowHeader({
           />
         </div>
 
-        <div className="relative z-10 flex items-center justify-between">
+        <div
+          className={`relative z-10 flex ${isMobile ? "flex-col items-start gap-4" : "items-center justify-between"}`}
+        >
           {/* Left side - Global stats */}
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-3">

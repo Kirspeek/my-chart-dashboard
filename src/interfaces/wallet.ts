@@ -43,8 +43,8 @@ export interface EventHandlers {
 }
 
 export interface BaseContainerProps {
-  width: number;
-  height: number;
+  width: number | string;
+  height: number | string;
   zIndex?: number;
 }
 
@@ -85,9 +85,9 @@ export interface BaseCardProps {
 
 export interface CardItemProps
   extends BaseCardProps,
-    BaseFormProps,
-    BaseDataProps,
-    EventHandlers {}
+  BaseFormProps,
+  BaseDataProps,
+  EventHandlers { }
 
 export interface WalletContainerProps {
   cards: CardData[];
@@ -185,23 +185,23 @@ export interface BaseBankInfoProps {
 
 export interface BaseBankInfoWithLoadingProps
   extends BaseBankInfoProps,
-    BaseLoadingProps {}
+  BaseLoadingProps { }
 
 export interface BaseDisplayWithBankDesignProps
   extends BaseDisplayProps,
-    BaseBankDesignProps {}
+  BaseBankDesignProps { }
 
 export interface BaseDisplayWithBankDesignFullProps
   extends BaseDisplayProps,
-    BaseBankDesignFullProps {}
+  BaseBankDesignFullProps { }
 
 export interface CardDisplayProps
   extends BaseCardDataProps,
-    BaseBankDesignFullProps,
-    BaseFormInputProps,
-    BaseActionProps,
-    BaseLoadingProps,
-    BaseBankInfoProps {
+  BaseBankDesignFullProps,
+  BaseFormInputProps,
+  BaseActionProps,
+  BaseLoadingProps,
+  BaseBankInfoProps {
   isEditing?: boolean;
 }
 
@@ -223,9 +223,9 @@ export interface BankLogoExtendedProps extends BankLogoBaseProps {
 
 export interface ActionButtonsProps
   extends BaseDisplayProps,
-    BaseBankDesignProps,
-    BaseActionProps,
-    BaseLoadingProps {
+  BaseBankDesignProps,
+  BaseActionProps,
+  BaseLoadingProps {
   hasCardData: boolean;
   onToggleVisibility: () => void;
   isInfoVisible: boolean;
@@ -233,8 +233,8 @@ export interface ActionButtonsProps
 
 export interface CardNumberSectionProps
   extends BaseDisplayProps,
-    BaseBankDesignProps,
-    BaseFormInputProps {
+  BaseBankDesignProps,
+  BaseFormInputProps {
   hasCardData: boolean;
   isInfoVisible: boolean;
   maskedDisplayNumber: string;
@@ -242,16 +242,16 @@ export interface CardNumberSectionProps
 
 export interface BankInfoDisplayProps
   extends BaseDisplayProps,
-    BaseBankInfoProps,
-    BaseLoadingProps {
+  BaseBankInfoProps,
+  BaseLoadingProps {
   currentBankName?: string;
   scheme?: string;
 }
 
 export interface CardDetailsSectionProps
   extends BaseDisplayProps,
-    BaseBankDesignProps,
-    BaseFormInputProps {
+  BaseBankDesignProps,
+  BaseFormInputProps {
   hasCardData: boolean;
   isInfoVisible: boolean;
   maskedDisplayHolder: string;

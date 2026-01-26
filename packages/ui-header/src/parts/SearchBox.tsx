@@ -78,6 +78,15 @@ export default function SearchBox({
           transition:
             "width 0.25s ease, opacity 0.25s ease, padding 0.25s ease",
           overflow: "hidden",
+          border: "2px solid var(--button-border)",
+          background: "var(--button-bg)",
+          color: "var(--primary-text)",
+          outline: "none",
+          WebkitTapHighlightColor: "transparent",
+          fontFamily: "var(--font-mono)",
+          fontWeight: 700,
+          fontSize: "1rem",
+          boxShadow: "0 2px 8px rgba(35,35,35,0.04)",
         }}
       />
       {isOpen && (

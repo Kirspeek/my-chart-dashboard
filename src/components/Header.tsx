@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search, User } from "lucide-react";
+import { Search } from "lucide-react";
 import { useSearch } from "../context/SearchContext";
 import SearchResults from "./common/SearchResults";
 import { useState, useRef, useEffect } from "react";
@@ -121,65 +121,19 @@ export default function Header() {
               />
             </div>
 
-            {/* Notifications */}
-            <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
-              <Bell
-                style={{ color: headerColors.icon, width: 28, height: 28 }}
-              />
-            </button>
-
-            {/* Contact info */}
-            <div className="flex items-center space-x-3">
-              <div className="flex flex-col items-end">
-                <a
-                  href="mailto:cherepenko.iryna@gmail.com"
-                  className="secondary-text hover:text-blue-400 transition-colors"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 900,
-                    fontSize: "1.1rem",
-                    letterSpacing: "0.01em",
-                  }}
-                >
-                  cherepenko.iryna@gmail.com
-                </a>
-                <div className="flex items-center space-x-3">
-                  <a
-                    href="https://www.linkedin.com/in/irynacherepenko/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="secondary-text hover:text-blue-400 transition-colors"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontWeight: 700,
-                      fontSize: "0.95rem",
-                      letterSpacing: "0.01em",
-                    }}
-                  >
-                    LinkedIn
-                  </a>
-                  <a
-                    href="https://github.com/Kirspeek"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="secondary-text hover:text-blue-400 transition-colors"
-                    style={{
-                      fontFamily: "var(--font-mono)",
-                      fontWeight: 700,
-                      fontSize: "0.95rem",
-                      letterSpacing: "0.01em",
-                    }}
-                  >
-                    GitHub
-                  </a>
-                </div>
-              </div>
-              <button className="p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md">
-                <User
-                  style={{ color: headerColors.icon, width: 28, height: 28 }}
-                />
-              </button>
-            </div>
+            {/* Contact Link */}
+            <a
+              href="https://kirspeek.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-bold secondary-text hover:text-blue-400 transition-colors"
+              style={{
+                fontFamily: "var(--font-mono)",
+                letterSpacing: "0.01em",
+              }}
+            >
+              Contact
+            </a>
           </div>
         </div>
       </div>

@@ -17,7 +17,7 @@ export default function ContributionHeader({
   const subtitle = `Total: $${totalYearSpending.toLocaleString()} | Avg: $${averageDailySpending}/day`;
 
   return (
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between sm:gap-0 mb-4">
       <WidgetTitle
         title={title}
         subtitle={subtitle}

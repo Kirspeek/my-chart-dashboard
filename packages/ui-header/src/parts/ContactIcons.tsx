@@ -40,12 +40,13 @@ export default function ContactIcons({
         </a>
       )}
       {contactLinks
-        ?.filter((l) => /github|linkedin|instagram|telegram/i.test(l.label))
+        ?.filter((l) => /github|linkedin|instagram|telegram|contact/i.test(l.label))
         .map((l) => {
           const isGithub = /github/i.test(l.label);
           const isInstagram = /instagram/i.test(l.label);
           const isLinkedIn = /linkedin/i.test(l.label);
           const isTelegram = /telegram/i.test(l.label);
+          const isContact = /contact/i.test(l.label);
           return (
             <a
               key={l.label}
@@ -65,7 +66,7 @@ export default function ContactIcons({
                 <Linkedin size={size} color={color} strokeWidth={stroke} />
               ) : isTelegram ? (
                 <Send size={size} color={color} strokeWidth={stroke} />
-              ) : isInstagram ? (
+              ) : isInstagram || isContact ? (
                 <LinkIcon size={size} color={color} strokeWidth={stroke} />
               ) : null}
             </a>

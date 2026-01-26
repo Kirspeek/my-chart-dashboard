@@ -102,8 +102,8 @@ export default function CalendarWidgetMobile({
   const selectedDateInfo = selectedDate ? formatDate(selectedDate) : null;
   const dayEvents = selectedDate
     ? events.filter(
-        (event) => event.date.toDateString() === selectedDate.toDateString()
-      )
+      (event) => event.date.toDateString() === selectedDate.toDateString()
+    )
     : [];
 
   return (
@@ -188,130 +188,9 @@ export default function CalendarWidgetMobile({
           </div>
         </div>
 
-        <div className="flex-shrink-0 calendar-events-section pb-1">
+        <div className="flex-shrink-0 calendar-events-section pb-1 hidden">
           {selectedDateInfo && (
-            <div className="p-2">
-              <div className="flex items-center justify-between mb-2">
-                <div className="text-left">
-                  <div
-                    className="text-sm font-bold"
-                    style={{ color: calendarColors.textColors.primary }}
-                  >
-                    {selectedDateInfo.day}
-                  </div>
-                  <div
-                    className="text-xs font-medium"
-                    style={{ color: calendarColors.textColors.secondary }}
-                  >
-                    {selectedDateInfo.dayName}
-                  </div>
-                  <div
-                    className="text-xs"
-                    style={{ color: calendarColors.textColors.muted }}
-                  >
-                    {selectedDateInfo.month} {selectedDateInfo.year}
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <div
-                    className="text-xs font-semibold"
-                    style={{ color: calendarColors.textColors.label }}
-                  >
-                    Events ({dayEvents.length})
-                  </div>
-                  {dayEvents.length === 0 ? (
-                    <div
-                      className="text-xs italic"
-                      style={{ color: calendarColors.textColors.muted }}
-                    >
-                      No events
-                    </div>
-                  ) : (
-                    <div
-                      className="text-xs"
-                      style={{ color: calendarColors.textColors.secondary }}
-                    >
-                      {dayEvents.map((event) => (
-                        <div key={event.id} className="truncate">
-                          {event.title}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                {showEventForm && (
-                  <div className="space-y-2 mb-2">
-                    <input
-                      type="text"
-                      placeholder="Add event"
-                      value={newEventTitle}
-                      onChange={(e) => setNewEventTitle(e.target.value)}
-                      className="w-full px-2 py-1 text-xs rounded focus:outline-none"
-                      style={{
-                        border: `1px solid ${calendarColors.borderColors.input}`,
-                        backgroundColor: calendarColors.backgroundColors.input,
-                        boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                        color: calendarColors.textColors.primary,
-                      }}
-                      onFocus={(e) => {
-                        e.target.style.borderColor =
-                          calendarColors.borderColors.focus;
-                        e.target.style.boxShadow = `0 0 0 1px ${calendarColors.borderColors.focus}`;
-                      }}
-                      onBlur={(e) => {
-                        e.target.style.borderColor =
-                          calendarColors.borderColors.input;
-                        e.target.style.boxShadow =
-                          "0 1px 2px 0 rgba(0, 0, 0, 0.05)";
-                      }}
-                    />
-                    <div className="flex gap-1">
-                      <Button3D
-                        onClick={handleAddEvent}
-                        style={{
-                          padding: "0.125rem 0.25rem",
-                          minWidth: "auto",
-                          minHeight: "auto",
-                          fontSize: "0.625rem",
-                        }}
-                      >
-                        Add
-                      </Button3D>
-                      <Button3D
-                        onClick={() => {
-                          setNewEventTitle("");
-                          toggleEventForm();
-                        }}
-                        style={{
-                          padding: "0.125rem 0.25rem",
-                          minWidth: "auto",
-                          minHeight: "auto",
-                          fontSize: "0.625rem",
-                        }}
-                      >
-                        Cancel
-                      </Button3D>
-                    </div>
-                  </div>
-                )}
-
-                <Button3D
-                  onClick={toggleEventForm}
-                  style={{
-                    padding: "0.375rem",
-                    minWidth: "auto",
-                    minHeight: "auto",
-                    fontSize: "0.625rem",
-                  }}
-                >
-                  + Add Event
-                </Button3D>
-              </div>
-            </div>
+            null
           )}
         </div>
       </div>

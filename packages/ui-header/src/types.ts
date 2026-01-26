@@ -1,4 +1,4 @@
-export type SectionKey = "dashboard" | "projects" | "about" | "experience";
+export type SectionKey = "dashboard";
 
 export type HeaderLink = {
   label: string;
@@ -29,6 +29,7 @@ export type HeaderProps = {
     label: string;
   }>;
   onSectionChange?: (section: SectionKey) => void;
+  onMenuClick?: () => void;
   getSectionHref?: (section: SectionKey) => string | undefined;
   loginHref?: string;
   signupHref?: string;

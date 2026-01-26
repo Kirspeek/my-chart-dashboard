@@ -27,21 +27,23 @@ export default function MetricContent({
   return (
     <div className="flex-1 min-w-0 text-left">
       <p
-        className="text-xs font-bold uppercase mb-1 truncate text-left secondary-text transition-all duration-300"
+        className="text-xs font-bold uppercase mb-1 whitespace-normal text-left secondary-text transition-all duration-300"
         style={{
           fontFamily: "var(--font-sans)",
           opacity: 0.7,
           letterSpacing: 1.5,
+          lineHeight: "1.2em",
+          height: "2.4em", // Force 2 lines height or auto? Auto is safer but might misalign grid. Let's start with auto/normal.
+          overflow: "hidden"
         }}
         title={title}
       >
         {title}
       </p>
-      <span className="flex items-baseline gap-1 justify-start">
+      <span className="flex items-baseline gap-0 justify-start">
         <span
-          className={`text-2xl sm:text-3xl lg:text-4xl font-mono font-extrabold mono primary-text transition-all duration-300 ${
-            isHovered ? "scale-105" : "scale-100"
-          }`}
+          className={`text-2xl sm:text-3xl lg:text-4xl font-mono font-extrabold mono primary-text transition-all duration-300 ${isHovered ? "scale-105" : "scale-100"
+            }`}
           style={{
             letterSpacing: "0.04em",
             lineHeight: 1.1,
@@ -51,9 +53,8 @@ export default function MetricContent({
         </span>
         {displaySecondary && (
           <span
-            className={`text-2xl sm:text-3xl lg:text-4xl font-mono font-extrabold mono secondary-text transition-all duration-300 ${
-              isHovered ? "scale-105" : "scale-100"
-            }`}
+            className={`text-2xl sm:text-3xl lg:text-4xl font-mono font-extrabold mono secondary-text transition-all duration-300 ${isHovered ? "scale-105" : "scale-100"
+              }`}
             style={{
               letterSpacing: "0.04em",
               lineHeight: 1.1,

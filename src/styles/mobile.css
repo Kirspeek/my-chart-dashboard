@@ -52,7 +52,7 @@
 }
 
 /* Map widget container styles */
-.mobile-slide .map-widget > div {
+.mobile-slide .map-widget>div {
   min-height: 82vh !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -61,7 +61,7 @@
   position: relative !important;
 }
 
-.mobile-slide .map-widget > div > div {
+.mobile-slide .map-widget>div>div {
   min-height: 82vh !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -184,17 +184,13 @@
 }
 
 /* Ensure Add Event button stays at bottom */
-.mobile-slide .calendar-widget-mobile .calendar-events-section > div {
+.mobile-slide .calendar-widget-mobile .calendar-events-section>div {
   display: flex !important;
   flex-direction: column !important;
   height: 100% !important;
 }
 
-.mobile-slide
-  .calendar-widget-mobile
-  .calendar-events-section
-  > div
-  > div:last-child {
+.mobile-slide .calendar-widget-mobile .calendar-events-section>div>div:last-child {
   margin-top: auto !important;
   margin-bottom: 0.25rem !important;
 }
@@ -234,12 +230,12 @@
 
 /* Mobile breakpoint */
 @media (max-width: 425px) {
+
   /* Map Widget Mobile Styles */
   .map-widget {
     min-height: 82vh !important;
     padding: 0 !important;
     padding-top: calc(var(--spacing) * 4) !important;
-    margin: 0 1rem 3rem 1rem !important;
     border-radius: 2rem !important;
   }
 
@@ -249,7 +245,7 @@
     flex-direction: column !important;
   }
 
-  .widget-container-mobile > * {
+  .widget-container-mobile>* {
     flex: 1 !important;
     min-height: 20vh !important;
   }
@@ -555,7 +551,7 @@
 
 /* Very small mobile devices */
 @media (max-width: 320px) {
-  .world-clocks-mobile > div {
+  .world-clocks-mobile>div {
     padding-left: 4rem !important;
     padding-right: 4rem !important;
   }
@@ -728,7 +724,7 @@
   min-height: 0 !important;
 }
 
-.mobile-slide .line-chart-widget > div {
+.mobile-slide .line-chart-widget>div {
   flex: 1 !important;
   min-height: 0 !important;
   display: flex !important;
@@ -749,7 +745,7 @@
   min-height: 0 !important;
 }
 
-.mobile-slide .bar-chart-widget > div {
+.mobile-slide .bar-chart-widget>div {
   flex: 1 !important;
   min-height: 0 !important;
   display: flex !important;
@@ -819,7 +815,8 @@
   margin: 0 !important;
   border-radius: 2rem !important;
   box-sizing: border-box !important;
-  overflow: visible !important; /* Changed from hidden to visible to ensure content is not cut off */
+  overflow: visible !important;
+  /* Changed from hidden to visible to ensure content is not cut off */
   position: relative !important;
   z-index: 1 !important;
 }

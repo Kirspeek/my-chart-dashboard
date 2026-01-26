@@ -19,6 +19,7 @@ export default function Header({
   defaultSection = "dashboard",
   sections,
   onSectionChange,
+  onMenuClick,
 }: HeaderProps) {
   const [value, setValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -62,19 +63,16 @@ export default function Header({
 
   const containerStyle: React.CSSProperties | undefined = pill
     ? {
-        borderRadius: 9999,
-        border: "2px solid #222",
-        background: "#ded4c6",
-        boxShadow: "0 2px 0 #222, inset 0 0 0 2px rgba(255,255,255,0.35)",
-        padding: 6,
-      }
+      borderRadius: 9999,
+      border: "2px solid #222",
+      background: "#ded4c6",
+      boxShadow: "0 2px 0 #222, inset 0 0 0 2px rgba(255,255,255,0.35)",
+      padding: 6,
+    }
     : undefined;
 
   const defaultSections: Array<{ key: SectionKey; label: string }> = [
     { key: "dashboard", label: "Chart Dashboard" },
-    { key: "projects", label: "Projects" },
-    { key: "about", label: "About me" },
-    { key: "experience", label: "Work experience" },
   ];
   const sectionList = sections && sections.length ? sections : defaultSections;
   const sectionLabelMap = new Map(sectionList.map((s) => [s.key, s.label]));
@@ -101,121 +99,147 @@ export default function Header({
     >
       <div className="px-4 sm:px-6 lg:px-8">
         {isMobile ? (
-          <div className="flex flex-col gap-3 py-3">
-            <div className="flex items-center justify-center">
-              <Title text={computedTitle} fontSize="1.2rem" />
+          <div className="flex items-center gap-3 py-1 w-full relative">
+            {/* Left: Hamburger */}
+            <button
+              type="button"
+              className="p-2 -ml-2 rounded-md focus:outline-none flex-shrink-0"
+              onClick={onMenuClick}
+              aria-label="Open menu"
+            >
+              <div className="space-y-1.5">
+                <span
+                  className="block w-6 h-0.5"
+                  style={{ background: orangeColor }}
+                ></span>
+                <span
+                  className="block w-6 h-0.5"
+                  style={{ background: orangeColor }}
+                ></span>
+                <span
+                  className="block w-6 h-0.5"
+                  style={{ background: orangeColor }}
+                ></span>
+              </div>
+            </button>
+
+            {/* Center: Title (Expanded to push right icons) */}
+            <div className="flex-1 flex justify-center">
+              <Title text={computedTitle} fontSize="1.1rem" />
             </div>
-            <NavButtons
-              sections={["dashboard", "projects", "about", "experience"]}
-              activeSection={activeSection}
-              onSelect={setSection}
-              labelMap={
-                sectionLabelMap as Map<
-                  "dashboard" | "projects" | "about" | "experience",
-                  string
-                >
-              }
-              getSectionHref={undefined}
-              color={orangeColor}
-              borderWidth={1.5}
-              textSizeClass="text-xs"
-              paddingClass="px-2.5 py-1.5"
-              className="flex flex-wrap items-center justify-center gap-1.5"
-            />
-            {(contactEmail ||
-              (contactLinks && contactLinks.length > 0) ||
-              activeSection === "dashboard") && (
-              <div className="flex items-center justify-center">
-                <div className="flex items-center gap-3">
-                  {activeSection === "dashboard" && (
-                    <SearchBox
-                      value={value}
-                      onChange={onChange}
-                      placeholder={searchPlaceholder}
-                      isVisible={isSearchVisible}
-                      setVisible={setIsSearchVisible}
-                      isOpen={isOpen}
-                      setOpen={setIsOpen}
-                      renderResults={renderSearchResults}
-                      isMobile={isMobile}
-                      color={orangeColor}
-                      stroke={iconStroke}
-                      searchRef={searchRef}
-                    />
-                  )}
-                  <ContactIcons
-                    contactEmail={contactEmail}
-                    contactLinks={contactLinks}
-                    aboutLink={aboutLink as HeaderLink | undefined}
-                    showAboutLink={activeSection === "about"}
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {activeSection === "dashboard" && (
+                <div style={{ transform: "translateY(2px)" }}>
+                  <SearchBox
+                    value={value}
+                    onChange={onChange}
+                    placeholder={searchPlaceholder}
+                    isVisible={isSearchVisible}
+                    setVisible={setIsSearchVisible}
+                    isOpen={isOpen}
+                    setOpen={setIsOpen}
+                    renderResults={renderSearchResults}
+                    isMobile={isMobile}
                     color={orangeColor}
-                    size={iconSize}
                     stroke={iconStroke}
-                    gapClass="gap-3"
+                    searchRef={searchRef}
                   />
                 </div>
-              </div>
-            )}
+              )}
+              <ContactIcons
+                contactEmail={contactEmail}
+                contactLinks={contactLinks}
+                aboutLink={aboutLink as HeaderLink | undefined}
+                showAboutLink={false}
+                color={orangeColor}
+                size={iconSize}
+                stroke={iconStroke}
+                gapClass="gap-3"
+              />
+            </div>
           </div>
         ) : isTablet ? (
-          <div className="flex flex-col gap-3 py-4">
-            <div className="flex items-center justify-center">
-              <Title text={computedTitle} fontSize="1.55rem" />
-            </div>
-            <NavButtons
-              sections={["dashboard", "projects", "about", "experience"]}
-              activeSection={activeSection}
-              onSelect={setSection}
-              labelMap={
-                sectionLabelMap as Map<
-                  "dashboard" | "projects" | "about" | "experience",
-                  string
-                >
-              }
-              getSectionHref={undefined}
-              color={orangeColor}
-              borderWidth={1.5}
-              textSizeClass="text-sm"
-              paddingClass="px-3 py-1.5"
-              className="flex flex-wrap items-center justify-center gap-2"
-            />
-            {(contactEmail ||
-              (contactLinks && contactLinks.length > 0) ||
-              activeSection === "dashboard") && (
-              <div className="flex items-center justify-center">
-                <div className="flex items-center gap-4">
-                  {activeSection === "dashboard" && (
-                    <SearchBox
-                      value={value}
-                      onChange={onChange}
-                      placeholder={searchPlaceholder}
-                      isVisible={isSearchVisible}
-                      setVisible={setIsSearchVisible}
-                      isOpen={isOpen}
-                      setOpen={setIsOpen}
-                      renderResults={renderSearchResults}
-                      isMobile={isMobile}
-                      color={orangeColor}
-                      stroke={iconStroke}
-                      searchRef={searchRef}
-                    />
-                  )}
-                  <ContactIcons
-                    contactEmail={contactEmail}
-                    contactLinks={contactLinks}
-                    aboutLink={aboutLink as HeaderLink | undefined}
-                    showAboutLink={activeSection === "about"}
-                    color={orangeColor}
-                    size={iconSize}
-                    stroke={iconStroke}
-                  />
-                </div>
+          <div className="flex items-center h-16 gap-4">
+            <button
+              type="button"
+              className="p-2 -ml-2 rounded-md focus:outline-none"
+              onClick={onMenuClick}
+              aria-label="Open menu"
+            >
+              <div className="space-y-1.5">
+                <span
+                  className="block w-7 h-0.5"
+                  style={{ background: orangeColor }}
+                ></span>
+                <span
+                  className="block w-7 h-0.5"
+                  style={{ background: orangeColor }}
+                ></span>
+                <span
+                  className="block w-7 h-0.5"
+                  style={{ background: orangeColor }}
+                ></span>
               </div>
-            )}
+            </button>
+            <Title text={computedTitle} fontSize="1.55rem" />
+
+            <div className="flex items-center gap-4 ml-4">
+              {activeSection === "dashboard" && (
+                <SearchBox
+                  value={value}
+                  onChange={onChange}
+                  placeholder={searchPlaceholder}
+                  isVisible={isSearchVisible}
+                  setVisible={setIsSearchVisible}
+                  isOpen={isOpen}
+                  setOpen={setIsOpen}
+                  renderResults={renderSearchResults}
+                  isMobile={isMobile}
+                  color={orangeColor}
+                  stroke={iconStroke}
+                  searchRef={searchRef}
+                />
+              )}
+              {(contactEmail || (contactLinks && contactLinks.length > 0)) && (
+                <ContactIcons
+                  contactEmail={contactEmail}
+                  contactLinks={contactLinks}
+                  aboutLink={aboutLink as HeaderLink | undefined}
+                  showAboutLink={false}
+                  color={orangeColor}
+                  size={iconSize}
+                  stroke={iconStroke}
+                />
+              )}
+            </div>
           </div>
         ) : (
           <div className="relative flex items-center h-16">
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
+              {/* Desktop Hamburger */}
+              <button
+                type="button"
+                className="p-2 -ml-2 rounded-md focus:outline-none hover:bg-white/5 transition-colors"
+                onClick={onMenuClick}
+                aria-label="Open menu"
+              >
+                <div className="space-y-1.5">
+                  <span
+                    className="block w-6 h-[3px] rounded-full"
+                    style={{ background: orangeColor }}
+                  ></span>
+                  <span
+                    className="block w-6 h-[3px] rounded-full"
+                    style={{ background: orangeColor }}
+                  ></span>
+                  <span
+                    className="block w-6 h-[3px] rounded-full"
+                    style={{ background: orangeColor }}
+                  ></span>
+                </div>
+              </button>
               <h1
                 className="primary-text"
                 style={{
@@ -232,7 +256,8 @@ export default function Header({
             {/* Centered navigation buttons */}
             <div className="absolute left-1/2 -translate-x-1/2 transform w-full flex justify-center pointer-events-none">
               <div className="hidden md:flex items-center gap-2 pointer-events-auto">
-                {(["dashboard", "projects", "about", "experience"] as const)
+                {sectionList
+                  .map((s) => s.key)
                   .filter((k) => k !== activeSection)
                   .map((key) => (
                     <button
@@ -329,7 +354,7 @@ export default function Header({
                   contactEmail={contactEmail}
                   contactLinks={contactLinks}
                   aboutLink={aboutLink as HeaderLink | undefined}
-                  showAboutLink={activeSection === "about"}
+                  showAboutLink={false}
                   color={orangeColor}
                   size={iconSize}
                   stroke={iconStroke}

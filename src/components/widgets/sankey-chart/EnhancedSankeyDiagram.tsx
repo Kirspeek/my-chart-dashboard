@@ -114,11 +114,16 @@ export default function EnhancedSankeyDiagram({
 
     const updateChart = () => {
       const containerRect = container.getBoundingClientRect();
-      const width = isMobile ? Math.min(containerRect.width * 0.9, 780) : 780;
+      const width = isMobile ? Math.min(containerRect.width, 780) : 780;
       const height = isMobile
         ? Math.min(containerRect.height * 0.85, 380)
         : 380;
-      const margin = { top: 30, right: 40, bottom: 30, left: 40 };
+      const margin = {
+        top: 30,
+        right: isMobile ? 10 : 40,
+        bottom: 30,
+        left: isMobile ? 10 : 40,
+      };
 
       const svg = d3
         .select(ref.current)

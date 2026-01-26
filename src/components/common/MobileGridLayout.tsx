@@ -45,8 +45,8 @@ export default function MobileGridLayout({
 }: MobileGridLayoutProps) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <main className="flex-1 overflow-y-auto px-4 py-6 bg-[var(--background)]">
-        <div className="max-w-full mx-auto space-y-6 mobile-grid-container">
+      <main className="flex-1 overflow-y-auto px-4 py-2 bg-[var(--background)]">
+        <div className="max-w-full mx-auto space-y-4 mobile-grid-container">
           {/* Top Section - Clock and Weather - Using original slide dimensions */}
           <div className="grid grid-cols-1 gap-4">
             <div className="clock-widget-container">
@@ -55,7 +55,7 @@ export default function MobileGridLayout({
                 setSelectedZone={setSelectedZone}
                 isMobile={true}
                 onOpenSidebar={() => setSidebarOpen(true)}
-                showSidebarButton={true}
+                showSidebarButton={false}
               />
             </div>
             <div className="weather-widget-container">
@@ -64,7 +64,7 @@ export default function MobileGridLayout({
           </div>
 
           {/* Timer Section */}
-          <div className="h-64">
+          <div className="h-auto">
             <TimerWidget
               onOpenSidebar={() => setSidebarOpen(true)}
               showSidebarButton={false}
@@ -72,19 +72,19 @@ export default function MobileGridLayout({
           </div>
 
           {/* Music Widget */}
-          <div className="h-48">
+          <div className="h-auto">
             <MusicWidget title="Spotify Music Player" compact={true} />
           </div>
 
           {/* Map and Calendar Section */}
           <div className="grid grid-cols-1 gap-4">
-            <div className="h-80">
+            <div className="h-auto">
               <MapWidget
                 onOpenSidebar={() => setSidebarOpen(true)}
                 showSidebarButton={false}
               />
             </div>
-            <div className="h-80">
+            <div className="h-auto">
               <CalendarWidgetMobile
                 onOpenSidebar={() => setSidebarOpen(true)}
                 showSidebarButton={false}
@@ -96,16 +96,16 @@ export default function MobileGridLayout({
           <WidgetHeightProvider>
             <WidgetStateProvider>
               <div className="grid grid-cols-1 gap-4">
-                <div className="h-80">
+                <div className="h-auto">
                   <WalletWidget />
                 </div>
-                <div className="h-64">
+                <div className="h-auto">
                   <WheelWidget
                     onOpenSidebar={() => setSidebarOpen(true)}
                     showSidebarButton={false}
                   />
                 </div>
-                <div className="h-64">
+                <div className="h-auto">
                   <AggregatedSpendingWidget
                     onOpenSidebar={() => setSidebarOpen(true)}
                     showSidebarButton={false}
@@ -118,7 +118,7 @@ export default function MobileGridLayout({
           {/* Contribution Graph */}
           <WidgetHeightProvider>
             <WidgetStateProvider>
-              <div className="h-80">
+              <div className="h-auto">
                 <ContributionGraphWidget title="Financial Activity Overview" />
               </div>
             </WidgetStateProvider>
@@ -127,12 +127,12 @@ export default function MobileGridLayout({
           {/* Metrics Grid */}
           <div className="grid grid-cols-2 gap-3">
             {(data.metricCards ?? []).map((metric, index) => (
-              <div key={index} className="h-32">
+              <div key={index} className="h-auto">
                 <MetricWidget
                   metric={metric}
                   index={index}
                   onOpenSidebar={() => setSidebarOpen(true)}
-                  showSidebarButton={index === 0}
+                  showSidebarButton={false}
                 />
               </div>
             ))}
@@ -140,7 +140,7 @@ export default function MobileGridLayout({
 
           {/* Charts Section */}
           <div className="grid grid-cols-1 gap-4">
-            <div className="h-80">
+            <div className="h-auto">
               <LineChartWidget
                 data={data.salesData ?? []}
                 title="Sales Performance"
@@ -148,7 +148,7 @@ export default function MobileGridLayout({
                 showSidebarButton={false}
               />
             </div>
-            <div className="h-80">
+            <div className="h-auto">
               <BarChartWidget
                 data={data.barChartData ?? []}
                 title="Quarterly Overview"
@@ -160,7 +160,7 @@ export default function MobileGridLayout({
 
           {/* Performance and Device Usage */}
           <div className="grid grid-cols-1 gap-4">
-            <div className="h-80">
+            <div className="h-auto">
               <RadarChartWidget
                 data={
                   (data.performanceMetricsData
@@ -173,7 +173,7 @@ export default function MobileGridLayout({
                 showSidebarButton={false}
               />
             </div>
-            <div className="h-80">
+            <div className="h-auto">
               <DeviceUsageWidget
                 data={data.pieChartData ?? []}
                 title="Device Usage"
@@ -184,7 +184,7 @@ export default function MobileGridLayout({
           </div>
 
           {/* Recent Users */}
-          <div className="h-80">
+          <div className="h-auto">
             <RecentUsersWidget
               data={data.userData ?? []}
               title="Recent Users"
@@ -193,7 +193,7 @@ export default function MobileGridLayout({
 
           {/* Advanced Charts */}
           <div className="grid grid-cols-1 gap-4">
-            <div className="h-80">
+            <div className="h-auto">
               <SankeyChartWidget
                 data={data.sankeyData ?? []}
                 title="Global Migration Flows"
@@ -202,7 +202,7 @@ export default function MobileGridLayout({
                 showSidebarButton={false}
               />
             </div>
-            <div className="h-80">
+            <div className="h-auto">
               <ChordChartWidget
                 data={data.migrationData ?? []}
                 title="Global Migrations"
@@ -214,7 +214,7 @@ export default function MobileGridLayout({
           </div>
 
           {/* Bubble Chart */}
-          <div className="h-80">
+          <div className="h-auto">
             <BubbleChartWidget
               data={data.bubbleData ?? []}
               title="Global Tech Investment"
@@ -225,7 +225,7 @@ export default function MobileGridLayout({
           </div>
 
           {/* Timeline */}
-          <div className="h-80">
+          <div className="h-auto">
             <EnhancedTimelineWidget
               onOpenSidebar={() => setSidebarOpen(true)}
               showSidebarButton={false}

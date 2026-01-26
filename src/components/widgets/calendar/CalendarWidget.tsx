@@ -50,7 +50,7 @@ export default function CalendarWidget({
         display: "flex",
         flexDirection: "column",
       }}
-      className="lg:h-auto xl:h-[40vh]"
+      className="h-full"
     >
       <CalendarHeader
         currentDate={currentDate}
