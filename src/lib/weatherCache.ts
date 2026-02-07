@@ -174,6 +174,8 @@ class WeatherCacheManager {
         return { forecast, coords, loading: false };
       } catch (error) {
         // Weather fetch error - propagate failure state to cache
+        console.error("Failed to fetch weather data:", error);
+        
         // We set empty forecast so the UI knows it failed (or shows empty state)
         this.cache.set(city, {
           forecast: [],
