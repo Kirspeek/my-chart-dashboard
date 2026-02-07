@@ -157,8 +157,8 @@ class WeatherCacheManager {
           await weatherAPI.getCityWeather(city);
 
         if (!weatherData?.daily) {
-          // No weather data available, using mock data
-          return this.getMockWeatherData(city);
+          // No weather data available
+          throw new Error("No weather data available");
         }
 
         const forecast = this.processWeatherData(weatherData);
@@ -172,9 +172,18 @@ class WeatherCacheManager {
         });
 
         return { forecast, coords, loading: false };
-      } catch {
-        // Weather fetch error
-        return this.getMockWeatherData(city);
+      } catch (error) {
+        // Weather fetch error - propagate failure state to cache
+        // We set empty forecast so the UI knows it failed (or shows empty state)
+        this.cache.set(city, {
+          forecast: [],
+          coords: null,
+          timestamp: Date.now(),
+          loading: false,
+        });
+        
+        // Return empty result
+        return { forecast: [], coords: null, loading: false };
       } finally {
         this.inflight.delete(city);
       }

@@ -13,29 +13,26 @@ export class WeatherAPI {
   async geocodeCity(
     city: string
   ): Promise<{ lat: number; lon: number } | null> {
-    try {
-      const url = `${API_CONFIG.WEATHER.GEOCODING}?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+    const url = `${API_CONFIG.WEATHER.GEOCODING}?name=${encodeURIComponent(
+      city
+    )}&count=1&language=en&format=json`;
 
-      const response = await RequestUtils.fetchWithRetry(url);
+    const response = await RequestUtils.fetchWithRetry(url);
 
-      if (!response.ok) {
-        throw new Error(`Geocoding API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      if (data && data.results && data.results.length > 0) {
-        return {
-          lat: data.results[0].latitude,
-          lon: data.results[0].longitude,
-        };
-      }
-
-      // No geocoding results found for city
-      return null;
-    } catch {
-      // Geocoding error
-      return null;
+    if (!response.ok) {
+      throw new Error(`Geocoding API error: ${response.status}`);
     }
+
+    const data = await response.json();
+    if (data && data.results && data.results.length > 0) {
+      return {
+        lat: data.results[0].latitude,
+        lon: data.results[0].longitude,
+      };
+    }
+
+    // No geocoding results found for city
+    return null;
   }
 
   /**
@@ -45,21 +42,16 @@ export class WeatherAPI {
     lat: number,
     lon: number
   ): Promise<WeatherForecastResponse | null> {
-    try {
-      const url = `${API_CONFIG.WEATHER.FORECAST}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`;
+    const url = `${API_CONFIG.WEATHER.FORECAST}?latitude=${lat}&longitude=${lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`;
 
-      const response = await RequestUtils.fetchWithRetry(url);
+    const response = await RequestUtils.fetchWithRetry(url);
 
-      if (!response.ok) {
-        throw new Error(`Weather API error: ${response.status}`);
-      }
-
-      const data: WeatherForecastResponse = await response.json();
-      return data;
-    } catch {
-      // Weather forecast error
-      return null;
+    if (!response.ok) {
+      throw new Error(`Weather API error: ${response.status}`);
     }
+
+    const data: WeatherForecastResponse = await response.json();
+    return data;
   }
 
   /**
@@ -69,27 +61,18 @@ export class WeatherAPI {
     forecast: WeatherForecastResponse | null;
     coords: { lat: number; lon: number } | null;
   }> {
-    try {
-      const coordinates = await this.geocodeCity(city);
-      if (!coordinates) {
-        // No geocoding results found for city
-        return WeatherAPI.getMockWeatherData(city);
-      }
-
-      const forecast = await this.getWeatherForecast(
-        coordinates.lat,
-        coordinates.lon
-      );
-      if (!forecast) {
-        // Weather forecast failed, using mock data
-        return WeatherAPI.getMockWeatherData(city);
-      }
-
-      return { forecast, coords: coordinates };
-    } catch {
-      // Weather API failed, using mock data
-      return WeatherAPI.getMockWeatherData(city);
+    const coordinates = await this.geocodeCity(city);
+    if (!coordinates) {
+      // No geocoding results found for city is a valid "not found" state, not strictly an error to throw, but returns nulls
+      return { forecast: null, coords: null };
     }
+
+    const forecast = await this.getWeatherForecast(
+      coordinates.lat,
+      coordinates.lon
+    );
+    
+    return { forecast, coords: coordinates };
   }
 
   /**
